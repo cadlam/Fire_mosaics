@@ -1,0 +1,119 @@
+﻿code,full_name,native_status,,form
+KOST,Kopsiopsis strobilacea,native,,herb
+LOHI,Lonicera hispidula,native,,shrub
+FECA,Festuca californica,native,,grass
+POIM,Polystichum imbricans,native,,herb
+PTAQ,Pteridium aquilinum,native,,herb
+IRTE,Iris tenuissima,native,,herb
+PYPI,Pyrola picta,native,ID DOUBTFUL,herb
+AICA,Aira caryophyllea,non_native,,grass
+FEMI,Festuca microstachys,native,,grass
+BRTE,Bromus tectorum,non_native,,grass
+POCO,Polygala cornuta,native,,herb
+TOAR,Torilis arvensis,non_native,,herb
+PETR,Pentagramma triangularis,native,,herb
+GABO,Gallium bolanderi,native,,herb
+ARDI,Arnica discoidea,native,,herb
+FEOC,Festuca occidentalis,native,,grass
+MECA,Melica californica,native,,grass
+VILO,Viola lobata,native,,herb
+PRHO,Prosartes hookeri,native,,herb
+WHMO,Whipplea modesta,native,,herb
+CHUM,Chimaphila umbellata,native,,herb
+MARA,Maianthemum racemosum,native,,herb
+TRLA,Trientalis latiolia,native,,herb
+RUBI,Rubus bifrons,non_native,,shrub
+PYAP,Pyrolla aphylla,native,,herb
+ELGL,Elymus glaucus,native,,grass
+HYPE,Hypericum perfoliatum,non_native,,herb
+SI,Sidalcea sp.,native,check,herb
+CYEC,Cynosurus echinatus,non_native,,grass
+COHE,Collomia heterophylla,native,,herb
+CAMU,Carex multicaulis,native,,grass
+HOCR,Hossackia crassicaulis,native,,herb
+ANMA,Anisocarpus madioides,native,"recorded as Madia elegans, check",herb
+RULE,Rubus leucodermis,native,,shrub
+ACMI,Achillea millefollium,native,,herb
+LUTR,Lupinus tracyi,native,check specimen,herb
+RUPA,Rubus parviflorus,native,,shrub
+APAN,Apocynum angustifolium,native,,herb
+ERLA,Eriophyllum lanatum,native,,herb
+DIMU,Dichelostemma multiflorum,native,,herb
+CHAN,Chamerion angustifolium,native,NOTED AS EPAN,herb
+DAGL,Dactylis glomerata,non_native,,grass
+BRSE,Bromus secalinus,native,ID DOUBTFUL,grass
+FRVE,Fragria vesca,native,,herb
+CASC,Campanula scouleri,native,,herb
+CLRH,Clarkia rhomboidea,native,,herb
+AGGR,Agoseris grandiflora,native,,herb
+CAAP,Castilleja applegatei,native,,herb
+RUUR,Rubus ursinus,native,,shrub
+MAGR,Madia gracilis,native,,herb
+VIAM,Vicia americana,native,ID uncertain,herb
+DAISYSP,XXXX,native,CHECK SPECIMEN WITH NO FL,herb
+GOOB,Goodyera oblongifolia,native,,herb
+ACTR,Achlys triphylla,native,,herb
+HEXX,Heuchera sp.,native,check,herb
+VIXX,Vicia sp. (big),native,,herb
+PLEL,Platanthera elegans,native,,herb
+ADBI,Adenocaulon bicolor,native,,herb
+COST,Corallorhiza striata,native,sp ID uncertain,herb
+GATR,Gallium triflorum,native,,herb
+HIAL,Hieracium albiflorum,native,,herb
+POGL,Potentilla glandulosa,native,new genus?,herb
+SADO,Satureja douglasii,native,,herb
+TRXX,Trifolium sp.,unknown,,herb
+CAOC,Calystegia occidentalis,native,,herb
+GICA,Gilia capitata,native,,herb
+SOPA,Solanum parishii,native,,herb
+ASHA,Asarum hartweggii,,,
+CLPU,Clarkia purpurea,native,,herb
+CAREX,Carex sp.,native,,herb
+ARXX,Arnica sp.,native,,herb
+SYMO,Symphoricarpos mollis,native,,shrub
+SYAL,Symphoricarpos albus,native,,shrub
+ARCA,Aralia californica,native,,herb
+WOFI,Woodwardia fimbriata,native,,herb
+LIBO,Linnaea borealis,native,,herb
+CYGR,Cynoglossum grande,native,,herb
+PHXX,Phacelia sp.,native,,herb
+LICA,Ligusticum californicum,native,,herb
+LOTR,Lomatium triernatum,native,,herb
+OSBE,Osmorrhiza berteroi,native,,herb
+VAHE,Vancouveria hexandra,native,,herb
+DAPU,Daucus pusillus,native,,herb
+GAPA,Galium parisiense,non_native,,herb
+CESO,Centaurea solstitialis,non_native,,herb
+CEBE,Centaurea benedicta,non_native,,herb
+LOXX,Lomatium sp,native,,herb
+SACR,Sanicula crassicaulis,native,,herb
+DIID,Dichelostemma ida-maia,native,,herb
+DRAR,Dryopteris arguta,native,,herb
+STME,Stachys mexicana,native,,herb
+NEPA,Nemophila parviflora,native,,herb
+CEIN,Ceanothus integerrimus,native,,shrub
+CHPO,Chlorogallum pomeridianum,native,,herb
+SIXX,Silene sp,native,SPECIES ID UNKNOWN.,herb
+MAOR,Marah oregana,native,,herb
+SICA,Siilene campanulata,native,"check specimen, COMPARE S. VULGARIS",herb
+RIRO,Ribes roezlii,native,,shrub
+MANE,Mahonia nervosa,native,,shrub
+ARVI,Arctostaphyllos viscida,native,,shrub
+SABI,Sanicula bipinnatifida,native,,herb
+CAXX,Calochortus sp,native,,herb
+BREL,Brodiaea elegans,native,,herb
+HOXX,Horkelia sp,native,"maybe H. tridentata, no specimen",herb
+ACMO,Achyrrhachaena mollis,native,bit out of range?,herb
+CIOC,Cirsium occidentale,native,,herb
+ALXX,Allium sp,native,,herb
+CAPY,Carduus pycnocephalus,non_native,,herb
+VICA,Vitis californica,native,,shrub
+BRVU,Bromus vulgaris,native,,grass
+MOOD,Monardella odoratissma,native,,herb
+CLVI,Clematis ligusticifolia,native,,shrub
+TRPO,Tragopogon porrifolius,non_native,,herb
+SASC,Salix scouleriana,native,,shrub
+ERCA,Eriodictyon californicum,native,,shrub
+ANMA,Anagallis margaritacea,native,,herb
+CLAM,Clarkia amoena,native,,herb
+CACA,Cardamine californica,native,,herb
