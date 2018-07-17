@@ -1,0 +1,202 @@
+---
+title: "fire_analysis"
+author: "Chris Adlam"
+date: "7/16/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# loading packages
+```{r}
+library(tidyverse)
+library(emmeans)
+library(lme4)
+library(lmerTest)
+library(pbkrtest)
+library(car)
+library(ggplot2)
+library(cowplot)
+library(reshape2)
+library(splitstackshape)
+library(magrittr)
+library(readr)
+library(vegan)
+library(viridis)
+library(cowplot)
+
+```
+
+# Load the data
+```{r include = FALSE}
+# This loads the data
+plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
+plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_list.csv")
+site_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv")
+```
+
+#NMDS
+```{r}
+# First convert data to wide format, then matrix
+plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
+plant_data <- left_join(plant_data, plant_names, by = "code") %>% 
+  filter(native_status == 'native', form != 'tree') %>% 
+  select(site_id, code, cover)
+
+plant_matrix <- spread(data = plant_data, key = code, value = cover, fill = 0)
+
+#str(plants_type)
+#plants_wide[is.na(plants_wide)] <- 0
+plants_matrix <- as.matrix(plant_matrix[,])
+plants_matrix <- vegan::vegdist(plants_matrix, method = "bray")
+
+#NMDS
+NMDS <- monoMDS(plants_matrix, k = 2, 
+        model = c("global"),  
+        maxit = 5000, 
+        weakties = TRUE, 
+        stress = 1,
+        scaling = TRUE, 
+        pc = TRUE,
+        smin = 1e-4, sfgrmin = 1e-7,  sratmax=0.99999)
+
+NMDS
+
+# write output
+write.csv(NMDS$points, file = "NMDS_out.csv")
+
+# Use ggplot to make plot
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_out.csv")
+MDSout <- cbind(MDSout, site_id = plant_matrix$site_id)
+MDSout <- left_join(MDSout, site_data, by = "site_id")
+
+
+ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") + 
+      geom_point(mapping = aes(x = MDS2, y = MDS1, color = tsf, shape = sev), size = 2) +
+      theme_bw() +
+      scale_color_viridis() +
+      #scale_shape_manual(values=c(0,17)) +
+      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+      stat_ellipse(geom = "polygon", alpha = 0.05, aes(fill = sev), level = 0.9) 
+
+#+
+      labs(geom = "polygon", fill = "Habitat cluster", shape = "Mesic vs. wet", color = "Cover type") +
+      guides(fill = guide_legend(order=3), shape = guide_legend(order=1), color = guide_legend(order=2)) +
+      annotate(geom="text", x=-1.35, y = -0.35, label = "Open/Ecotone", size = 3.5)+
+      annotate(geom="text", x=0.85, y = -0.9, label = "Mesic", size = 3.5)+
+      annotate(geom="text", x=0.75, y = 1, label = "Wet", size = 3.5)
+```
+```{r}
+### Cluster analysis
+mydata <- scale(plant_matrix) # standardize variables 
+
+# Determine number of clusters
+wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
+for (i in 2:15) wss[i] <- sum(kmeans(mydata,
+   centers=i)$withinss)
+plot(1:15, wss, type="b", xlab="Number of Clusters",
+  ylab="Within groups sum of squares")
+
+# K-Means Cluster Analysis
+fit <- kmeans(mydata, 5) # 5 cluster solution
+# get cluster means
+aggregate(mydata,by=list(fit$cluster),FUN=mean)
+# append cluster assignment
+mydata <- data.frame(mydata, fit$cluster) 
+
+# K-Means Clustering with 6 clusters
+fit <- kmeans(mydata, 6)
+
+# Cluster Plot against 1st 2 principal components
+
+# vary parameters for most readable graph
+library(cluster)
+clusplot(mydata, fit$cluster, color=TRUE, shade=TRUE,
+   labels=2, lines=0)
+
+# Centroid Plot against 1st 2 discriminant functions
+library(fpc)
+plotcluster(mydata, fit$cluster) 
+```
+
+
+```{r}
+### Main PERMANOVA
+comp.data <- left_join(plant_matrix, site_data, by = "site_id")
+
+###Pairwise PERMANOVA can be done with package RVAideMemoire
+###install.packages("RVAideMemoire")
+###library(RVAideMemoire)
+###adonis(comp.data[,6:59]~cover,data=comp.data,method="euclidian")
+###pairwise.perm.manova(dist(comp.data[,6:59], "euclidean"),comp.data$forest_moisture,nperm=999)
+
+### need to fix this
+comp.sub <- subset(comp.data, sev == "h" | sev != "h", select = ACMI:WOFI)
+comp.env <- subset(comp.data, select = c(sev:tsf))
+attach(comp.env)
+adonis2(comp.sub ~ sev * tsf)
+
+### All (to include open/ecotone)
+comp.sub <- subset(comp.data, select = Agonum_fidele:Bradycellus_semipubescens)
+comp.env <- subset(comp.data, select = c(concatenate:cover))
+attach(comp.env)
+adonis2(comp.sub ~ moisture * cover)
+
+### Pairwise PERMANOVA (code from https://www.researchgate.net/post/How_can_I_do_PerMANOVA_pairwise_contrasts_in_R)
+pairwise.adonis <- function(x,factors, sim.method = 'bray', p.adjust.m ='bonferroni')
+{
+  library(vegan)
+  co = combn(unique(factors),2)
+  pairs = c()
+  F.Model =c()
+  R2 = c()
+  p.value = c()
+  
+  for(elem in 1:ncol(co)){
+    ad = adonis(x[factors %in% c(co[1,elem],co[2,elem]),] ~ factors[factors %in% c(co[1,elem],co[2,elem])] , method =sim.method);
+    pairs = c(pairs,paste(co[1,elem],'vs',co[2,elem]));
+    F.Model =c(F.Model,ad$aov.tab[1,4]);
+    R2 = c(R2,ad$aov.tab[1,5]);
+    p.value = c(p.value,ad$aov.tab[1,6])
+    
+  }
+  p.adjusted = p.adjust(p.value,method=p.adjust.m)
+  pairw.res = data.frame(pairs,F.Model,R2,p.value,p.adjusted)
+  return(pairw.res)
+} 
+
+
+### but hw to get Df??
+
+pairwise.adonis <- function(x,factors, sim.method = 'bray', p.adjust.m ='bonferroni')
+{
+  library(vegan)
+  co = combn(unique(factors),2)
+  pairs = c()
+  Df = c()
+  F.Model =c()
+  R2 = c()
+  p.value = c()
+  
+  for(elem in 1:ncol(co)){
+    ad = adonis(x[factors %in% c(co[1,elem],co[2,elem]),] ~ factors[factors %in% c(co[1,elem],co[2,elem])] , method =sim.method);
+    pairs = c(pairs,paste(co[1,elem],'vs',co[2,elem]));
+    Df = c(Df, ad$aov.tab[1,]);
+    F.Model =c(F.Model,ad$aov.tab[1,4]);
+    R2 = c(R2,ad$aov.tab[1,5]);
+    p.value = c(p.value,ad$aov.tab[1,6])
+    
+  }
+  p.adjusted = p.adjust(p.value,method=p.adjust.m)
+  pairw.res = data.frame(pairs,Df,F.Model,R2,p.value,p.adjusted)
+  return(pairw.res)
+} 
+
+pairwise.adonis(beetles[,6:59], beetles$cover)
+pairwise.adonis(beetles[,6:59], beetles$moisture)
+pairwise.adonis(beetles[,6:59], beetles$concatenate)
+pairwise.adonis(beetles[,6:59], beetles$mF_wF_O)
+pairwise.adonis(beetles[,6:59], beetles$forest_moisture)
+```
