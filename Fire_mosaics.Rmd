@@ -34,27 +34,69 @@ library(cowplot)
 # This loads the data
 plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
 plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_list.csv")
+plant_data$species <- as.character(plant_data$species)
+plant_data$site_id <- as.character(plant_data$site_id)
+plant_names$species <- as.character(plant_names$species)
+plant_names$full_name <- as.character(plant_names$full_name)
+plant_names$native_status <- as.factor(plant_names$native_status)
+plant_names$form <- as.factor(plant_names$form)
+
 site_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv")
+site_data$site_id <- as.character(site_data$site_id)
 ```
 
-#NMDS
+#NMDS prep
 ```{r}
 # First convert data to wide format, then matrix
-plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
-plant_data <- left_join(plant_data, plant_names, by = "code") %>% 
-  filter(native_status == 'native', form != 'tree') %>% 
-  select(site_id, code, cover)
+# CHECK FOR TYPOS - ALL GOOD
+#missing <- anti_join(plant_data, plant_names, by = "species")
 
-plant_matrix <- spread(data = plant_data, key = code, value = cover, fill = 0)
+# Join file with data and file with plant info, then select required information; select and run the right one:
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
+  filter(native_status == 'native') %>% 
+  select(site_id, species, cover) 
 
-#str(plants_type)
-#plants_wide[is.na(plants_wide)] <- 0
-plants_matrix <- as.matrix(plant_matrix[,])
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
+  filter(native_status == 'native' & form == "tree") %>% 
+  select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
+  filter(native_status == 'native' & form == "shrub") %>% 
+  select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
+  filter(native_status == 'native' & (form == "herb" | form == "grass")) %>% 
+  select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
+  filter(native_status == 'native' & (form == "herb")) %>% 
+  select(site_id, species, cover)
+
+```
+
+#NMDS run
+```{r}
+# convert to wide format for following analysis
+plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0) 
+
+# optional:remove plants with few sightings
+## add columns true/false depending on obs count reaching minimum value
+plant_matrix <- rbind(plant_matrix1, c("colsum", colSums(plant_matrix1[,-1]) > 4)) 
+
+## keep only columns where minimum is reached (true)
+plant_matrix <- plant_matrix[,(plant_matrix[49,]) == TRUE]
+
+## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
+plant_matrix <- cbind(site_id = plant_matrix1[,1], plant_matrix[-49,]) %>%
+  mutate_if(is.character,as.numeric)
+
+# Make Bray-Curtis dissimilarity matrix
+plants_matrix <- as.matrix(plant_matrix[,-1])
 plants_matrix <- vegan::vegdist(plants_matrix, method = "bray")
 
-#NMDS
+# NMDS using monoMDS
 NMDS <- monoMDS(plants_matrix, k = 2, 
-        model = c("global"),  
+        model = c("local"),  
         maxit = 5000, 
         weakties = TRUE, 
         stress = 1,
@@ -62,13 +104,41 @@ NMDS <- monoMDS(plants_matrix, k = 2,
         pc = TRUE,
         smin = 1e-4, sfgrmin = 1e-7,  sratmax=0.99999)
 
-NMDS
+# NMDS using metaMDS
+metaMDS <- metaMDS(plants_matrix,trymax = 200,try = 40, k = 2)
+
+# but why is metaMDS$species empty???
+
+plot(metaMDS)
+ordiplot(metaMDS,type="n")
+orditorp(metaMDS,display="species",col="red",air=0.01)
+orditorp(metaMDS,display="sites",cex=1.25,air=0.01)
+treat = site_data$sev
+ordiplot(metaMDS,type="n")
+ordihull(metaMDS,groups=treat,draw="polygon",col="grey90",label=F)
+orditorp(metaMDS,display="species",col="red",air=0.01)
+orditorp(metaMDS,display="sites",col=c(rep("green",5),rep("blue",5)),
+   air=0.01,cex=1.25)
+
 
 # write output
 write.csv(NMDS$points, file = "NMDS_out.csv")
 
-# Use ggplot to make plot
+```
+
+# Plot NMDS results
+```{r}
+# select desired dataset
 MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_out.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_all_natives.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_trees.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_shrubs.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_grass_herbs.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_herbs_only.csv")
+```
+
+```{r}
+# Use ggplot to make plot
 MDSout <- cbind(MDSout, site_id = plant_matrix$site_id)
 MDSout <- left_join(MDSout, site_data, by = "site_id")
 
@@ -81,6 +151,10 @@ ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") +
       theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
       stat_ellipse(geom = "polygon", alpha = 0.05, aes(fill = sev), level = 0.9) 
 
+text(NMDS, disp=c("species"), col=c("red"), cex=0.7)
+```
+
+```{r}
 #+
       labs(geom = "polygon", fill = "Habitat cluster", shape = "Mesic vs. wet", color = "Cover type") +
       guides(fill = guide_legend(order=3), shape = guide_legend(order=1), color = guide_legend(order=2)) +
@@ -88,9 +162,10 @@ ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") +
       annotate(geom="text", x=0.85, y = -0.9, label = "Mesic", size = 3.5)+
       annotate(geom="text", x=0.75, y = 1, label = "Wet", size = 3.5)
 ```
+
 ```{r}
 ### Cluster analysis
-mydata <- scale(plant_matrix) # standardize variables 
+mydata <- scale(plant_matrix[,-1]) # standardize variables 
 
 # Determine number of clusters
 wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
@@ -100,7 +175,7 @@ plot(1:15, wss, type="b", xlab="Number of Clusters",
   ylab="Within groups sum of squares")
 
 # K-Means Cluster Analysis
-fit <- kmeans(mydata, 5) # 5 cluster solution
+fit <- kmeans(mydata, 3) # 3 cluster solution
 # get cluster means
 aggregate(mydata,by=list(fit$cluster),FUN=mean)
 # append cluster assignment
@@ -110,21 +185,32 @@ mydata <- data.frame(mydata, fit$cluster)
 fit <- kmeans(mydata, 6)
 
 # Cluster Plot against 1st 2 principal components
-
 # vary parameters for most readable graph
 library(cluster)
-clusplot(mydata, fit$cluster, color=TRUE, shade=TRUE,
-   labels=2, lines=0)
+clusplot(mydata, fit$cluster, color=TRUE, shade=TRUE, labels=2, lines=0) # not working
+
+#Trying to fix clusplot to use prcomp instead of princomp, which doesn't work with more variables than observations, but it's nor working
+newtble <- prop.table(data.matrix(mydata), 1) * 100
+num.clust <- 3
+clusplotMW <- cluster:::clusplot.default # Create a copy of the two necessary functions for clusplot that route to princomp
+mkCheckMW <- cluster:::mkCheckX
+body(mkCheckMW) <- parse(text=gsub("princomp", "prcomp",deparse(body(mkCheckMW)))) # replace princomp with prcomp in our copy
+body(clusplotMW) <- parse(text=gsub("mkCheckX","mkCheckMW",deparse(body(clusplotMW)))) # route our clusplot to our mkCheckXW
+clusplotMW(newtble, fitnw$cluster, color = T, shade = T, lines = 0)
 
 # Centroid Plot against 1st 2 discriminant functions
 library(fpc)
-plotcluster(mydata, fit$cluster) 
+plotcluster(mydata, fit$cluster)
+
+#checking to see which sites are in which groups.... basically makes no sense at all. 
+mydata_clusters <- as.data.frame(cbind(site_id = plant_matrix$site_id, cluster = fit$cluster))
+mydata_clusters <- left_join(mydata_clusters, site_data, by = 'site_id')
 ```
 
 
 ```{r}
 ### Main PERMANOVA
-comp.data <- left_join(plant_matrix, site_data, by = "site_id")
+comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% mutate()
 
 ###Pairwise PERMANOVA can be done with package RVAideMemoire
 ###install.packages("RVAideMemoire")
@@ -134,9 +220,9 @@ comp.data <- left_join(plant_matrix, site_data, by = "site_id")
 
 ### need to fix this
 comp.sub <- subset(comp.data, sev == "h" | sev != "h", select = ACMI:WOFI)
-comp.env <- subset(comp.data, select = c(sev:tsf))
+comp.env <- subset(comp.data, select = c(sev:tsf_cat))
 attach(comp.env)
-adonis2(comp.sub ~ sev * tsf)
+adonis2(comp.sub ~ sev * tsf_cat)
 
 ### All (to include open/ecotone)
 comp.sub <- subset(comp.data, select = Agonum_fidele:Bradycellus_semipubescens)

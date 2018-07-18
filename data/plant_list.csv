@@ -1,4 +1,4 @@
-﻿code,full_name,native_status,,form
+﻿species,full_name,native_status,,form
 KOST,Kopsiopsis strobilacea,native,,herb
 LOHI,Lonicera hispidula,native,,shrub
 FECA,Festuca californica,native,,grass
@@ -31,7 +31,7 @@ CYEC,Cynosurus echinatus,non_native,,grass
 COHE,Collomia heterophylla,native,,herb
 CAMU,Carex multicaulis,native,,grass
 HOCR,Hossackia crassicaulis,native,,herb
-ANMA,Anisocarpus madioides,native,"recorded as Madia elegans, check",herb
+ANMAD,Anisocarpus madioides,native,"recorded as Madia elegans, check",herb
 RULE,Rubus leucodermis,native,,shrub
 ACMI,Achillea millefollium,native,,herb
 LUTR,Lupinus tracyi,native,check specimen,herb
@@ -66,13 +66,13 @@ TRXX,Trifolium sp.,unknown,,herb
 CAOC,Calystegia occidentalis,native,,herb
 GICA,Gilia capitata,native,,herb
 SOPA,Solanum parishii,native,,herb
-ASHA,Asarum hartweggii,,,
+ASHA,Asarum hartweggii,native,,herb
 CLPU,Clarkia purpurea,native,,herb
 CAREX,Carex sp.,native,,herb
 ARXX,Arnica sp.,native,,herb
 SYMO,Symphoricarpos mollis,native,,shrub
 SYAL,Symphoricarpos albus,native,,shrub
-ARCA,Aralia californica,native,,herb
+ARCAL,Aralia californica,native,,herb
 WOFI,Woodwardia fimbriata,native,,herb
 LIBO,Linnaea borealis,native,,herb
 CYGR,Cynoglossum grande,native,,herb
@@ -114,6 +114,41 @@ CLVI,Clematis ligusticifolia,native,,shrub
 TRPO,Tragopogon porrifolius,non_native,,herb
 SASC,Salix scouleriana,native,,shrub
 ERCA,Eriodictyon californicum,native,,shrub
-ANMA,Anagallis margaritacea,native,,herb
+ANMAR,Anagallis margaritacea,native,,herb
 CLAM,Clarkia amoena,native,,herb
 CACA,Cardamine californica,native,,herb
+PSME,Pseudotsuga menziesii,native,,tree
+TODI,Toxicodendron diversilobum,native,,shrub
+PILA,Pinus lambertiana,native,,tree
+PIPO,Pinus ponderosa,native,,tree
+QUKE,Quercus kelloggii,native,,tree
+QUGA,Quercus garryana,native,,tree
+QUCH,Quercus chrysolepis,native,,tree
+CHCH,Chrysolepis chrysophylla,native,,tree
+CEOC,Cercis occidentalis,native,,shrub
+CESA,Ceanothus sanguineus,native,,shrub
+GAFR,Garrya fremontii,native,,shrub
+COCO,Corylus cornuta,native,,shrub
+PHLE,Philadelphus lewisii,native,,shrub
+NODE,Notholithocarpus densifolius,native,,tree
+ARME,Arbutus menziesii,native,,tree
+ARPA,Arctostaphyllos patula,native,,shrub
+PIAT,Pinus attenuata,native,,tree
+AIAL,Ailanthus altissima,non_native,,tree
+ROGY,Rosa gymnocarpa,native,,shrub
+CONU,Cornus nuttallii,native,,shrub
+ACMA,Acer macrophyllum,native,,tree
+ALRH,Alnus rhombifolia,native,,tree
+OECE,Oemleria cerasiformis,native,,shrub
+SANIG,Sambucus nigra,native,,shrub
+CADE,Calocedrus decurrens,native,,tree
+RISA,Ribes sanguineum,native,,shrub
+AMAL,Amelanchier alnifolia,native,,shrub
+UMCA,Umbellularia californica,native,,tree
+ABCO,Abies concolor,native,,tree
+HEAR,Heteromeles arbutifolia,native,,shrub
+ARCA,Arctostaphylos canescens,native,,shrub
+HODI,Holodiscus discolor,native,,shrub
+RHPU,Rhamnus purshiana,native,,shrub
+SALU,Salix lucida,native,,shrub
+MAAQ,Mahonia aquifolium,native,,shrub
