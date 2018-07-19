@@ -26,7 +26,6 @@ library(readr)
 library(vegan)
 library(viridis)
 library(cowplot)
-
 ```
 
 # Load the data
@@ -45,88 +44,180 @@ site_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire
 site_data$site_id <- as.character(site_data$site_id)
 ```
 
-#NMDS prep
+#NMDS data
 ```{r}
 # First convert data to wide format, then matrix
 # CHECK FOR TYPOS - ALL GOOD
-#missing <- anti_join(plant_data, plant_names, by = "species")
+# missing <- anti_join(plant_data, plant_names, by = "species")
 
 # Join file with data and file with plant info, then select required information; select and run the right one:
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
-  filter(native_status == 'native') %>% 
-  select(site_id, species, cover) 
-
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
-  filter(native_status == 'native' & form == "tree") %>% 
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native") %>%
   select(site_id, species, cover)
 
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
-  filter(native_status == 'native' & form == "shrub") %>% 
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & form == "tree") %>%
   select(site_id, species, cover)
 
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
-  filter(native_status == 'native' & (form == "herb" | form == "grass")) %>% 
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & form == "shrub") %>%
   select(site_id, species, cover)
 
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>% 
-  filter(native_status == 'native' & (form == "herb")) %>% 
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
   select(site_id, species, cover)
 
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "herb")) %>%
+  select(site_id, species, cover)
 ```
 
-#NMDS run
+#NMDS prep
 ```{r}
 # convert to wide format for following analysis
-plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0) 
+plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
 
 # optional:remove plants with few sightings
 ## add columns true/false depending on obs count reaching minimum value
-plant_matrix <- rbind(plant_matrix1, c("colsum", colSums(plant_matrix1[,-1]) > 4)) 
+plant_matrix <- rbind(plant_matrix1, c("colsum", colSums(plant_matrix1[, -1]) > 4))
 
 ## keep only columns where minimum is reached (true)
-plant_matrix <- plant_matrix[,(plant_matrix[49,]) == TRUE]
+plant_matrix <- plant_matrix[, (plant_matrix[49, ]) == TRUE]
 
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
-plant_matrix <- cbind(site_id = plant_matrix1[,1], plant_matrix[-49,]) %>%
-  mutate_if(is.character,as.numeric)
+plant_matrix <- cbind(site_id = plant_matrix1[, 1], plant_matrix[-49, ]) %>%
+  mutate_if(is.character, as.numeric)
 
 # Make Bray-Curtis dissimilarity matrix
-plants_matrix <- as.matrix(plant_matrix[,-1])
-plants_matrix <- vegan::vegdist(plants_matrix, method = "bray")
+plants_matrix <- as.matrix(plant_matrix1[, -1])
+```
 
-# NMDS using monoMDS
-NMDS <- monoMDS(plants_matrix, k = 2, 
-        model = c("local"),  
-        maxit = 5000, 
-        weakties = TRUE, 
-        stress = 1,
-        scaling = TRUE, 
-        pc = TRUE,
-        smin = 1e-4, sfgrmin = 1e-7,  sratmax=0.99999)
+#NMDS run using monoMDS
+```{r}
+# monoMDS allows for some more flexibility than metaMDS, eg. selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
 
-# NMDS using metaMDS
-metaMDS <- metaMDS(plants_matrix,trymax = 200,try = 40, k = 2)
+plants_matrix_mono <- vegan::vegdist(plants_matrix, method = "bray")
 
-# but why is metaMDS$species empty???
-
-plot(metaMDS)
-ordiplot(metaMDS,type="n")
-orditorp(metaMDS,display="species",col="red",air=0.01)
-orditorp(metaMDS,display="sites",cex=1.25,air=0.01)
-treat = site_data$sev
-ordiplot(metaMDS,type="n")
-ordihull(metaMDS,groups=treat,draw="polygon",col="grey90",label=F)
-orditorp(metaMDS,display="species",col="red",air=0.01)
-orditorp(metaMDS,display="sites",col=c(rep("green",5),rep("blue",5)),
-   air=0.01,cex=1.25)
+NMDS <- monoMDS(plants_matrix_mono, k = 2, model = c("global"), maxit = 5000, weakties = TRUE, stress = 1, scaling = TRUE, pc = TRUE, smin = 1e-4, sfgrmin = 1e-7, sratmax = 0.99999)
 
 
-# write output
-write.csv(NMDS$points, file = "NMDS_out.csv")
+# now trying to improve this code to directly plot NMDS results:
+data_scores <- as.data.frame(scores(NMDS))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
+data_scores$site_id <- plant_matrix1[, 1]  # create a column of site names, from the rownames of data.scores
+data_scores <- left_join(data_scores, site_data, by = "site_id") #  add the grp variable created earlier
+  
+head(data_scores)  #look at the data
+
+# this part not working:
+#species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+#species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
+#head(species_scores)  #look at the data
+
+hi <- data_scores[data_scores$sev == "h", ][chull(data_scores[data_scores$sev == 
+    "h", c("MDS1", "MDS2")]), ]  # hull values for grp A
+lo <- data_scores[data_scores$sev == "l", ][chull(data_scores[data_scores$sev == 
+    "l", c("MDS1", "MDS2")]), ]  # hull values for grp B
+un <- data_scores[data_scores$sev == "u", ][chull(data_scores[data_scores$sev == 
+    "u", c("MDS1", "MDS2")]), ]  # hull values for grp B
+
+hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
+hull.data
+
+ggplot() + 
+  geom_polygon(data=hull.data,aes(x=MDS1,y=MDS2,fill=sev,group=sev),alpha=0.30) + # add the convex hulls
+  #geom_text(data=species_scores,aes(x=MDS1,y=MDS2,label=species),alpha=0.5) +  # add the species labels
+  geom_point(data=data_scores,aes(x=MDS1,y=MDS2,shape=sev,colour=sev),size=3) + # add the point markers
+  geom_text(data=data_scores,aes(x=MDS1,y=MDS2,label=site_id),size=6,vjust=0) +  # add the site labels
+#  scale_colour_manual(values=c("A" = "red", "B" = "blue")) +
+  coord_equal() +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),  # remove x-axis text
+        axis.text.y = element_blank(), # remove y-axis text
+        axis.ticks = element_blank(),  # remove axis ticks
+        axis.title.x = element_text(size=18), # remove x-axis labels
+        axis.title.y = element_text(size=18), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+# old school plotting method:
+#plot(NMDS)
+#ordiplot(NMDS, type = "n")
+#ordiellipse(NMDS, site_data$sev, display = "site_id", kind = "sd")
+# ordihull(NMDS,groups=treat,draw="polygon",col="grey90",label=F)
 
 ```
 
-# Plot NMDS results
+#NMDS run using metaMDS
+```{r}
+# NMDS using metaMDS
+NMDS <- metaMDS(plants_matrix, trymax = 5000, try = 100, k = 2)
+
+# now trying to improve this code to directly plot NMDS results:
+data_scores <- as.data.frame(scores(NMDS))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
+data_scores$site_id <- plant_matrix1[, 1]  # create a column of site names, from the rownames of data.scores
+data_scores <- left_join(data_scores, site_data, by = "site_id") #  add the grp variable created earlier
+  
+head(data_scores)  #look at the data
+
+# this part not working:
+species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
+head(species_scores)  #look at the data
+
+hi <- data_scores[data_scores$sev == "h", ][chull(data_scores[data_scores$sev == 
+    "h", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
+lo <- data_scores[data_scores$sev == "l", ][chull(data_scores[data_scores$sev == 
+    "l", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+un <- data_scores[data_scores$sev == "u", ][chull(data_scores[data_scores$sev == 
+    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+
+hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
+hull.data
+
+ggplot() + 
+  geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,fill=sev,group=sev),alpha=0.30) + # add the convex hulls
+  geom_text(data=species_scores,aes(x=NMDS1,y=NMDS2,label=species),alpha=0.5) +  # add the species labels
+  geom_point(data=data_scores,aes(x=NMDS1,y=NMDS2,shape=sev,colour=sev),size=3) + # add the point markers
+  geom_text(data=data_scores,aes(x=NMDS1,y=NMDS2,label=site_id),size=6,vjust=0) +  # add the site labels
+#  scale_colour_manual(values=c("A" = "red", "B" = "blue")) +
+  coord_equal() +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),  # remove x-axis text
+        axis.text.y = element_blank(), # remove y-axis text
+        axis.ticks = element_blank(),  # remove axis ticks
+        axis.title.x = element_text(size=18), # remove x-axis labels
+        axis.title.y = element_text(size=18), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+```
+
+```{r}
+# old school plotting method:
+plot(metaMDS)
+ordiplot(metaMDS, type = "n")
+orditorp(metaMDS, display = "species", col = "red", air = 0.01)
+
+# note that the sites are not the right numbers on the graph
+orditorp(metaMDS, display = "sites", cex = 1.25, air = 0.01)
+
+treat <- site_data$sev
+ordiplot(metaMDS, type = "n")
+ordihull(metaMDS, groups = treat, draw = "polygon", col = "grey90", label = F)
+
+orditorp(metaMDS, display = "species", col = "red", air = 0.01)
+orditorp(metaMDS, display = "sites", col = c(rep("green", 5), rep("blue", 5)), air = 0.01, cex = 1.25)
+
+
+# write output
+# write.csv(NMDS$points, file = "NMDS_out.csv")
+```
+
+# Plot NMDS results (from before I figured out how to plot directly)
 ```{r}
 # select desired dataset
 MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_out.csv")
@@ -143,43 +234,47 @@ MDSout <- cbind(MDSout, site_id = plant_matrix$site_id)
 MDSout <- left_join(MDSout, site_data, by = "site_id")
 
 
-ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") + 
-      geom_point(mapping = aes(x = MDS2, y = MDS1, color = tsf, shape = sev), size = 2) +
-      theme_bw() +
-      scale_color_viridis() +
-      #scale_shape_manual(values=c(0,17)) +
-      theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-      stat_ellipse(geom = "polygon", alpha = 0.05, aes(fill = sev), level = 0.9) 
+ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") +
+  geom_point(mapping = aes(x = MDS2, y = MDS1, color = tsf, shape = sev), size = 2) +
+  theme_bw() +
+  scale_color_viridis() +
+  # scale_shape_manual(values=c(0,17)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  stat_ellipse(geom = "polygon", alpha = 0.05, aes(fill = sev), level = 0.9)
 
-text(NMDS, disp=c("species"), col=c("red"), cex=0.7)
+# text(NMDS, disp=c("species"), col=c("red"), cex=0.7)
 ```
 
 ```{r}
-#+
-      labs(geom = "polygon", fill = "Habitat cluster", shape = "Mesic vs. wet", color = "Cover type") +
-      guides(fill = guide_legend(order=3), shape = guide_legend(order=1), color = guide_legend(order=2)) +
-      annotate(geom="text", x=-1.35, y = -0.35, label = "Open/Ecotone", size = 3.5)+
-      annotate(geom="text", x=0.85, y = -0.9, label = "Mesic", size = 3.5)+
-      annotate(geom="text", x=0.75, y = 1, label = "Wet", size = 3.5)
+# +
+labs(geom = "polygon", fill = "Habitat cluster", shape = "Mesic vs. wet", color = "Cover type") +
+  guides(fill = guide_legend(order = 3), shape = guide_legend(order = 1), color = guide_legend(order = 2)) +
+  annotate(geom = "text", x = -1.35, y = -0.35, label = "Open/Ecotone", size = 3.5) +
+  annotate(geom = "text", x = 0.85, y = -0.9, label = "Mesic", size = 3.5) +
+  annotate(geom = "text", x = 0.75, y = 1, label = "Wet", size = 3.5)
 ```
 
 ```{r}
 ### Cluster analysis
-mydata <- scale(plant_matrix[,-1]) # standardize variables 
+mydata <- scale(plant_matrix[, -1]) # standardize variables
 
 # Determine number of clusters
-wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
-for (i in 2:15) wss[i] <- sum(kmeans(mydata,
-   centers=i)$withinss)
-plot(1:15, wss, type="b", xlab="Number of Clusters",
-  ylab="Within groups sum of squares")
+wss <- (nrow(mydata) - 1) * sum(apply(mydata, 2, var))
+for (i in 2:15) wss[i] <- sum(kmeans(
+    mydata,
+    centers = i
+  )$withinss)
+plot(
+  1:15, wss, type = "b", xlab = "Number of Clusters",
+  ylab = "Within groups sum of squares"
+)
 
 # K-Means Cluster Analysis
 fit <- kmeans(mydata, 3) # 3 cluster solution
 # get cluster means
-aggregate(mydata,by=list(fit$cluster),FUN=mean)
+aggregate(mydata, by = list(fit$cluster), FUN = mean)
 # append cluster assignment
-mydata <- data.frame(mydata, fit$cluster) 
+mydata <- data.frame(mydata, fit$cluster)
 
 # K-Means Clustering with 6 clusters
 fit <- kmeans(mydata, 6)
@@ -187,24 +282,24 @@ fit <- kmeans(mydata, 6)
 # Cluster Plot against 1st 2 principal components
 # vary parameters for most readable graph
 library(cluster)
-clusplot(mydata, fit$cluster, color=TRUE, shade=TRUE, labels=2, lines=0) # not working
+clusplot(mydata, fit$cluster, color = TRUE, shade = TRUE, labels = 2, lines = 0) # not working
 
-#Trying to fix clusplot to use prcomp instead of princomp, which doesn't work with more variables than observations, but it's nor working
+# Trying to fix clusplot to use prcomp instead of princomp, which doesn't work with more variables than observations, but it's nor working
 newtble <- prop.table(data.matrix(mydata), 1) * 100
 num.clust <- 3
 clusplotMW <- cluster:::clusplot.default # Create a copy of the two necessary functions for clusplot that route to princomp
 mkCheckMW <- cluster:::mkCheckX
-body(mkCheckMW) <- parse(text=gsub("princomp", "prcomp",deparse(body(mkCheckMW)))) # replace princomp with prcomp in our copy
-body(clusplotMW) <- parse(text=gsub("mkCheckX","mkCheckMW",deparse(body(clusplotMW)))) # route our clusplot to our mkCheckXW
+body(mkCheckMW) <- parse(text = gsub("princomp", "prcomp", deparse(body(mkCheckMW)))) # replace princomp with prcomp in our copy
+body(clusplotMW) <- parse(text = gsub("mkCheckX", "mkCheckMW", deparse(body(clusplotMW)))) # route our clusplot to our mkCheckXW
 clusplotMW(newtble, fitnw$cluster, color = T, shade = T, lines = 0)
 
 # Centroid Plot against 1st 2 discriminant functions
 library(fpc)
 plotcluster(mydata, fit$cluster)
 
-#checking to see which sites are in which groups.... basically makes no sense at all. 
+# checking to see which sites are in which groups.... basically makes no sense at all.
 mydata_clusters <- as.data.frame(cbind(site_id = plant_matrix$site_id, cluster = fit$cluster))
-mydata_clusters <- left_join(mydata_clusters, site_data, by = 'site_id')
+mydata_clusters <- left_join(mydata_clusters, site_data, by = "site_id")
 ```
 
 
@@ -212,11 +307,11 @@ mydata_clusters <- left_join(mydata_clusters, site_data, by = 'site_id')
 ### Main PERMANOVA
 comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% mutate()
 
-###Pairwise PERMANOVA can be done with package RVAideMemoire
-###install.packages("RVAideMemoire")
-###library(RVAideMemoire)
-###adonis(comp.data[,6:59]~cover,data=comp.data,method="euclidian")
-###pairwise.perm.manova(dist(comp.data[,6:59], "euclidean"),comp.data$forest_moisture,nperm=999)
+### Pairwise PERMANOVA can be done with package RVAideMemoire
+### install.packages("RVAideMemoire")
+### library(RVAideMemoire)
+### adonis(comp.data[,6:59]~cover,data=comp.data,method="euclidian")
+### pairwise.perm.manova(dist(comp.data[,6:59], "euclidean"),comp.data$forest_moisture,nperm=999)
 
 ### need to fix this
 comp.sub <- subset(comp.data, sev == "h" | sev != "h", select = ACMI:WOFI)
@@ -231,58 +326,54 @@ attach(comp.env)
 adonis2(comp.sub ~ moisture * cover)
 
 ### Pairwise PERMANOVA (code from https://www.researchgate.net/post/How_can_I_do_PerMANOVA_pairwise_contrasts_in_R)
-pairwise.adonis <- function(x,factors, sim.method = 'bray', p.adjust.m ='bonferroni')
-{
+pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
   library(vegan)
-  co = combn(unique(factors),2)
-  pairs = c()
-  F.Model =c()
-  R2 = c()
-  p.value = c()
-  
-  for(elem in 1:ncol(co)){
-    ad = adonis(x[factors %in% c(co[1,elem],co[2,elem]),] ~ factors[factors %in% c(co[1,elem],co[2,elem])] , method =sim.method);
-    pairs = c(pairs,paste(co[1,elem],'vs',co[2,elem]));
-    F.Model =c(F.Model,ad$aov.tab[1,4]);
-    R2 = c(R2,ad$aov.tab[1,5]);
-    p.value = c(p.value,ad$aov.tab[1,6])
-    
+  co <- combn(unique(factors), 2)
+  pairs <- c()
+  F.Model <- c()
+  R2 <- c()
+  p.value <- c()
+
+  for (elem in 1:ncol(co)) {
+    ad <- adonis(x[factors %in% c(co[1, elem], co[2, elem]), ] ~ factors[factors %in% c(co[1, elem], co[2, elem])], method = sim.method)
+    pairs <- c(pairs, paste(co[1, elem], "vs", co[2, elem]))
+    F.Model <- c(F.Model, ad$aov.tab[1, 4])
+    R2 <- c(R2, ad$aov.tab[1, 5])
+    p.value <- c(p.value, ad$aov.tab[1, 6])
   }
-  p.adjusted = p.adjust(p.value,method=p.adjust.m)
-  pairw.res = data.frame(pairs,F.Model,R2,p.value,p.adjusted)
+  p.adjusted <- p.adjust(p.value, method = p.adjust.m)
+  pairw.res <- data.frame(pairs, F.Model, R2, p.value, p.adjusted)
   return(pairw.res)
-} 
+}
 
 
 ### but hw to get Df??
 
-pairwise.adonis <- function(x,factors, sim.method = 'bray', p.adjust.m ='bonferroni')
-{
+pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
   library(vegan)
-  co = combn(unique(factors),2)
-  pairs = c()
-  Df = c()
-  F.Model =c()
-  R2 = c()
-  p.value = c()
-  
-  for(elem in 1:ncol(co)){
-    ad = adonis(x[factors %in% c(co[1,elem],co[2,elem]),] ~ factors[factors %in% c(co[1,elem],co[2,elem])] , method =sim.method);
-    pairs = c(pairs,paste(co[1,elem],'vs',co[2,elem]));
-    Df = c(Df, ad$aov.tab[1,]);
-    F.Model =c(F.Model,ad$aov.tab[1,4]);
-    R2 = c(R2,ad$aov.tab[1,5]);
-    p.value = c(p.value,ad$aov.tab[1,6])
-    
-  }
-  p.adjusted = p.adjust(p.value,method=p.adjust.m)
-  pairw.res = data.frame(pairs,Df,F.Model,R2,p.value,p.adjusted)
-  return(pairw.res)
-} 
+  co <- combn(unique(factors), 2)
+  pairs <- c()
+  Df <- c()
+  F.Model <- c()
+  R2 <- c()
+  p.value <- c()
 
-pairwise.adonis(beetles[,6:59], beetles$cover)
-pairwise.adonis(beetles[,6:59], beetles$moisture)
-pairwise.adonis(beetles[,6:59], beetles$concatenate)
-pairwise.adonis(beetles[,6:59], beetles$mF_wF_O)
-pairwise.adonis(beetles[,6:59], beetles$forest_moisture)
+  for (elem in 1:ncol(co)) {
+    ad <- adonis(x[factors %in% c(co[1, elem], co[2, elem]), ] ~ factors[factors %in% c(co[1, elem], co[2, elem])], method = sim.method)
+    pairs <- c(pairs, paste(co[1, elem], "vs", co[2, elem]))
+    Df <- c(Df, ad$aov.tab[1, ])
+    F.Model <- c(F.Model, ad$aov.tab[1, 4])
+    R2 <- c(R2, ad$aov.tab[1, 5])
+    p.value <- c(p.value, ad$aov.tab[1, 6])
+  }
+  p.adjusted <- p.adjust(p.value, method = p.adjust.m)
+  pairw.res <- data.frame(pairs, Df, F.Model, R2, p.value, p.adjusted)
+  return(pairw.res)
+}
+
+pairwise.adonis(beetles[, 6:59], beetles$cover)
+pairwise.adonis(beetles[, 6:59], beetles$moisture)
+pairwise.adonis(beetles[, 6:59], beetles$concatenate)
+pairwise.adonis(beetles[, 6:59], beetles$mF_wF_O)
+pairwise.adonis(beetles[, 6:59], beetles$forest_moisture)
 ```
