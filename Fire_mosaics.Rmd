@@ -2,15 +2,17 @@
 title: "fire_analysis"
 author: "Chris Adlam"
 date: "7/16/2018"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# loading packages
-```{r}
+# Load packages
+```{r eval = F}
 library(tidyverse)
 library(emmeans)
 library(lme4)
@@ -26,6 +28,9 @@ library(readr)
 library(vegan)
 library(viridis)
 library(cowplot)
+library(purrr)
+library(tibble)
+library(broom)
 ```
 
 # Load the data
@@ -44,8 +49,8 @@ site_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire
 site_data$site_id <- as.character(site_data$site_id)
 ```
 
-#NMDS data
-```{r}
+#NMDS data (pick one)
+```{r eval = F}
 # First convert data to wide format, then matrix
 # CHECK FOR TYPOS - ALL GOOD
 # missing <- anti_join(plant_data, plant_names, by = "species")
@@ -64,6 +69,10 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   select(site_id, species, cover)
 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "shrub" | form == "tree")) %>%
+  select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
   select(site_id, species, cover)
 
@@ -77,23 +86,21 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
 # convert to wide format for following analysis
 plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
 
-# optional:remove plants with few sightings
+# optional:remove plants with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
 plant_matrix <- rbind(plant_matrix1, c("colsum", colSums(plant_matrix1[, -1]) > 4))
-
 ## keep only columns where minimum is reached (true)
 plant_matrix <- plant_matrix[, (plant_matrix[49, ]) == TRUE]
-
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
 plant_matrix <- cbind(site_id = plant_matrix1[, 1], plant_matrix[-49, ]) %>%
   mutate_if(is.character, as.numeric)
 
-# Make Bray-Curtis dissimilarity matrix
+# Make Bray-Curtis (?) dissimilarity matrix
 plants_matrix <- as.matrix(plant_matrix1[, -1])
 ```
 
 #NMDS run using monoMDS
-```{r}
+```{r eval = F}
 # monoMDS allows for some more flexibility than metaMDS, eg. selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
 
 plants_matrix_mono <- vegan::vegdist(plants_matrix, method = "bray")
@@ -124,11 +131,11 @@ hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
 hull.data
 
 ggplot() + 
-  geom_polygon(data=hull.data,aes(x=MDS1,y=MDS2,fill=sev,group=sev),alpha=0.30) + # add the convex hulls
+#  geom_polygon(data=hull.data,aes(x=MDS1,y=MDS2,fill=sev,group=sev),alpha=0.30) + # add the convex hulls
   #geom_text(data=species_scores,aes(x=MDS1,y=MDS2,label=species),alpha=0.5) +  # add the species labels
   geom_point(data=data_scores,aes(x=MDS1,y=MDS2,shape=sev,colour=sev),size=3) + # add the point markers
-  geom_text(data=data_scores,aes(x=MDS1,y=MDS2,label=site_id),size=6,vjust=0) +  # add the site labels
-#  scale_colour_manual(values=c("A" = "red", "B" = "blue")) +
+  geom_text(data=data_scores,aes(x=MDS1,y=MDS2,label=site_id),size=6,vjust=0) +  # add the site labels+
+  stat_ellipse(data = data_scores, geom = "polygon", alpha = 0.05, aes(x=MDS1,y=MDS2, fill = sev), level = 0.8) +
   coord_equal() +
   theme_bw() + 
   theme(axis.text.x = element_blank(),  # remove x-axis text
@@ -154,107 +161,81 @@ ggplot() +
 # NMDS using metaMDS
 NMDS <- metaMDS(plants_matrix, trymax = 5000, try = 100, k = 2)
 
-# now trying to improve this code to directly plot NMDS results:
+# The following is meant for plotting the results (old school, not using ggplot), and also is used for the cluster analysis using dplyr:
+site_data$tsf_cat <- as.factor(site_data$tsf_cat)
 data_scores <- as.data.frame(scores(NMDS))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
-data_scores$site_id <- plant_matrix1[, 1]  # create a column of site names, from the rownames of data.scores
-data_scores <- left_join(data_scores, site_data, by = "site_id") #  add the grp variable created earlier
-  
-head(data_scores)  #look at the data
+data_scores$site_id <- plant_matrix1[, 1]  # create a column of site names
+data_scores <- left_join(data_scores, site_data, by = "site_id")
 
-# this part not working:
-species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
-species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
-head(species_scores)  #look at the data
+# this part not working but would be used for old school plotting:
+#species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+#species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
+```
 
-hi <- data_scores[data_scores$sev == "h", ][chull(data_scores[data_scores$sev == 
-    "h", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
-lo <- data_scores[data_scores$sev == "l", ][chull(data_scores[data_scores$sev == 
-    "l", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
-un <- data_scores[data_scores$sev == "u", ][chull(data_scores[data_scores$sev == 
-    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+```{r eval = F}
+data_scores <- data_scores %>%
+  mutate_all(funs(ifelse(is.na(.), un, .))) %>% 
+  mutate(tsf_cat2 = ifelse(tsf < 10 , "1", ifelse(tsf < 20, "2", ifelse(tsf != "3", "4"))))
+```
 
-hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
-hull.data
+# CLuster analysis
+## Cluster analysis using dplyr
+```{r}
+#kclust <- kmeans(data_scores, centers = 3)
+# necessary if using monoMDS:
+#data_scores$NMDS1 <- data_scores$MDS1
+#data_scores$NMDS2 <- data_scores$MDS2
 
-ggplot() + 
-  geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,fill=sev,group=sev),alpha=0.30) + # add the convex hulls
-  geom_text(data=species_scores,aes(x=NMDS1,y=NMDS2,label=species),alpha=0.5) +  # add the species labels
-  geom_point(data=data_scores,aes(x=NMDS1,y=NMDS2,shape=sev,colour=sev),size=3) + # add the point markers
-  geom_text(data=data_scores,aes(x=NMDS1,y=NMDS2,label=site_id),size=6,vjust=0) +  # add the site labels
-#  scale_colour_manual(values=c("A" = "red", "B" = "blue")) +
-  coord_equal() +
-  theme_bw() + 
-  theme(axis.text.x = element_blank(),  # remove x-axis text
-        axis.text.y = element_blank(), # remove y-axis text
-        axis.ticks = element_blank(),  # remove axis ticks
-        axis.title.x = element_text(size=18), # remove x-axis labels
-        axis.title.y = element_text(size=18), # remove y-axis labels
-        panel.background = element_blank(), 
-        panel.grid.major = element_blank(),  #remove major-grid labels
-        panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())
+# Necessary if using MDSout:
+MDSout$NMDS1 <- MDSout$MDS1
+MDSout$NMDS2 <- MDSout$MDS2
+
+# Use if wanting to filter or to remove unwanted columns:
+data_scores <- data_scores %>% 
+#  filter(tsf_cat <3) %>% 
+  select(NMDS1, NMDS2, site_id)
 
 ```
 
 ```{r}
-# old school plotting method:
-plot(metaMDS)
-ordiplot(metaMDS, type = "n")
-orditorp(metaMDS, display = "species", col = "red", air = 0.01)
+# CA starts here
+kclusts <- tibble(k = 1:6) %>%
+  mutate(
+    kclust = map(k, ~kmeans(data_scores, .x)),
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, data_scores)
+  )
 
-# note that the sites are not the right numbers on the graph
-orditorp(metaMDS, display = "sites", cex = 1.25, air = 0.01)
+kclusts
 
-treat <- site_data$sev
-ordiplot(metaMDS, type = "n")
-ordihull(metaMDS, groups = treat, draw = "polygon", col = "grey90", label = F)
+clusters <- kclusts %>%
+  unnest(tidied)
 
-orditorp(metaMDS, display = "species", col = "red", air = 0.01)
-orditorp(metaMDS, display = "sites", col = c(rep("green", 5), rep("blue", 5)), air = 0.01, cex = 1.25)
+assignments <- kclusts %>% 
+  unnest(augmented)
 
+clusterings <- kclusts %>%
+  unnest(glanced, .drop = TRUE)
 
-# write output
-# write.csv(NMDS$points, file = "NMDS_out.csv")
+p1 <- ggplot(assignments, aes(NMDS1, NMDS2)) +
+  geom_point(aes(color = .cluster)) + 
+  facet_wrap(~ k)
+p1
+
+clusters$NMDS1 <- clusters$x1
+clusters$NMDS2 <- clusters$x2
+
+p2 <- p1 + geom_point(data = clusters, size = 10, shape = "x")
+p2
+
+ggplot(clusterings, aes(k, tot.withinss)) +
+  geom_line()
+
 ```
 
-# Plot NMDS results (from before I figured out how to plot directly)
-```{r}
-# select desired dataset
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_out.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_all_natives.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_trees.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_shrubs.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_grass_herbs.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_herbs_only.csv")
-```
-
-```{r}
-# Use ggplot to make plot
-MDSout <- cbind(MDSout, site_id = plant_matrix$site_id)
-MDSout <- left_join(MDSout, site_data, by = "site_id")
-
-
-ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") +
-  geom_point(mapping = aes(x = MDS2, y = MDS1, color = tsf, shape = sev), size = 2) +
-  theme_bw() +
-  scale_color_viridis() +
-  # scale_shape_manual(values=c(0,17)) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  stat_ellipse(geom = "polygon", alpha = 0.05, aes(fill = sev), level = 0.9)
-
-# text(NMDS, disp=c("species"), col=c("red"), cex=0.7)
-```
-
-```{r}
-# +
-labs(geom = "polygon", fill = "Habitat cluster", shape = "Mesic vs. wet", color = "Cover type") +
-  guides(fill = guide_legend(order = 3), shape = guide_legend(order = 1), color = guide_legend(order = 2)) +
-  annotate(geom = "text", x = -1.35, y = -0.35, label = "Open/Ecotone", size = 3.5) +
-  annotate(geom = "text", x = 0.85, y = -0.9, label = "Mesic", size = 3.5) +
-  annotate(geom = "text", x = 0.75, y = 1, label = "Wet", size = 3.5)
-```
-
-```{r}
+## Cluster analysis (without dplyr, problematic)
+```{r eval=F}
 ### Cluster analysis
 mydata <- scale(plant_matrix[, -1]) # standardize variables
 
@@ -303,9 +284,118 @@ mydata_clusters <- left_join(mydata_clusters, site_data, by = "site_id")
 ```
 
 
+# Plot NMDS results
+## Plot using ggplot (better?)
 ```{r}
-### Main PERMANOVA
-comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% mutate()
+ggplot() + 
+  geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,fill=tsf_cat,group=tsf_cat),alpha=0.30) + # add the convex hulls
+  geom_text(data=species_scores,aes(x=NMDS1,y=NMDS2,label=species),alpha=0.5) +  # add the species labels
+  geom_point(data=data_scores,aes(x=NMDS1,y=NMDS2,shape=tsf_cat,colour=tsf_cat),size=3) + # add the point markers
+  geom_text(data=data_scores,aes(x=NMDS1,y=NMDS2,label=site_id),size=6,vjust=0) +  # add the site labels
+#  scale_colour_manual(values=c("A" = "red", "B" = "blue")) +
+  coord_equal() +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),  # remove x-axis text
+        axis.text.y = element_blank(), # remove y-axis text
+        axis.ticks = element_blank(),  # remove axis ticks
+        axis.title.x = element_text(size=18), # remove x-axis labels
+        axis.title.y = element_text(size=18), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+```
+
+## Categories for old school plot (pick)
+```{r eval = F}
+# just severity
+hi <- data_scores[data_scores$sev == "h", ][chull(data_scores[data_scores$sev == 
+    "h", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
+lo <- data_scores[data_scores$sev == "l", ][chull(data_scores[data_scores$sev == 
+    "l", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+un <- data_scores[data_scores$sev == "u", ][chull(data_scores[data_scores$sev == 
+    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+
+hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
+hull.data
+
+
+# just tsf in bins
+recent <- data_scores[data_scores$tsf_cat == "1", ][chull(data_scores[data_scores$tsf_cat == 
+    "h", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
+mid <- data_scores[data_scores$tsf_cat == "2", ][chull(data_scores[data_scores$tsf_cat == 
+    "l", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+maturing <- data_scores[data_scores$tsf_cat == "3", ][chull(data_scores[data_scores$tsf_cat == 
+    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+old <- data_scores[data_scores$tsf_cat == "4", ][chull(data_scores[data_scores$tsf_cat == 
+    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+
+hull.data <- rbind(recent, mid, maturing, old)  #combine grp.a and grp.b
+hull.data
+
+```
+
+## Old school plotting (continued)
+```{r eval = F}
+# old school plotting method:
+plot(metaMDS)
+ordiplot(metaMDS, type = "n")
+orditorp(metaMDS, display = "species", col = "red", air = 0.01)
+
+# note that the sites are not the right numbers on the graph
+orditorp(metaMDS, display = "sites", cex = 1.25, air = 0.01)
+
+# not sure the following works properly, but can be included directly into ordihull call
+treat <- site_data$sev
+
+ordiplot(metaMDS, type = "n")
+ordihull(metaMDS, groups = treat, draw = "polygon", col = "grey90", label = F)
+
+orditorp(metaMDS, display = "species", col = "red", air = 0.01)
+orditorp(metaMDS, display = "sites", col = c(rep("green", 5), rep("blue", 5)), air = 0.01, cex = 1.25)
+
+
+# write output
+# write.csv(NMDS$points, file = "NMDS_out.csv")
+```
+
+## Plot NMDS results (from before I figured out how to plot directly)
+```{r}
+# select desired dataset
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_out.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_all_natives.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_trees.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_shrubs.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_grass_herbs.csv")
+MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_herbs_only.csv")
+```
+
+```{r}
+# Use ggplot to make plot
+MDSout <- cbind(MDSout, site_id = plant_matrix$site_id)
+MDSout <- left_join(MDSout, site_data, by = "site_id")
+
+
+ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") +
+  geom_point(mapping = aes(x = MDS2, y = MDS1, color = tsf, shape = sev), size = 2) +
+  theme_bw() +
+  scale_color_viridis() +
+  # scale_shape_manual(values=c(0,17)) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  stat_ellipse(geom = "polygon", alpha = 0.05, aes(fill = sev), level = 0.9)
+
+# text(NMDS, disp=c("species"), col=c("red"), cex=0.7)
+```
+
+# PERMANOVA
+## Main PERMANOVA
+We see using the permanova that there is no difference between low sev and unburnt. There is a difference with high sev though. No detectable effect of time since fire, but further analysis is necessary (ie is there an effect with high sev).
+```{r}
+# Main PERMANOVA
+comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu"))
+comp.data$sev <- as.character(comp.data$sev)
 
 ### Pairwise PERMANOVA can be done with package RVAideMemoire
 ### install.packages("RVAideMemoire")
@@ -313,18 +403,23 @@ comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% mutate()
 ### adonis(comp.data[,6:59]~cover,data=comp.data,method="euclidian")
 ### pairwise.perm.manova(dist(comp.data[,6:59], "euclidean"),comp.data$forest_moisture,nperm=999)
 
-### need to fix this
-comp.sub <- subset(comp.data, sev == "h" | sev != "h", select = ACMI:WOFI)
-comp.env <- subset(comp.data, select = c(sev:tsf_cat))
+# Pick among the following
+## Is there an effect of severity and time since fire?
+comp.sub <- subset(comp.data, sev != "h" | sev == "h", select = ACTR:WHMO)
+comp.env <- subset(comp.data, sev != "h" | sev == "h", select = c(fire:tsf_cat))
 attach(comp.env)
 adonis2(comp.sub ~ sev * tsf_cat)
 
-### All (to include open/ecotone)
-comp.sub <- subset(comp.data, select = Agonum_fidele:Bradycellus_semipubescens)
-comp.env <- subset(comp.data, select = c(concatenate:cover))
+## Is there an effect of severity and time since fire if low sev and unburnt are pooled?
+comp.sub <- subset(comp.data, select = ACTR:WHMO)
+comp.env <- subset(comp.data, select = c(fire:sev2))
 attach(comp.env)
-adonis2(comp.sub ~ moisture * cover)
+adonis2(comp.sub ~ sev2 * tsf_cat)
 
+```
+
+## Pairwise PERMANOVA function
+```{r}
 ### Pairwise PERMANOVA (code from https://www.researchgate.net/post/How_can_I_do_PerMANOVA_pairwise_contrasts_in_R)
 pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
   library(vegan)
@@ -346,8 +441,11 @@ pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonfer
   return(pairw.res)
 }
 
+```
 
-### but hw to get Df??
+## Pairwise PERMANOVA function (pt.2)
+```{r}
+### below is an attempt to show Df, but output is screwy
 
 pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
   library(vegan)
@@ -370,10 +468,9 @@ pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonfer
   pairw.res <- data.frame(pairs, Df, F.Model, R2, p.value, p.adjusted)
   return(pairw.res)
 }
+```
 
-pairwise.adonis(beetles[, 6:59], beetles$cover)
-pairwise.adonis(beetles[, 6:59], beetles$moisture)
-pairwise.adonis(beetles[, 6:59], beetles$concatenate)
-pairwise.adonis(beetles[, 6:59], beetles$mF_wF_O)
-pairwise.adonis(beetles[, 6:59], beetles$forest_moisture)
+## Pairwise PERMANOVA function (run)
+```{r}
+pairwise.adonis(comp.sub, comp.data$sev)
 ```
