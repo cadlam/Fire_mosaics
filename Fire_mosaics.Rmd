@@ -31,6 +31,10 @@ library(cowplot)
 library(purrr)
 library(tibble)
 library(broom)
+library(labdsv)
+library(indicspecies)
+library(permute)
+library(perm)
 ```
 
 # Load the data
@@ -55,30 +59,30 @@ site_data$site_id <- as.character(site_data$site_id)
 # CHECK FOR TYPOS - ALL GOOD
 # missing <- anti_join(plant_data, plant_names, by = "species")
 
-# Join file with data and file with plant info, then select required information; select and run the right one:
+# Join file with data and file with plant info, then dplyr::select required information; dplyr::select and run the right one:
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native") %>%
-  select(site_id, species, cover)
+  dplyr::select(site_id, species, cover)
 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & form == "tree") %>%
-  select(site_id, species, cover)
+  dplyr::select(site_id, species, cover)
 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & form == "shrub") %>%
-  select(site_id, species, cover)
+  dplyr::select(site_id, species, cover)
 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & (form == "shrub" | form == "tree")) %>%
-  select(site_id, species, cover)
+  dplyr::select(site_id, species, cover)
 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
-  select(site_id, species, cover)
+  dplyr::select(site_id, species, cover)
 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & (form == "herb")) %>%
-  select(site_id, species, cover)
+  dplyr::select(site_id, species, cover)
 ```
 
 #NMDS prep
@@ -101,7 +105,7 @@ plants_matrix <- as.matrix(plant_matrix1[, -1])
 
 #NMDS run using monoMDS
 ```{r eval = F}
-# monoMDS allows for some more flexibility than metaMDS, eg. selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
+# monoMDS allows for some more flexibility than metaMDS, eg. dplyr::selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
 
 plants_matrix_mono <- vegan::vegdist(plants_matrix, method = "bray")
 
@@ -174,8 +178,8 @@ data_scores <- left_join(data_scores, site_data, by = "site_id")
 
 ```{r eval = F}
 data_scores <- data_scores %>%
-  mutate_all(funs(ifelse(is.na(.), un, .))) %>% 
-  mutate(tsf_cat2 = ifelse(tsf < 10 , "1", ifelse(tsf < 20, "2", ifelse(tsf != "3", "4"))))
+#  mutate_all(funs(ifelse(is.na(.), un, .))) %>% 
+  mutate(tsf_cat2 = ifelse(tsf < 8 , "1", ifelse(tsf < 17, "2", ifelse(tsf < 35, "3", "4"))))
 ```
 
 # CLuster analysis
@@ -193,7 +197,7 @@ MDSout$NMDS2 <- MDSout$MDS2
 # Use if wanting to filter or to remove unwanted columns:
 data_scores <- data_scores %>% 
 #  filter(tsf_cat <3) %>% 
-  select(NMDS1, NMDS2, site_id)
+  dplyr::select(NMDS1, NMDS2, site_id)
 
 ```
 
@@ -362,7 +366,7 @@ orditorp(metaMDS, display = "sites", col = c(rep("green", 5), rep("blue", 5)), a
 
 ## Plot NMDS results (from before I figured out how to plot directly)
 ```{r}
-# select desired dataset
+# dplyr::select desired dataset
 MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_out.csv")
 MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_all_natives.csv")
 MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_trees.csv")
@@ -405,14 +409,14 @@ comp.data$sev <- as.character(comp.data$sev)
 
 # Pick among the following
 ## Is there an effect of severity and time since fire?
-comp.sub <- subset(comp.data, sev != "h" | sev == "h", select = ACTR:WHMO)
-comp.env <- subset(comp.data, sev != "h" | sev == "h", select = c(fire:tsf_cat))
+comp.sub <- subset(comp.data, sev != "h" | sev == "h", dplyr::select = ACTR:WHMO)
+comp.env <- subset(comp.data, sev != "h" | sev == "h", dplyr::select = c(fire:tsf_cat))
 attach(comp.env)
 adonis2(comp.sub ~ sev * tsf_cat)
 
 ## Is there an effect of severity and time since fire if low sev and unburnt are pooled?
-comp.sub <- subset(comp.data, select = ACTR:WHMO)
-comp.env <- subset(comp.data, select = c(fire:sev2))
+comp.sub <- subset(comp.data, dplyr::select = ACTR:WHMO)
+comp.env <- subset(comp.data, dplyr::select = c(fire:sev2))
 attach(comp.env)
 adonis2(comp.sub ~ sev2 * tsf_cat)
 
@@ -473,4 +477,50 @@ pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonfer
 ## Pairwise PERMANOVA function (run)
 ```{r}
 pairwise.adonis(comp.sub, comp.data$sev)
+```
+
+# Indicator species analysis
+```{r}
+### Community data matrix
+d <- plant_matrix
+data <- d[,-1]
+View(data)
+
+### Vector for site classification
+### severity
+groups1 = as.vector(data_scores$tsf_cat)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+View(indvalsummary1)
+
+#write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
+```{r eval=FALSE}
+###Rarefaction curves (not working)
+rare <- plant_matrix
+raredata <- rare[,-1]
+raredata[raredata > 0] <- 1 # transform into presence/absence
+rarecurve(raredata, xlab = "Cumulative number of individuals", ylab = "Number of species")
+
+### trying indicspecies. This combines habitat clusters too.
+options(max.print=1000000)
+indval <- multipatt(data, groups1, func = "IndVal.g", control = how(nperm = 999), max.order = 6)
+indval
+summary(indval, alpha=1)
+summary(indval)
+indval$sign
+
+### Can also use combinations of species as indicators, but this is not very interesting (?). 
+spcomb <- combinespecies(data, max.order = 3)$XC
+indvapspcomp <- multipatt(spcomb, groups1, duleg = TRUE, control = how(nperm = 999))
+summary(indvapspcomp)
 ```
