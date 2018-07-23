@@ -53,7 +53,7 @@ site_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire
 site_data$site_id <- as.character(site_data$site_id)
 ```
 
-#NMDS data (pick one)
+# Select data (pick one)
 ```{r eval = F}
 # First convert data to wide format, then matrix
 # CHECK FOR TYPOS - ALL GOOD
@@ -85,7 +85,7 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   dplyr::select(site_id, species, cover)
 ```
 
-#NMDS prep
+# Data prep
 ```{r}
 # convert to wide format for following analysis
 plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
@@ -103,7 +103,8 @@ plant_matrix <- cbind(site_id = plant_matrix1[, 1], plant_matrix[-49, ]) %>%
 plants_matrix <- as.matrix(plant_matrix1[, -1])
 ```
 
-#NMDS run using monoMDS
+#NMDS
+##NMDS run using monoMDS
 ```{r eval = F}
 # monoMDS allows for some more flexibility than metaMDS, eg. dplyr::selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
 
@@ -160,7 +161,7 @@ ggplot() +
 
 ```
 
-#NMDS run using metaMDS
+##NMDS run using metaMDS
 ```{r}
 # NMDS using metaMDS
 NMDS <- metaMDS(plants_matrix, trymax = 5000, try = 100, k = 2)
@@ -182,7 +183,7 @@ data_scores <- data_scores %>%
   mutate(tsf_cat2 = ifelse(tsf < 8 , "1", ifelse(tsf < 17, "2", ifelse(tsf < 35, "3", "4"))))
 ```
 
-# CLuster analysis
+# Cluster analysis
 ## Cluster analysis using dplyr
 ```{r}
 #kclust <- kmeans(data_scores, centers = 3)
@@ -482,13 +483,34 @@ pairwise.adonis(comp.sub, comp.data$sev)
 # Indicator species analysis
 ```{r}
 ### Community data matrix
+plant_data_filtered <- left_join(plant_data, site_data, by = "site_id") 
+
+plant_dat <- left_join(plant_data_filtered, plant_names, by = "species") %>%
+  filter(native_status == "native") %>%
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "")) %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu")) 
+#%>%  filter(sev == "l")
+
+plant_dat$fire_yr <- as.numeric(as.character(plant_dat$fire_yr))
+plant_dat$tsf <- as.numeric(as.character(plant_dat$tsf))
+
+plant_dat <- mutate(plant_dat, tsf_cat2 = ifelse(tsf < 20 , "1", "2")) 
+
+plant_dat_select  <- plant_dat %>%
+  dplyr::select(site_id, species, cover)
+
+plant_matrix1 <- spread(data = plant_dat_select, key = species, value = cover, fill = 0)
+
+plants_matrix <- as.matrix(plant_matrix1[, -1])
+
 d <- plant_matrix
 data <- d[,-1]
-View(data)
 
 ### Vector for site classification
 ### severity
-groups1 = as.vector(data_scores$tsf_cat)
+groups1 = as.vector(plant_dat$sev)
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
 
 Indval_out1 <- indval(data, groups1, numitr=10000)
 gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
