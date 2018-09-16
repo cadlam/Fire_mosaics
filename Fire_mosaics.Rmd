@@ -64,6 +64,11 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native") %>%
   dplyr::select(site_id, species, cover)
 
+plant_dat <- left_join(plant_dat, site_data, by = "site_id") %>% 
+  filter(sev=="l")
+
+write.csv(plant_dat, file = "plant_data_natives.csv")
+
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & form == "tree") %>%
   dplyr::select(site_id, species, cover)
@@ -105,6 +110,7 @@ plants_matrix <- as.matrix(plant_matrix1[, -1])
 
 #NMDS
 ##NMDS run using monoMDS
+The NMDS using all native plants shows no difference between unburnt and LS, but HS is very different. The difference seems to be stronger when subsetting only trees, than when only herbaceous species are selected. The shrub only NMDS is interesting-looking, with a tight cluster of unburnt, LS spread out one direction, and HS spread out perpendicularly. I wonder what factors influence this.
 ```{r eval = F}
 # monoMDS allows for some more flexibility than metaMDS, eg. dplyr::selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
 
@@ -121,7 +127,7 @@ data_scores <- left_join(data_scores, site_data, by = "site_id") #  add the grp 
 head(data_scores)  #look at the data
 
 # this part not working:
-#species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
 #species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
 #head(species_scores)  #look at the data
 
@@ -161,246 +167,24 @@ ggplot() +
 
 ```
 
-##NMDS run using metaMDS
-```{r}
-# NMDS using metaMDS
-NMDS <- metaMDS(plants_matrix, trymax = 5000, try = 100, k = 2)
-
-# The following is meant for plotting the results (old school, not using ggplot), and also is used for the cluster analysis using dplyr:
-site_data$tsf_cat <- as.factor(site_data$tsf_cat)
-data_scores <- as.data.frame(scores(NMDS))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
-data_scores$site_id <- plant_matrix1[, 1]  # create a column of site names
-data_scores <- left_join(data_scores, site_data, by = "site_id")
-
-# this part not working but would be used for old school plotting:
-#species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
-#species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
-```
-
-```{r eval = F}
-data_scores <- data_scores %>%
-#  mutate_all(funs(ifelse(is.na(.), un, .))) %>% 
-  mutate(tsf_cat2 = ifelse(tsf < 8 , "1", ifelse(tsf < 17, "2", ifelse(tsf < 35, "3", "4"))))
-```
-
-# Cluster analysis
-## Cluster analysis using dplyr
-```{r}
-#kclust <- kmeans(data_scores, centers = 3)
-# necessary if using monoMDS:
-#data_scores$NMDS1 <- data_scores$MDS1
-#data_scores$NMDS2 <- data_scores$MDS2
-
-# Necessary if using MDSout:
-MDSout$NMDS1 <- MDSout$MDS1
-MDSout$NMDS2 <- MDSout$MDS2
-
-# Use if wanting to filter or to remove unwanted columns:
-data_scores <- data_scores %>% 
-#  filter(tsf_cat <3) %>% 
-  dplyr::select(NMDS1, NMDS2, site_id)
-
-```
-
-```{r}
-# CA starts here
-kclusts <- tibble(k = 1:6) %>%
-  mutate(
-    kclust = map(k, ~kmeans(data_scores, .x)),
-    tidied = map(kclust, tidy),
-    glanced = map(kclust, glance),
-    augmented = map(kclust, augment, data_scores)
-  )
-
-kclusts
-
-clusters <- kclusts %>%
-  unnest(tidied)
-
-assignments <- kclusts %>% 
-  unnest(augmented)
-
-clusterings <- kclusts %>%
-  unnest(glanced, .drop = TRUE)
-
-p1 <- ggplot(assignments, aes(NMDS1, NMDS2)) +
-  geom_point(aes(color = .cluster)) + 
-  facet_wrap(~ k)
-p1
-
-clusters$NMDS1 <- clusters$x1
-clusters$NMDS2 <- clusters$x2
-
-p2 <- p1 + geom_point(data = clusters, size = 10, shape = "x")
-p2
-
-ggplot(clusterings, aes(k, tot.withinss)) +
-  geom_line()
-
-```
-
-## Cluster analysis (without dplyr, problematic)
-```{r eval=F}
-### Cluster analysis
-mydata <- scale(plant_matrix[, -1]) # standardize variables
-
-# Determine number of clusters
-wss <- (nrow(mydata) - 1) * sum(apply(mydata, 2, var))
-for (i in 2:15) wss[i] <- sum(kmeans(
-    mydata,
-    centers = i
-  )$withinss)
-plot(
-  1:15, wss, type = "b", xlab = "Number of Clusters",
-  ylab = "Within groups sum of squares"
-)
-
-# K-Means Cluster Analysis
-fit <- kmeans(mydata, 3) # 3 cluster solution
-# get cluster means
-aggregate(mydata, by = list(fit$cluster), FUN = mean)
-# append cluster assignment
-mydata <- data.frame(mydata, fit$cluster)
-
-# K-Means Clustering with 6 clusters
-fit <- kmeans(mydata, 6)
-
-# Cluster Plot against 1st 2 principal components
-# vary parameters for most readable graph
-library(cluster)
-clusplot(mydata, fit$cluster, color = TRUE, shade = TRUE, labels = 2, lines = 0) # not working
-
-# Trying to fix clusplot to use prcomp instead of princomp, which doesn't work with more variables than observations, but it's nor working
-newtble <- prop.table(data.matrix(mydata), 1) * 100
-num.clust <- 3
-clusplotMW <- cluster:::clusplot.default # Create a copy of the two necessary functions for clusplot that route to princomp
-mkCheckMW <- cluster:::mkCheckX
-body(mkCheckMW) <- parse(text = gsub("princomp", "prcomp", deparse(body(mkCheckMW)))) # replace princomp with prcomp in our copy
-body(clusplotMW) <- parse(text = gsub("mkCheckX", "mkCheckMW", deparse(body(clusplotMW)))) # route our clusplot to our mkCheckXW
-clusplotMW(newtble, fitnw$cluster, color = T, shade = T, lines = 0)
-
-# Centroid Plot against 1st 2 discriminant functions
-library(fpc)
-plotcluster(mydata, fit$cluster)
-
-# checking to see which sites are in which groups.... basically makes no sense at all.
-mydata_clusters <- as.data.frame(cbind(site_id = plant_matrix$site_id, cluster = fit$cluster))
-mydata_clusters <- left_join(mydata_clusters, site_data, by = "site_id")
-```
-
-
-# Plot NMDS results
-## Plot using ggplot (better?)
-```{r}
-ggplot() + 
-  geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,fill=tsf_cat,group=tsf_cat),alpha=0.30) + # add the convex hulls
-  geom_text(data=species_scores,aes(x=NMDS1,y=NMDS2,label=species),alpha=0.5) +  # add the species labels
-  geom_point(data=data_scores,aes(x=NMDS1,y=NMDS2,shape=tsf_cat,colour=tsf_cat),size=3) + # add the point markers
-  geom_text(data=data_scores,aes(x=NMDS1,y=NMDS2,label=site_id),size=6,vjust=0) +  # add the site labels
-#  scale_colour_manual(values=c("A" = "red", "B" = "blue")) +
-  coord_equal() +
-  theme_bw() + 
-  theme(axis.text.x = element_blank(),  # remove x-axis text
-        axis.text.y = element_blank(), # remove y-axis text
-        axis.ticks = element_blank(),  # remove axis ticks
-        axis.title.x = element_text(size=18), # remove x-axis labels
-        axis.title.y = element_text(size=18), # remove y-axis labels
-        panel.background = element_blank(), 
-        panel.grid.major = element_blank(),  #remove major-grid labels
-        panel.grid.minor = element_blank(),  #remove minor-grid labels
-        plot.background = element_blank())
-
-```
-
-## Categories for old school plot (pick)
-```{r eval = F}
-# just severity
-hi <- data_scores[data_scores$sev == "h", ][chull(data_scores[data_scores$sev == 
-    "h", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
-lo <- data_scores[data_scores$sev == "l", ][chull(data_scores[data_scores$sev == 
-    "l", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
-un <- data_scores[data_scores$sev == "u", ][chull(data_scores[data_scores$sev == 
-    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
-
-hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
-hull.data
-
-
-# just tsf in bins
-recent <- data_scores[data_scores$tsf_cat == "1", ][chull(data_scores[data_scores$tsf_cat == 
-    "h", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
-mid <- data_scores[data_scores$tsf_cat == "2", ][chull(data_scores[data_scores$tsf_cat == 
-    "l", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
-maturing <- data_scores[data_scores$tsf_cat == "3", ][chull(data_scores[data_scores$tsf_cat == 
-    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
-old <- data_scores[data_scores$tsf_cat == "4", ][chull(data_scores[data_scores$tsf_cat == 
-    "u", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
-
-hull.data <- rbind(recent, mid, maturing, old)  #combine grp.a and grp.b
-hull.data
-
-```
-
-## Old school plotting (continued)
-```{r eval = F}
-# old school plotting method:
-plot(metaMDS)
-ordiplot(metaMDS, type = "n")
-orditorp(metaMDS, display = "species", col = "red", air = 0.01)
-
-# note that the sites are not the right numbers on the graph
-orditorp(metaMDS, display = "sites", cex = 1.25, air = 0.01)
-
-# not sure the following works properly, but can be included directly into ordihull call
-treat <- site_data$sev
-
-ordiplot(metaMDS, type = "n")
-ordihull(metaMDS, groups = treat, draw = "polygon", col = "grey90", label = F)
-
-orditorp(metaMDS, display = "species", col = "red", air = 0.01)
-orditorp(metaMDS, display = "sites", col = c(rep("green", 5), rep("blue", 5)), air = 0.01, cex = 1.25)
-
-
-# write output
-# write.csv(NMDS$points, file = "NMDS_out.csv")
-```
-
-## Plot NMDS results (from before I figured out how to plot directly)
-```{r}
-# dplyr::select desired dataset
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_out.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_all_natives.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_trees.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_only_shrubs.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_grass_herbs.csv")
-MDSout <- read.csv("~/Desktop/Davis/R/GitHub Repos/Fire_mosaics/output/NMDS_herbs_only.csv")
-```
-
-```{r}
-# Use ggplot to make plot
-MDSout <- cbind(MDSout, site_id = plant_matrix$site_id)
-MDSout <- left_join(MDSout, site_data, by = "site_id")
-
-
-ggplot(data = MDSout, aes(MDS2, MDS1), color = "tsf") +
-  geom_point(mapping = aes(x = MDS2, y = MDS1, color = tsf, shape = sev), size = 2) +
-  theme_bw() +
-  scale_color_viridis() +
-  # scale_shape_manual(values=c(0,17)) +
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
-  stat_ellipse(geom = "polygon", alpha = 0.05, aes(fill = sev), level = 0.9)
-
-# text(NMDS, disp=c("species"), col=c("red"), cex=0.7)
-```
-
 # PERMANOVA
 ## Main PERMANOVA
-We see using the permanova that there is no difference between low sev and unburnt. There is a difference with high sev though. No detectable effect of time since fire, but further analysis is necessary (ie is there an effect with high sev).
+All natives: We see using the permanova there is a strong effect of severity, and a weaker effect of TSF. The pairwise PERMANOVA shows that there is no difference between low sev and unburnt. There is a difference with high sev though.
+
+Herbaceous (grass and forb): There is an effect of severity, but no detectable overall effect of TSF. But there is an interaction sev:TSF, suggesting that TSF in important sometimes (in HS?).
+
+Trees and shrubs: Same as all natives; effect of sev, weaker effect of TSF, no interaction. Still no difference between low and unburnt in pariwise analysis.
+
 ```{r}
 # Main PERMANOVA
+#comp.data$tsf <- as.numeric(comp.data$tsf)
+
 comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% 
+#  filter(tsf != "u") %>% 
   mutate(sev2 = ifelse(sev == 'h' , "h", "lu"))
 comp.data$sev <- as.character(comp.data$sev)
+comp.data$tsf <- as.numeric(comp.data$tsf)
+
 
 ### Pairwise PERMANOVA can be done with package RVAideMemoire
 ### install.packages("RVAideMemoire")
@@ -410,14 +194,15 @@ comp.data$sev <- as.character(comp.data$sev)
 
 # Pick among the following
 ## Is there an effect of severity and time since fire?
-comp.sub <- subset(comp.data, sev != "h" | sev == "h", dplyr::select = ACTR:WHMO)
-comp.env <- subset(comp.data, sev != "h" | sev == "h", dplyr::select = c(fire:tsf_cat))
+##the second term is because i'm trying to compare LS and UN at younger stages. But this code excludes UN so it doesn't work.
+comp.sub <- subset(comp.data, (tsf < 13 & sev != "h"), select = ACTR:WHMO) # might need to use dplyr::select; also replace ACTR:WHMO with ABCO:UMCA if using trees or trees and shrubs)
+comp.env <- subset(comp.data, (tsf < 13 & sev != "h"), select = c(fire:tsf_cat))
 attach(comp.env)
-adonis2(comp.sub ~ sev * tsf_cat)
+adonis2(comp.sub ~ sev * tsf)
 
 ## Is there an effect of severity and time since fire if low sev and unburnt are pooled?
-comp.sub <- subset(comp.data, dplyr::select = ACTR:WHMO)
-comp.env <- subset(comp.data, dplyr::select = c(fire:sev2))
+comp.sub <- subset(comp.data, select = ACTR:WHMO)
+comp.env <- subset(comp.data, select = c(fire:sev2))
 attach(comp.env)
 adonis2(comp.sub ~ sev2 * tsf_cat)
 
