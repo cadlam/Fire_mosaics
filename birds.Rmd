@@ -1,0 +1,169 @@
+---
+title: "birds"
+author: "Chris Adlam"
+date: "9/23/2018"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(vegan)
+library(cowplot)
+
+# read in data
+site_data <- read.csv("data/site_data.csv", header = T)
+bird_dat_suppl <- read.csv("data/bird_data_suppl.csv")
+bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>% 
+  filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
+  dplyr::select(Point, Count, Spp, DistanceBin) # keeping only relevant columns
+
+# remove duplicate rows (same species detected multiple times in a single plot)
+bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>% 
+  mutate(pa = 1) %>% 
+  rename(site_id = Point) %>% 
+  rename(species = Spp)
+
+# Adding additional species detections (outside count)
+bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
+
+# function to turn presence only data to presence-absence:
+splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
+  # version 1.1 (7 May 2013)
+  # data: a matrix or data frame with your localities and species (each in a different column)
+  # sites.col: the name or index number of the column containing the localities
+  # sp.col: the name or index number of the column containing the species names or codes
+  # keep.n: logical, whether to get in the resulting table the number of times each species appears in each locality; if false (the default), only the presence (1) or absence (0) are recorded
+
+  stopifnot(
+    length(sites.col) == 1,
+    length(sp.col) == 1,
+    sites.col != sp.col,
+    sites.col %in% 1 : ncol(data) | sites.col %in% names(data),
+    sp.col %in% 1 : ncol(data) | sp.col %in% names(data),
+    is.logical(keep.n)
+  )
+
+  presabs <- table(data[ , c(sites.col, sp.col)])
+  presabs <- as.data.frame(unclass(presabs))
+  if (!keep.n)  presabs[presabs > 1] <- 1
+  presabs <- data.frame(row.names(presabs), presabs)
+  names(presabs)[1] <- names(subset(data, select = sites.col))
+  rownames(presabs) <- NULL
+  return(presabs)
+}  # end splist2presabs function
+
+# executing function and going from wide to long:
+bird_dat_pa <- splist2presabs(bird_dat_long, sites.col = 1, sp.col = 2) %>% 
+  gather(key = species, value = pa, ACWO:YEWA)
+
+#Add in site data
+site_data$site_id <- as.factor(site_data$site_id)
+bird_dat <- left_join(bird_dat_pa, site_data, by = "site_id") 
+```
+
+```{r}
+# convert to wide format for following analysis
+bird_matrix1 <- spread(data = bird_dat, key = species, value = pa, fill = 0)
+
+# optional:remove birds with few sightings; not sure this makes much difference
+## add columns true/false depending on obs count reaching minimum value
+#bird_matrix <- rbind(bird_matrix1[,-c(1:20)], c("colsum", colSums(bird_matrix1[,-c(1:20)]) == 1))
+bird_matrix <- bird_matrix1[,-c(1:20)] %>%
+  bind_rows(summarise_all(., funs(sum(.)))) # note: if wanting to make a row named total, could have used: funs(if(is.numeric(.)) sum(.) else "Total"
+  
+## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49)
+bird_matrix <- bird_matrix[, (bird_matrix[49, ]) > 1]
+## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
+bird_matrix <- cbind(site_id = bird_matrix1[, 1], bird_matrix[-49, ]) %>%
+  mutate_if(is.character, as.numeric)
+
+# Make Bray-Curtis (?) dissimilarity matrix
+birds_matrix <- as.matrix(bird_matrix[, -c(1:20)])
+```
+
+```{r eval = F}
+# monoMDS allows for some more flexibility than metaMDS, eg. dplyr::selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
+
+birds_matrix_mono <- vegan::vegdist(birds_matrix, method = "bray")
+
+NMDS <- monoMDS(birds_matrix_mono, k = 2, model = c("global"), maxit = 50000, weakties = TRUE, stress = 1, scaling = TRUE, pc = TRUE, smin = 1e-4, sfgrmin = 1e-7, sratmax = 0.99999)
+
+
+# now trying to improve this code to directly plot NMDS results:
+data_scores <- as.data.frame(scores(NMDS))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
+data_scores$site_id <- bird_matrix1[, 1]  # create a column of site names, from the rownames of data.scores
+data_scores <- left_join(data_scores, site_data, by = "site_id") #  add the grp variable created earlier
+  
+head(data_scores)  #look at the data
+
+# this part not working:
+species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+#species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
+#head(species_scores)  #look at the data
+
+hi <- data_scores[data_scores$sev == "h", ][chull(data_scores[data_scores$sev == 
+    "h", c("MDS1", "MDS2")]), ]  # hull values for grp A
+lo <- data_scores[data_scores$sev == "l", ][chull(data_scores[data_scores$sev == 
+    "l", c("MDS1", "MDS2")]), ]  # hull values for grp B
+un <- data_scores[data_scores$sev == "u", ][chull(data_scores[data_scores$sev == 
+    "u", c("MDS1", "MDS2")]), ]  # hull values for grp B
+
+hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
+hull.data
+
+ggplot() + 
+#  geom_polygon(data=hull.data,aes(x=MDS1,y=MDS2,fill=sev,group=sev),alpha=0.30) + # add the convex hulls
+  #geom_text(data=species_scores,aes(x=MDS1,y=MDS2,label=species),alpha=0.5) +  # add the species labels
+  geom_point(data=data_scores,aes(x=MDS1,y=MDS2,shape=sev,colour=sev),size=3) + # add the point markers
+  geom_text(data=data_scores,aes(x=MDS1,y=MDS2,label=site_id),size=6,vjust=0) +  # add the site labels+
+  stat_ellipse(data = data_scores, geom = "polygon", alpha = 0.05, aes(x=MDS1,y=MDS2, fill = sev), level = 0.8) +
+  coord_equal() +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),  # remove x-axis text
+        axis.text.y = element_blank(), # remove y-axis text
+        axis.ticks = element_blank(),  # remove axis ticks
+        axis.title.x = element_text(size=18), # remove x-axis labels
+        axis.title.y = element_text(size=18), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+# old school plotting method:
+#plot(NMDS)
+#ordiplot(NMDS, type = "n")
+#ordiellipse(NMDS, site_data$sev, display = "site_id", kind = "sd")
+# ordihull(NMDS,groups=treat,draw="polygon",col="grey90",label=F)
+
+```
+
+```{r}
+#test NMDS method https://stackoverflow.com/questions/14711470/plotting-envfit-vectors-vegan-package-in-ggplot2
+
+library(grid)
+
+# calculate distance for NMDS. 54 nd 28 are weirdly way out there and need to be removed.
+NMDS.log<-log1p(birds_matrix[,-1])#[,-c(1:20)])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = bird_matrix$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+#  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = spp.scrs,
+               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = spp.scrs, aes(x = NMDS1, y = NMDS2, label = Species),
+            size = 3)
+p
+
+```

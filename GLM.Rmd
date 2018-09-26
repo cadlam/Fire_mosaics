@@ -1,0 +1,129 @@
+---
+title: "GLM"
+author: "Chris Adlam"
+date: "9/18/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library (plyr)
+library (dplyr)
+library (reshape2)
+library(tidyr)
+
+plant_dat <- read.csv("data/plant_data_natives.csv", header=TRUE)
+
+site_data <- read.csv("data/site_data.csv")
+
+
+#install.packages("fuzzySim") doesnt work, so here's the function; serves to convert from presence only to presence-absence
+
+splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
+  # version 1.1 (7 May 2013)
+  # data: a matrix or data frame with your localities and species (each in a different column)
+  # sites.col: the name or index number of the column containing the localities
+  # sp.col: the name or index number of the column containing the species names or codes
+  # keep.n: logical, whether to get in the resulting table the number of times each species appears in each locality; if false (the default), only the presence (1) or absence (0) are recorded
+
+  stopifnot(
+    length(sites.col) == 1,
+    length(sp.col) == 1,
+    sites.col != sp.col,
+    sites.col %in% 1 : ncol(data) | sites.col %in% names(data),
+    sp.col %in% 1 : ncol(data) | sp.col %in% names(data),
+    is.logical(keep.n)
+  )
+
+  presabs <- table(data[ , c(sites.col, sp.col)])
+  presabs <- as.data.frame(unclass(presabs))
+  if (!keep.n)  presabs[presabs > 1] <- 1
+  presabs <- data.frame(row.names(presabs), presabs)
+  names(presabs)[1] <- names(subset(data, select = sites.col))
+  rownames(presabs) <- NULL
+  return(presabs)
+}  # end splist2presabs function
+
+# executing function and going from wide to long:
+plant_dat_pa <- splist2presabs(plant_dat, sites.col = 2, sp.col = 3) %>% 
+  gather(key = species, value = pa, ABCO:WOFI)
+head(plant_dat_pa)
+
+# Adding in the sev and tsf data
+head(site_data)
+
+#merge(plant_dat_pa, site_data[, c('sev', 'tsf')], by= 'site_id')
+
+plant_glm <- merge(plant_dat_pa, site_data, by= 'site_id')
+
+#edna data
+plant_list <- read.csv("data/plant_list.csv")
+
+plant_edna <- merge(plant_dat, plant_list, by= 'species') %>% filter(site_id == 28|site_id == 52|site_id == 34|site_id == 47|site_id == 51|site_id == 40|site_id == 1|site_id == 53|site_id == 6|site_id == 49|site_id == 25|site_id == 41) %>% select(site_id,full_name, species, cover) %>% arrange(site_id)
+
+write.csv(plant_edna, "data/plants_edna.csv")
+
+# Now the GLM
+bin.glm1 = glm(pa~sev*tsf,data=plant_glm,family=binomial)
+
+summary(bin.glm1)
+step(bin.glm1) 
+
+#likelihood ratio test
+results.reduced =glm(data=plant_glm, pa ~ 1, family=binomial)
+anova(results.reduced,bin.glm1, test="Chisq")
+
+
+```
+
+```{r}
+# now just for MAGR
+MAGR_glm <- plant_glm %>% filter(species == "MAGR")
+
+# Now the GLM
+bin.glm1 = glm(pa~sev*tsf,data=MAGR_glm,family=binomial)
+
+summary(bin.glm1)
+step(bin.glm1) 
+
+#likelihood ratio test
+results.reduced =glm(data=MAGR_glm, pa ~ 1, family=binomial)
+anova(results.reduced,bin.glm1, test="Chisq")
+
+```
+
+```{r}
+# now just for PSME
+PSME_glm <- plant_glm %>% filter(species == "PSME")
+
+# Now the GLM
+bin.glm1 = glm(pa~sev*tsf,data=PSME_glm,family=binomial)
+
+summary(bin.glm1)
+step(bin.glm1) 
+
+#likelihood ratio test
+results.reduced =glm(data=PSME_glm, pa ~ 1, family=binomial)
+anova(results.reduced,bin.glm1, test="Chisq")
+
+```
+
+```{r}
+# now just for CEIN
+CEIN_glm <- plant_glm %>% filter(species == "CEIN")
+
+# Now the GLM
+bin.glm1 = glm(pa~sev*tsf_cat,data=CEIN_glm,family=binomial)
+
+summary(bin.glm1)
+step(bin.glm1) 
+
+#likelihood ratio test
+results.reduced =glm(data=CEIN_glm, pa ~ 1, family=binomial)
+anova(results.reduced,bin.glm1, test="Chisq")
+
+
+```

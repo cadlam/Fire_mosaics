@@ -35,13 +35,14 @@ library(labdsv)
 library(indicspecies)
 library(permute)
 library(perm)
+
 ```
 
 # Load the data
 ```{r include = FALSE}
 # This loads the data
 plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
-plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_list.csv")
+plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/plant_list.csv")
 plant_data$species <- as.character(plant_data$species)
 plant_data$site_id <- as.character(plant_data$site_id)
 plant_names$species <- as.character(plant_names$species)
@@ -64,10 +65,10 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native") %>%
   dplyr::select(site_id, species, cover)
 
-plant_dat <- left_join(plant_dat, site_data, by = "site_id") %>% 
-  filter(sev=="l")
+#plant_dat <- left_join(plant_dat, site_data, by = "site_id") %>% 
+#  filter(sev=="l")
 
-write.csv(plant_dat, file = "plant_data_natives.csv")
+#write.csv(plant_dat, file = "plant_data_natives.csv")
 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & form == "tree") %>%
@@ -97,8 +98,8 @@ plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0
 
 # optional:remove plants with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
-plant_matrix <- rbind(plant_matrix1, c("colsum", colSums(plant_matrix1[, -1]) > 4))
-## keep only columns where minimum is reached (true)
+plant_matrix <- rbind(plant_matrix1, c("colsum", colSums(plant_matrix1[, -1]) > 9))
+## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
 plant_matrix <- plant_matrix[, (plant_matrix[49, ]) == TRUE]
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
 plant_matrix <- cbind(site_id = plant_matrix1[, 1], plant_matrix[-49, ]) %>%
@@ -111,6 +112,134 @@ plants_matrix <- as.matrix(plant_matrix1[, -1])
 #NMDS
 ##NMDS run using monoMDS
 The NMDS using all native plants shows no difference between unburnt and LS, but HS is very different. The difference seems to be stronger when subsetting only trees, than when only herbaceous species are selected. The shrub only NMDS is interesting-looking, with a tight cluster of unburnt, LS spread out one direction, and HS spread out perpendicularly. I wonder what factors influence this.
+```{r}
+#test NMDS method https://stackoverflow.com/questions/14711470/plotting-envfit-vectors-vegan-package-in-ggplot2
+
+library(grid)
+
+# calculate distance for NMDS
+NMDS.log<-log1p(plant_matrix[,-1])
+set.seed(42)
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = plant_matrix$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+
+set.seed(123)
+vf <- envfit(sol, NMDS.log, perm = 999)
+?envfit
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = spp.scrs,
+               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = spp.scrs, aes(x = NMDS1, y = NMDS2, label = Species),
+            size = 3)
+p
+
+```
+
+```{r}
+#further NMDS test (see also https://oliviarata.wordpress.com/2014/07/17/ordinations-in-ggplot2-v2-ordisurf/ for using ggplot)
+#NMDS
+#AVG_data written to .csv
+AVG_data <- read.csv("AVG_data.csv")
+AVG_data <- avg_birds
+guilds <- read.csv("Bird_guilds.csv")
+rda_avg2 <- read.csv("rda_avg2.csv")
+rda_avg2$Burned <- as.factor(rda_avg2$Burned)
+rda_avg2$Grazed <- as.factor(rda_avg2$Grazed)
+rda_avg2$Riparian <- as.factor(rda_avg2$Riparian)
+guild_data <- read.csv("avg_birds.csv")
+guild_data <- guild_data[,c(3:42)]
+
+
+#Model
+NMDS_test <- metaMDS(plants_matrix)
+
+str(AVG_data)
+#Guild models
+NMDS_guild <- metaMDS(guild_data, trymax = 200, try=40, k=2)
+ord.fit <- envfit(NMDS_test, plants_matrix, perm=9999, choices = c(1:2) )
+ord.fit
+#leaf_sp <- AVG_data[,c(19,9,29,32,41)]
+#NMDS_leaf <-metaMDS(leaf_sp[-c(16,22),], trymax = 200, try=40,k=2)
+#ord.fit <- envfit(NMDS_leaf , rda_avg2[-c(16,22),-c(1)], perm=9999, choices = c(1:2) )
+#ord.fit
+
+
+#Envfit plot
+#par(mfrow=c(1,1))
+plot(NMDS_test , display = "species" , type = "n", main = "Environmental variables on ordination")
+plot(ord.fit , p.max = 0.20 , cex=0.9)
+#orditorp (NMDS_test, disp=c("species"), col=c("red"), cex=1, #pcex = 0)
+text(NMDS_test, disp=c("species"), col=c("red"), cex=0.7)
+#text(NMDS_test, disp="sites", pch=21, col="black", bg="yellow", cex=0.7)
+
+attach(rda_avg2)
+
+#elevation contour plot
+plot(NMDS_test,  display = "sites", main = "Elevation contour")
+ordisurf(scrs,Elevation, main="Elevation contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30", cex=1)
+
+#Grass contour plot ADAPT
+plot(NMDS_test,  display = "species", type = "n", main = "tree cover contour")
+ordisurf(NMDS_test,scrs$tree_cov, main="tree cover contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30",air=0.1,
+     cex=1)
+
+#AECAs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "Grass cover contour")
+ordisurf(NMDS_test,AECAs, main="AECAs contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30",air=0.1,
+     cex=1)
+
+#QUWIs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "Grass cover contour")
+ordisurf(NMDS_test,QUWIs, main="QUWIs contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30",air=0.1,
+     cex=1)
+
+#HEARs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "HEAR contour")
+ordisurf(NMDS_test,HEARs, main="HEAR contour" ,col="forestgreen")
+orditorp(NMDS_test,display="species",col="grey30",air=0.1,
+         cex=1)
+
+#PISAs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "PISA contour")
+ordisurf(NMDS_test,PISAs, main="PISA contour" ,col="forestgreen")
+orditorp(NMDS_test,display="species",col="grey30",air=0.1,
+         cex=1)
+
+#Envfit
+ord.fit <- envfit(NMDS_test , rda_avg2[,-c(1)], perm=9999, choices = c(1:2) )
+ord.fit
+
+
+#Envfit plot
+par(mfrow=c(1,1))
+plot(NMDS_test , display = "species" , type = "n", main = "Environmental variables on ordination")
+plot(ord.fit , p.max = 0.060 , cex=0.9)
+#orditorp (NMDS_test, disp=c("species"), col=c("red"), cex=1, pcex = 0)
+text(NMDS_test, disp=c("species"), col=c("red"), cex=0.7)
+#text(NMDS_test, disp="sites", pch=21, col="black", bg="yellow", cex=0.7)
+```
+
+
+
 ```{r eval = F}
 # monoMDS allows for some more flexibility than metaMDS, eg. dplyr::selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
 
