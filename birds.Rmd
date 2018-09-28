@@ -156,6 +156,37 @@ vf <- envfit(sol, NMDS.log, perm = 9)
 spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
 spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
 
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.05)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = Cred,
+               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+            size = 3)
+p
+
+```
+
+```{r eval = F}
+#plot for all spp
 p <- ggplot(scrs) +
   geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
 #  coord_fixed() + ## need aspect ratio of 1!
@@ -166,4 +197,49 @@ p <- ggplot(scrs) +
             size = 3)
 p
 
+```
+
+# Indicator species analysis
+```{r}
+### Community data matrix
+#bird_dat_pa$site_id <- as.character(bird_dat_pa$site_id)
+bird_data_filtered <- left_join(bird_dat_pa, site_data, by = "site_id")  %>%
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "")) %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu")) %>%
+  dplyr::select(site_id, species, pa, sev2, tsf_cat)
+
+#%>%  filter(sev == "l")
+
+#plant_dat$fire_yr <- as.numeric(as.character(plant_dat$fire_yr))
+#plant_dat$tsf <- as.numeric(as.character(plant_dat$tsf))
+#plant_dat <- mutate(plant_dat, tsf_cat2 = ifelse(tsf < 20 , "1", "2")) 
+
+#bird_dat_select  <- bird_data_filtered %>%
+#  dplyr::select(site_id, species, pa)
+
+bird_matrix1 <- spread(data = bird_data_filtered, key = species, value = pa, fill = 0)
+
+#birds_matrix <- as.matrix(bird_matrix1[, -1])
+
+data <- bird_matrix1[,-c(1:3)]
+
+### Vector for site classification
+### severity
+#groups1 = as.vector(bird_data_filtered$sev2)
+groups1 = as.vector(bird_matrix1$sev2)
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+View(indvalsummary1)
+
+write.csv(indvalsummary1, file = "indvalsummary1.csv")
+write.csv(prob.corrected1, file = "prob.corrected1.csv")
 ```

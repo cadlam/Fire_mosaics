@@ -70,6 +70,9 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
 
 #write.csv(plant_dat, file = "plant_data_natives.csv")
 
+```
+
+```{r eval = F}
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & form == "tree") %>%
   dplyr::select(site_id, species, cover)
@@ -91,6 +94,12 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   dplyr::select(site_id, species, cover)
 ```
 
+```{r}
+#Only run this chunk if converting to presence-absence
+plant_dat$cover[plant_dat$cover > 0] <- 1 
+```
+
+
 # Data prep
 ```{r}
 # convert to wide format for following analysis
@@ -98,16 +107,18 @@ plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0
 
 # optional:remove plants with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
-plant_matrix <- rbind(plant_matrix1, c("colsum", colSums(plant_matrix1[, -1]) > 9))
+plant_matrix <- plant_matrix1 %>% bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
-plant_matrix <- plant_matrix[, (plant_matrix[49, ]) == TRUE]
+plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 5]
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
-plant_matrix <- cbind(site_id = plant_matrix1[, 1], plant_matrix[-49, ]) %>%
+plant_matrix <- plant_matrix[-49, ] %>%
   mutate_if(is.character, as.numeric)
 
 # Make Bray-Curtis (?) dissimilarity matrix
 plants_matrix <- as.matrix(plant_matrix1[, -1])
 ```
+
+
 
 #NMDS
 ##NMDS run using monoMDS
@@ -134,19 +145,186 @@ vf <- envfit(sol, NMDS.log, perm = 999)
 spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
 spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
 
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.05)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
 p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = Cred,
+               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+            size = 3)
+p
+
+```
+
+```{r eval = F}
+#all spp
+p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2)) +
   geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!
   geom_segment(data = spp.scrs,
                aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
                arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
   geom_text(data = spp.scrs, aes(x = NMDS1, y = NMDS2, label = Species),
-            size = 3)
+            size = 3) 
 p
+
+?geom_point
+
+mite.ordisurf.ggplot <- ggplot(mite.NMDS.data, aes(x = NMDS1, y = NMDS2))+
+  stat_contour(data = ordi.mite.na, aes(x = x, y = y, z = z, colour = rev(..level..)),
+               binwidth = 2)+ #can change the binwidth depending on how many contours you want
+  geom_point(size = 3, alpha = 0.8,  aes(shape = tsf_cat)) + #plots the NMDS points, with shape by topo type
+  theme_bw() + #for aesthetics
+  scale_shape_manual("Topo Type",  values = c(1,16, 8, 12)) + #sets the name of the legend for shape, and says which symbols we want (equivalent to the pch command in plot)
+  labs(colour = "tree cover")+ #another way to set the labels, in this case, for the colour legend
+  scale_colour_gradient(high = "darkgreen", low = "darkolivegreen1")+ #here we set the high and low of the colour scale.  Can delete to go back to the standard blue, or specify others
+  theme(legend.key = element_blank(),  #removes the box around each legend item
+        legend.position = "bottom", #legend at the bottom
+        legend.direction = "horizontal",
+        legend.box = "horizontal",
+        legend.box.just = "centre")+
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = spp.scrs,
+               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = spp.scrs, aes(x = NMDS1, y = NMDS2, label = Species),
+            size = 3) 
+mite.ordisurf.ggplot
 
 ```
 
 ```{r}
+#data - from the vegan package:
+data(mite)
+data(mite.env)
+set.seed(505) #set seed for reproducibility
+names(mite.env)
+ 
+mite.env <- site_data %>% dplyr::select(site_id, tree_cov, tsf_cat) 
+
+mite.env$tsf_cat <- as.factor(mite.env$tsf_cat)
+
+#NMDS
+meta.nmds.mite <- sol #metaMDS(mite) #no transformation of species data is made here prior to bray curtis dissimilarities being calculated. (Bray Curtis is the default in R).
+meta.nmds.mite #prints very basic dsecription
+stressplot(meta.nmds.mite) # To gain the stress plot for stress values for your MDS
+ 
+#ordisurf:
+ordi <- ordisurf(meta.nmds.mite ~ mite.env$tree_cov) #created the ordisurf object
+ordi.grid <- ordi$grid #extracts the ordisurf object
+str(ordi.grid) #it's a list though - cannot be plotted as is
+ordi.mite <- expand.grid(x = ordi.grid$x, y = ordi.grid$y) #get x and ys
+ordi.mite$z <- as.vector(ordi.grid$z) #unravel the matrix for the z scores
+ordi.mite.na <- data.frame(na.omit(ordi.mite)) #gets rid of the nas
+ordi.mite.na #looks ready for plotting!
+ 
+ 
+#data for plotting
+##NMDS points
+mite.NMDS.data <- mite.env #there are other ways of doing this. But this is the way I do it for ease of plotting
+mite.NMDS.data$NMDS1 <- meta.nmds.mite$points[ ,1] #this puts the NMDS scores for the plots into a new dataframe. you could put them into an existing one if you preferred.
+mite.NMDS.data$NMDS2 <- meta.nmds.mite$points[ ,2]
+ 
+#setting up a plot in base graphics
+plot(mite.NMDS.data$NMDS1, mite.NMDS.data$NMDS2,
+     xlab="NMDS1", ylab="NMDS2",  
+     pch = c(1,16)[as.factor(mite.NMDS.data$Topo)]) #symbols coded by factor
+#legend(title = "tsf_cat", "bottomleft", levels(mite.NMDS.data$tsf_cat), pch = c(1,16))
+ordisurf(meta.nmds.mite~mite.env$tree_cov, col = "grey50", add = TRUE)
+with(ordi.grid, contour(x = x, y = y, z = z, add=TRUE)) # you can use this as a check to make sure your ordigrid is doing the same thing as an ordisurf (ie, you've extracted the components correctly)
+ 
+## Plotting in ggplot2
+mite.ordisurf.ggplot<-ggplot(mite.NMDS.data, aes(x = NMDS1, y = NMDS2))+
+  stat_contour(data = ordi.mite.na, aes(x = x, y = y, z = z, colour = rev(..level..)),
+               binwidth = 2)+ #can change the binwidth depending on how many contours you want
+  geom_point(size = 3, alpha = 0.8,  aes(shape = tsf_cat)) + #plots the NMDS points, with shape by topo type
+  theme_bw() + #for aesthetics
+  scale_shape_manual("Topo Type",  values = c(1,16, 8, 12)) + #sets the name of the legend for shape, and says which symbols we want (equivalent to the pch command in plot)
+  labs(colour = "tree cover")+ #another way to set the labels, in this case, for the colour legend
+  scale_colour_gradient(high = "darkgreen", low = "darkolivegreen1")+ #here we set the high and low of the colour scale.  Can delete to go back to the standard blue, or specify others
+  theme(legend.key = element_blank(),  #removes the box around each legend item
+        legend.position = "bottom", #legend at the bottom
+        legend.direction = "horizontal",
+        legend.box = "horizontal",
+        legend.box.just = "centre")
+mite.ordisurf.ggplot
+#ggsave(plot = mite.ordisurf.ggplot, file= "mite.ordisurf.ggplot.png") #to save = see ?ggsave. does not work for base graphics
+```
+
+```{r}
+#data - from the vegan package:
+data(mite)
+data(mite.env)
+set.seed(505) #set seed for reproducibility
+names(mite.env)
+ 
+#NMDS
+meta.nmds.mite <- metaMDS(mite) #no transformation of species data is made here prior to bray curtis dissimilarities being calculated. (Bray Curtis is the default in R).
+meta.nmds.mite #prints very basic dsecription
+stressplot(meta.nmds.mite) # To gain the stress plot for stress values for your MDS
+ 
+#ordisurf:
+ordi <- ordisurf(meta.nmds.mite ~ mite.env$SubsDens) #created the ordisurf object
+ordi.grid <- ordi$grid #extracts the ordisurf object
+str(ordi.grid) #it's a list though - cannot be plotted as is
+ordi.mite <- expand.grid(x = ordi.grid$x, y = ordi.grid$y) #get x and ys
+ordi.mite$z <- as.vector(ordi.grid$z) #unravel the matrix for the z scores
+ordi.mite.na <- data.frame(na.omit(ordi.mite)) #gets rid of the nas
+ordi.mite.na #looks ready for plotting!
+ 
+ 
+#data for plotting
+##NMDS points
+mite.NMDS.data <- mite.env #there are other ways of doing this. But this is the way I do it for ease of plotting
+mite.NMDS.data$NMDS1 <- meta.nmds.mite$points[ ,1] #this puts the NMDS scores for the plots into a new dataframe. you could put them into an existing one if you preferred.
+mite.NMDS.data$NMDS2 <- meta.nmds.mite$points[ ,2]
+ 
+#setting up a plot in base graphics
+plot(mite.NMDS.data$NMDS1, mite.NMDS.data$NMDS2,
+     xlab="NMDS1", ylab="NMDS2",  
+     pch = c(1,16)[as.factor(mite.NMDS.data$Topo)]) #symbols coded by factor
+legend(title = "Topo", "bottomleft", levels(mite.NMDS.data$Topo), pch = c(1,16))
+ordisurf(meta.nmds.mite~mite.env$SubsDens, col = "grey50", add = TRUE)
+with(ordi.grid, contour(x = x, y = y, z = z, add=TRUE)) # you can use this as a check to make sure your ordigrid is doing the same thing as an ordisurf (ie, you've extracted the components correctly)
+ 
+## Plotting in ggplot2
+mite.ordisurf.ggplot<-ggplot(mite.NMDS.data, aes(x = NMDS1, y = NMDS2))+
+  stat_contour(data = ordi.mite.na, aes(x = x, y = y, z = z, colour = rev(..level..)),
+               binwidth = 2)+ #can change the binwidth depending on how many contours you want
+  geom_point(size = 3, alpha = 0.8,  aes(shape = Topo)) + #plots the NMDS points, with shape by topo type
+  theme_bw() + #for aesthetics
+  scale_shape_manual("Topo Type",  values = c(1,16)) + #sets the name of the legend for shape, and says which symbols we want (equivalent to the pch command in plot)
+  labs(colour = "Substrate Density")+ #another way to set the labels, in this case, for the colour legend
+  scale_colour_gradient(high = "darkgreen", low = "darkolivegreen1")+ #here we set the high and low of the colour scale.  Can delete to go back to the standard blue, or specify others
+  theme(legend.key = element_blank(),  #removes the box around each legend item
+        legend.position = "bottom", #legend at the bottom
+        legend.direction = "horizontal",
+        legend.box = "horizontal",
+        legend.box.just = "centre")
+mite.ordisurf.ggplot
+#ggsave(plot = mite.ordisurf.ggplot, file= "mite.ordisurf.ggplot.png") #to save = see ?ggsave. does not work for base graphics
+```
+
+
+```{r eval=F}
 #further NMDS test (see also https://oliviarata.wordpress.com/2014/07/17/ordinations-in-ggplot2-v2-ordisurf/ for using ggplot)
 #NMDS
 #AVG_data written to .csv
