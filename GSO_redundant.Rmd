@@ -34,6 +34,7 @@ Save each spreadsheet as a txt (or csv) file, and read them in.
 library (plyr)
 library (dplyr)
 library (reshape2)
+library(tidyr)
 
 #setwd("C:/Users/Documents/Example")
 
@@ -41,21 +42,38 @@ library (reshape2)
 
 #select just the species column
 plant_spp <- read.csv("data/plant_data_natives.csv", header=TRUE) %>% 
-  dplyr::select(species) 
+  select(species) 
 
-#now make a list of all species (use of plant_dat_UN is irrelevant)
+#now make a list of all species
 plant_dat <- read.csv("data/plant_data_natives.csv", header=TRUE)
+
+# this is to filter only spp that have more than 10 presences and absences (leaves only 30 spp; would be 39 if using 8 as a cutoff):
+# One important issue with this subsetting: are there any sites that get dropped because they have no species among the 30 retained?
+plant_dat_wide <- plant_dat %>% 
+  select(species, site_id, cover) %>% 
+  spread(site_id, cover) %>%
+#  mutate(n = rowSums(select_if(., is.numeric) >0, na.rm = TRUE)) %>% 
+#  filter(n > 10 & n < 38)
+
+plant_dat <- subset(plant_dat, species %in% plant_dat_wide$species)
+
+#select only herb and grass:
+herb_grass <- read.csv("data/plant_list.csv") %>% 
+  filter(form == "herb" | form == "grass")
+  
+plant_dat <- subset(plant_dat, species %in% plant_dat_wide$species)
+
+plant_dat <- subset(plant_dat, species %in% herb_grass$species)
 
 plant_dat_UN <- plant_dat %>% 
   filter(sev == "u") %>% 
-  dplyr::select(species)
-
+  select(species)
 complete_spp <- union(plant_spp, plant_dat_UN)
 
 ## Unburnt data: filter to get only UN; keep only species and cover columns
 plant_dat_UN <- plant_dat %>% 
   filter(sev == "u") %>% 
-  dplyr::select(species, cover, site_id)  %>% 
+  select(species, cover, site_id)  %>% 
   arrange(species)
 
 #plant_dat_UN <- full_join(plant_dat_UNa, plant_dat_UNb, by = "species")%>% 
@@ -70,7 +88,7 @@ plant_dat_UN <- reshape(plant_dat_UN, idvar = "species", timevar = "site_id", di
 ar.w <- full_join(complete_spp, plant_dat_UN, by = "species") %>% 
   replace(., is.na(.), "0")
 
-## LS data (less than 10 yrs; 4-5 ysf): filter to get only LS, TSF less than 11 years, keep only species and cover columns
+## LS data (less than 11 yrs;): filter to get only LS, TSF less than 11 years, keep only species and cover columns
 plant_dat_LS1 <- plant_dat %>% 
   filter(sev == "l")
 
@@ -79,8 +97,8 @@ plant_dat_LS1$fire_yr <- as.numeric(plant_dat_LS1$fire_yr)
 plant_dat_LS1$tsf <- 2018-plant_dat_LS1$fire_yr
 
 plant_dat_LS1 <- plant_dat_LS1 %>% 
-  filter(tsf < 10) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+  filter(tsf < 11) %>% 
+  select(species, cover, site_id) %>% 
   arrange(species)
   
 plant_dat_LS1 <- reshape(plant_dat_LS1, idvar = "species", timevar = "site_id", direction = "wide")
@@ -100,8 +118,8 @@ plant_dat_LS2$fire_yr <- as.numeric(plant_dat_LS2$fire_yr)
 plant_dat_LS2$tsf <- 2018-plant_dat_LS2$fire_yr
 
 plant_dat_LS2 <- plant_dat_LS2 %>% 
-  filter(tsf < 10) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+  filter(tsf < 11) %>% 
+  select(species, cover, site_id) %>% 
   arrange(species)
   
 plant_dat_LS2 <- reshape(plant_dat_LS2, idvar = "species", timevar = "site_id", direction = "wide")
@@ -122,7 +140,7 @@ plant_dat_HS1$tsf <- 2018-plant_dat_HS1$fire_yr
 
 plant_dat_HS1 <- plant_dat_HS1 %>% 
   filter(tsf < 11) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+  select(species, cover, site_id) %>% 
   arrange(species)
 
 plant_dat_HS1 <- reshape(plant_dat_HS1, idvar = "species", timevar = "site_id", direction = "wide")
@@ -142,7 +160,7 @@ plant_dat_HS2$tsf <- 2018-plant_dat_HS2$fire_yr
 
 plant_dat_HS2 <- plant_dat_HS2 %>% 
   filter(tsf > 10) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+  select(species, cover, site_id) %>% 
   arrange(species)
 
 plant_dat_HS2 <- reshape(plant_dat_HS2, idvar = "species", timevar = "site_id", direction = "wide")
@@ -462,3 +480,4 @@ write.table(out, "gso_result.txt", col.names = TRUE, row.names = FALSE)
 If `gso` is applied to 1000 resampled datasets, the object `out` contains 1000 results (optimal growth stage structures and geometric means).  The mean and 95% confidence intervals can be derived from this distribution of values. 
 
 ***
+

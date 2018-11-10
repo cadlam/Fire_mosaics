@@ -1,4 +1,4 @@
-﻿species,full_name,native_status,,form
+species,full_name,native_status,,form
 KOST,Kopsiopsis strobilacea,native,,herb
 LOHI,Lonicera hispidula,native,,shrub
 FECA,Festuca californica,native,,grass
@@ -31,7 +31,7 @@ CYEC,Cynosurus echinatus,non_native,,grass
 COHE,Collomia heterophylla,native,,herb
 CAMU,Carex multicaulis,native,,grass
 HOCR,Hossackia crassicaulis,native,,herb
-ANMAD,Anisocarpus madioides,native,"recorded as Madia elegans, check",herb
+ANMAD,Anisocarpus madioides,native,recorded as Madia elegans check,herb
 RULE,Rubus leucodermis,native,,shrub
 ACMI,Achillea millefollium,native,,herb
 LUTR,Lupinus tracyi,native,check specimen,herb
@@ -41,8 +41,8 @@ ERLA,Eriophyllum lanatum,native,,herb
 DIMU,Dichelostemma multiflorum,native,,herb
 CHAN,Chamerion angustifolium,native,NOTED AS EPAN,herb
 DAGL,Dactylis glomerata,non_native,,grass
-BRSE,Bromus secalinus,native,ID DOUBTFUL,grass
-FRVE,Fragria vesca,native,,herb
+BRSE,Bromus secalinus,native,ID DOUBTFUL maybe B carinatus,grass
+FRVE,Fragaria vesca,native,,herb
 CASC,Campanula scouleri,native,,herb
 CLRH,Clarkia rhomboidea,native,,herb
 AGGR,Agoseris grandiflora,native,,herb
@@ -95,14 +95,14 @@ CEIN,Ceanothus integerrimus,native,,shrub
 CHPO,Chlorogallum pomeridianum,native,,herb
 SIXX,Silene sp,native,SPECIES ID UNKNOWN.,herb
 MAOR,Marah oregana,native,,herb
-SICA,Siilene campanulata,native,"check specimen, COMPARE S. VULGARIS",herb
+SICA,Siilene campanulata,native,check specimen COMPARE S. VULGARIS,herb
 RIRO,Ribes roezlii,native,,shrub
 MANE,Mahonia nervosa,native,,shrub
 ARVI,Arctostaphyllos viscida,native,,shrub
 SABI,Sanicula bipinnatifida,native,,herb
 CAXX,Calochortus sp,native,,herb
 BREL,Brodiaea elegans,native,,herb
-HOXX,Horkelia sp,native,"maybe H. tridentata, no specimen",herb
+HOXX,Horkelia sp,native,maybe H. tridentata  no specimen,herb
 ACMO,Achyrrhachaena mollis,native,bit out of range?,herb
 CIOC,Cirsium occidentale,native,,herb
 ALXX,Allium sp,native,,herb

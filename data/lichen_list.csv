@@ -1,28 +1,40 @@
-﻿species,genus,species,full_name
-LESA,Leptogium,saturninum,Leptogium saturninum
-NOPU,Normandina,pulchella,Normandina pulchella
-EVPR,Evernia,prunastri,Evernia prunastri
-HYIN,Hypogymnia,inactiva,Hypogymnia inactiva
-HYEN,Hypogymnia,enteromorpha,hypogymnia enteromorpha
-HYPH,Hypogymnia,physodes,Hypogymnia physodes
-ALLA,Alectoria,lata,Alectoria lata
-PLST,Platismatia,stenophylla,Platismatia stenophylla
-PLHE,Platismatia,herrei,Platismatia herrei
-PLGL,Platismatia,glauca,Platismatia glauca
-AHPA,Ahtiana,pallidula,Ahtiana pallidula
-VUCA,Vulpicida,canadensis,Vulpicida canadensis
-LOANT,Lobaria,anthraspis,Lobaria anthraspis
-LOANO,Lobaria,anomala,Lobaria anomala
-LOPU,Lobaria,pulmonaria,Lobaria pulmonaria
-LEVU,Letharia,vulpina,Letharia vulpina
-PECO,Peltigera,collina,Peltigera collina
-NEHE,Nephroma,helvetica,Nephroma helvetica
-NERE,Nephroma,resupinatum,Nephroma resupinatum
-KAME,Kaernefeltia,merrillii,Kaernefeltia merrillii
-TUOR,Tuckermanopsis,orbata,Tuckermanopsis orbata
-TUPL,Tuckermanopsis,platyphylla,Tuckermanopsis platyphylla
-TUCH,Tuckermanopsis,chlorophylla,Tuckermanopsis chlorophylla
-PASU,Parmela,sulcata,Parmela sulcata
-USPE,Usnea,pendulous,Usnea pendulous
-USTU,Usnea,tufted,Usnea tufted
-BRXX,Bryoria,,
+species,genus,species,full_name,
+AHPA,Ahtiana,pallidula,Ahtiana pallidula,
+ALLA,Alectoria,lata,Alectoria lata,
+BRXX,Bryoria,,,
+EVPR,Evernia,prunastri,Evernia prunastri,
+HYEN,Hypogymnia,enteromorpha,hypogymnia enteromorpha,
+HYIM,Hypogymnia,imshaugii,,
+HYIN,Hypogymnia,inactiva,Hypogymnia inactiva,
+HYPH,Hypogymnia,physodes,Hypogymnia physodes,
+KAME,Kaernefeltia,merrillii,Kaernefeltia merrillii,
+LECO,Letharia,columiana,,
+LESA,Leptogium,saturninum,Leptogium saturninum,
+LEVU,Letharia,vulpina,Letharia vulpina,
+LOANO,Lobaria,anomala,Lobaria anomala,
+LOANT,Lobaria,anthraspis,Lobaria anthraspis,
+LOPU,Lobaria,pulmonaria,Lobaria pulmonaria,
+MECA,Melanelixia,californica,Melanelixia californica,
+NEHE,Nephroma,helvetica,Nephroma helvetica,
+NERE,Nephroma,resupinatum,Nephroma resupinatum,
+NOPU,Normandina,pulchella,Normandina pulchella,
+PAHY,Parmelia,hygrophila,HAS ISIDIA_RHIZINES APICALLY DICHOTOMOUS,
+PAQU,Parmelina,quercina,Parmelina quercina,
+PASU,Parmela,sulcata,Parmela sulcata,
+PECO,Peltigera,collina,Peltigera collina,
+PLGL,Platismatia,glauca,Platismatia glauca,
+PLHE,Platismatia,herrei,Platismatia herrei,
+PLST,Platismatia,stenophylla,Platismatia stenophylla,
+TUCH,Tuckermanopsis,chlorophylla,Tuckermanopsis chlorophylla,
+TUOR,Tuckermanopsis,orbata,Tuckermanopsis orbata,
+TUPL,Tuckermanopsis,platyphylla,Tuckermanopsis platyphylla,
+USPE,Usnea,pendulous,Usnea pendulous,U. filipendula?
+USTU,Usnea,tufted,Usnea tufted,U. subfloridana?
+VUCA,Vulpicida,canadensis,Vulpicida canadensis,
+USXX,Usnea,,Unknown Usnea,
+POXX,Polycauliona,,,
+FUME,Fuscopannaria,mediterranea,Fuscopannaria mediterranea,
+LEPS,Leptogium,pseudofurfuraceum,Leptogium pseudofurfuraceum,
+CONI,Collema,nigriscens,,
+PHPE,Physconia,perisidiosa,,
+PHCA,Physconia,californica,,

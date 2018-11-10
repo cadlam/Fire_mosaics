@@ -1,33 +1,94 @@
 ---
-title: "Growth-stage optimization"
-author: "Holly Sitters, Julian Di Stefano, Timothy Wills, Matthew Swan, Alan York"
-date: "7 October, 2016"
+title: "bird_gso_test"
+author: "Chris Adlam"
+date: "10/4/2018"
 output: html_document
 ---
 
-***
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, error = F) 
+knitr::knit_hooks$set(
+   error = function(x, options) {
+     paste('\n\n<div class="alert alert-danger">',
+           gsub('##', '\n', gsub('^##\ Error', '**Error**', x)),
+           '</div>', sep = '\n')
+   },
+   warning = function(x, options) {
+     paste('\n\n<div class="alert alert-warning">',
+           gsub('##', '\n', gsub('^##\ Warning:', '**Warning**', x)),
+           '</div>', sep = '\n')
+   },
+   message = function(x, options) {
+     paste('\n\n<div class="alert alert-info">',
+           gsub('##', '\n', x),
+           '</div>', sep = '\n')
+   }
+)
+```
 
-## 1 Resample data for each growth stage 1000 times, and combine output in a single data frame
+```{r include = F}
+# Load packages
+library(tidyverse)
+library(emmeans)
+library(lme4)
+library(lmerTest)
+library(pbkrtest)
+library(car)
+library(ggplot2)
+library(cowplot)
+library(reshape2)
+library(splitstackshape)
+library(magrittr)
+library(readr)
+library(vegan)
+library(viridis)
+library(cowplot)
+library(purrr)
+library(tibble)
+library(broom)
+library(labdsv)
+library(indicspecies)
+library(permute)
+library(perm)
+library(magrittr)
+library(kableExtra)
+library("knitr")
+library(rowr)
+#knit2html("Fire_mosaics.html")
 
-1000 resamples is arbitrary -- a greater number will reduce the confidence intervals around the result, but the difference is very small.
+```
 
-This document assumes four growth stages, so edit if using a different number. 
 
-Save separate input files for each growth stage in the following format (species as rows, sites as columns):
+```{r}
+site_data_read <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
+site_data_read$tsf <- as.numeric(as.character(site_data_read$tsf))
+site_data_read$fire_yr <- as.numeric(as.character(site_data_read$fire_yr))
 
-species   | A   | B   | C   | D   | E   | F
------ | --- | --- | --- | --- | --- | ---
-sp1   |     |     |     |     |     |
-sp2   |     |     |     |     |     |
+# here I'm setting the TSF categories; change as necessary.
+site_data <- site_data_read %>% 
+    mutate(tsf_cat = ifelse(is.na(tsf), "4", "3"))
+site_data$tsf_cat[site_data$tsf < 17] <-2
+site_data$tsf_cat[site_data$tsf < 10] <-1
 
-If data contain subsamples (e.g. quadrats within sites), use the following format (sites are A, B, C; two As correspond to two quadrats/sub-samples):
+site_data$site_id <- as.character(site_data$site_id)
 
-species   | A   | A   | B   | B   | C   | C
------ | --- | --- | --- | --- | --- | ---
-sp1   |     |     |     |     |     |
-sp2   |     |     |     |     |     |
+# read in data
+bird_dat_suppl <- read.csv("data/bird_data_suppl.csv")
+bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>% 
+  filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
+  dplyr::select(Point, Count, Spp, DistanceBin) # keeping only relevant columns
 
-Save each spreadsheet as a txt (or csv) file, and read them in. 
+# remove duplicate rows (same species detected multiple times in a single plot)
+bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>% 
+  mutate(pa = 1) %>% 
+  dplyr::rename(site_id = Point) %>% 
+  dplyr::rename(species = Spp)
+
+
+# Adding additional species detections (outside count)
+bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
+```
+
 
 ```{r Read in data, eval=FALSE}
 ## Packages needed throughout
@@ -35,121 +96,106 @@ library (plyr)
 library (dplyr)
 library (reshape2)
 
-#setwd("C:/Users/Documents/Example")
+# create list of all species
+bird_spp <- bird_dat_long %>% 
+  dplyr::select(species, pa)
 
-# w = data are in wide format; a, b, c, d keep growth stages in order
-
-#select just the species column
-plant_spp <- read.csv("data/plant_data_natives.csv", header=TRUE) %>% 
-  dplyr::select(species) 
-
-#now make a list of all species (use of plant_dat_UN is irrelevant)
-plant_dat <- read.csv("data/plant_data_natives.csv", header=TRUE)
-
-plant_dat_UN <- plant_dat %>% 
-  filter(sev == "u") %>% 
+bird_spp <-  unique(bird_spp[ , c(1,2)]) %>% 
   dplyr::select(species)
 
-complete_spp <- union(plant_spp, plant_dat_UN)
+# Add site data to detection data
+bird_dat_long$site_id <- as.character(bird_dat_long$site_id)
+bird_dat_long <- left_join(bird_dat_long, site_data, by = "site_id")
 
 ## Unburnt data: filter to get only UN; keep only species and cover columns
-plant_dat_UN <- plant_dat %>% 
+bird_dat_UN <- bird_dat_long %>% 
   filter(sev == "u") %>% 
-  dplyr::select(species, cover, site_id)  %>% 
+  dplyr::select(species, pa, site_id)  %>% 
   arrange(species)
-
-#plant_dat_UN <- full_join(plant_dat_UNa, plant_dat_UNb, by = "species")%>% 
-#  arrange(species)
 
 # make it wide format
-plant_dat_UN <- reshape(plant_dat_UN, idvar = "species", timevar = "site_id", direction = "wide")
+bird_dat_UN <- reshape(bird_dat_UN, idvar = "species", timevar = "site_id", direction = "wide")
 
 # add species not detected to get same length vectors
-#plant_dat_UN1 
-
-ar.w <- full_join(complete_spp, plant_dat_UN, by = "species") %>% 
+ar.w <- full_join(bird_spp, bird_dat_UN, by = "species") %>% 
   replace(., is.na(.), "0")
 
-## LS data (less than 10 yrs; 4-5 ysf): filter to get only LS, TSF less than 11 years, keep only species and cover columns
-plant_dat_LS1 <- plant_dat %>% 
+## LS data (less than 14 yrs): filter to get only LS, TSF less than 14 years, keep only species and cover columns
+bird_dat_LS1 <- bird_dat_long %>% 
   filter(sev == "l")
 
-plant_dat_LS1$fire_yr <- as.character(plant_dat_LS1$fire_yr)
-plant_dat_LS1$fire_yr <- as.numeric(plant_dat_LS1$fire_yr)
-plant_dat_LS1$tsf <- 2018-plant_dat_LS1$fire_yr
+bird_dat_LS1$fire_yr <- as.character(bird_dat_LS1$fire_yr)
+bird_dat_LS1$fire_yr <- as.numeric(bird_dat_LS1$fire_yr)
+bird_dat_LS1$tsf <- 2018-bird_dat_LS1$fire_yr
 
-plant_dat_LS1 <- plant_dat_LS1 %>% 
-  filter(tsf < 10) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+bird_dat_LS1 <- bird_dat_LS1 %>% 
+  filter(tsf < 14) %>% 
+  dplyr::select(species, pa, site_id) %>% 
   arrange(species)
   
-plant_dat_LS1 <- reshape(plant_dat_LS1, idvar = "species", timevar = "site_id", direction = "wide")
+bird_dat_LS1 <- reshape(bird_dat_LS1, idvar = "species", timevar = "site_id", direction = "wide")
 
 # add species not detected to get same length vectors
-#plant_dat_LS1 
-
-be.w <- full_join(complete_spp, plant_dat_LS1, by = "species") %>% 
+be.w <- full_join(bird_spp, bird_dat_LS1, by = "species") %>% 
   replace(., is.na(.), "0")
 
 ## LS data (less than 10 yrs; 11 sites total): filter to get only LS, TSF more than 10 years, keep only species and cover columns
-plant_dat_LS2 <- plant_dat %>% 
+bird_dat_LS2 <- bird_dat_long %>% 
   filter(sev == "l")
 
-plant_dat_LS2$fire_yr <- as.character(plant_dat_LS2$fire_yr)
-plant_dat_LS2$fire_yr <- as.numeric(plant_dat_LS2$fire_yr)
-plant_dat_LS2$tsf <- 2018-plant_dat_LS2$fire_yr
+bird_dat_LS2$fire_yr <- as.character(bird_dat_LS2$fire_yr)
+bird_dat_LS2$fire_yr <- as.numeric(bird_dat_LS2$fire_yr)
+bird_dat_LS2$tsf <- 2018-bird_dat_LS2$fire_yr
 
-plant_dat_LS2 <- plant_dat_LS2 %>% 
+bird_dat_LS2 <- bird_dat_LS2 %>% 
   filter(tsf < 10) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+  dplyr::select(species, pa, site_id) %>% 
   arrange(species)
   
-plant_dat_LS2 <- reshape(plant_dat_LS2, idvar = "species", timevar = "site_id", direction = "wide")
+bird_dat_LS2 <- reshape(bird_dat_LS2, idvar = "species", timevar = "site_id", direction = "wide")
 
 # add species not detected to get same length vectors
-#plant_dat_LS1 
-
-xx.w <- full_join(complete_spp, plant_dat_LS2, by = "species") %>% 
+xx.w <- full_join(bird_spp, bird_dat_LS2, by = "species") %>% 
   replace(., is.na(.), "0")
 
 # HS data (less than 11 yrs; 13 sites): filter to get only LS, TSF less than 10 years, keep only species and cover columns
-plant_dat_HS1 <- plant_dat %>% 
+bird_dat_HS1 <- bird_dat_long %>% 
   filter(sev == "h")
 
-plant_dat_HS1$fire_yr <- as.character(plant_dat_HS1$fire_yr)
-plant_dat_HS1$fire_yr <- as.numeric(plant_dat_HS1$fire_yr)
-plant_dat_HS1$tsf <- 2018-plant_dat_HS1$fire_yr
+bird_dat_HS1$fire_yr <- as.character(bird_dat_HS1$fire_yr)
+bird_dat_HS1$fire_yr <- as.numeric(bird_dat_HS1$fire_yr)
+bird_dat_HS1$tsf <- 2018-bird_dat_HS1$fire_yr
 
-plant_dat_HS1 <- plant_dat_HS1 %>% 
+bird_dat_HS1 <- bird_dat_HS1 %>% 
   filter(tsf < 11) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+  dplyr::select(species, pa, site_id) %>% 
   arrange(species)
 
-plant_dat_HS1 <- reshape(plant_dat_HS1, idvar = "species", timevar = "site_id", direction = "wide")
+bird_dat_HS1 <- reshape(bird_dat_HS1, idvar = "species", timevar = "site_id", direction = "wide")
 
-#plant_dat_LS11 
+#bird_dat_LS11 
 
-cm.w <- full_join(complete_spp, plant_dat_HS1, by = "species") %>% 
+cm.w <- full_join(bird_spp, bird_dat_HS1, by = "species") %>% 
   replace(., is.na(.), "0")
 
 # HS data (more than 10 yrs; 10 sites): filter to get only LS, TSF more than 10 years, keep only species and cover columns
-plant_dat_HS2 <- plant_dat %>% 
+bird_dat_HS2 <-bird_dat_long %>% 
   filter(sev == "h")
 
-plant_dat_HS2$fire_yr <- as.character(plant_dat_HS2$fire_yr)
-plant_dat_HS2$fire_yr <- as.numeric(plant_dat_HS2$fire_yr)
-plant_dat_HS2$tsf <- 2018-plant_dat_HS2$fire_yr
+bird_dat_HS2$fire_yr <- as.character(bird_dat_HS2$fire_yr)
+bird_dat_HS2$fire_yr <- as.numeric(bird_dat_HS2$fire_yr)
+bird_dat_HS2$tsf <- 2018-bird_dat_HS2$fire_yr
 
-plant_dat_HS2 <- plant_dat_HS2 %>% 
+bird_dat_HS2 <- bird_dat_HS2 %>% 
   filter(tsf > 10) %>% 
-  dplyr::select(species, cover, site_id) %>% 
+  dplyr::select(species, pa, site_id) %>% 
   arrange(species)
 
-plant_dat_HS2 <- reshape(plant_dat_HS2, idvar = "species", timevar = "site_id", direction = "wide")
+bird_dat_HS2 <- reshape(bird_dat_HS2, idvar = "species", timevar = "site_id", direction = "wide")
 
-#plant_dat_HS22 
+#bird_dat_HS22 
 
-dl.w <- full_join(complete_spp, plant_dat_HS2, by = "species") %>% 
+dl.w <- full_join(bird_spp, bird_dat_HS2, by = "species") %>% 
   replace(., is.na(.), "0")
 ```
 
@@ -157,14 +203,15 @@ Only run the following chunk if you need to convert abundance data to presence-a
 
 ```{r Convert abundance data to presence-absence, eval = FALSE}
 convert <- function (x) {
-  species <- x %>% select (species)
-  s <- x %>% select(-species)
+  species <- x %>% dplyr::select (species)
+  s <- x %>% dplyr::select(-species)
   df <-  data.frame(t(apply (as.matrix(s), 1, function (x) ifelse (x>0, 1, 0))))
   b <- bind_cols (species, df)
   return (b)}
 
 ar.w <- convert (ar.w)
 be.w <- convert (be.w)
+xx.w <- convert (xx.w)
 cm.w <- convert (cm.w)
 dl.w <- convert (dl.w)
 ```
@@ -235,11 +282,12 @@ res.pa <- function (z) {(ddply (z, .(species), function(x) {
 # Run 'res.pa' on each growth stage:
 ar.r <- rdply (1000, res.pa (ar.l))
 be.r <- rdply (1000, res.pa (be.l))
+xx.r <- rdply (1000, res.pa (xx.l))
 cm.r <- rdply (1000, res.pa (cm.l))
 dl.r <- rdply (1000, res.pa (dl.l))
 
 # Combine to a matrix:
-zdata <- cbind (ar.r$.n, ar.r$rn, be.r$rn, cm.r$rn, dl.r$rn) # ar.r$.n = row labels
+zdata <- cbind (ar.r$.n, ar.r$rn, be.r$rn, xx.r$rn, cm.r$rn, dl.r$rn) # ar.r$.n = row labels
 ```
 
 #### Alternative method for datasets containing subsamples.

@@ -21,8 +21,8 @@ bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>%
 # remove duplicate rows (same species detected multiple times in a single plot)
 bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>% 
   mutate(pa = 1) %>% 
-  rename(site_id = Point) %>% 
-  rename(species = Spp)
+  dplyr::rename(site_id = Point) %>% 
+  dplyr::rename(species = Spp)
 
 # Adding additional species detections (outside count)
 bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
@@ -65,11 +65,11 @@ bird_dat <- left_join(bird_dat_pa, site_data, by = "site_id")
 ```{r}
 # convert to wide format for following analysis
 bird_matrix1 <- spread(data = bird_dat, key = species, value = pa, fill = 0)
-
+str(birds_matrix)
 # optional:remove birds with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
 #bird_matrix <- rbind(bird_matrix1[,-c(1:20)], c("colsum", colSums(bird_matrix1[,-c(1:20)]) == 1))
-bird_matrix <- bird_matrix1[,-c(1:20)] %>%
+bird_matrix <- bird_matrix1[,-c(1:27)] %>%
   bind_rows(summarise_all(., funs(sum(.)))) # note: if wanting to make a row named total, could have used: funs(if(is.numeric(.)) sum(.) else "Total"
   
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49)
@@ -79,7 +79,7 @@ bird_matrix <- cbind(site_id = bird_matrix1[, 1], bird_matrix[-49, ]) %>%
   mutate_if(is.character, as.numeric)
 
 # Make Bray-Curtis (?) dissimilarity matrix
-birds_matrix <- as.matrix(bird_matrix[, -c(1:20)])
+birds_matrix <- as.matrix(bird_matrix)#[, -c(1:27)])
 ```
 
 ```{r eval = F}
@@ -143,8 +143,8 @@ ggplot() +
 
 library(grid)
 
-# calculate distance for NMDS. 54 nd 28 are weirdly way out there and need to be removed.
-NMDS.log<-log1p(birds_matrix[,-1])#[,-c(1:20)])
+# calculate distance for NMDS.
+NMDS.log<-log1p(bird_matrix[,-1])#[,-c(1:20)])
 sol <- metaMDS(NMDS.log)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))

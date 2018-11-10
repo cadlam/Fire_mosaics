@@ -1,0 +1,722 @@
+---
+title: "Test"
+author: "Chris Adlam"
+date: "7/20/2018"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r setup, include=FALSE}
+
+library(dplyr)
+library(ggplot2)
+library(purrr)
+library(tibble)
+library(tidyr)
+library(lmtest)
+library(bbmle)
+library(spdep)
+library(rsq)
+options(contrasts =c("contr.sum", "contr.poly"))
+
+set.seed(27)
+
+centers <- tibble(
+  cluster = factor(1:3), 
+  num_points = c(100, 150, 50),  # number points in each cluster
+  x1 = c(5, 0, -3),              # x1 coordinate of cluster center
+  x2 = c(-1, 1, -2)              # x2 coordinate of cluster center
+)
+
+labelled_points <- centers %>%
+  mutate(
+    x1 = map2(num_points, x1, rnorm),
+    x2 = map2(num_points, x2, rnorm)
+  ) %>% 
+  select(-num_points) %>% 
+  unnest(x1, x2)
+
+ggplot(labelled_points, aes(x1, x2, color = cluster)) +
+  geom_point()
+
+
+points <- labelled_points %>% 
+  select(-cluster)
+
+kclust <- kmeans(points, centers = 3)
+kclust
+
+library(broom)
+
+kclusts <- tibble(k = 1:9) %>%
+  mutate(
+    kclust = map(k, ~kmeans(points, .x)),
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, points)
+  )
+
+kclusts
+
+clusters <- kclusts %>%
+  unnest(tidied)
+
+assignments <- kclusts %>% 
+  unnest(augmented)
+
+clusterings <- kclusts %>%
+  unnest(glanced, .drop = TRUE)
+
+p1 <- ggplot(assignments, aes(x1, x2)) +
+  geom_point(aes(color = .cluster)) + 
+  facet_wrap(~ k)
+p1
+
+
+```
+
+```{r}
+## trying to figure out how to use distance to correct for detection probability
+# read in data
+bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>% 
+  filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
+  dplyr::select(Point, Count, Spp, DistanceBin) %>%  # keeping only relevant columns
+  dplyr::rename(distance = DistanceBin)
+
+  head(bird_dat_count)
+# remove duplicate rows (same species detected multiple times in a single plot)
+bird_dat_long <- bird_dat_count %>% 
+  dplyr::rename(site_id = Point) %>% 
+  dplyr::rename(species = Spp)
+?Distance
+
+ library(Distance)
+  # Golf tee data
+  data(book.tee.data)
+  # just take the data from observer 1
+  tee.data<-book.tee.data$book.tee.dataframe[book.tee.data$book.tee.dataframe$observer==1,]
+  # run the analysis, selecting number of adjustments by AIC
+  # but constraining for monotonicity
+  ds.model<-ds(bird_dat_count, transect = "Point")
+  # usual R functions
+  summary(ds.model)
+  plot(ds.model)
+```
+
+```{r}
+#is there a trend in aspect?
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      sd = sd(x[[col]], na.rm=TRUE))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- rename(data_sum, c("mean" = varname))
+ return(data_sum)
+}
+
+df <- data_summary(scrs, varname="aspect", groupnames="sev")
+df
+
+ggplot(scrs, aes(x= sev, y = aspect)) +
+  geom_boxplot()
+
+```
+
+# GLM function
+```{r get plant data}
+plant_dat <- read.csv("data/plant_data_natives.csv", header=TRUE)
+
+site_data <- read.csv("data/site_data.csv")
+
+
+#install.packages("fuzzySim") doesnt work, so here's the function; serves to convert from presence only to presence-absence
+
+splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
+  # version 1.1 (7 May 2013)
+  # data: a matrix or data frame with your localities and species (each in a different column)
+  # sites.col: the name or index number of the column containing the localities
+  # sp.col: the name or index number of the column containing the species names or codes
+  # keep.n: logical, whether to get in the resulting table the number of times each species appears in each locality; if false (the default), only the presence (1) or absence (0) are recorded
+
+  stopifnot(
+    length(sites.col) == 1,
+    length(sp.col) == 1,
+    sites.col != sp.col,
+    sites.col %in% 1 : ncol(data) | sites.col %in% names(data),
+    sp.col %in% 1 : ncol(data) | sp.col %in% names(data),
+    is.logical(keep.n)
+  )
+
+  presabs <- table(data[ , c(sites.col, sp.col)])
+  presabs <- as.data.frame(unclass(presabs))
+  if (!keep.n)  presabs[presabs > 1] <- 1
+  presabs <- data.frame(row.names(presabs), presabs)
+  names(presabs)[1] <- names(subset(data, select = sites.col))
+  rownames(presabs) <- NULL
+  return(presabs)
+}  # end splist2presabs function
+
+# executing function and going from wide to long:
+plant_dat_pa <- splist2presabs(plant_dat, sites.col = 2, sp.col = 3) %>% 
+  gather(key = species, value = pa, ABCO:WOFI)
+head(plant_dat_pa)
+
+# Adding in the sev and tsf data
+head(site_data)
+
+#merge(plant_dat_pa, site_data[, c('sev', 'tsf')], by= 'site_id')
+plant_glm <- merge(plant_dat_pa, site_data, by= 'site_id') %>% 
+  mutate(tsf_cat = as.factor(as.character(tsf_cat))) # if tsf_cat is numeric, model output is gibberish; must change to factor
+str(plant_glm_cov)
+
+# For cover instead of p/a, use:
+plant_matrix$site_id <- as.character(plant_matrix$site_id) 
+
+plant_glm_cov <- left_join(plant_matrix, site_data, by = "site_id") %>% 
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
+```
+
+
+```{r}
+CEIN_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf)
+
+CEIN_mod <- glm(CEIN/100 ~ sev + tsf_cat, CEIN_dat, family = binomial)
+summary(CEIN_mod)
+
+CEIN_mod1 <- glm(CEIN/100 ~ sev, CEIN_dat, family = binomial)
+summary(CEIN_mod1)
+
+anova(CEIN_mod, CEIN_mod1)
+
+
+#PSME
+PSME_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, PSME, tsf_cat, sev)
+
+PSME_mod <- lm(PSME ~ sev * tsf_cat, PSME_dat)
+summary(PSME_mod)
+
+PSME_mod1 <- lm(PSME ~ sev, PSME_dat)
+summary(PSME_mod1)
+
+anova(PSME_mod, PSME_mod1)
+
+?glm
+# MECA
+
+MECA_dat <- plant_mrpp_d %>% 
+  dplyr::select(site_id, MECA, tsf_cat, sev)
+
+MECA_mod <- lm(MECA ~ sev + tsf_cat, MECA_dat)
+summary(MECA_mod)
+
+MECA_mod1 <- lm(MECA ~ sev, MECA_dat)
+summary(MECA_mod1)
+
+anova(MECA_mod, MECA_mod1)
+
+
+MECA_mod <- glm(MECA ~ sev * tsf_cat, MECA_dat, family = "gaussian")
+summary(MECA_mod)
+
+MECA_mod1 <- glm(MECA ~ sev, MECA_dat, family = "gaussian")
+summary(MECA_mod1)
+
+anova(MECA_mod, MECA_mod1)
+
+# it's better to use AICc
+MECA_aic <- AIC(MECA_mod, MECA_mod1)
+
+
+```
+
+```{r Moran's I}
+#library(ape)
+
+dists <- as.matrix(dist(cbind(plant_mrpp_d$lon, plant_mrpp_d$lat)))
+#dists.inv <- 1/dists
+#diag(dists.inv) <- 0
+#Moran.I(plant_mrpp_d$PSME, dists.inv, na.rm = T)
+
+# convert w to a row standardised general weights object
+lw <- mat2listw(dists)
+lwW <- nb2listw(lw$neighbours, glist=lw$weights, style="W")
+CEIN_mi <- (moran.test(plant_mrpp_d$MECA, lwW, alternative="two.sided"))$statistic
+
+#CEIN_mi <- (moran.test(MECA_dat[,2], lwW, alternative="two.sided"))$statistic
+
+CEIN_mip <- (moran.test(plant_mrpp_d$MECA, lwW, alternative="two.sided"))$'p.value'
+```
+
+```{r AIC}
+d <- as.data.frame(UCBAdmissions)
+d <- tidyr::spread(d, Admit, Freq) # use Hadley's excellent tidyr to reshape
+d[order(d$Dept), ]
+
+m1 <- glm(cbind(Admitted, Rejected) ~ Gender, d, family='binomial')
+m2 <- glm(cbind(Admitted, Rejected) ~ Dept, d, family = 'binomial')
+m3 <- glm(cbind(Admitted, Rejected) ~ Dept + Gender, d, family = 'binomial')
+model.names <- c("1 Gender", "2 Dept", "3 Gender + Dept")
+
+summ.table <- do.call(rbind, lapply(list(m1, m2, m3), broom::glance))
+
+table.cols <- c("df.residual", "deviance", "AIC")
+reported.table <- summ.table[table.cols]
+names(reported.table) <- c("Resid. Df", "Resid. Dev", "AIC")
+
+reported.table[['dAIC']] <-  with(reported.table, AIC - min(AIC))
+reported.table[['weight']] <- with(reported.table, exp(- 0.5 * dAIC) / sum(exp(- 0.5 * dAIC)))
+reported.table$AIC <- NULL
+reported.table$weight <- round(reported.table$weight, 2)
+reported.table$dAIC <- round(reported.table$dAIC, 1)
+row.names(reported.table) <- model.names
+
+
+
+#this is the way to calculate AICc
+library(bbmle)
+AICctab(MECA_mod,MECA_mod1, base=T, delta=T, weights=T)
+
+# likelihood ratio test
+library(lmtest)
+
+```
+
+# function
+```{r lmt function}
+# before the function can add a line to the table, need to create the table!
+tbl_headr <- c("sp", "Model", "dAICc", "w", "X2", "df", "p", "R2", 'Moran I', 'Moran I (p)')
+
+#function:
+lmt <- function(sp_dat) {
+
+  ?glm
+tsf <- glm(sp_dat[,2]/100 ~ tsf_cat, sp_dat, family = "gaussian") #sp cover /100 because it has to be between 0 and 1
+sev <- glm(sp_dat[,2]/100 ~ sev, sp_dat, family = "gaussian")
+sp_null  <-glm(sp_dat[,2]/100 ~ 1, sp_dat, family = "gaussian")
+full <- glm(sp_dat[,2]/100 ~ sev + tsf_cat, sp_dat, family = "gaussian")
+  
+# AIC and likelihood ratio test
+sp_aic <- AICctab(full, sev, tsf, base=T, delta=T, weights=T)
+
+# get r squared values, but need to get them in the right order. use a conditional process?
+#ifelse(attr(sp_aic, "row.names")[1] == "sev", sev, ifelse(attr(sp_aic, "row.names")[1] == "tsf", tsf, full))
+
+#sp_R2_1 <- rsq(ifelse(attr(sp_aic, "row.names")[1] == "sev", sev, ifelse(attr(sp_aic, "row.names")[1] == "tsf", tsf, full)), adj = T)
+
+#sp_R2_1 <- rsq(attr(sp_aic, "row.names")[1], adj = T)
+#sp_R2_2 <- rsq(attr(sp_aic, "row.names")[2], adj = T)
+#sp_R2_3 <- rsq(attr(sp_aic, "row.names")[3], adj = T)
+
+# row 1 R2
+if(attr(sp_aic, "row.names")[1] == "sev")
+    {sp_R2_1 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[1] == "tsf")
+    {sp_R2_1 <- rsq(tsf, adj = T)}
+else 
+    {sp_R2_1 <- rsq(full, adj = T)}
+
+# row 2 R2
+if(attr(sp_aic, "row.names")[2] == "sev")
+    {sp_R2_2 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[2] == "tsf")
+    {sp_R2_2 <- rsq(tsf, adj = T)}
+else 
+    {sp_R2_2 <- rsq(full, adj = T)}
+
+# row 3 R2
+if(attr(sp_aic, "row.names")[3] == "sev")
+    {sp_R2_3 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[3] == "tsf")
+    {sp_R2_3 <- rsq(tsf, adj = T)}
+else 
+    {sp_R2_3 <- rsq(full, adj = T)}
+
+
+#sp_tsfcat_R2 <- rsq(tsf, adj = T)
+#sp_sev_R2 <- rsq(sev, adj = T)
+#sp_mod_R2 <- rsq(full, adj = T)
+
+
+#sp_full <-  glm(log1p(sp_dat[,2]) ~ sev*tsf_cat, sp_dat, family = "gaussian")
+#sp_tsfcat <- glm(log1p(sp_dat[,2]) ~ tsf_cat, sp_dat, family = "gaussian")
+#sp_sev <- glm(log1p(sp_dat[,2]) ~ sev, sp_dat, family = "gaussian")
+#sp_null  <-glm(log1p(sp_dat[,2]) ~ 1, sp_dat, family = "gaussian")
+
+#but check the QQ plot: log1p or logit transformation is way better.
+#plot(CEIN_sev)
+#plot(CEIN_full)
+#CEIN_sev_t <- glm(log1p(CEIN) ~ sev, cein_dat, family = "gaussian")
+#CEIN_aic <- AICctab(CEIN_full,CEIN_full_t, base=T, delta=T, weights=T)
+#lrtest(CEIN_sev, CEIN_sev_t)
+
+#how to get the right lrt into the table with the right aic? Same with the R2 for that matter
+
+# row 1 R2
+if(attr(sp_aic, "row.names")[1] == "sev")
+    {sp_lrt_1 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[1] == "tsf")
+    {sp_lrt_1 <- lrtest(tsf, sp_null)}
+else 
+    {sp_lrt_1 <- lrtest(full, sp_null)}
+
+# row 2 R2
+if(attr(sp_aic, "row.names")[2] == "sev")
+    {sp_lrt_2 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[2] == "tsf")
+    {sp_lrt_2 <- lrtest(tsf, sp_null)}
+else 
+    {sp_lrt_2 <- lrtest(full, sp_null)}
+
+# row 3 R2
+if(attr(sp_aic, "row.names")[3] == "sev")
+    {sp_lrt_3 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[3] == "tsf")
+    {sp_lrt_3 <- lrtest(tsf, sp_null)}
+else 
+    {sp_lrt_3 <- lrtest(full, sp_null)}
+
+
+#sp_lrt_full <- lrtest(full, sp_null)
+#sp_lrt_sev <- lrtest(sev, sp_null)
+#sp_lrt_tsfcat <- lrtest(tsf, sp_null)
+
+#moran's I (first load function)
+sp_mi <- (moran.test(sp_dat[,2], lwW, alternative="two.sided"))$statistic
+sp_mip <- (moran.test(sp_dat[,2], lwW, alternative="two.sided"))$'p.value'
+
+# Now the table BUT: the order in the aic changes depending on which model is best; the way the table is shown it throws that data into a pre existing order, so that's wrong
+sp_tbl1 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[1], sp_aic$dAICc[1], sp_aic$weight[1], sp_lrt_1$Chisq[2], sp_lrt_1$'#Df'[1], sp_lrt_1$'Pr(>Chisq)'[2], sp_R2_1, sp_mi, sp_mip)
+
+sp_tbl2 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[2], sp_aic$dAICc[2], sp_aic$weight[2], sp_lrt_2$Chisq[2], sp_lrt_2$'#Df'[1], sp_lrt_2$'Pr(>Chisq)'[2], sp_R2_2, sp_mi, sp_mip)
+
+sp_tbl3 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[3], sp_aic$dAICc[3], sp_aic$weight[3], sp_lrt_3$Chisq[2], sp_lrt_3$'#Df'[1], sp_lrt_3$'Pr(>Chisq)'[2], sp_R2_3, sp_mi, sp_mip)
+
+tbl <- data.frame(rbind(tbl_headr, sp_tbl1, sp_tbl2, sp_tbl3)) 
+
+# Turn first row into column names
+names(tbl) <- lapply(tbl[1, ], as.character)
+tbl <- tbl[-1,]
+
+# convert to numeric
+tbl[,c(3:10)] <- as.numeric(as.character(unlist(tbl[,c(3:10)]))) 
+
+#remove row names
+rownames(tbl) <- c()
+
+tbl
+}
+```
+
+# SPP with more than 10 detections
+```{r}
+colnames(plant_glm_cov)[2:35]
+```
+
+
+# ACMA
+```{r ACMA}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, ACMA, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+
+# ANMAD
+```{r ANMAD}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, ANMAD, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+
+# APAN
+```{r APAN}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, APAN, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# ARME
+```{r ARME}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, ARME, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# CASC
+```{r CASC}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, CASC, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# CEIN
+```{r CEIN}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# COCO
+```{r COCO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, COCO, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# COHE
+```{r COHE}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, COHE, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# CONU
+```{r CONU}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, CONU, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# ELGL
+```{r ELGL}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, ELGL, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# FECA
+```{r FECA}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, FECA, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# FEOC
+```{r FEOC}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, FEOC, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# GABO
+```{r GABO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, GABO, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# GATR
+```{r GATR}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, GATR, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# HIAL
+```{r HIAL}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, HIAL, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# IRTE
+```{r IRTE}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, IRTE, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# LOHI
+```{r LOHI}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, LOHI, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# MAGR
+```{r MAGR}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, MAGR, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# MECA
+```{r MECA}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, MECA, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# NODE
+```{r NODE}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, NODE, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# POIM
+```{r POIM}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, POIM, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# PRHO
+```{r PRHO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, PRHO, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# PSME
+```{r PSME}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, PSME, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# PTAQ
+```{r PTAQ}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, PTAQ, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# QUCH
+```{r QUCH}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, QUCH, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# QUKE
+```{r QUKE}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, QUKE, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# RIRO
+```{r RIRO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, RIRO, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# ROGY
+```{r ROGY}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, ROGY, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# RULE
+```{r RULE}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, RULE, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# RUPA
+```{r RUPA}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, RUPA, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# SYMO
+```{r SYMO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, SYMO, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+# TODI
+```{r TODI}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, TODI, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+
+# TRLA
+```{r TRLA}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, TRLA, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+
+# WHMO
+```{r WHMO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, WHMO, tsf_cat, sev, tsf)
+
+lmt(sp_dat)
+```
+
+```{r}
+
+#Goodness-of-fit tests
+#This runs three GOF tests: Chi square, Freeman Tukey, and SSE. What you're basically looking for is that your data doesn't fall near the extremes of the bootstrapped distribution. A good threshold for each statistic might be >.1 and <0.9. Probably good to run at least 100 simulations, more is preferable (nsim in the bottom code). These can be slow.
+
+#m12 is your model fit - if this doesn't work, you made need to play around with the model output you are using and figure out how to extract the required elements below
+#fm <- m12
+
+#fm <- sp_mod
+
+#Function for the GOF tests - if this doesn't work, check your model output and make sure observed, expected, and residuals are being properly extracted and amend those first three lines as needed. I haven't tried this with a GLM output, but it should be an easy fix if it doesn't work out of the box.
+#looks like boot() needs some sort of indices parameter... not sure what this means but this seems to work:
+fitstats <- function(sp_dat, ind) {
+  fm <- glm(sp_dat[,2]/100 ~ sev + tsf_cat, sp_dat[ind,], family = "binomial")
+  observed <- fm$y
+  expected <- fitted(fm)
+  resids <- residuals(fm)
+  sse <- sum(resids^2)
+  chisq <- sum((observed - expected)^2 / expected)
+  freeTuke <- sum((sqrt(observed) - sqrt(expected))^2)
+  out <- c(SSE=sse, Chisq=chisq, freemanTukey=freeTuke)
+  return(out)
+}
+
+
+fitstats(sp_dat)
+
+#Bootstrapping the GOF - this is using parboot() from Unmarked. It may not play nicely with GLM output. If not, try the boot() function from the boot package in place of parboot(). I think the syntax is nearly identical except maybe the 'report' part which isn't important.
+library(boot)
+pb <- boot(sp_dat, fitstats, R = 100)
+#how to interpret?
+
+#Plot isn't necessary but might help you understand the outputs - may need some tweeking to work for boot()
+plot(pb)
+
+
+
+
+#Next section
+
+#Converting logit scale to natural scale. The link function for binomial is logit, so you need to backtransform to get from that scale to a probability of occurence (0-1). Use the following function. Be sure to add together any coefficients and intercepts first - all arithmetic should be done before backtransformation:
+
+logit2prob <- function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+
+
+
+#If you do anything that uses Poisson, that's on the log scale so you can just use exp() to convert to the natural scale.
+```
+
+

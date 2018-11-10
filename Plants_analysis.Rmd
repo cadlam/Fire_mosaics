@@ -1,0 +1,730 @@
+---
+title: "Optimal fire mosaics"
+author: "Chris Adlam"
+date: "9/29/2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = F, error = F) 
+```
+
+```{r include = F}
+# Load packages
+library(tidyverse)
+library(emmeans)
+library(lme4)
+library(lmerTest)
+library(pbkrtest)
+library(car)
+library(ggplot2)
+library(cowplot)
+library(reshape2)
+library(splitstackshape)
+library(magrittr)
+library(readr)
+library(vegan)
+library(viridis)
+library(cowplot)
+library(purrr)
+library(tibble)
+library(broom)
+library(labdsv)
+library(indicspecies)
+library(permute)
+library(perm)
+library(magrittr)
+library("knitr")
+
+
+```
+
+```{r include = FALSE}
+# This loads the data
+plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
+plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/plant_list.csv")
+plant_data$species <- as.character(plant_data$species)
+plant_data$site_id <- as.character(plant_data$site_id)
+plant_names$species <- as.character(plant_names$species)
+plant_names$full_name <- as.character(plant_names$full_name)
+plant_names$native_status <- as.factor(plant_names$native_status)
+plant_names$form <- as.factor(plant_names$form)
+
+site_data_read <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
+site_data_read$tsf <- as.numeric(as.character(site_data_read$tsf))
+site_data_read$fire_yr <- as.numeric(as.character(site_data_read$fire_yr))
+site_data_read$tsf_index <- as.numeric(as.character(site_data_read$tsf_index))
+
+# here I'm setting the TSF categories; change as necessary.
+site_data <- site_data_read %>% 
+    mutate(tsf_cat = ifelse(is.na(tsf), "4", "3"))
+site_data$tsf_cat <-as.numeric(as.character(site_data$tsf_cat))
+site_data$tsf_cat[site_data$tsf < 15] <-2
+site_data$tsf_cat[site_data$tsf < 10] <-1
+
+# here I'm setting the TSF categories for the index; change as necessary.
+site_data <- site_data_read %>% 
+    mutate(tsf_ind_cat = ifelse(is.na(tsf_index), "4", "3"))
+site_data$tsf_ind_cat[site_data$tsf_index < 12] <-2
+site_data$tsf_ind_cat[site_data$tsf_index < 5] <-1
+
+site_data$site_id <- as.character(site_data$site_id)
+
+#plot(site_data$tsf, site_data$tsf_index, col=sev)
+#plot(site_data$tsf, site_data$tsf_index, col=sev)
+
+#ggplot(site_data,aes(x=tsf,y=tsf_index, group = sev)) + ylab('tsf_index') +
+#  geom_point() +
+#  geom_hline(yintercept = 12) +
+#  geom_hline(yintercept = 5)
+
+#site_data_pairs <- site_data %>% dplyr::select(herb_cov, bare_cov, tsf, shrub_cov, tree_cov)
+#pairs(site_data_pairs) +
+
+```
+
+
+```{r echo = F}
+# Select data (pick one)
+# CHECK FOR TYPOS - ALL GOOD
+# missing <- anti_join(plant_data, plant_names, by = "species")
+# Join file with data and file with plant info, then dplyr::select required information; dplyr::select and run the right one:
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native") %>%
+  dplyr::select(site_id, species, cover)
+
+#plant_dat <- left_join(plant_dat, site_data, by = "site_id") %>% 
+#  filter(sev=="l")
+
+#write.csv(plant_dat, file = "plant_data_natives.csv")
+
+```
+
+```{r eval = F, include = F}
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & form == "tree") %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & form == "shrub") %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "shrub" | form == "tree")) %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "herb")) %>%
+  dplyr::select(site_id, species, cover)
+```
+
+```{r eval = F, include = F}
+#Only run this chunk if converting to presence-absence
+plant_dat$cover[plant_dat$cover > 0] <- 1 
+```
+
+
+```{r include=F}
+# Data prep
+# convert to wide format for following analysis
+plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
+
+# optional:remove plants with few sightings; not sure this makes much difference
+## add columns true/false depending on obs count reaching minimum value
+plant_matrix <- plant_matrix1 %>% bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
+## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
+plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 5]
+## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
+plant_matrix <- plant_matrix[-49, ] %>%
+  mutate_if(is.character, as.numeric)
+
+# Make Bray-Curtis (?) dissimilarity matrix
+plants_matrix <- as.matrix(plant_matrix1[, -1])
+```
+
+```{r echo = F}
+plant_spp_num <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
+  mutate(num_spp = rowSums(dplyr::select(.,ABCO:WOFI)))
+
+plant_spp_mean <- plant_spp_num %>% 
+  group_by(sev) %>%
+  summarize(mean_items = mean(num_spp))
+
+hist <- ggplot(plant_spp_num, aes(x = sev, y = num_spp)) +
+  geom_boxplot()
+  
+hist
+
+# or use plant_spp_mean <- tapply(plant_spp_num$num_spp, INDEX = plant_spp_num$sev, FUN = mean)
+```
+
+```{r echo = F}
+plant_spp_num <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
+  filter(sev == "h" | sev =="l") %>% 
+  mutate(num_spp = rowSums(dplyr::select(.,ABCO:WOFI)))
+
+plant_spp_num$tsf_cat <- as.factor(plant_spp_num$tsf_cat)
+
+
+plant_spp_mean <- plant_spp_num %>% 
+  group_by(tsf_cat) %>%
+  summarize(mean_items = mean(num_spp))
+
+hist <- ggplot(plant_spp_num, aes(x = tsf_cat, y = num_spp)) +
+  geom_boxplot()
+  
+hist
+
+
+ggplot(plant_spp_num,aes(x=tsf_index,y=num_spp, group = sev)) + ylab('number of species') +
+  stat_summary(aes(color = sev),fun.y = 'mean',geom = 'line') + facet_wrap(~sev)
+
+# or use plant_spp_mean <- tapply(plant_spp_num$num_spp, INDEX = plant_spp_num$sev, FUN = mean)
+```
+
+#NMDS
+
+The NMDS using all native plants shows no difference between unburnt and LS, but HS is very different. The difference seems to be stronger when subsetting only trees, than when only herbaceous species are selected. The shrub only NMDS is interesting-looking, with a tight cluster of unburnt, LS spread out one direction, and HS spread out perpendicularly. I wonder what factors influence this.
+```{r , echo =F}
+#test NMDS method https://stackoverflow.com/questions/14711470/plotting-envfit-vectors-vegan-package-in-ggplot2
+
+library(grid)
+
+# calculate distance for NMDS
+NMDS.log<-log1p(plant_matrix[,-1])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = plant_matrix$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 999)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.05)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+scrs <- scrs %>% mutate(sev3 = ifelse(sev == "h", tsf, "0", ifelse(sev == "l", "1", "0")))
+
+scrs <- scrs %>% 
+    mutate(sev3 = ifelse(is.na(tsf), "0", "3"))
+scrs$sev3 <-as.numeric(as.character(scrs$tsf))
+scrs$sev3[scrs$sev == "l"] <-"l"
+scrs$sev3[scrs$sev == "u"] <-"u"
+
+scrs$sev3 <- as.numeric(as.character(scrs$sev3))
+str(scrs)
+
+#scrs$sev3[scrs$sev =="l"]<- "l"
+#scrs$sev3[scrs$sev =="u"]<- "u"
+#only stat. signif. spp
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour=sev3)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = Cred,
+               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+            size = 3)
+p
+
+```
+
+```{r eval = F, include = F}
+#all spp
+p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2)) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = spp.scrs,
+               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = spp.scrs, aes(x = NMDS1, y = NMDS2, label = Species),
+            size = 3) 
+p
+```
+
+
+```{r eval = F, include = F}
+#further NMDS test (see also https://oliviarata.wordpress.com/2014/07/17/ordinations-in-ggplot2-v2-ordisurf/ for using ggplot)
+#NMDS
+#AVG_data written to .csv
+AVG_data <- read.csv("AVG_data.csv")
+AVG_data <- avg_birds
+guilds <- read.csv("Bird_guilds.csv")
+rda_avg2 <- read.csv("rda_avg2.csv")
+rda_avg2$Burned <- as.factor(rda_avg2$Burned)
+rda_avg2$Grazed <- as.factor(rda_avg2$Grazed)
+rda_avg2$Riparian <- as.factor(rda_avg2$Riparian)
+guild_data <- read.csv("avg_birds.csv")
+guild_data <- guild_data[,c(3:42)]
+
+
+#Model
+NMDS_test <- metaMDS(plants_matrix)
+
+str(AVG_data)
+#Guild models
+NMDS_guild <- metaMDS(guild_data, trymax = 200, try=40, k=2)
+ord.fit <- envfit(NMDS_test, plants_matrix, perm=9999, choices = c(1:2) )
+ord.fit
+#leaf_sp <- AVG_data[,c(19,9,29,32,41)]
+#NMDS_leaf <-metaMDS(leaf_sp[-c(16,22),], trymax = 200, try=40,k=2)
+#ord.fit <- envfit(NMDS_leaf , rda_avg2[-c(16,22),-c(1)], perm=9999, choices = c(1:2) )
+#ord.fit
+
+
+#Envfit plot
+#par(mfrow=c(1,1))
+plot(NMDS_test , display = "species" , type = "n", main = "Environmental variables on ordination")
+plot(ord.fit , p.max = 0.20 , cex=0.9)
+#orditorp (NMDS_test, disp=c("species"), col=c("red"), cex=1, #pcex = 0)
+text(NMDS_test, disp=c("species"), col=c("red"), cex=0.7)
+#text(NMDS_test, disp="sites", pch=21, col="black", bg="yellow", cex=0.7)
+
+attach(rda_avg2)
+
+#elevation contour plot
+plot(NMDS_test,  display = "sites", main = "Elevation contour")
+ordisurf(scrs,Elevation, main="Elevation contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30", cex=1)
+
+#Grass contour plot ADAPT
+plot(NMDS_test,  display = "species", type = "n", main = "tree cover contour")
+ordisurf(NMDS_test,scrs$tree_cov, main="tree cover contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30",air=0.1,
+     cex=1)
+
+#AECAs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "Grass cover contour")
+ordisurf(NMDS_test,AECAs, main="AECAs contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30",air=0.1,
+     cex=1)
+
+#QUWIs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "Grass cover contour")
+ordisurf(NMDS_test,QUWIs, main="QUWIs contour" ,col="forestgreen")
+#orditorp(NMDS_test,display="species",col="grey30",air=0.1,cex=1)
+text(NMDS_test,display="species",col="grey30",air=0.1,
+     cex=1)
+
+#HEARs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "HEAR contour")
+ordisurf(NMDS_test,HEARs, main="HEAR contour" ,col="forestgreen")
+orditorp(NMDS_test,display="species",col="grey30",air=0.1,
+         cex=1)
+
+#PISAs contour plot
+plot(NMDS_test, type = "n", display = "species", main = "PISA contour")
+ordisurf(NMDS_test,PISAs, main="PISA contour" ,col="forestgreen")
+orditorp(NMDS_test,display="species",col="grey30",air=0.1,
+         cex=1)
+
+#Envfit
+ord.fit <- envfit(NMDS_test , rda_avg2[,-c(1)], perm=9999, choices = c(1:2) )
+ord.fit
+
+
+#Envfit plot
+par(mfrow=c(1,1))
+plot(NMDS_test , display = "species" , type = "n", main = "Environmental variables on ordination")
+plot(ord.fit , p.max = 0.060 , cex=0.9)
+#orditorp (NMDS_test, disp=c("species"), col=c("red"), cex=1, pcex = 0)
+text(NMDS_test, disp=c("species"), col=c("red"), cex=0.7)
+#text(NMDS_test, disp="sites", pch=21, col="black", bg="yellow", cex=0.7)
+```
+
+
+
+```{r eval = F, include = F}
+# monoMDS allows for some more flexibility than metaMDS, eg. dplyr::selecting alternative MDS methods; one problem is that species can't be plotted along with sites.
+
+plants_matrix_mono <- vegan::vegdist(plants_matrix, method = "bray")
+
+NMDS <- monoMDS(plants_matrix_mono, k = 2, model = c("global"), maxit = 5000, weakties = TRUE, stress = 1, scaling = TRUE, pc = TRUE, smin = 1e-4, sfgrmin = 1e-7, sratmax = 0.99999)
+
+
+# now trying to improve this code to directly plot NMDS results:
+data_scores <- as.data.frame(scores(NMDS))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
+data_scores$site_id <- plant_matrix1[, 1]  # create a column of site names, from the rownames of data.scores
+data_scores <- left_join(data_scores, site_data, by = "site_id") #  add the grp variable created earlier
+  
+head(data_scores)  #look at the data
+
+# this part not working:
+species_scores <- as.data.frame(scores(NMDS, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+#species_scores$species <- rownames(species_scores)  # create a column of species, from the rownames of species.scores
+#head(species_scores)  #look at the data
+
+hi <- data_scores[data_scores$sev == "h", ][chull(data_scores[data_scores$sev == 
+    "h", c("MDS1", "MDS2")]), ]  # hull values for grp A
+lo <- data_scores[data_scores$sev == "l", ][chull(data_scores[data_scores$sev == 
+    "l", c("MDS1", "MDS2")]), ]  # hull values for grp B
+un <- data_scores[data_scores$sev == "u", ][chull(data_scores[data_scores$sev == 
+    "u", c("MDS1", "MDS2")]), ]  # hull values for grp B
+
+hull.data <- rbind(hi, lo, un)  #combine grp.a and grp.b
+hull.data
+
+ggplot() + 
+#  geom_polygon(data=hull.data,aes(x=MDS1,y=MDS2,fill=sev,group=sev),alpha=0.30) + # add the convex hulls
+  #geom_text(data=species_scores,aes(x=MDS1,y=MDS2,label=species),alpha=0.5) +  # add the species labels
+  geom_point(data=data_scores,aes(x=MDS1,y=MDS2,shape=sev,colour=sev),size=3) + # add the point markers
+  geom_text(data=data_scores,aes(x=MDS1,y=MDS2,label=site_id),size=6,vjust=0) +  # add the site labels+
+  stat_ellipse(data = data_scores, geom = "polygon", alpha = 0.05, aes(x=MDS1,y=MDS2, fill = sev), level = 0.8) +
+  coord_equal() +
+  theme_bw() + 
+  theme(axis.text.x = element_blank(),  # remove x-axis text
+        axis.text.y = element_blank(), # remove y-axis text
+        axis.ticks = element_blank(),  # remove axis ticks
+        axis.title.x = element_text(size=18), # remove x-axis labels
+        axis.title.y = element_text(size=18), # remove y-axis labels
+        panel.background = element_blank(), 
+        panel.grid.major = element_blank(),  #remove major-grid labels
+        panel.grid.minor = element_blank(),  #remove minor-grid labels
+        plot.background = element_blank())
+
+# old school plotting method:
+#plot(NMDS)
+#ordiplot(NMDS, type = "n")
+#ordiellipse(NMDS, site_data$sev, display = "site_id", kind = "sd")
+# ordihull(NMDS,groups=treat,draw="polygon",col="grey90",label=F)
+
+```
+
+# PERMANOVA
+## Main PERMANOVA
+All natives: We see using the permanova there is a strong effect of severity, and a weaker effect of TSF. The pairwise PERMANOVA shows that there is no difference between low sev and unburnt. There is a difference with high sev though.
+
+Herbaceous (grass and forb): There is an effect of severity, but TSF is not as important (p = 0.067). But there is almost a significan interaction sev:TSF, suggesting that TSF is more important for herbaceous plants (in HS?). This is not entirely suprising since TSF has little to no effect on tree cover in LS.
+
+Trees and shrubs: Same as all natives; effect of sev, weaker effect of TSF, no interaction. Still no difference between low and unburnt in pariwise analysis.
+
+```{r echo = F}
+# Main PERMANOVA
+#comp.data$tsf <- as.numeric(comp.data$tsf)
+plant_matrix$site_id <- as.character(plant_matrix$site_id)
+site_data$site_id <- as.character(site_data$site_id)
+
+#plant_matrix_sub <- plant_matrix %>% filter(sev == "")
+#site_data_sub <- site_data %>% filter(sev == "h")
+
+#comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% 
+#  filter(sev == "h")# %>% 
+#  mutate(sev2 = ifelse(sev == 'h' , "h", "lu"))
+
+#comp.data$sev <- as.character(comp.data$sev)
+#comp.data$tsf <- as.numeric(comp.data$tsf)
+
+# Pick among the following
+## Is there an effect of severity and time since fire?
+## Using all tsf_cat and sev, we see a strong effect of sev, and a marginal effect of tsf_cat
+comp.data <- left_join(plant_matrix, site_data, by = "site_id")
+comp.sub <- subset(comp.data, select = ADBI:WHMO)
+comp.env <- subset(comp.data, select = c(fire:tsf_ind_cat))
+attach(comp.env)
+kable(adonis2(comp.sub ~ sev * tsf_cat))
+
+comp.data <- left_join(plant_matrix, site_data, by = "site_id")
+comp.sub <- subset(comp.data, select = ADBI:WHMO)
+comp.env <- subset(comp.data, select = c(fire:tsf_ind_cat))
+attach(comp.env)
+kable(adonis2(comp.sub ~ sev * tsf_ind_cat))
+
+## Using the filter function, can look at only l of h sev. There is no effect of tsf_cat in l, but there is an effect in h.
+#comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% 
+#  filter(sev == "h")
+#comp.sub <- subset(comp.data, select = ACTR:WHMO)
+#comp.env <- subset(comp.data, select = c(fire:tsf_cat))
+#attach(comp.env)
+#adonis2(comp.sub ~ sev * tsf_cat)
+
+
+##the second term is because i'm trying to compare LS and UN at younger stages. But this code excludes UN so it doesn't work.
+#comp.sub <- subset(comp.data, (tsf < 13 | sev != "h"), select =ACTR:WHMO) # might need to use dplyr::select; also replace ACTR:WHMO with ABCO:UMCA if using trees or trees and shrubs)
+#comp.env <- subset(comp.data, (tsf < 13 | sev != "h"), select = c(fire:tsf_cat))
+#attach(comp.env)
+#adonis2(comp.sub ~ sev * tsf_cat)
+
+```
+
+## Pairwise PERMANOVA function
+```{r include=F}
+### Pairwise PERMANOVA (code from https://www.researchgate.net/post/How_can_I_do_PerMANOVA_pairwise_contrasts_in_R)
+pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
+  library(vegan)
+  co <- combn(unique(factors), 2)
+  pairs <- c()
+  F.Model <- c()
+  R2 <- c()
+  p.value <- c()
+
+  for (elem in 1:ncol(co)) {
+    ad <- adonis(x[factors %in% c(co[1, elem], co[2, elem]), ] ~ factors[factors %in% c(co[1, elem], co[2, elem])], method = sim.method)
+    pairs <- c(pairs, paste(co[1, elem], "vs", co[2, elem]))
+    F.Model <- c(F.Model, ad$aov.tab[1, 4])
+    R2 <- c(R2, ad$aov.tab[1, 5])
+    p.value <- c(p.value, ad$aov.tab[1, 6])
+  }
+  p.adjusted <- p.adjust(p.value, method = p.adjust.m)
+  pairw.res <- data.frame(pairs, F.Model, R2, p.value, p.adjusted)
+  return(pairw.res)
+}
+
+```
+
+
+```{r eval = F, include = F}
+## Pairwise PERMANOVA function (pt.2)
+### below is an attempt to show Df, but output is screwy
+
+pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
+  library(vegan)
+  co <- combn(unique(factors), 2)
+  pairs <- c()
+  Df <- c()
+  F.Model <- c()
+  R2 <- c()
+  p.value <- c()
+
+  for (elem in 1:ncol(co)) {
+    ad <- adonis(x[factors %in% c(co[1, elem], co[2, elem]), ] ~ factors[factors %in% c(co[1, elem], co[2, elem])], method = sim.method)
+    pairs <- c(pairs, paste(co[1, elem], "vs", co[2, elem]))
+    Df <- c(Df, ad$aov.tab[1, ])
+    F.Model <- c(F.Model, ad$aov.tab[1, 4])
+    R2 <- c(R2, ad$aov.tab[1, 5])
+    p.value <- c(p.value, ad$aov.tab[1, 6])
+  }
+  p.adjusted <- p.adjust(p.value, method = p.adjust.m)
+  pairw.res <- data.frame(pairs, Df, F.Model, R2, p.value, p.adjusted)
+  return(pairw.res)
+}
+```
+
+1 = High severity;
+
+2 = Low severity;
+
+3 = Unburnt.  
+
+The pairwise comparison shows a difference between the two youngest TSF categories for herbs/grasses. Using presence-absence, the difference is significant between the youngest TSF and both the oldest (which are not statistically different)
+```{r echo = F}
+## Pairwise PERMANOVA function (run)
+comp.data <- comp.data %>% 
+    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
+
+kable(pairwise.adonis(comp.sub, comp.data$sev2))
+```
+
+Comparing the different time since fire categories in LS: no statistically signficant difference for herbaceous plants only (p value is lower when comparing 10-12 YSF to 16-31 YSF and 4-5 YSF to 16-31 YSF than when comparing 4-5 YSF to 10-12 YSF).
+
+Comparing the different time since fire categories in HS: still no significant difference between age categories (once p value is adjusted, maybe a different adjustment would make the difference?), although the lowest p value is for comparing 4-5 YSF to 16-31 YSF. Perhaps adjusting for site productivity or changing the TSF categories might make a difference. Changing to presence-absence makes no difference.
+```{r echo = F}
+## Pairwise PERMANOVA function (run)
+comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% filter(sev == "h")
+comp.sub <- subset(comp.data, select = ADBI:WHMO)
+
+kable(pairwise.adonis(comp.sub, comp.data$tsf_cat))
+```
+## testing permanova
+```{r echo = F}
+## Pairwise PERMANOVA function (run)
+# here I'm setting the TSF categories; change as necessary.
+site_data <- site_data_read %>% 
+    mutate(tsf_cat = ifelse(is.na(tsf), "4", "3"))
+site_data$tsf_cat <-as.numeric(as.character(site_data$tsf_cat))
+site_data$tsf_cat[site_data$tsf < 15] <-2
+#site_data$tsf_cat[site_data$tsf < 10] <-1
+
+#subset plants
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native") %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & form == "tree") %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & form == "shrub") %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "shrub" | form == "tree")) %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
+  dplyr::select(site_id, species, cover)
+
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native" & (form == "herb")) %>%
+  dplyr::select(site_id, species, cover)
+
+#Only run this chunk if converting to presence-absence
+plant_dat$cover[plant_dat$cover > 0] <- 1 
+
+# Data prep
+# convert to wide format for following analysis
+plant_matrix <- spread(data = plant_dat, key = species, value = cover, fill = 0)
+# optional:remove plants with few sightings; not sure this makes much difference
+## add columns true/false depending on obs count reaching minimum value
+plant_matrix <- plant_matrix %>% bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
+## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
+plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 5]
+## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
+plant_matrix <- plant_matrix[-49, ] %>%
+  mutate_if(is.character, as.numeric)
+
+plant_matrix$site_id <- as.character(plant_matrix$site_id)
+site_data$site_id <- as.character(site_data$site_id)
+
+comp.data <- left_join(plant_matrix, site_data, by = "site_id")
+comp.data <- comp.data %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3"))) %>% 
+  mutate(sev_tsf = interaction(sev2, tsf_cat, sep ="-")) %>% 
+  mutate(sev_tsf1 = ifelse(sev_tsf == '1-2' , "1", ifelse(sev_tsf == '1-3' , "2", ifelse(sev_tsf == "2-2", "3", ifelse(sev_tsf == "2-3", "4", "5")))))
+
+
+comp.data <- left_join(plant_matrix, site_data, by = "site_id")# %>% filter(sev == "h")
+comp.sub <- subset(comp.data, select = ABCO:WOFI)
+
+kable(pairwise.adonis(comp.sub, comp.data$sev_tsf1))
+
+hs <- plant_spp_num %>% filter(sev =="h") %>% dplyr::select(c(ABCO:WOFI))
+hs1 <- rbind(hs, colSums(hs))
+plant_dat$cover[plant_dat$cover > 0] <- 1 
+hs1[hs1 > 0] <-1
+hs2 <- cbind(hs1, rowSums(hs1)) #119 species in HS (23 sites)
+#hs3 <-hs2 %>% dplyr::select(hs2[24,] > 0)
+hs3 <- hs2[,(hs2[24,]) == 1]
+hs_spp <- data.frame(names = colnames(hs3))
+
+ls <- plant_spp_num %>% filter(sev =="l") %>% dplyr::select(c(ABCO:WOFI))
+ls1 <- rbind(ls, colSums(ls))
+ls1[ls1 > 0] <-1
+ls2 <- cbind(ls1, rowSums(ls1)) #90 species in LS (19 sites)
+ls3 <- ls2[,(ls2[20,]) == 1]
+ls_spp <- data.frame(names = colnames(ls3))
+
+un <- plant_spp_num %>% filter(sev =="u") %>% dplyr::select(c(ABCO:WOFI))
+un1 <- rbind(un, colSums(un))
+un1[un1 > 0] <-1
+un2 <- cbind(un1, rowSums(un1)) #42 species in un (6 sites)
+un3 <- un2[,(un2[7,]) == 1]
+un_spp <- data.frame(names = colnames(un3))
+
+#spp in HS not in LS
+library(rowr)
+x <- cbind.fill(hs_spp, ls_spp, fill = NA)
+hs_spp1 <- x[,1]
+ls_spp1 <- x[,2]
+kable(spp_diff <- setdiff(hs_spp1, ls_spp1))
+
+#spp in LS not in HS
+x <- cbind.fill(ls_spp, hs_spp, un_spp, fill = NA)
+hs_spp1 <- x[,1]
+ls_spp1 <- x[,2]
+un_spp1 <- x[,3]
+kable(spp_diff <- setdiff(hs_spp1, ls_spp1))
+
+#spp in LS not in HS HOW TO PUT ONE COLUMN ON THE END OF ANOTHER?
+ls_spp2 <- c(ls_spp1, un_spp1)
+x <- as.matrix(x)
+x[,4] <- c(x[,2],x[,3])
+x[,4] <- paste(x[,2],x[,3])
+
+
+x <- cbind.fill(ls_spp2, hs_spp, fill = NA)
+hs_spp1 <- x[,1]
+ls_spp1 <- x[,2]
+kable(spp_diff <- setdiff(hs_spp1, ls_spp1))
+
+```
+# Indicator species analysis
+Group 1 = High severity;
+
+Group 2 = Low severity.
+```{r echo = F}
+### Community data matrix
+plant_data_filtered <- left_join(plant_data, site_data, by = "site_id") 
+
+plant_dat <- left_join(plant_data_filtered, plant_names, by = "species") %>%
+  filter(native_status == "native") %>%
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "")) %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu")) 
+
+plant_dat_select  <- plant_dat %>%
+  dplyr::select(site_id, species, cover, sev, sev2)
+
+plant_matrix1 <- spread(data = plant_dat_select, key = species, value = cover, fill = 0)
+
+# getting rid of species detected in 0 plots
+plant_matrix1 <- plant_matrix1 %>% bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
+plant_matrix1 <- plant_matrix1[, (plant_matrix1[49, ]) > 5]
+plant_matrix1 <- plant_matrix1[-49, ]
+
+### Vector for site classification
+### severity
+data <- plant_matrix1[,-c(1:3)]
+groups1 = as.vector(plant_matrix1$sev2)
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+kable(indvalsummary1)
+
+#write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
+```{r eval = F, include = F}
+###Rarefaction curves (not working)
+rare <- plant_matrix
+raredata <- rare[,-1]
+raredata[raredata > 0] <- 1 # transform into presence/absence
+rarecurve(raredata, xlab = "Cumulative number of individuals", ylab = "Number of species")
+
+### trying indicspecies. This combines habitat clusters too.
+options(max.print=1000000)
+indval <- multipatt(data, groups1, func = "IndVal.g", control = how(nperm = 999), max.order = 6)
+indval
+summary(indval, alpha=1)
+summary(indval)
+indval$sign
+
+### Can also use combinations of species as indicators, but this is not very interesting (?). 
+spcomb <- combinespecies(data, max.order = 3)$XC
+indvapspcomp <- multipatt(spcomb, groups1, duleg = TRUE, control = how(nperm = 999))
+summary(indvapspcomp)
+```
