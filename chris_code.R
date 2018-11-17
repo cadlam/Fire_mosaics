@@ -1,6 +1,6 @@
 
 #Goodness-of-fit tests
-#This runs three GOF tests: Chi square, Freeman Tukey, and SSE. What your basically looking for is that your data doesn't fall near the extremes of the bootstrapped distribution. A good threshold for each statistic might be >.1 and <0.9. Probably good to run at least 100 simulations, more is preferable (nsim in the bottom code). These can be slow.
+#This runs three GOF tests: Chi square, Freeman Tukey, and SSE. What you're basically looking for is that your data doesn't fall near the extremes of the bootstrapped distribution. A good threshold for each statistic might be >.1 and <0.9. Probably good to run at least 100 simulations, more is preferable (nsim in the bottom code). These can be slow.
 
 #m12 is your model fit - if this doesn't work, you made need to play around with the model output you are using and figure out how to extract the required elements below
 fm <- m12

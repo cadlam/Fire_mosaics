@@ -14,13 +14,13 @@ LEVU,Letharia,vulpina,Letharia vulpina,
 LOANO,Lobaria,anomala,Lobaria anomala,
 LOANT,Lobaria,anthraspis,Lobaria anthraspis,
 LOPU,Lobaria,pulmonaria,Lobaria pulmonaria,
-MECA,Melanelixia,californica,Melanelixia californica,
-NEHE,Nephroma,helvetica,Nephroma helvetica,
+MECA,Melanelixia,californica,Melanelixia californica,"ACTUALLY MELANELIXIA, MULTISPORA OR SUBOLIVACEA, CHECK ASCI"
+NEHE,Nephroma,helvetica,Nephroma helvetica,"medulla white, marginal lobules, no white papillae below"
 NERE,Nephroma,resupinatum,Nephroma resupinatum,
 NOPU,Normandina,pulchella,Normandina pulchella,
 PAHY,Parmelia,hygrophila,HAS ISIDIA_RHIZINES APICALLY DICHOTOMOUS,
 PAQU,Parmelina,quercina,Parmelina quercina,
-PASU,Parmela,sulcata,Parmela sulcata,
+PASU,Parmelia,sulcata,Parmela sulcata,
 PECO,Peltigera,collina,Peltigera collina,
 PLGL,Platismatia,glauca,Platismatia glauca,
 PLHE,Platismatia,herrei,Platismatia herrei,
@@ -34,7 +34,28 @@ VUCA,Vulpicida,canadensis,Vulpicida canadensis,
 USXX,Usnea,,Unknown Usnea,
 POXX,Polycauliona,,,
 FUME,Fuscopannaria,mediterranea,Fuscopannaria mediterranea,
-LEPS,Leptogium,pseudofurfuraceum,Leptogium pseudofurfuraceum,
+LEPS,Leptogium,pseudofurfuraceum,Leptogium pseudofurfuraceum,COULD USE SECOND OPINION_SEE SPECIMEN FROM 57
 CONI,Collema,nigriscens,,
 PHPE,Physconia,perisidiosa,,
 PHCA,Physconia,californica,,
+ALSA,Alectoria,sarmentosa,,
+HYOC,Hypogymnia,occidentalis,,holes in tips_lobe interior dark
+HYME,Hypogymnia,metaphysodes,,ceiling white_floor dark_no holes_no side lobes_looks neater
+HYAP,Hypogymnia,apinnata,,medulla P+R_cortex P-_lobes forming arcs with occ lobe tip perforations
+FUPU,Fuscopannaria,pulveracea,,marginal soredia_blue gray color_no apos_K+Y
+PHAI,Physcia,aipolia,,med and cort K+Y
+FUXX,Fuscopannaria,sp,,green esorediate_black apos
+XAHA,Xanthomendoza,hasseana,Xanthomendoza hasseana,all POXX are this probably?
+RADI,Ramalina,dilacerata,,in 58
+USCA,Usnea,cavernosa,,"FEW APOS_LONGITUDINAL RIDGES AND PITS_FEW FIBRILS_NO PAPILLAE, in 30"
+PHBI,Physcia,biziana,,
+LECO,Letharia,columbiana,,
+ALIM,Alectoria,imshaugii,,in 20
+USSC,Usnea,scabrata,,"pendulous, with ridges in 37"
+DUMB,Dummy,,,
+PHYSCONIA,Physconia,,,
+PHYS,Physconia,,,
+PHXX,Physconia,,,
+ESID,Esslingeriana,idahoense,,
+HYXX,Hypogymnia,sp,,
+PHAL,Physcia,alnophylla,,

@@ -22,6 +22,7 @@ library(lmtest)
 library(bbmle)
 library(spdep)
 library(rsq)
+library(lmtest)
 options(contrasts =c("contr.sum", "contr.poly"))
 
 set.seed(27)
@@ -257,7 +258,7 @@ CEIN_mi <- (moran.test(plant_mrpp_d$MECA, lwW, alternative="two.sided"))$statist
 CEIN_mip <- (moran.test(plant_mrpp_d$MECA, lwW, alternative="two.sided"))$'p.value'
 ```
 
-```{r AIC}
+```{r AIC test}
 d <- as.data.frame(UCBAdmissions)
 d <- tidyr::spread(d, Admit, Freq) # use Hadley's excellent tidyr to reshape
 d[order(d$Dept), ]
@@ -280,15 +281,6 @@ reported.table$weight <- round(reported.table$weight, 2)
 reported.table$dAIC <- round(reported.table$dAIC, 1)
 row.names(reported.table) <- model.names
 
-
-
-#this is the way to calculate AICc
-library(bbmle)
-AICctab(MECA_mod,MECA_mod1, base=T, delta=T, weights=T)
-
-# likelihood ratio test
-library(lmtest)
-
 ```
 
 # function
@@ -298,8 +290,6 @@ tbl_headr <- c("sp", "Model", "dAICc", "w", "X2", "df", "p", "R2", 'Moran I', 'M
 
 #function:
 lmt <- function(sp_dat) {
-
-  ?glm
 tsf <- glm(sp_dat[,2]/100 ~ tsf_cat, sp_dat, family = "gaussian") #sp cover /100 because it has to be between 0 and 1
 sev <- glm(sp_dat[,2]/100 ~ sev, sp_dat, family = "gaussian")
 sp_null  <-glm(sp_dat[,2]/100 ~ 1, sp_dat, family = "gaussian")
@@ -308,15 +298,7 @@ full <- glm(sp_dat[,2]/100 ~ sev + tsf_cat, sp_dat, family = "gaussian")
 # AIC and likelihood ratio test
 sp_aic <- AICctab(full, sev, tsf, base=T, delta=T, weights=T)
 
-# get r squared values, but need to get them in the right order. use a conditional process?
-#ifelse(attr(sp_aic, "row.names")[1] == "sev", sev, ifelse(attr(sp_aic, "row.names")[1] == "tsf", tsf, full))
-
-#sp_R2_1 <- rsq(ifelse(attr(sp_aic, "row.names")[1] == "sev", sev, ifelse(attr(sp_aic, "row.names")[1] == "tsf", tsf, full)), adj = T)
-
-#sp_R2_1 <- rsq(attr(sp_aic, "row.names")[1], adj = T)
-#sp_R2_2 <- rsq(attr(sp_aic, "row.names")[2], adj = T)
-#sp_R2_3 <- rsq(attr(sp_aic, "row.names")[3], adj = T)
-
+# R2 values 
 # row 1 R2
 if(attr(sp_aic, "row.names")[1] == "sev")
     {sp_R2_1 <- rsq(sev, adj = T)}
@@ -341,26 +323,7 @@ if(attr(sp_aic, "row.names")[3] == "tsf")
 else 
     {sp_R2_3 <- rsq(full, adj = T)}
 
-
-#sp_tsfcat_R2 <- rsq(tsf, adj = T)
-#sp_sev_R2 <- rsq(sev, adj = T)
-#sp_mod_R2 <- rsq(full, adj = T)
-
-
-#sp_full <-  glm(log1p(sp_dat[,2]) ~ sev*tsf_cat, sp_dat, family = "gaussian")
-#sp_tsfcat <- glm(log1p(sp_dat[,2]) ~ tsf_cat, sp_dat, family = "gaussian")
-#sp_sev <- glm(log1p(sp_dat[,2]) ~ sev, sp_dat, family = "gaussian")
-#sp_null  <-glm(log1p(sp_dat[,2]) ~ 1, sp_dat, family = "gaussian")
-
-#but check the QQ plot: log1p or logit transformation is way better.
-#plot(CEIN_sev)
-#plot(CEIN_full)
-#CEIN_sev_t <- glm(log1p(CEIN) ~ sev, cein_dat, family = "gaussian")
-#CEIN_aic <- AICctab(CEIN_full,CEIN_full_t, base=T, delta=T, weights=T)
-#lrtest(CEIN_sev, CEIN_sev_t)
-
-#how to get the right lrt into the table with the right aic? Same with the R2 for that matter
-
+# Likelihood Ratio Test
 # row 1 R2
 if(attr(sp_aic, "row.names")[1] == "sev")
     {sp_lrt_1 <- lrtest(sev, sp_null)}
@@ -394,7 +357,7 @@ else
 sp_mi <- (moran.test(sp_dat[,2], lwW, alternative="two.sided"))$statistic
 sp_mip <- (moran.test(sp_dat[,2], lwW, alternative="two.sided"))$'p.value'
 
-# Now the table BUT: the order in the aic changes depending on which model is best; the way the table is shown it throws that data into a pre existing order, so that's wrong
+# construct table
 sp_tbl1 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[1], sp_aic$dAICc[1], sp_aic$weight[1], sp_lrt_1$Chisq[2], sp_lrt_1$'#Df'[1], sp_lrt_1$'Pr(>Chisq)'[2], sp_R2_1, sp_mi, sp_mip)
 
 sp_tbl2 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[2], sp_aic$dAICc[2], sp_aic$weight[2], sp_lrt_2$Chisq[2], sp_lrt_2$'#Df'[1], sp_lrt_2$'Pr(>Chisq)'[2], sp_R2_2, sp_mi, sp_mip)
@@ -679,7 +642,7 @@ lmt(sp_dat)
 #Function for the GOF tests - if this doesn't work, check your model output and make sure observed, expected, and residuals are being properly extracted and amend those first three lines as needed. I haven't tried this with a GLM output, but it should be an easy fix if it doesn't work out of the box.
 #looks like boot() needs some sort of indices parameter... not sure what this means but this seems to work:
 fitstats <- function(sp_dat, ind) {
-  fm <- glm(sp_dat[,2]/100 ~ sev + tsf_cat, sp_dat[ind,], family = "binomial")
+  fm <- glm(sp_dat[,2]/100 ~ sev + tsf_cat, sp_dat[ind,], family = "poisson")
   observed <- fm$y
   expected <- fitted(fm)
   resids <- residuals(fm)

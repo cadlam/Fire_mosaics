@@ -99,6 +99,9 @@ site_data$tsf_cat[site_data$tsf < 17] <-2
 site_data$tsf_cat[site_data$tsf < 10] <-1
 
 site_data$site_id <- as.character(site_data$site_id) 
+
+#lichens
+lichen_names <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/lichen_list.csv")
 ```
 
 
@@ -623,8 +626,9 @@ bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>%
 bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>% 
   mutate(pa = 1) %>% 
   dplyr::rename(site_id = Point) %>% 
-  dplyr::rename(species = Spp)
-
+  dplyr::rename(species = Spp) %>% 
+  mutate(species = recode(species, "'ANHU'='XXHU'")) %>% 
+  mutate(species = recode(species, "'RUHU'='XXHU'")) #changing all RUHU and ANHU to XXHU
 
 # Adding additional species detections (outside count)
 bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
@@ -722,6 +726,143 @@ p <- ggplot(scrs) +
   labs(title = "Figure 2: NMDS for birds")
 p
 ```
+
+#### Lichens
+```{r, echo=FALSE,results='hide',fig.keep='all'}
+# read in data
+lichen_dat_wide <- read.csv("data/lichen_data.csv", header = T) %>% 
+  mutate(site_id = as.factor(site_id)) %>% 
+  dplyr::select(site_id, species, abund) %>% 
+  spread(key = species, value = abund, fill = 0) %>% 
+  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
+
+#for genus level analysis (presence/absence)
+lichen_dat_genus <- lichen_dat_wide %>% 
+  gather(key=species, value=abund, AHPA:DUMB) %>% 
+  left_join(., lichen_names, by = "species") %>% 
+  dplyr::select(site_id,genus,abund) 
+
+# remove duplicate rows (same species detected multiple times in a single plot)
+lichen_dat_genus_pa1 <- lichen_dat_genus %>% 
+  mutate(pa = ifelse(abund == 0, 0, 1)) %>% 
+  dplyr::select(site_id, genus, pa)
+
+#spread not working.
+lichen_dat_genus_pa_l <- unique(lichen_dat_genus_pa1[ , c(1:3)]) %>%
+  filter(pa==1)
+
+lichen_dat_genus_pa <- lichen_dat_genus_pa_l %>% 
+  spread(key = genus, value = pa, fill = 0)
+
+# calculate distance for NMDS.
+# for species: 
+#NMDS.log<-log1p(lichen_dat_wide[,-1])#[,-c(1:20)])
+#for genus:
+NMDS.log<-log1p(lichen_dat_genus_pa[,-1])#[,-c(1:20)])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = lichen_dat_wide$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.05)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = Cred,
+               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+            size = 3) +
+  labs(title = "Figure 3: NMDS for lichens")
+p
+```
+
+#### All taxa
+```{r, echo=FALSE,results='hide',fig.keep='all'}
+# read in data
+plant_dat_long <- plant_dat %>% 
+  mutate(pa = cover) %>% 
+  dplyr::select(site_id, species, pa)
+
+lichen_dat_genus_pa_l <- lichen_dat_genus_pa_l %>% 
+  mutate(species = genus) %>% 
+  dplyr::select(site_id, species, pa)
+
+all_spp <- rbind(lichen_dat_genus_pa_l, bird_dat_pa) %>% 
+  rbind(., plant_dat_long)
+
+# convert to wide matrix
+all_spp_w_pa <- unique(all_spp[ , c(1:3)]) %>%
+  filter(pa==1) %>% 
+  spread(key = species, value = pa, fill = 0)
+
+# calculate distance for NMDS.
+# for species: 
+#NMDS.log<-log1p(lichen_dat_wide[,-1])#[,-c(1:20)])
+#for genus:
+NMDS.log<-log1p(all_spp_w_pa[,-1])#[,-c(1:20)])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = lichen_dat_wide$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.05)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = Cred,
+               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+            size = 3) +
+  labs(title = "Figure 4: NMDS for all spp")
+p
+```
+
 ### Plots for plants
 
 ```{r}
@@ -797,11 +938,13 @@ ggplot(scrs1, aes(x = herb_cov, y = NMDS1)) +
 bird_mat_num <- bird_matrix1 %>%
   mutate(num_spp = rowSums(dplyr::select(.,ACWO:YEWA)))
 
+#doesn't look right:
 hist <- ggplot(bird_mat_num, aes(x = sev, y = num_spp)) +
   geom_boxplot() +
   labs(title = "Figure 2: Number of bird species in each habitat")
 hist
 
+#the following two should be split between HS and LS/UN rather than showing all together
 ggplot(bird_mat_num, aes(x = tree_cov, y = num_spp)) +
   geom_point(aes(colour = sev))+
   geom_smooth(method ="lm")
