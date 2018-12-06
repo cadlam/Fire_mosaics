@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Read in data
 ```{r}
 library (plyr)
 library (dplyr)
@@ -72,18 +73,19 @@ plant_glm <- merge(plant_dat_pa, site_data, by= 'site_id') %>%
 
 ```
 
+# GLM and LRT for selected species (more than 10 detections?)
 ```{r}
 # now just for MAGR
 MAGR_glm <- plant_glm %>% filter(species == "MAGR")
 
 # Now the GLM
-bin.glm1 = glm(pa~sev+tsf_cat,data=MAGR_glm,family=binomial)
+bin.glm1 <- glm(pa~sev+tsf_cat,data=MAGR_glm,family=binomial)
 
 summary(bin.glm1)
 #step(bin.glm1) 
 
 #likelihood ratio test
-results.reduced =glm(data=MAGR_glm, pa ~ 1, family=binomial)
+results.reduced <- glm(data=MAGR_glm, pa ~ 1, family=binomial)
 anova(results.reduced,bin.glm1, test="Chisq")
 
 ```

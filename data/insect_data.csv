@@ -1,97 +1,691 @@
-﻿site_id,trap
-1,p
-1,c
-2,p
-2,c
-3,p
-3,c
-4,p
-4,c
-5,p
-5,c
-6,p
-6,c
-7,p
-7,c
-8,p
-8,c
-9,p
-9,c
-10,p
-10,c
-12,p
-12,c
-13,p
-13,c
-14,p
-14,c
-15,p
-15,c
-16,p
-16,c
-17,p
-17,c
-18,p
-18,c
-19,p
-19,c
-20,p
-20,c
-21,p
-21,c
-25,p
-25,c
-27,p
-27,c
-28,p
-28,c
-30,p
-30,c
-32,p
-32,c
-33,p
-33,c
-34,p
-34,c
-36,p
-36,c
-37,p
-37,c
-38,p
-38,c
-40,p
-40,c
-41,p
-41,c
-42,p
-42,c
-43,p
-43,c
-44,p
-44,c
-46,p
-46,c
-47,p
-47,c
-49,p
-49,c
-51,p
-51,c
-52,p
-52,c
-53,p
-53,c
-54,p
-54,c
-55,p
-55,c
-56,p
-56,c
-57,p
-57,c
-58,p
-58,c
-59,p
-59,c
-60,p
-60,c
+site_id,trap,order,suborder,family,number,notes
+1,p,Hymenoptera,Aculeata,,6,incl 6 yellow jackets
+1,p,Coleoptera,,,1,1 elateridae
+1,p,Coleoptera,,Curculionidae,5,bark beetles
+1,p,Lepidoptera,,,1,
+1,p,Hymenoptera,Parasitica,,12,
+1,p,Diptera,Nematocera,,37,
+1,p,Hemiptera,Homoptera,,3,
+1,p,Diptera,Brachycera,,1,fruit fly
+1,c,Raphidioptera,,,1,
+1,c,Diptera,Nematocera,,13,
+1,c,Lepidoptera,,,3,fringe winged moth
+1,c,Arachnida,Araneae,,1,
+1,c,Hymenoptera,Parasitica,,1,
+1,c,Hemiptera,Homoptera,,1,
+2,p,Hemiptera,Homoptera,,13,
+2,p,Hemiptera,Heteroptera,,1,
+2,p,Hymenoptera,Aculeata,,6,
+2,p,Hymenoptera,Aculeata,Formicidae,4,
+2,p,Hymenoptera,Parasitica,,3,
+2,p,Coleoptera,,,3,
+2,p,Arachnida,Araneae,,3,
+2,p,Coleoptera,,Curculionidae,1,bark beetle
+2,p,Lepidoptera,,,1,
+2,p,Diptera,Brachycera,,15,8 syrphidae and 7 fruit
+2,p,Diptera,Nematocera,,13,
+2,p,Orthoptera,,,2,
+2,c,Lepidoptera,,,12,
+2,c,Diptera,Nematocera,,3,
+2,c,Diptera,Brachycera,,2,
+2,c,Hemiptera,Homoptera,,1,
+3,p,Lepidoptera,,,1,moth
+3,p,Hymenoptera,,Formicidae,1,
+3,p,Hymenoptera,Aculeata,,13,"yellow jacket(1), hornet (1) ""bald face??"""
+3,p,Coleoptera,,,6,(1) Lampyridae 
+3,p,Hemiptera,Heteroptera,,6,
+3,p,Psocoptera,,,4,
+3,p,Diptera,Nematocera,,25,
+3,p,Diptera,Brachycera,,10,
+3,p,Hemiptera,Homoptera,,7,(3) aphidae
+3,p,Ephemeroptera,,,1,
+3,c,Lepidoptera,,,5,"big brown moth, small brown moth (4)"
+3,c,Diptera,Nematocera,,8,
+3,c,Diptera,Brachycera,,5,
+3,c,Hemiptera,Homoptera,,1,
+3,c,Psocoptera,,,2,
+3,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+3,c,Coleoptera,,Curculionidae,1,bark beetle
+3,c,Coleoptera,,,1,possibly a black leaf beetle 
+4,p,Coleoptera,,,14,
+4,p,Coleoptera,,Curculionidae,7,bark beetle
+4,p,Hymenoptera,Aculeata,,12,
+4,p,Hymenoptera,Aculeata,Formicidae,5,
+4,p,Arachnida,Araneae,,1,
+4,p,Orthoptera,,,2,
+4,p,Hymenoptera,Parasitica,,5,
+4,p,Hemiptera,Homoptera,,35,
+4,c,Coleoptera,,Curculionidae,11,bark beetles
+4,c,Hymenoptera,Aculeata,Formicidae,1,
+4,c,Coleoptera,,,1,like BB but slender antennae
+5,c,Diptera,Brachycera,,2,
+5,c,Coleoptera,,,1,
+5,c,Lepidoptera,,,1,
+5,c,Coleoptera,,Curculionidae,5,
+5,c,Psocoptera,,,1,
+5,p,Orthoptera,,,3,
+5,p,Hymenoptera,Aculeata,,7,
+5,p,Coleoptera,,,6,
+5,p,Hymenoptera,Aculeata,Formicidae,2,
+5,p,Arachnida,Araneae,,1,
+5,p,Diptera,Brachycera,,3,
+5,p,Diptera,Nematocera,,1,
+5,p,Hymenoptera,Parasitica,,1,
+5,p,Hemiptera,Homoptera,,15,
+5,p,Hemiptera,Heteroptera,,1,
+6,p,Hymenoptera,Aculeata,Vespidae,2,yellowjackets
+6,p,Raphidioptera,,,1,
+6,p,Arachnida,Opiliones,,3,
+6,p,Diptera,Brachycera,,3,incl 1 droso
+6,p,Hemiptera,Homoptera,,10,incl 1 aphid and 5 larvae
+6,p,Coleoptera,,Curculionidae,8,
+6,p,Coleoptera,,Carabidae,3,2 carabidae 1 staph
+6,p,Diptera,Nematocera,,2,
+6,p,Arachnida,Araneae,,1,
+6,c,Diptera,Brachycera,,3,
+6,c,Diptera,Nematocera,,3,
+6,c,Hemiptera,Heteroptera,,1,
+6,c,Hemiptera,Homoptera,,2,
+6,c,Psocoptera,,,2,
+6,c,Coleoptera,,Curculionidae,14,
+7,p,Hymenoptera,Aculeata,,33,plus 4 caterpillar
+7,p,Hemiptera,Heteroptera,,11,
+7,p,Coleoptera,,,17,
+7,p,Orthoptera,,,2,
+7,p,Arachnida,Araneae,,3,
+7,p,Coleoptera,,Curculionidae,4,bark beetles
+7,p,Hymenoptera,Parasitica,,8,
+7,p,Hemiptera,Homoptera,,173,
+7,p,Hymenoptera,Aculeata,Formicidae,9,
+7,p,Collembola,,,1,
+7,p,Diptera,Brachycera,,10,
+7,p,Diptera,Nematocera,,24,
+7,p,Thysanoptera,,,1,
+7,p,Psocoptera,,,3,
+7,c,Lepidoptera,,,4,
+7,c,Coleoptera,,,5,
+7,c,Diptera,Brachycera,,7,
+7,c,Diptera,Nematocera,,3,
+7,c,Psocoptera,,,2,
+7,c,Hymenoptera,Aculeata,,1,
+7,c,Hymenoptera,Aculeata,Formicidae,1,
+7,c,Hymenoptera,Parasitica,,1,
+7,c,Hemiptera,Homoptera,,1,
+7,c,Thysanoptera,,,2,
+8,p,Lepidoptera,,,2,"large brown moth, small brown moth"
+8,p,Lepidoptera,,Hesperiidae ,1,skipper 
+8,p,Hemiptera,Homoptera,,21,10 are aphids
+8,p,Hymenoptera,Aculeata,,3,Unknown Vespodiea_1; needs ID 
+8,p,Diptera,Nematocera,,15,
+8,p,Arachnida,Acari,,1,
+8,p,Coleoptera,,Scarabaeidae,1,
+8,p,Hymenoptera,,Formicidae ,11,
+8,p,Diptera,Brachycera,,1,
+8,p,Coleoptera,,Curculionidae,2,Bark beetle
+8,p,Coleoptera,,Lampyridae ,1,
+8,p,Hymenoptera,Parasitica,,3,
+8,c,Lepidoptera,,,1,small brown moth
+8,c,Hemiptera,Homoptera,Aphidae,2,
+8,c,Diptera,Nematocera,,2,
+8,c,Hymenoptera,Parasitica,,2,1 is Ichneumonidae
+9,p,Lepidoptera,,,1,Hesperiidae
+9,p,Hymenoptera,Aculeata,,7,
+9,p,Hymenoptera,Parasitica,,7,
+9,p,Diptera,Brachycera,,10,mostly fruit flies
+9,p,Coleoptera,,Curculionidae,1,bark beetle
+9,p,Coleoptera,,,6,
+9,p,Hymenoptera,Aculeata,Formicidae,3,
+9,p,Arachnida,Araneae,,2,
+9,p,Hemiptera,Homoptera,,8,
+9,p,Diptera,Nematocera,,1,
+9,c,Neuroptera,,,1,
+9,c,Coleoptera,,,1,
+9,c,Lepidoptera,,,4,
+10,p,Coleoptera,,,3,
+10,p,Coleoptera,,Curculionidae,2,bark beetle
+10,p,Hymenoptera,Aculeata,,1,
+10,p,Hymenoptera,Aculeata,Formicidae,30,
+10,p,Thysanoptera,,,2,
+10,p,Diptera,Brachycera,,5,
+10,p,Apterygota,,,2,
+10,p,Psocoptera,,,1,
+10,p,Hemiptera,Homoptera,,7,
+10,p,Hymenoptera,Parasitica,,4,
+10,p,Lepidoptera,,,1,
+10,p,Diptera,Nematocera,,10,
+10,c,Lepidoptera,,,7,"3 large brown, 2 small brown, 2 tiny brown"
+10,c,Diptera,Brachycera,Drosophilidae,3,fruit fly
+10,c,Diptera,Nematocera,,5,
+10,c,Psocoptera,,,1,
+10,c,Coleoptera,,,1,
+12,p2,Hymenoptera,Aculeata,Vespidae,2,"This was the first thing entered on spreadsheet, probably as a test???"
+12,p,Hymenoptera,Aculeata,,10,(2) yellowjackets
+12,p,Lepidoptera,,,2,
+12,p,Coleoptera,,,1,
+12,p,Arachnida,Araneae,,1,
+12,p,Hemiptera,Homoptera,,5,(1) Aphidae
+12,p,Hemiptera,Heteroptera,Enicocephalidae,1,
+12,p,Hymenoptera,Parasitica,,2,
+12,p,Hymenoptera,,Formicidae,1,
+12,p,Diptera,Nematocera,,32,
+12,p,Diptera,Brachycera,,10,
+12,c,Lepidoptera,,,1,tiny light brown moth
+12,c,Diptera,Brachycera,Drosophilidae,1,
+12,c,Diptera,Nematocera,,1,
+13,p,Hymenoptera,Aculeata,Formicidae,3,
+13,p,Hymenoptera,Aculeata,,2,
+13,p,Coleoptera,,,2,
+13,p,Hemiptera,Homoptera,,2,
+13,p,Diptera,Nematocera,,21,
+13,p,Hymenoptera,Parasitica,,2,
+13,p,Arachnida,Araneae,,1,
+13,c,Diptera,Nematocera,,6,
+13,c,Coleoptera,,,1,"pic ""coleoptera sublte shine, small hairs, longish antenae"""
+13,c,Diptera,Brachycera,,2,
+14,p,Hymenoptera,Aculeata,,3,(1) Yellowjacket
+14,p,Diptera,Brachycera,,2,
+14,p,Hymenoptera,,Formicidae,2,
+14,p,Odonata,,,1,
+14,p,Coleoptera,,,1,
+14,p,Hemiptera,Heteroptera,,1,
+14,p,Hemiptera,Homoptera,,3,(2) Aphidae
+14,p,Diptera,Nematocera,,1,
+14,p,Lepidoptera,,,1,Small moth
+14,p,Hymenoptera,Parasitica,,2,
+14,p,Diptera,Brachycera,Drosophilidae,57,
+14,c,Diptera,Brachycera,,6,
+14,c,Hymenoptera,Parasitica,,1,
+15,p,Diptera,Nematocera,,28,
+15,p,Diptera,Brachycera,,10,
+15,p,Hemiptera,Homoptera,,1,1 aphid 
+15,p,Hymenoptera,Parasitica,Ichneumonidae,1,
+15,p,Hymenoptera,Aculeata,,2,
+15,p,Hymenoptera,Parasitica,,1,
+15,c,Hemiptera,Homoptera,,2,
+15,c,Diptera,Nematocera,,2,
+15,c,Diptera,Brachycera,,2,
+15,c,Lepidoptera,,,2,big brown moths 
+16,p,Raphidioptera,,,1,
+16,p,Hymenoptera,Aculeata,Vespidae,1,
+16,p,Lepidoptera,,,4,1small brown; 1 small tan; 2 extra tiny brown moths
+16,p,Arachnida,,,3,
+16,p,Diptera,Nematocera,,15,
+16,p,Hemiptera,Homoptera,,1,
+16,p,Diptera,Nematocera,Culicidae,1,mosquito
+16,p,Diptera,Brachycera,,15,
+16,p,Hymenoptera,Parasitica,,1,
+16,p,Psocoptera,,,1,
+16,p,Hymenoptera,Aculeata,,1,
+16,p,Coleoptera,,,4,
+16,p,Coleoptera,,Curculionidae,2,
+16,c,,,,0,lost?
+17,p,Orthoptera,,,1,
+17,p,Hymenoptera,Aculeata,Vespidae,1,yellow jacket
+17,p,Diptera,Nematocera,,15,
+17,p,Arachnida,,,1,
+17,p,Hemiptera,Homoptera,,11,
+17,p,Diptera,Brachycera,,5,
+17,p,Hymenoptera,Aculeata,,8,
+17,p,Coleoptera,,Curculionidae,1,
+17,p,Hymenoptera,Parasitica,,1,
+17,c,Lepidoptera,,,15,
+17,c,Hymenoptera,Aculeata,,2,
+17,c,Hymenoptera,Parasitica,,1,
+17,c,Diptera,Brachycera,,12,
+17,c,Diptera,Nematocera,,9,
+17,c,Psocoptera,,,2,
+18,p,Hemiptera,Heteroptera,,12,
+18,p,Hemiptera,Homoptera,,110,
+18,p,Coleoptera,,,11,
+18,p,Diptera,Brachycera,,42,incl a bunch of fruit flies
+18,p,Diptera,Nematocera,,11,
+18,p,Hymenoptera,Aculeata,Formicidae,7,
+18,p,Hymenoptera,Aculeata,,47,Many large wasps and bees
+18,p,Hymenoptera,Parasitica,,29,
+18,p,Orthoptera,,,4,
+18,p,Lepidoptera,,,2,
+18,p,Arachnida,Araneae,,1,
+18,p,Thysanoptera,,,300,
+18,p,Psocoptera,,,1,
+18,p,Apterygota,,,2,
+18,c,Diptera,Nematocera,,2,
+18,c,Psocoptera,,,1,
+18,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+18,c,Hemiptera,Homoptera,,3,
+18,c,Hemiptera,Heteroptera,,1,
+18,c,Diptera,Brachycera,Silphidae,1,
+19,p,Hymenoptera,Aculeata,,60,
+19,p,Hemiptera,Heteroptera,,1,
+19,p,Arachnida,Araneae,,2,
+19,p,Coleoptera,,,14,
+19,p,Coleoptera,,Curculionidae,1,bark beetle
+19,p,Diptera,Brachycera,,14,most fruit flies
+19,p,Diptera,Nematocera,,5,
+19,p,Hymenoptera,Parasitica,,28,
+19,p,Hemiptera,Homoptera,,70,
+19,p,Lepidoptera,,,3,
+19,p,Hymenoptera,Aculeata,Formicidae,3,
+19,p,Thysanoptera,,,40,
+19,p,Apterygota,,,2,
+19,p,Collembola,,,50,
+19,p,Orthoptera,,,1,
+19,c,Psocoptera,,,2,
+19,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+19,c,Hemiptera,Homoptera,,1,
+19,c,Lepidoptera,,,1,
+20,p,Hymenoptera,Aculeata,,4,incl 1 YJ 1 megachil 1 cuckoo
+20,p,Orthoptera,,,1,
+20,p,Coleoptera,,,7,
+20,p,Apterygota,,,2,also 1 caterpillar
+20,p,Hemiptera,Homoptera,,8,2 hemiptera with no order added here
+20,p,Diptera,Brachycera,,9,incl 8 fruit flies
+20,p,Hymenoptera,Aculeata,Formicidae,1,
+20,p,Diptera,Nematocera,,14,
+20,p,Collembola,,,1,springtail
+21,p,Hymenoptera,Aculeata,,36,
+21,p,Diptera,Nematocera,,4,
+21,p,Diptera,Brachycera,,38,mostly fruit flies
+21,p,Hemiptera,Homoptera,,38,
+21,p,Coleoptera,,,17,5 lampyridae
+21,p,Lepidoptera,,,3,
+21,p,Hymenoptera,Aculeata,Formicidae,3,
+21,p,Hymenoptera,Parasitica,,4,
+21,c,Coleoptera,,,2,Coccinellidae
+21,c,Lepidoptera,,,4,"(1 big brown, 1 medium, neither wings frindged, 2 small brown moth wings frindged) "
+21,c,Hemiptera,Homoptera,,7,
+21,c,Diptera,Nematocera,,1,
+21,c,Diptera,Brachycera,,3,(2 different types) 
+21,c,Hemiptera,Heteroptera,,1,
+21,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+25,p,Coleoptera,,,1,
+25,p,Diptera,Brachycera,,4,
+25,p,Arachnida,Araneae,,1,
+25,p,Hymenoptera,Parasitica,Ichneumonidae,1,
+25,p,Hymenoptera,Parasitica,,1,
+25,p,Hymenoptera,,Formicidae ,1,
+25,p,Diptera,Nematocera,,9,
+25,p,Arachnida,Opiliones,,1,
+25,p,Coleoptera,,Lampyridae,1,
+25,p,Apterygota,,,1,
+25,p,Hemiptera,Homoptera,Aphidae ,1,
+25,p,Hemiptera,Homoptera,,7,
+25,c,Lepidoptera,,,5,small brown moths
+25,c,Diptera,Nematocera,,44,
+25,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+25,c,Hemiptera,Homoptera,,1,
+25,c,Coleoptera,,Curculionidae,1,
+25,c,Diptera,Brachycera,Drosophilidae,8,fruit fly
+25,c,Diptera,Brachycera,,1,
+27,p,Hymenoptera,Aculeata,Vespidae,2,Yellowjackets
+27,p,Orthoptera,,,3,camel cricket
+27,p,Hymenoptera,Aculeata,Formicidae,4,
+27,p,Diptera,Nematocera,,22,
+27,p,Arachnida,Araneae,,2,
+27,p,Hemiptera,Heteroptera,,2,
+27,p,Hemiptera,Homoptera,,1,
+27,p,Coleoptera,,Curculionidae,1,bark beetle
+27,p,Diptera,Brachycera,Drosophilidae,1,
+27,p,Psocoptera,,,1,
+27,c,Lepidoptera,,,3,
+27,c,Raphidioptera,,,1,
+27,c,Diptera,Nematocera,,1,
+28,p,Hymenoptera,Parasitica,Ichneumonidae,1,
+28,p,Hemiptera,Homoptera,Aphidae,3,
+28,p,Diptera,Nematocera,,50,
+28,p,Hemiptera,Homoptera,,2,
+28,p,Diptera,Brachycera,,11,
+28,p,Hymenoptera,Aculeata,Formicidae,1,
+28,p,Lepidoptera,,,1,small brown moth
+28,p,Psocoptera,,,3,
+28,p,Coleoptera,,Curculionidae,5,
+28,p,Coleoptera,,,7,
+28,p,Hymenoptera,Aculeata,,2,
+28,p,Neuroptera,,Coniopterygidae,1,
+28,c,Lepidoptera,,,10,
+28,c,Coleoptera,,,2,
+28,c,Coleoptera,,Curculionidae,7,bark beetle
+28,c,Hymenoptera,Aculeata,,1,
+28,c,Psocoptera,,,3,
+28,c,Diptera,Nematocera,,5,
+28,c,Diptera,Brachycera,,3,
+28,c,Hemiptera,Heteroptera,,2,
+28,c,Hymenoptera,Parasitica,,2,
+30,p,Orthoptera,,,1,Camel cricket
+30,p,Diptera,Brachycera,,6,2 large spp: one black and spiky and the other tan and spiky
+30,p,Hymenoptera,Parasitica,,3,incl one cynipidae
+30,p,Diptera,Nematocera,,35,
+30,p,Coleoptera,,,1,click beetle
+30,p,Coleoptera,,Curculionidae,1,bark beetle
+30,p,Arachnida,Araneae,,4,
+30,p,Hemiptera,Homoptera,,7,
+30,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+30,c,Lepidoptera,,,4,
+30,c,Psocoptera,,,2,
+30,c,Coleoptera,,Curculionidae,1,bark beetle
+30,c,Diptera,Nematocera,,3,
+32,p,Coleoptera,,,1,
+32,p,Arachnida,,,1,
+32,p,Orthoptera,,,3,
+32,p,Diptera,Brachycera,,12,
+32,p,Hemiptera,Homoptera,,2,
+32,p,Diptera,Nematocera,,3,
+32,p,Hymenoptera,Parasitica,,1,
+32,p,Hymenoptera,Aculeata,,1,
+32,p,Coleoptera,,Buprestidae,1,
+33,p,Arachnida,Opiliones,,3,
+33,p,Arachnida,Araneae,,1,
+33,p,Orthoptera,,,1,
+33,p,Apterygota,,,1,
+33,p,Diptera,Brachycera,,1,
+33,p,Hymenoptera,Aculeata,Formicidae ,1,
+33,p,Hymenoptera,Parasitica,Ichneumonidae,2,
+33,p,Coleoptera,,Curculionidae ,3,
+33,p,Coleoptera,,,3,
+33,p,Hymenoptera,Parasitica,,1,
+32,c,Psocoptera,,,1,
+33,c,Coleoptera,,Curculionidae,6,bark beetles
+33,c,Coleoptera,,,1,
+33,c,Arachnida,Araneae,,2,
+33,c,Lepidoptera,,,4,
+33,c,Diptera,Nematocera,,6,
+33,c,Hymenoptera,Parasitica,,1,
+34,p,Myriapoda,Diplopoda,,2,
+34,p,Hymenoptera,Aculeata,,8,incl 1 yellowjacket
+34,p,Orthoptera,,,16,incl 2 camel crickets and the others acrididae
+34,p,Hemiptera,Heteroptera,,11,incl 7 red assasin bugs
+34,p,Hymenoptera,Aculeata,Formicidae,16,
+34,p,Apterygota,,,1,
+34,p,Hymenoptera,Parasitica,,6,
+34,p,Coleoptera,,Curculionidae,10,bark beetles
+34,p,Coleoptera,,,4,1 buprestidae 1 mordellidae 1 staph
+34,p,Diptera,Nematocera,,3,
+34,p,Diptera,Brachycera,,1,
+34,p,Hemiptera,Homoptera,,32,many leaf hoppers
+34,p,Lepidoptera,,,1,
+34,p,Collembola,,,1,
+34,c,Arachnida,Araneae,,1,
+34,c,Coleoptera,,Curculionidae,9,bark beetles
+36,p,Lepidoptera,,,1,caterpillar
+36,p,Myriapoda,Diplopoda,,1,
+36,p,Orthoptera,,Acrididae,3,
+36,p,Diptera,Brachycera,,2,plus one maggot
+36,p,Coleoptera,,Curculionidae,2,
+36,p,Hemiptera,Homoptera,,3,
+36,p,Arachnida,Opiliones,,1,
+36,p,Coleoptera,,,6,1 larva 4 staph 1 carabidae
+36,p,Diptera,Nematocera,,3,
+36,c,Raphidioptera,,,1,
+36,c,Diptera,Brachycera,Tabanidae,2,Deer flies
+36,c,Diptera,Nematocera,,1,
+36,c,Coleoptera,,Curculionidae,2,Bark beetle
+37,p,Arachnida,,,1,
+37,p,Hymenoptera,Aculeata,Vespidae ,1,Yellow Jacket
+37,p,Hymenoptera,Aculeata,Formicidae ,3,ants 
+37,p,Diptera,Nematocera,Culicidae ,3,mosquito 
+37,p,Hemiptera,Homoptera,,3,aphids
+37,p,Psocoptera,,,3,
+37,p,Diptera,Nematocera,,3,
+37,p,Hymenoptera,Parasitica,,2,
+37,p,Hemiptera,Homoptera,,1,
+37,p,Diptera,Brachycera,,2,
+37,p,Coleoptera,,Mordellidae,1,
+37,p,Coleoptera,,Curculionidae,1,
+37,c,Lepidoptera,,,2,
+37,c,Diptera,Nematocera,,9,7 of them had the same transparent/white features over the entire body 
+37,c,Thysanoptera,,,2,
+37,c,Hemiptera,Homoptera,,3,
+37,c,Psocoptera,,,1,
+38,p,Hymenoptera,Aculeata,,1,Yellow jacket
+38,p,Diptera,Nematocera,,11,
+38,p,Arachnida,,,1,
+38,p,Diptera,Brachycera,,3,
+38,p,Hymenoptera,Parasitica,Ichneumonidae,1,
+38,p,Hymenoptera,Parasitica,,2,
+38,p,Hemiptera,Homoptera,,1,
+38,c,Diptera,Nematocera,,1,
+38,c,Hemiptera,Homoptera,,1,
+38,c,Hymenoptera,Aculeata,Formicidae,1,
+38,c,Coleoptera,,Curculionidae,1,bark beetle
+38,c,Coleoptera,,,1,common one that looks like a bark beetle but has long slender antenae 
+38,c,Coleoptera,,Cerambycidae,1,longhorn beetle 
+40,p,Hymenoptera,Aculeata,Formicidae ,3,
+40,p,Orthoptera,,,1,camel cricket
+40,p,Diptera,Nematocera,,8,
+40,p,Arachnida,Araneae,,1,
+40,p,Diptera,Brachycera,,2,fruit flies
+40,p,Hemiptera,Homoptera,,2,
+40,p,Hymenoptera,Aculeata,,1,
+40,c,Lepidoptera,,,5,large brown moths
+40,c,Hemiptera,Homoptera,,1,
+49,p,Hemiptera,Heteroptera,,1,
+49,p,Hemiptera,Homoptera,,11,
+49,p,Orthoptera,,,1,
+49,p,Diptera,Brachycera,,9,
+49,p,Diptera,Nematocera,,2,
+49,p,Coleoptera,,Curculionidae,2,
+49,p,Hymenoptera,Aculeata,,1,
+41,p,Orthoptera,,,1,
+41,p,Hymenoptera,Aculeata,Formicidae,1,
+41,p,Arachnida,Opiliones,,1,
+41,p,Diptera,Nematocera,,5,
+41,p,Diptera,Brachycera,,3,
+41,p,Hemiptera,Homoptera,,2,
+41,p,Hemiptera,Parasitica,,2,
+41,c,Diptera,Nematocera,,3,
+41,c,Lepidoptera,,,1,fringe-winged moth
+41,c,Diptera,Brachycera,Drosophilidae,1,
+42,p,Orthoptera,,,2,plus 1 caterpillar not recorded
+42,p,Apterygota,,,1,
+42,p,Diptera,Brachycera,,6,
+42,p,Diptera,Nematocera,,7,
+42,p,Hymenoptera,Aculeata,Formicidae,1,
+42,p,Hymenoptera,Parasitica,,5,
+42,p,Hemiptera,Homoptera,,80,mostly mosquitoes
+42,p,Psocoptera,,,1,
+42,p,Coleoptera,,,1,
+42,c,Lepidoptera,,,2,1 Large brown moth; 1 small brown moth
+42,c,Diptera,Nematocera,,3,
+42,c,Raphidioptera,,,2,
+43,p,Hymenoptera,Aculeata,,3,3 yellow jackets
+43,p,Coleoptera,,Curculionidae,1,
+43,p,Coleoptera,,,1,
+43,p,Diptera,Nematocera,,22,
+43,p,Diptera,Brachycera,,12,
+43,p,Hemiptera,Homoptera,,1,
+43,p,Hymenoptera,Parasitica,,3,
+43,p,Psocoptera,,,1,
+43,c,Raphidioptera,,,1,
+43,c,Lepidoptera,,,1,
+43,c,Diptera,Nematocera,,3,
+43,c,Psocoptera,,,1,
+43,c,Hymenoptera,Parasitica,,1,
+44,p,Diptera,Brachycera,,3,
+44,p,Diptera,Brachycera,Drosophilidae,4,
+44,p,Diptera,Nematocera,,2,
+44,p,Hemiptera,Homoptera,,7,
+44,p,Hymenoptera,Parasitica,,2,
+44,p,Arachnida,,,1,
+44,p,Coleoptera,,,1,1 beetle larva
+44,c,Diptera,Nematocera,,3,
+44,c,Lepidoptera,,,3,
+44,c,Coleoptera,,,3,2 Staphylinidae
+44,c,Diptera,Brachycera,,2,possibly drosophilidae 
+44,c,Hemiptera,Homoptera,,1,
+46,p,Lepidoptera,,,1,plus one caterpillar
+46,p,Orthoptera,,,7,
+46,p,Diptera,Brachycera,,3,
+46,p,Diptera,Nematocera,,20,
+46,p,Coleoptera,,,7,
+46,p,Psocoptera,,,1,plus one neuroptera larva
+46,p,Arachnida,Araneae,,1,
+46,p,Hymenoptera,Parasitica,,1,
+46,p,Hemiptera,Homoptera,,1,
+46,c,Diptera,Brachycera,Syrphidae,1,Syrphus sp.
+46,c,Diptera,Brachycera,Drosophilidae,1,
+46,c,Lepidoptera,,,4,Fringe winged moths
+46,c,Diptera,Nematocera,,5,
+47,p,Hemiptera,Homoptera,,13,
+47,p,Hemiptera,Heteroptera,,3,
+47,p,Diptera,Brachycera,,7,
+47,p,Diptera,Nematocera,,12,
+47,p,Hymenoptera,Parasitica,Ichneumonidae,1,
+47,p,Hymenoptera,Aculeata,,1,
+47,p,Psocoptera,,,1,
+47,p,Coleoptera,,,2,1 lampyridae 
+47,p,Coleoptera,,Curculionidae ,2,bark beetle
+47,p,Diptera,Brachycera,Drosophilidae,3,
+47,p,Lepidoptera,,,1,
+47,c,Lepidoptera,,,1,large brown moth
+47,c,Diptera,Brachycera,Drosophilidae,6,
+47,c,Diptera,Nematocera,,8,
+47,c,Hemiptera,Homoptera,,2,
+47,c,Arachnida,Araneae,,1,
+47,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+47,c,Lepidoptera,,,1,small fringed wing moth
+47,c,Coleoptera,,Staphyllinidae,1,
+47,c,Hymenoptera,Parasitica,,2,unknown wasps v small sparse veins on wings prob 2 spp one with yellow legs and slightly metallic
+47,c,Coleoptera,,Cleridae,1,id uncertain not keyed to be verified
+49,c,Lepidoptera,,,5,"fringed wing moth, 4 small (dark brown) + 1 big (light brown)"
+49,c,Diptera,Nematocera,,3,had 2 diptera with no suborder_added here
+49,c,Coleoptera,,,1,
+49,c,Diptera,Brachycera,,1,had a parasitic mite clinging to its head
+49,c,Diptera,Brachycera,Drosophilidae ,7,"6 large, 1 very tiny fruit fly"
+51,p,Orthoptera,,Acrididae,1,
+51,p,Hymenoptera,Aculeata,Vespidae,1,
+51,p,Hymenoptera,Aculeata,,17,
+51,p,Hymenoptera,Parasitica,,4,
+51,p,Hemiptera,Homoptera,,60,
+51,p,Hemiptera,Homoptera,,1,
+51,p,Lepidoptera,,,2,LBB + FWM
+51,p,Hymenoptera,Aculeata,Formicidae,3,
+51,p,Coleoptera,,Curculionidae,2,bark beetles
+51,p,Coleoptera,,,6,
+51,p,Diptera,Brachycera,,33,
+51,p,Diptera,Nematocera,,40,
+51,c,Lepidoptera,,,5,small frindged winged brown moths
+51,c,Diptera,Nematocera,,7,
+51,c,Diptera,Brachycera,,5,
+51,c,Hemiptera,Homoptera,,1,
+52,p,Hymenoptera,Aculeata,,5,
+52,p,Diptera,Brachycera,,6,
+52,p,Diptera,Nematocera,,3,
+52,p,Coleoptera,,,8,
+52,p,Lepidoptera,,,3,
+52,p,Hymenoptera,Parasitica,,1,
+52,p,Hemiptera,Heteroptera,,1,
+52,p,Hemiptera,Homoptera,,23,
+52,p,Coleoptera,,Curculionidae,1,
+52,c,Arachnida,Araneae,,1,
+52,c,Coleoptera,,,1,
+52,c,Lepidoptera,,,3,fringed wing moths
+52,c,Diptera,Brachycera,,1,
+52,c,Diptera,Nematocera,,1,
+53,c,Hymenoptera,Parasitica,Ichneumonidae,1,
+53,c,Diptera,Nematocera,,2,
+53,c,Lepidoptera,,,1,small brown moth
+53,c,Coleoptera,,,1,
+53,p,Arachnida,Araneae,,2,
+53,p,Hymenoptera,Aculeata,,1,
+53,p,Diptera,Brachycera,,3,
+53,p,Orthoptera,,,1,
+53,p,Hemiptera,Homoptera,,18,
+53,p,Hymenoptera,Parasitica,,5,
+53,p,Diptera,Nematocera,,3,
+53,p,Coleoptera,,,1,
+54,p,Diptera,Brachycera,,5,label inside said 6P
+54,p,Diptera,Nematocera,,2,
+54,p,Coleoptera,,Curculionidae,2,bark beetles
+54,p,Hymenoptera,Aculeata,,1,black megachilidae
+54,p,Hymenoptera,Parasitica,,2,
+54,p,Hymenoptera,Aculeata,Formicidae,1,
+54,p,Lepidoptera,,,1,
+54,p,Psocoptera,,,1,
+54,p,Hemiptera,Homoptera,,4,
+54,c,Coleoptera,,Curculionidae,10,bark beetles
+54,c,Psocoptera,,,1,
+54,c,Hymenoptera,,Formicidae,1,
+54,c,Diptera,Brachycera,Drosophilidae ,1,
+54,c,Coleoptera,,,1,
+54,c,Lepidoptera,,,1,
+55,p,Diptera,Nematocera,,3,midge
+55,p,Hemiptera,Homoptera,,4,
+55,p,Coleoptera,,Carabidae,1,
+55,p,Arachnida,Araneae,,1,
+55,p,Coleoptera,,Curculionidae ,1,bark beetle
+55,p,Hymenoptera,Parasitica,Chalcididae ,1,
+55,p,Diptera,Brachycera,Drosophilidae,6,fruit fly 
+55,p,Hymenoptera,Parasitica,Torymidae ,1,"metallic, wings are covered in small hairs, very few veins on wings, long ovipositter "
+55,c,,,,0,
+56,p,Diptera,Nematocera,,11,
+56,p,Diptera,Brachycera,Drosophilidae ,12,
+56,p,Hemiptera,Homoptera,,20,includes aphids (2)
+56,p,Orthoptera,,,1,
+56,p,Apterygota,,,1,silverfish
+56,p,Coleoptera,,Cleridae ,1,
+56,p,Hymenoptera,Aculeata,,17,Unknown Vespodiea ; needs ID
+56,p,Hymenoptera,Aculeata,,1,Unknown Vespodiea #2 ; needs ID
+56,p,Coleoptera,,Lampyridae,1,Firefly and one larva
+56,p,Hymenoptera,Aculeata,Megachilidae,1,leaf-cutter bees
+56,p,Hymenoptera,Parasitica,,1,Unknown Vespoidea #2 ; needs ID
+56,p,Hymenoptera,Parasitica,,1,Unknown Vespoidea #3 ; needs ID
+56,p,Hymenoptera,Parasitica,,1,Unknown Vespoidea #4 ; needs ID
+56,p,Hymenoptera,Parasitica,,1,Unknown Vespoidea #5 ; needs ID
+56,p,Hymenoptera,Parasitica,,1,Unknown Vespoidea #6 ; needs ID
+56,p,Hymenoptera,Aculeata,,1,Unknown Vespoidea #7 ; needs ID
+56,p,Hymenoptera,Parasitica,,1,Unknown Vespoidea #8 ; needs ID
+56,p,Coleoptera,,,1,Unknown Coleoptera #1; needs ID
+56,p,Coleoptera,,,4,Unknown Coleoptera #2; needs ID
+56,p,Hymenoptera,Aculeata,Chrysididae,1,Cuckoo Wasp
+56,p,Thysanoptera,,,1,
+56,p,Hymenoptera,Parasitica,,5,
+56,p,Hymenoptera,Aculeata,,2,
+56,c,Lepidoptera,,,2,
+56,c,Coleoptera,,,1,
+56,c,Diptera,Brachycera,,5,4 Drosophilidae
+56,c,Hymenoptera,Aculeata,,1,
+57,p,Arachnida,Opiliones,,3,
+57,p,Diptera,Nematocera,,19,mosquitos + midges 
+57,p,Hymenoptera,Aculeata,Formicidae ,3,1 small + 1 big ant + 1 fat abdomen ant
+57,p,Arachnida,Araneae,,1,spider
+57,p,Orthoptera,,,1,camel crickets
+57,p,Coleoptera,,Curculionidae ,1,bark beetle
+57,p,Hemiptera,Homoptera,,10,2 are aphids
+57,p,Hymenoptera,Parasitica,Ichneumonidae,4,
+57,p,Hymenoptera,Parasitica,Cynipidae,1,unknown wasp; has 1 set of symmetrical wings that are lightly veined (~5 veins); long ovipositor; big abdomen; mouth ripped off; dots on wings
+57,p,Hymenoptera,Aculeata,,1,"unknown black wasp; long, spiny legs; lightly veined wings; not metallic "
+57,p,Coleoptera,,Mordellidae,1,
+57,p,Coleoptera,,Staphylinidae,1,
+57,c,,,,0,
+58,p,Diptera,Nematocera,Tipulidae ,1,
+58,p,Diptera,Nematocera,,16,
+58,p,Diptera,Brachycera,,3,
+58,p,Arachnida,Araneae,,1,
+58,p,Hemiptera,Homoptera,,4,1 aphid
+58,p,Hymenoptera,Aculeata,,4,
+58,p,Hymenoptera,Parasitica,,1,
+58,p,Neuroptera,,Coniopterygidae,1,
+58,p,Apterygota,,,1,
+58,p,Coleoptera,,Staphylinidae,1,
+58,p,Coleoptera,,,3,
+58,c,Lepidoptera,,,1,
+58,c,Diptera,Nematocera,,3,
+59,p,Coleoptera,,,1,
+59,p,Hymenoptera,Aculeata,Vespidae,2,
+59,p,Hemiptera,Homoptera,Aphidae,1,
+59,p,Hymenoptera,Parasitica,,2,
+59,p,Hymenoptera,Parasitica,Ichneumonidae,1,
+59,p,Diptera,Nematocera,,4,
+59,c,Hymenoptera,Aculeata,Formicidae,1,
+59,c,Diptera,Nematocera,,1,
+60,p,Apterygota,,,2,
+60,p,Diptera,Brachycera,,1,
+60,p,Hemiptera,Homoptera,,3,
+60,p,Hymenoptera,Parasitica,,4,2 call wasps
+60,p,Diptera,Brachycera,,6,
+60,p,Hymenoptera,Aculeata,,1,1 yellow jacket
+60,p,Diptera,Nematocera,,10,
+60,p,Coleoptera,,Cerambycidae,1,
+60,p,Coleoptera,,,2,
+60,c,Lepidoptera,,,3,"1 big moth, 2 little moths"
+60,c,Psocoptera,,,1,
+60,c,Hemiptera,Homoptera,,1,

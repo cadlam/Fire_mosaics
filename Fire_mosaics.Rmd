@@ -47,6 +47,9 @@ Sampling methods involved: surveys of all native plants and lichens (growing on 
 
 ```{r include = F}
 # Load packages
+if(!require('pacman'))install.packages('pacman')
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv)
+
 library(tidyverse)
 library(emmeans)
 library(lme4)
@@ -57,21 +60,21 @@ library(ggplot2)
 library(cowplot)
 library(reshape2)
 library(splitstackshape)
-library(magrittr)
-library(readr)
+#library(magrittr)
+#library(readr)
 library(vegan)
 library(viridis)
 library(cowplot)
 library(purrr)
 library(tibble)
 library(broom)
-library(labdsv)
+#library(labdsv)
 library(indicspecies)
 library(permute)
 library(perm)
 library(magrittr)
 library(kableExtra)
-library(knitr)
+#library(knitr)
 library(rowr)
 #knit2html("Fire_mosaics.html")
 
@@ -102,6 +105,10 @@ site_data$site_id <- as.character(site_data$site_id)
 
 #lichens
 lichen_names <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/lichen_list.csv")
+
+# Insects
+insect_data <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/insect_data.csv")
+
 ```
 
 
@@ -163,14 +170,11 @@ plant_matrix <- plant_matrix1 %>%
   bind_rows(., plant_matrix2[49,]) %>%
   mutate("DUMB" = "0.5") # adding dummy species (eg. Webster 2010)  
 
-View(plant_matrix)
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
 plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 10]
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
 plant_matrix <- plant_matrix[-49, ] %>%
   mutate_if(is.character, as.numeric)
-
-str(plant_matrix)
 
 # Make Bray-Curtis (?) dissimilarity matrix
 plants_matrix <- as.matrix(plant_matrix1[, -1])
@@ -266,10 +270,6 @@ ordi.plant <- expand.grid(x = ordi.grid$x, y = ordi.grid$y) #get x and ys
 ordi.plant$z <- as.vector(ordi.grid$z) #unravel the matrix for the z scores
 ordi.plant.na <- data.frame(na.omit(ordi.plant)) #gets rid of the nas
 str(ordi.plant.na) #looks ready for plotting!
-
-
-?contourLines
-  
   
 df <- data.frame(
   x = runif(100),
@@ -303,9 +303,6 @@ ggplot(df, aes(x, y)) +
   scale_colour_gradient(low = "white", high = "black")
 # Avoid red-green colour contrasts because ~10% of men have difficulty
 # seeing them
-
-
-
 
 library(ggrepel)
 
@@ -627,8 +624,8 @@ bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>%
   mutate(pa = 1) %>% 
   dplyr::rename(site_id = Point) %>% 
   dplyr::rename(species = Spp) %>% 
-  mutate(species = recode(species, "'ANHU'='XXHU'")) %>% 
-  mutate(species = recode(species, "'RUHU'='XXHU'")) #changing all RUHU and ANHU to XXHU
+  mutate(species = recode(species, ANHU='XXHU')) %>% 
+  mutate(species = recode(species, RUHU='XXHU')) #changing all RUHU and ANHU to XXHU
 
 # Adding additional species detections (outside count)
 bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
@@ -711,10 +708,11 @@ pvals<-as.data.frame(A$pvals)
 arrows<-as.data.frame(A$arrows*sqrt(A$r))
 C<-cbind(arrows, pvals)
 #subset
-Cred<-subset(C,pvals<0.05)
+Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
+# maye subset only species detected at least 5 times?
 p <- ggplot(scrs) +
   geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!
@@ -796,6 +794,82 @@ p <- ggplot(scrs) +
   geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
             size = 3) +
   labs(title = "Figure 3: NMDS for lichens")
+p
+```
+
+
+#### Insects
+```{r, echo=FALSE,results='hide',fig.keep='all'}
+# read in data
+insect_dat1 <- read.csv("data/insect_data.csv", header = T) %>% 
+  mutate(order = as.character(order)) %>% 
+  mutate(suborder = as.character(suborder))
+
+insect_dat2 <- insect_dat1 %>% 
+  mutate(site_id = as.factor(site_id)) %>% 
+#  gsub(" ", "", order) %>% #get rid of spaces in some cells
+  filter(family != "Curculionidae", family != "Formicidae", order != "Arachnida", order != "Apterygota", order != "Collembola", order!= "Myriapoda") %>% # here, can decide to look at only pan, or only cones
+  mutate(trap_id = paste(site_id, trap)) %>% 
+  mutate(taxon = ifelse(suborder %in% "", order, suborder)) # use suborder when available
+
+insect_dat3 <- as.data.table(insect_dat2)[, sum(number), by = .(site_id, taxon)]# Adding rows when duplicate; could have done this using aggragate instead, but wasn't working
+
+
+# but this drop all the other columns
+#insect_dat2$site_id <- insect_dat3$site_id
+#insect_dat2$order <- insect_dat3$order
+#insect_dat2$V1 <- insect_dat3$V1
+
+insect_dat <- insect_dat3 %>% 
+  dplyr::select(site_id, taxon, V1) %>% 
+  spread(key = taxon, value = V1, fill = 0) %>%
+  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
+
+insect_dat$site_id <- as.character(insect_dat$site_id)
+
+# presence/absence is not meaningful here
+#insect_dat_order <- insect_dat %>% 
+#  spread(key = order, value = V1, fill = 0)
+
+# calculate distance for NMDS
+NMDS.log<-log1p(insect_dat[,-c(1:2)])#[,-c(1:20)])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = insect_dat$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.05)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = Cred,
+               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+            size = 3) +
+  labs(title = "Figure 4: NMDS for insects")
 p
 ```
 
@@ -985,8 +1059,40 @@ summary(plant.md)
 plot(plant.md)
 ```
 
+## MRPP (insects) 
+We see from the MRPP that the first 2 age categories for HS stand out, but the older HS burns cluster with the LS and UN.
+```{r echo = F}
+insect_mrpp_d <- left_join(insect_dat, site_data, by = "site_id") %>% 
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
 
-### PERMANOVA (plants)
+insect.mrpp <- mrpp(insect_mrpp_d[,c(3:19)], insect_mrpp_d$sev_tsf)
+
+# Save and change plotting parameters
+def.par <- par(no.readonly = TRUE)
+layout(matrix(1:2,nr=1))
+
+plot(insect.ord <- metaMDS(insect_mrpp_d[,c(3:19)]), type="text", display="sites" )
+ordihull(insect.ord, insect_mrpp_d$sev_tsf, label = T)
+
+with(insect.mrpp, {
+  fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
+                 main="Test of Differences Among Groups")
+  abline(v=delta); 
+  text(delta, 2*mean(fig.dist$counts), adj = -0.5,
+     expression(bold(delta)), cex=1.5 )  }
+)
+par(def.par)
+## meandist 
+# calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
+insect.md <- meandist(vegdist(insect_mrpp_d[,c(3:19)]), insect_mrpp_d$sev_tsf)
+insect.md
+summary(insect.md)
+plot(insect.md)
+```
+
+
+### PERMANOVA
+#### Plants
 A permanova analysis shows that there is a strong effect of severity on plants (only native species used in the analysis), and a weaker effect of TSF. A pairwise comparison indicates that there is no statistically significant difference between unburnt and LS sites, but that HS sites differ in species composition. Further analysis incorporating TSF is needed.  
 
 ```{r echo = F}
@@ -1124,7 +1230,101 @@ kable(pairwise.adonis(comp.sub, comp.data$sev2))
 
 ```
 
+#### Insects
+Again, the PERMANOVA shows a significant impact of severity and TSF on insect communities (there is a barely significant interaction). Pairwise analysis reveals no detectable difference between UN and LS but HS is significantly different. Using the tsf and sev together to distinguish between recent HS and older HS versus LS/UN, there is no detectable difference between older HS and LS/UN, but there is also not detectable difference between recent and older HS.
+```{r echo = F}
+# Main PERMANOVA
+insect_matrix$site_id <- as.character(insect_matrix$site_id)
+
+comp.data <- insect_mrpp_d
+comp.sub <- subset(comp.data, select = 3:19)
+comp.env <- subset(comp.data, select = c(fire:tsf_cat))
+attach(comp.env)
+
+kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 2: PERMANOVA results", digits = 2) %>%
+  kable_styling()
+```
+
+```{r include=F}
+### Pairwise PERMANOVA (code from https://www.researchgate.net/post/How_can_I_do_PerMANOVA_pairwise_contrasts_in_R)
+pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
+  library(vegan)
+  co <- combn(unique(factors), 2)
+  pairs <- c()
+  F.Model <- c()
+  R2 <- c()
+  p.value <- c()
+
+  for (elem in 1:ncol(co)) {
+    ad <- adonis(x[factors %in% c(co[1, elem], co[2, elem]), ] ~ factors[factors %in% c(co[1, elem], co[2, elem])], method = sim.method)
+    pairs <- c(pairs, paste(co[1, elem], "vs", co[2, elem]))
+    F.Model <- c(F.Model, ad$aov.tab[1, 4])
+    R2 <- c(R2, ad$aov.tab[1, 5])
+    p.value <- c(p.value, ad$aov.tab[1, 6])
+  }
+  p.adjusted <- p.adjust(p.value, method = p.adjust.m)
+  pairw.res <- data.frame(pairs, F.Model, R2, p.value, p.adjusted)
+  return(pairw.res)
+}
+
+```
+
+
+```{r eval = F, include = F}
+## Pairwise PERMANOVA function (run)
+# 1 = High severity; 2 = Low severity; 3 = Unburnt.
+comp.data <- comp.data %>% 
+    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
+
+pair <- pairwise.adonis(comp.sub, comp.data$sev2) %>% 
+  dplyr::select(pairs, F.Model, p.adjusted)
+
+kable(pair, caption = "Table 4: pairwise PERMANOVA results for insects", digits = 2) %>%
+  kable_styling()
+
+# this time using tsf_cat
+#comp.data <- comp.data %>% 
+#    mutate(tsf_cat2 = ifelse(sev_tsf == 'h-2'|sev_tsf == "h-1", "1", ifelse(sev_tsf == 'h-3' , "2", "3")))
+
+comp.data <- comp.data %>% 
+    mutate(tsf_cat2 = ifelse(sev_tsf == 'h-1', "1", ifelse(sev_tsf == 'h-2' , "2", ifelse(sev_tsf == "h-3", "3", "4"))))
+
+pair <- pairwise.adonis(comp.sub, comp.data$tsf_cat2) %>% 
+  dplyr::select(pairs, F.Model, p.adjusted)
+
+kable(pair, caption = "Table 4: pairwise PERMANOVA results for insects", digits = 2) %>%
+  kable_styling()
+
+```
+
+```{r eval=F, echo = F, include = F}
+# Pairwise comparison for herbaceous insects using TSF categories.
+# here I'm setting the TSF categories; change as necessary.
+site_data <- site_data_read %>% 
+    mutate(tsf_cat = ifelse(is.na(tsf), "4", "3"))
+site_data$tsf_cat <-as.numeric(as.character(site_data$tsf_cat))
+site_data$tsf_cat[site_data$tsf < 15] <-2
+site_data$tsf_cat[site_data$tsf < 10] <-1
+
+insect_matrix$site_id <- as.character(insect_matrix$site_id)
+site_data$site_id <- as.character(site_data$site_id)
+
+insect_dat <- left_join(insect_data, insect_names, by = "species") %>%
+  filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
+  dplyr::select(site_id, species, cover)
+insect_matrix <- spread(data = insect_dat, key = species, value = cover, fill = 0)
+
+comp.data <- left_join(insect_matrix, site_data, by = "site_id") %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3"))) #%>%  %>% filter(sev == "h")
+comp.sub <- subset(comp.data, select = ADBI:WOFI)
+
+kable(pairwise.adonis(comp.sub, comp.data$sev2))
+
+```
+
 ### Indicator species analysis
+
+#### Plants
 The indicator species analysis reveals which species are strongly tied to HS and LS/UN habitats (the latter are grouped since the PERMANOVA suggested they were not very different). Further exploration of species preferences using linear models is in progress.  
 
 In brief, species associated with high severity burns include native grasses, shrubs, and annuals, whereas species of closed-canopy stands include sword fern, vanilla leaf, and pathfinder. Unsurprisingly, high cover of Douglas-fir is indicative of low severity fire.  
@@ -1200,6 +1400,95 @@ kable(indval_table, caption = "Table 3: Indicator species for different habitats
 #write.csv(prob.corrected1, file = "prob.corrected1.csv")
 ```
 
+#### Insects
+
+There are no species that are indicators of LS/UN. Several orders/suborders have a high indicator value for HS though: Hemiptera (Homoptera specifically), Coleoptera, and Hymenoptera (Aculeata specifically). Brachyceran flies are also indicators of HS (but not Diptera as a whole).
+```{r echo = F}
+# Putting Hemiptera and Hymenoptera back together, the indicator value stays the same as when splitting, but when split, Homoptera and Aculeata replace the order (respectively). Splitting Diptera takes it out of the final output altogether.
+
+### Community data matrix
+
+insect_dat_long <- insect_dat %>%
+  left_join(site_data, by = "site_id") %>% 
+  gather(key = "taxon", value = "number", 3:19)
+
+insect_dat_ind1 <- insect_dat_long %>%  
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "")) %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu")) %>% 
+  mutate(taxon = recode(taxon, Aculeata="Hymenoptera")) %>% 
+  mutate(taxon = recode(taxon, Parasitica="Hymenoptera")) %>% 
+  mutate(taxon = recode(taxon, Homoptera ="Hemiptera")) %>% 
+  mutate(taxon = recode(taxon, Heteroptera ="Hemiptera"))
+
+insect_dat_ind <- as.data.table(insect_dat_ind1)[, sum(number), by = .(site_id, taxon)] %>% 
+  left_join(., site_data) %>%
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "")) %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu")) 
+
+#insect_dat_select  <- insect_dat_ind %>%
+#  dplyr::select(site_id, taxon, V1, sev, sev_tsf, sev2)
+
+insect_matrix1 <- spread(data = insect_dat_ind, key = taxon, value = V1, fill = 0)
+
+# getting rid of taxon detected in few plots
+#insect_matrix1 <- insect_matrix1 %>% 
+#  bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
+
+#insect_matrix1 <- insect_matrix1[, (insect_matrix1[49, ]) > 5]
+#insect_matrix1 <- insect_matrix1[-49, ]
+
+
+### Vector for site classification
+### severity
+data <- insect_matrix1[,-c(1:29)]
+groups1 <- as.vector(insect_matrix1$sev2)
+
+#groups1 = as.vector(insect_dat$tsf_cat2)
+#groups1 = as.vector(insect_dat$sev_tsf)
+str(data)
+str(groups1)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+#kable(indvalsummary1)
+
+indvalsummary1 <- cbind(rownames(indvalsummary1), data.frame(indvalsummary1, row.names=NULL))
+
+names(indvalsummary1)[1]<-"taxon"
+
+indval <- indvalsummary1 %>% 
+  dplyr::select(taxon, group, indval, pvalue) %>% 
+  mutate("Indicator value" = indval * 100) %>% 
+  filter(indval > 0.245) %>% 
+  filter(pvalue < 0.05)
+
+indval_hs <- indval %>% 
+  filter(group =="1") %>% 
+  dplyr::select(taxon, "Indicator value")
+
+indval_ls <- indval %>% 
+  filter(group =="2")%>% 
+  dplyr::select(taxon, "Indicator value")
+
+names(indval_hs)[1]<-"Indicators of HS"
+names(indval_ls)[1]<-"Indicators of LS/UN"
+
+#names(spp_diff2)[1]<-"taxon found only in LS/UN"
+indval_table <- list(indval_hs, indval_ls)
+
+kable(indval_table, caption = "Table 3: Indicator taxon for different habitats", digits = 0) %>%
+  kable_styling()
+
+#write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
 ### Growth-stage optimization
 #### GSO: plants
 
@@ -1207,9 +1496,9 @@ In a nutshell, the growth-stage optimization method (GSO) uses an algorithm to p
 
 ```{r Read in plant data, echo=FALSE, include=F}
 ## Packages needed throughout
-library (plyr)
-library (dplyr)
-library (reshape2)
+#library (plyr)
+#library (dplyr)
+#library (reshape2)
 
 #setwd("C:/Users/Documents/Example")
 
@@ -1225,6 +1514,7 @@ plant_dat <- read.csv("data/plant_data_natives.csv", header=TRUE)
 plant_dat_UN <- plant_dat %>% 
   filter(sev == "u") %>% 
   dplyr::select(species)
+
 complete_spp <- union(plant_spp, plant_dat_UN)
 
 ## Unburnt data: filter to get only UN; keep only species and cover columns
@@ -1245,7 +1535,7 @@ plant_dat_UN <- reshape(plant_dat_UN, idvar = "species", timevar = "site_id", di
 ar.w <- full_join(complete_spp, plant_dat_UN, by = "species") %>% 
   replace(., is.na(.), "0")
 
-## LS data (less than 14 yrs; ): filter to get only LS, TSF less than 14 years, keep only species and cover columns
+## LS data (less than 15 yrs): filter to get only LS, TSF less than 14 years, keep only species and cover columns
 plant_dat_LS1 <- plant_dat %>% 
   filter(sev == "l")
 
@@ -1254,7 +1544,7 @@ plant_dat_LS1$fire_yr <- as.numeric(plant_dat_LS1$fire_yr)
 plant_dat_LS1$tsf <- 2018-plant_dat_LS1$fire_yr
 
 plant_dat_LS1 <- plant_dat_LS1 %>% 
-  filter(tsf < 14) %>% 
+  filter(tsf < 15) %>% 
   dplyr::select(species, cover, site_id) %>% 
   arrange(species)
   
@@ -1275,7 +1565,7 @@ plant_dat_LS2$fire_yr <- as.numeric(plant_dat_LS2$fire_yr)
 plant_dat_LS2$tsf <- 2018-plant_dat_LS2$fire_yr
 
 plant_dat_LS2 <- plant_dat_LS2 %>% 
-  filter(tsf < 14) %>% 
+  filter(tsf > 15) %>% 
   dplyr::select(species, cover, site_id) %>% 
   arrange(species)
   
@@ -1296,7 +1586,7 @@ plant_dat_HS1$fire_yr <- as.numeric(plant_dat_HS1$fire_yr)
 plant_dat_HS1$tsf <- 2018-plant_dat_HS1$fire_yr
 
 plant_dat_HS1 <- plant_dat_HS1 %>% 
-  filter(tsf < 14) %>% 
+  filter(tsf < 15) %>% 
   dplyr::select(species, cover, site_id) %>% 
   arrange(species)
 
@@ -1307,7 +1597,7 @@ plant_dat_HS1 <- reshape(plant_dat_HS1, idvar = "species", timevar = "site_id", 
 cm.w <- full_join(complete_spp, plant_dat_HS1, by = "species") %>% 
   replace(., is.na(.), "0")
 
-# HS data (more than 14 yrs; ?? sites): filter to get only LS, TSF more than 14 years, keep only species and cover columns
+# HS data (more than 10 yrs): filter to get only LS, TSF more than 14 years, keep only species and cover columns
 plant_dat_HS2 <- plant_dat %>% 
   filter(sev == "h")
 
@@ -1316,7 +1606,7 @@ plant_dat_HS2$fire_yr <- as.numeric(plant_dat_HS2$fire_yr)
 plant_dat_HS2$tsf <- 2018-plant_dat_HS2$fire_yr
 
 plant_dat_HS2 <- plant_dat_HS2 %>% 
-  filter(tsf > 14) %>% 
+  filter(tsf > 15) %>% 
   dplyr::select(species, cover, site_id) %>% 
   arrange(species)
 
@@ -1530,9 +1820,9 @@ The GSO for birds is similar to that for plants (Fig. 4). The optimal proportion
 
 ```{r Bird Read in data, echo=FALSE, include = F}
 ## Packages needed throughout
-library (plyr)
-library (dplyr)
-library (reshape2)
+#library (plyr)
+#library (dplyr)
+#library (reshape2)
 
 # create list of all species; NOTE this is better code than for plants above, might consider changing that
 bird_spp <- bird_dat_long %>% 
@@ -1558,7 +1848,7 @@ bird_dat_UN <- reshape(bird_dat_UN, idvar = "species", timevar = "site_id", dire
 ar.w <- full_join(bird_spp, bird_dat_UN, by = "species") %>% 
   replace(., is.na(.), "0")
 
-## LS data (less than 14 yrs): filter to get only LS, TSF less than 14 years, keep only species and cover columns
+## LS data (less than 11 yrs): filter to get only LS, TSF less than 14 years, keep only species and cover columns
 bird_dat_LS1 <- bird_dat_long %>% 
   filter(sev == "l")
 
@@ -1567,7 +1857,7 @@ bird_dat_LS1$fire_yr <- as.numeric(bird_dat_LS1$fire_yr)
 bird_dat_LS1$tsf <- 2018-bird_dat_LS1$fire_yr
 
 bird_dat_LS1 <- bird_dat_LS1 %>% 
-  filter(tsf < 14) %>% 
+  filter(tsf < 15) %>% 
   dplyr::select(species, pa, site_id) %>% 
   arrange(species)
   
@@ -1586,7 +1876,7 @@ bird_dat_LS2$fire_yr <- as.numeric(bird_dat_LS2$fire_yr)
 bird_dat_LS2$tsf <- 2018-bird_dat_LS2$fire_yr
 
 bird_dat_LS2 <- bird_dat_LS2 %>% 
-  filter(tsf < 10) %>% 
+  filter(tsf > 15) %>% 
   dplyr::select(species, pa, site_id) %>% 
   arrange(species)
   
@@ -1605,7 +1895,7 @@ bird_dat_HS1$fire_yr <- as.numeric(bird_dat_HS1$fire_yr)
 bird_dat_HS1$tsf <- 2018-bird_dat_HS1$fire_yr
 
 bird_dat_HS1 <- bird_dat_HS1 %>% 
-  filter(tsf < 11) %>% 
+  filter(tsf < 15) %>% 
   dplyr::select(species, pa, site_id) %>% 
   arrange(species)
 
@@ -1625,7 +1915,7 @@ bird_dat_HS2$fire_yr <- as.numeric(bird_dat_HS2$fire_yr)
 bird_dat_HS2$tsf <- 2018-bird_dat_HS2$fire_yr
 
 bird_dat_HS2 <- bird_dat_HS2 %>% 
-  filter(tsf > 10) %>% 
+  filter(tsf > 15) %>% 
   dplyr::select(species, pa, site_id) %>% 
   arrange(species)
 
@@ -1842,6 +2132,329 @@ hist <- ggplot(df3, aes(x = severity, y = prop)) +
   labs(title = "Figure 4: Optimal habitat proportions (birds)", y = "% of landscape", x = "habitat") +
   geom_errorbar(aes(ymin=prop-sd, ymax=prop+ sd), width=.2) 
 plot(hist)
+```
+
+
+#### GSO: insects
+```{r Read in insect data, echo=FALSE, include=F}
+## Packages needed throughout
+#library (plyr)
+#library (dplyr)
+#library (reshape2)
+
+#setwd("C:/Users/Documents/Example")
+
+# w = data are in wide format; a, b, c, d keep growth stages in order
+
+#select just the species column
+insect_dat_long <- insect_dat %>%
+  left_join(site_data, by = "site_id") %>% 
+  gather(key = "taxon", value = "number", 3:19)# %>% 
+#  dplyr::select(site_id, taxon, number)
+
+#now make a list of all species
+#insect_dat <- read.csv("data/insect_data_natives.csv", header=TRUE)
+
+insect_dat_UN <- insect_dat_long %>% 
+  filter(sev == "u") %>% 
+  dplyr::select(taxon)
+
+insect_spp <- insect_dat_long %>% 
+  dplyr::select(taxon)
+
+complete_spp <- union(insect_spp, insect_dat_UN) # but should the dummy species be removed?
+
+## Unburnt data: filter to get only UN; keep only species and cover columns
+insect_dat_UN <- insect_dat_long %>% 
+  filter(sev == "u") %>% 
+  dplyr::select(taxon, number, site_id)  %>% 
+  arrange(taxon)
+
+#insect_dat_UN <- full_join(insect_dat_UNa, insect_dat_UNb, by = "species")%>% 
+#  arrange(species)
+
+# make it wide format
+insect_dat_UN <- reshape(insect_dat_UN, idvar = "taxon", timevar = "site_id", direction = "wide")
+
+# add species not detected to get same length vectors
+#insect_dat_UN1 
+ar.w <- full_join(complete_spp, insect_dat_UN, by = "taxon") %>% 
+  replace(., is.na(.), "0")
+
+## LS data (less than 14 yrs; ): filter to get only LS, TSF less than 14 years, keep only species and cover columns
+insect_dat_LS1 <- insect_dat_long %>% 
+  filter(sev == "l")
+
+insect_dat_LS1$fire_yr <- as.character(insect_dat_LS1$fire_yr)
+insect_dat_LS1$fire_yr <- as.numeric(insect_dat_LS1$fire_yr)
+insect_dat_LS1$tsf <- 2018-insect_dat_LS1$fire_yr
+
+insect_dat_LS1 <- insect_dat_LS1 %>% 
+  filter(tsf < 11) %>% 
+  dplyr::select(taxon, number, site_id) %>% 
+  arrange(taxon)
+  
+insect_dat_LS1 <- reshape(insect_dat_LS1, idvar = "taxon", timevar = "site_id", direction = "wide")
+
+# add species not detected to get same length vectors
+#insect_dat_LS1 
+
+be.w <- full_join(complete_spp, insect_dat_LS1, by = "taxon") %>% 
+  replace(., is.na(.), "0")
+
+## LS data (less than 10 yrs; 11 sites total): filter to get only LS, TSF more than 10 years, keep only species and cover columns
+insect_dat_LS2 <- insect_dat_long %>% 
+  filter(sev == "l")
+
+insect_dat_LS2$fire_yr <- as.character(insect_dat_LS2$fire_yr)
+insect_dat_LS2$fire_yr <- as.numeric(insect_dat_LS2$fire_yr)
+insect_dat_LS2$tsf <- 2018-insect_dat_LS2$fire_yr
+
+insect_dat_LS2 <- insect_dat_LS2 %>% 
+  filter(tsf > 10) %>% 
+  dplyr::select(taxon, number, site_id) %>% 
+  arrange(taxon)
+  
+insect_dat_LS2 <- reshape(insect_dat_LS2, idvar = "taxon", timevar = "site_id", direction = "wide")
+
+# add species not detected to get same length vectors
+#insect_dat_LS1 
+
+xx.w <- full_join(complete_spp, insect_dat_LS2, by = "taxon") %>% 
+  replace(., is.na(.), "0")
+
+# HS data (less than 14 yrs; ?? sites): filter to get only LS, TSF less than 14 years, keep only species and cover columns
+insect_dat_HS1 <- insect_dat_long %>% 
+  filter(sev == "h")
+
+insect_dat_HS1$fire_yr <- as.character(insect_dat_HS1$fire_yr)
+insect_dat_HS1$fire_yr <- as.numeric(insect_dat_HS1$fire_yr)
+insect_dat_HS1$tsf <- 2018-insect_dat_HS1$fire_yr
+
+insect_dat_HS1 <- insect_dat_HS1 %>% 
+  filter(tsf < 11) %>% 
+  dplyr::select(taxon, number, site_id) %>% 
+  arrange(taxon)
+
+insect_dat_HS1 <- reshape(insect_dat_HS1, idvar = "taxon", timevar = "site_id", direction = "wide")
+
+#insect_dat_LS11 
+
+cm.w <- full_join(complete_spp, insect_dat_HS1, by = "taxon") %>% 
+  replace(., is.na(.), "0")
+
+# HS data (more than 14 yrs; ?? sites): filter to get only LS, TSF more than 14 years, keep only species and cover columns
+insect_dat_HS2 <- insect_dat_long %>% 
+  filter(sev == "h")
+
+insect_dat_HS2$fire_yr <- as.character(insect_dat_HS2$fire_yr)
+insect_dat_HS2$fire_yr <- as.numeric(insect_dat_HS2$fire_yr)
+insect_dat_HS2$tsf <- 2018-insect_dat_HS2$fire_yr
+
+insect_dat_HS2 <- insect_dat_HS2 %>% 
+  filter(tsf > 10) %>% 
+  dplyr::select(taxon, number, site_id) %>% 
+  arrange(taxon)
+
+insect_dat_HS2 <- reshape(insect_dat_HS2, idvar = "taxon", timevar = "site_id", direction = "wide")
+
+#insect_dat_HS22 
+
+dl.w <- full_join(complete_spp, insect_dat_HS2, by = "taxon") %>% 
+  replace(., is.na(.), "0")
+```
+
+```{r Melt insect data, warning=FALSE, results="hide", echo =F, include = F}
+#Convert the data format from wide to long (such that there are only three columns: taxon, site_id, number), and order by taxon Then delete the site column. 
+
+melt.sort <- function (x){
+  m <- melt(x, id.vars="taxon") # convert to long
+  s <- m[order(m$taxon),] # order by species
+  s$variable <- NULL # delete site column
+  return(s)}
+
+# l = data are in long format
+ar.l <- melt.sort(ar.w) %>% 
+  mutate(value = as.numeric(value))
+be.l <- melt.sort(be.w) %>% 
+  mutate(value = as.numeric(value))
+xx.l <- melt.sort(xx.w) %>% 
+  mutate(value = as.numeric(value))
+cm.l <- melt.sort(cm.w) %>% 
+  mutate(value = as.numeric(value))
+dl.l <- melt.sort(dl.w) %>% 
+  mutate(value = as.numeric(value))
+
+#Now data are ready for resampling.  Use a different method for abundance data (resampling with replacement) and presence-absence data (random number generation from the binomial distribution).  Both methods produce a matrix named `zdata`.  
+
+#An extra step is required for data containing subsamples -- see below.
+
+```
+
+
+```{r insect Abundance, echo=FALSE, include = F}
+#### Abundance data
+#Use this method for abundance datasets which don't contain subsamples.
+
+res.ab <- function (z){(ddply (z, .(taxon), function(x) { 
+  rs1 <- sample(x$value, replace = TRUE) # resample raw data
+  bm <- mean(rs1) # big mean is the mean of the resampled means  
+  data.frame(bm=bm)}
+  ))
+}
+
+# Run 'res.ab' on each growth stage:
+ar.r <- rdply (1000, res.ab (ar.l))
+be.r <- rdply (1000, res.ab (be.l))
+xx.r <- rdply (1000, res.ab (xx.l))
+cm.r <- rdply (1000, res.ab (cm.l))
+dl.r <- rdply (1000, res.ab (dl.l))
+
+# Combine to a matrix:
+zdata <- cbind (ar.r$.n, ar.r$bm, be.r$bm, xx.r$bm, cm.r$bm, dl.r$bm) # ar.r$.n = row labels
+```
+
+```{r Combine insect data, echo = FALSE,include =F}
+### Convert the matrix to a data frame and save it.
+#The same method applies to all data types from this point.
+
+mdata <- apply (zdata, 2, function (x) ifelse (x>0, x, 0.001)) 
+# replace zeros for geometric mean calculation
+rdata <- data.frame(mdata) # convert to a data frame
+names(rdata) <- c("group", "AR", "BE", "XX", "CM", "DL")
+rdata$group <- factor(rdata$group) # rdata is ready for the GSO function
+```
+
+
+```{r GSO function for insects, echo = FALSE, warning=FALSE, message = F}
+## 2 Run the GSO function
+
+#The nloptr function maximises the geometric mean by changing the growth stage proportions given bounds constraints (parameters (GS proportions) must be between 0 and 1), and an inequality constraint -- the parameters must sum to 1. 
+
+## Handy helper function, constructing a n-length vector c(k, ..., k)
+const.vector <- function(n, k) {
+  return( sapply(seq_len(n), function (x) return(k)) )
+}
+## The original objective (assumes columns [AR, BE, CM, DL] appear in that order) 
+geomean.fun <- function(x, taxon) {
+  logsum <- sum(log(apply(taxon, 1, function (row) { sum(x*row) })))
+  exp(logsum/(dim(taxon)[1]))
+}
+## The reformulated objective (nloptr expects a minimization problem)
+geomean.obj <- function (x, taxon) {
+  logsum <- sum(log(apply(taxon, 1, function (row) { sum(x*row) })))
+  return(-logsum)
+}
+## The gradient of geomean.obj.
+## Returns a vector containing the partial derivatives wrt each var.
+geomean.grad <- function(x, taxon) {
+  contrib <- apply(taxon, 1, function(row) { -row/(sum(x*row)) })
+  grad <- apply(contrib, 1, sum)  # sum the contribution vectors to get the gradient
+  return(grad)
+}
+## Inequality constraints.
+eval.cs <- function(x, taxon) {
+  return( c(
+    sum(x) - 1,  # Growth stage proportions don't exceed 1
+    0.0 - x[1]   # Recently burnt proportion is at least 0.0 (i.e. AR >= 0.0)
+  ))
+}
+eval.cs.jac <- function(x, taxon) { # Jacobian (partial derivative matrix) for inequalities
+  return( rbind(
+    const.vector(length(x), 1),
+    c(-1, const.vector(length(x)-1, 0))
+    ))
+}
+## Pass all to nloptr 
+gso <- function(taxon){
+  require(nloptr)
+  require(dplyr)
+  x0 <- const.vector(5, 1/5)  # edit according to the number of growth stages
+  run <- nloptr(x0 = x0, taxon = taxon, eval_f=geomean.obj, eval_grad_f = geomean.grad,
+                lb = const.vector(length(x0), 0),
+                ub = const.vector(length(x0), 1),
+                eval_g_ineq = eval.cs,
+                eval_jac_g_ineq = eval.cs.jac,
+                opts = list("algorithm" = "NLOPT_LD_MMA",
+                            "maxeval"=1000,
+                            "ftol_rel"=1.0e-15,
+                            "xtol_rel"=1.0e-8,
+                            "print_level"=0
+                            ))
+  res <- rbind(c(run$solution, geomean.fun(run$solution, taxon)))
+  colnames(res) <- c("AR", "BE", "XX", "CM", "DL", "geom") # edit according to growth stages
+  res <- data.frame(res)
+  return (res)
+}
+
+# Apply to the 1000 resampled communities (defined by group)
+out <- ddply(rdata[2:6], .(rdata$group), gso) # takes a few minutes to run
+
+names(out)[1]<-"num"
+names(out)[2]<-"UN"
+names(out)[3]<-"LS1"
+names(out)[4]<-"LS2"
+names(out)[5]<-"HS1"
+names(out)[6]<-"HS2"
+
+UN <- mean(out$UN) *100
+LS1 <- mean(out$LS1) *100
+LS2 <- mean(out$LS2) *100
+HS1 <- mean(out$HS1) *100
+HS2 <- mean(out$HS2) *100
+
+GSO_tbl <- list(UN, LS1, LS2, HS1, HS2) 
+
+names(GSO_tbl)[1]<-"UN"
+names(GSO_tbl)[2]<-"LS1"
+names(GSO_tbl)[3]<-"LS2"
+names(GSO_tbl)[4]<-"HS1"
+names(GSO_tbl)[5]<-"HS2"
+
+GSO_tbl <- data.frame(GSO_tbl)
+
+#kable(GSO_tbl, caption = "Table 5: GSO results (insects)", digits = 0, col.names = c("UN", 
+#                                                                           "LS1", 
+#                                                                           "LS2", 
+#                                                                           "HS1", 
+#                                                                           "HS2")) %>%
+#  kable_styling()
+
+out_long <- gather(out, severity) %>% 
+  filter(severity != "num" & severity != "geom") 
+
+out_long$value <- as.numeric(out_long$value)
+
+out_long <- out_long %>% 
+  mutate("prop" = value*100)
+
+# summarize data
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      sd = sd(x[[col]], na.rm=TRUE))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- rename(data_sum, c("mean" = varname))
+ return(data_sum)
+}
+
+df2 <- data_summary(out_long, varname="prop", groupnames="severity")
+
+#plot
+hist <- ggplot(df2, aes(x = severity, y = prop)) +
+  geom_histogram(stat = "identity") +
+  labs(title = "Figure 3: Optimal habitat proportions (insects)", y = "% of landscape", x = "habitat") +
+  geom_errorbar(aes(ymin=prop-sd, ymax=prop+ sd), width=.2) 
+hist
+
+
+# Or apply to a single community (for example, the raw data)
+#out <- gso (rdata)
+
+#write.table (out, "gso_result.txt", col.names=TRUE, row.names=FALSE)
 ```
 
 # Discussion and next steps  
