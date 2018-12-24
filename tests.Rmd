@@ -11,7 +11,10 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Load Packages
 ```{r setup, include=FALSE}
+if(!require('pacman'))install.packages('pacman')
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, bbmle, spdep, rsq,lmtest, unmarked, broom)
 
 library(dplyr)
 library(ggplot2)
@@ -23,10 +26,10 @@ library(bbmle)
 library(spdep)
 library(rsq)
 library(lmtest)
-options(contrasts =c("contr.sum", "contr.poly"))
+#options(contrasts =c("contr.sum", "contr.poly"))
+#options(contrasts = rep ("contr.treatment", 2))
 
-set.seed(27)
-
+# Test of k-means cluster analysis?
 centers <- tibble(
   cluster = factor(1:3), 
   num_points = c(100, 150, 50),  # number points in each cluster
@@ -39,7 +42,7 @@ labelled_points <- centers %>%
     x1 = map2(num_points, x1, rnorm),
     x2 = map2(num_points, x2, rnorm)
   ) %>% 
-  select(-num_points) %>% 
+  dplyr::select(-num_points) %>% 
   unnest(x1, x2)
 
 ggplot(labelled_points, aes(x1, x2, color = cluster)) +
@@ -47,12 +50,10 @@ ggplot(labelled_points, aes(x1, x2, color = cluster)) +
 
 
 points <- labelled_points %>% 
-  select(-cluster)
+  dplyr::select(-cluster)
 
 kclust <- kmeans(points, centers = 3)
 kclust
-
-library(broom)
 
 kclusts <- tibble(k = 1:9) %>%
   mutate(
@@ -81,63 +82,51 @@ p1
 
 ```
 
+# Bird data
 ```{r}
-## trying to figure out how to use distance to correct for detection probability
-# read in data
+# read in bird data
 bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>% 
   filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
   dplyr::select(Point, Count, Spp, DistanceBin) %>%  # keeping only relevant columns
   dplyr::rename(distance = DistanceBin)
 
-  head(bird_dat_count)
 # remove duplicate rows (same species detected multiple times in a single plot)
 bird_dat_long <- bird_dat_count %>% 
   dplyr::rename(site_id = Point) %>% 
   dplyr::rename(species = Spp)
-?Distance
-
- library(Distance)
-  # Golf tee data
-  data(book.tee.data)
-  # just take the data from observer 1
-  tee.data<-book.tee.data$book.tee.dataframe[book.tee.data$book.tee.dataframe$observer==1,]
-  # run the analysis, selecting number of adjustments by AIC
-  # but constraining for monotonicity
-  ds.model<-ds(bird_dat_count, transect = "Point")
-  # usual R functions
-  summary(ds.model)
-  plot(ds.model)
 ```
 
-```{r}
-#is there a trend in aspect?
-data_summary <- function(data, varname, groupnames){
-  require(plyr)
-  summary_func <- function(x, col){
-    c(mean = mean(x[[col]], na.rm=TRUE),
-      sd = sd(x[[col]], na.rm=TRUE))
-  }
-  data_sum<-ddply(data, groupnames, .fun=summary_func,
-                  varname)
-  data_sum <- rename(data_sum, c("mean" = varname))
- return(data_sum)
-}
+# Plant and site data
+```{r include=F}
+plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
+plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/plant_list.csv")
+plant_data$species <- as.character(plant_data$species)
+plant_data$site_id <- as.character(plant_data$site_id)
+plant_names$species <- as.character(plant_names$species)
+plant_names$full_name <- as.character(plant_names$full_name)
+plant_names$native_status <- as.factor(plant_names$native_status)
+plant_names$form <- as.factor(plant_names$form)
 
-df <- data_summary(scrs, varname="aspect", groupnames="sev")
-df
-
-ggplot(scrs, aes(x= sev, y = aspect)) +
-  geom_boxplot()
-
-```
-
-# GLM function
-```{r get plant data}
-plant_dat <- read.csv("data/plant_data_natives.csv", header=TRUE)
+plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
+  filter(native_status == "native") %>%
+  dplyr::select(site_id, species, cover)
 
 site_data <- read.csv("data/site_data.csv")
 
+site_data <- site_data_read %>% 
+    mutate(tsf_cat2 = ifelse(is.na(tsf), "3", "2"))
+site_data$tsf_cat2[site_data$tsf < 15] <-1
 
+
+# Data prep
+# convert to wide format for following analysis
+plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
+
+# Make Bray-Curtis dissimilarity matrix
+plants_matrix <- as.matrix(plant_matrix1[, -1])
+```
+
+```{r get plant data}
 #install.packages("fuzzySim") doesnt work, so here's the function; serves to convert from presence only to presence-absence
 
 splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
@@ -166,34 +155,225 @@ splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
 }  # end splist2presabs function
 
 # executing function and going from wide to long:
-plant_dat_pa <- splist2presabs(plant_dat, sites.col = 2, sp.col = 3) %>% 
-  gather(key = species, value = pa, ABCO:WOFI)
-head(plant_dat_pa)
+plant_dat_pa <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2) 
 
-# Adding in the sev and tsf data
-head(site_data)
-
-#merge(plant_dat_pa, site_data[, c('sev', 'tsf')], by= 'site_id')
-plant_glm <- merge(plant_dat_pa, site_data, by= 'site_id') %>% 
-  mutate(tsf_cat = as.factor(as.character(tsf_cat))) # if tsf_cat is numeric, model output is gibberish; must change to factor
-str(plant_glm_cov)
-
-# For cover instead of p/a, use:
-plant_matrix$site_id <- as.character(plant_matrix$site_id) 
-
-plant_glm_cov <- left_join(plant_matrix, site_data, by = "site_id") %>% 
+# data for plant glm using p/a
+plant_glm_pa <- merge(plant_dat_pa, site_data, by= 'site_id') %>% 
+  mutate(tsf_cat = as.factor(as.character(tsf_cat)))  %>% # if tsf_cat is numeric, model output is gibberish; must change to factor
   mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
+
+plant_glm_pa$tsf_cat <- as.factor(plant_glm_pa$tsf_cat)
+
+# For cover instead of p/a, use the following, which is the same as plant_mrpp_d:
+site_data$site_id <- as.character(site_data$site_id) 
+plant_glm_cov <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
+
+plant_glm_cov$tsf_cat <- as.factor(plant_glm_cov$tsf_cat)
 ```
 
-
+# GLM testing
 ```{r}
-CEIN_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf)
+# how to transform skewed data?
+# check if there is a nice bell curve or if it's truncated (gaussian not so good if skewed)
+# transform SE to standard dev
 
-CEIN_mod <- glm(CEIN/100 ~ sev + tsf_cat, CEIN_dat, family = binomial)
+CEIN_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf, sev_tsf, tsf_cat2)
+
+CEIN_dat$tsf_cat <- as.factor(CEIN_dat$tsf_cat)
+CEIN_dat$tsf_cat2 <- as.factor(CEIN_dat$tsf_cat2)
+
+CEIN_mod <- glm(CEIN/100 ~ sev + tsf_cat, CEIN_dat, family = gaussian)
 summary(CEIN_mod)
 
-CEIN_mod1 <- glm(CEIN/100 ~ sev, CEIN_dat, family = binomial)
+# to extract the coefficients:
+#coef(summary(CEIN_mod))["(Intercept)","Estimate"]
+
+# equivalently using package broom:
+## construct function; this works with sev and tsf_cat (3 categories)
+occ_plot_full <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs1_mean <- CEIN_tidy[1,2]
+hs2_mean <- CEIN_tidy[1,2] + CEIN_tidy[4,2]
+hs3_mean <- CEIN_tidy[1,2] + CEIN_tidy[5,2]
+ls1_mean <- CEIN_tidy[1,2] + CEIN_tidy[2,2]
+ls2_mean <- CEIN_tidy[1,2] + CEIN_tidy[2,2] + CEIN_tidy[4,2]
+ls3_mean <- CEIN_tidy[1,2] + CEIN_tidy[2,2] + CEIN_tidy[5,2]
+un_mean <- CEIN_tidy[1,2] + CEIN_tidy[3,2]
+
+mean <- unlist(c(hs1_mean, hs2_mean, hs3_mean, ls1_mean, ls2_mean, ls3_mean, un_mean))
+
+hs1_SE <- CEIN_tidy[1,3]
+hs2_SE <- CEIN_tidy[1,3] + CEIN_tidy[4,3]
+hs3_SE <- CEIN_tidy[1,3] + CEIN_tidy[5,3]
+ls1_SE <- CEIN_tidy[1,3] + CEIN_tidy[2,3]
+ls2_SE <- CEIN_tidy[1,3] + CEIN_tidy[2,3] + CEIN_tidy[4,3]
+ls3_SE <- CEIN_tidy[1,3] + CEIN_tidy[2,3] + CEIN_tidy[5,3]
+un_SE <- CEIN_tidy[1,3] + CEIN_tidy[3,3]
+
+SE <- unlist(c(hs1_SE, hs2_SE, hs3_SE, ls1_SE, ls2_SE, ls3_SE, un_SE))
+
+hab <- c("hs1", "hs2", "hs3", "ls1", "ls2", "ls3", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+
+##THis works with sev_tsf
+occ_plot_sevtsf <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs1_mean <- CEIN_tidy[1,2]
+hs2_mean <- CEIN_tidy[1,2] + CEIN_tidy[2,2]
+hs3_mean <- CEIN_tidy[1,2] + CEIN_tidy[3,2]
+ls1_mean <- CEIN_tidy[1,2] + CEIN_tidy[4,2]
+ls2_mean <- CEIN_tidy[1,2] + CEIN_tidy[5,2]
+ls3_mean <- CEIN_tidy[1,2] + CEIN_tidy[6,2]
+un_mean <- CEIN_tidy[1,2] + CEIN_tidy[7,2]
+
+mean <- unlist(c(hs1_mean, hs2_mean, hs3_mean, ls1_mean, ls2_mean, ls3_mean, un_mean))
+
+hs1_SE <- CEIN_tidy[1,3]
+hs2_SE <- CEIN_tidy[1,3] + CEIN_tidy[2,3]
+hs3_SE <- CEIN_tidy[1,3] + CEIN_tidy[3,3]
+ls1_SE <- CEIN_tidy[1,3] + CEIN_tidy[4,3]
+ls2_SE <- CEIN_tidy[1,3] + CEIN_tidy[5,3]
+ls3_SE <- CEIN_tidy[1,3] + CEIN_tidy[6,3]
+un_SE <- CEIN_tidy[1,3] + CEIN_tidy[7,3]
+
+SE <- unlist(c(hs1_SE, hs2_SE, hs3_SE, ls1_SE, ls2_SE, ls3_SE, un_SE))
+
+hab <- c("hs1", "hs2", "hs3", "ls1", "ls2", "ls3", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+#sev only
+occ_plot_sev <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs_mean <- CEIN_tidy[1,2]
+ls_mean <- CEIN_tidy[1,2] + CEIN_tidy[2,2]
+un_mean <- CEIN_tidy[1,2] + CEIN_tidy[3,2]
+
+mean <- unlist(c(hs_mean, ls_mean, un_mean))
+
+hs_SE <- CEIN_tidy[1,3]
+ls_SE <- CEIN_tidy[1,3] + CEIN_tidy[2,3]
+un_SE <- CEIN_tidy[1,3] + CEIN_tidy[3,3]
+
+SE <- unlist(c(hs_SE, ls_SE, un_SE))
+
+hab <- c("HS", "LS", "UN")
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+#tsf_cat only (3 categories plus UN)
+occ_plot_tsf <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+mean1 <- CEIN_tidy[1,2]
+mean2 <- CEIN_tidy[1,2] + CEIN_tidy[2,2]
+mean3 <- CEIN_tidy[1,2] + CEIN_tidy[3,2]
+un_mean <- CEIN_tidy[1,2] + CEIN_tidy[4,2]
+
+mean <- unlist(c(mean1, mean2, mean3, un_mean))
+
+SE1 <- CEIN_tidy[1,3]
+SE2 <- CEIN_tidy[1,3] + CEIN_tidy[2,3]
+SE3 <- CEIN_tidy[1,3] + CEIN_tidy[3,3]
+un_SE <- CEIN_tidy[1,3] + CEIN_tidy[4,3]
+
+SE <- unlist(c(SE1, SE2, SE3, un_SE))
+
+hab <- c("1", "2", "3", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+#full with 2 tsf categories
+occ_plot_full2cat <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs1_mean <- CEIN_tidy[1,2]
+hs2_mean <- CEIN_tidy[1,2] + CEIN_tidy[4,2]
+ls1_mean <- CEIN_tidy[1,2] + CEIN_tidy[2,2]
+ls2_mean <- CEIN_tidy[1,2] + CEIN_tidy[2,2] + CEIN_tidy[4,2]
+un_mean <- CEIN_tidy[1,2] + CEIN_tidy[3,2]
+
+mean <- unlist(c(hs1_mean, hs2_mean, ls1_mean, ls2_mean, un_mean))
+
+hs1_SE <- CEIN_tidy[1,3]
+hs2_SE <- CEIN_tidy[1,3] + CEIN_tidy[4,3]
+ls1_SE <- CEIN_tidy[1,3] + CEIN_tidy[2,3]
+ls2_SE <- CEIN_tidy[1,3] + CEIN_tidy[2,3] + CEIN_tidy[4,3]
+un_SE <- CEIN_tidy[1,3] + CEIN_tidy[3,3]
+
+SE <- unlist(c(hs1_SE, hs2_SE, ls1_SE, ls2_SE, un_SE))
+
+hab <- c("hs1", "hs2", "ls1", "ls2", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+
+
+# why are the estimates all negative???
+CEIN_mod1 <- glm(CEIN/100 ~ tsf_cat, CEIN_dat, family = "gaussian")
+summary(CEIN_mod1)
+
+occ_plot_full2cat(CEIN_mod1)
+
+str(CEIN_dat)
+
+
+
+
+
+CEIN_mod1 <- glm(CEIN/100 ~ sev, CEIN_dat, family = "gaussian")
 summary(CEIN_mod1)
 
 anova(CEIN_mod, CEIN_mod1)
@@ -201,30 +381,22 @@ anova(CEIN_mod, CEIN_mod1)
 
 #PSME
 PSME_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, PSME, tsf_cat, sev)
+  dplyr::select(site_id, PSME, tsf_cat, sev, tsf_cat2)
 
-PSME_mod <- lm(PSME ~ sev * tsf_cat, PSME_dat)
+PSME_mod <- glm(PSME ~ sev + tsf_cat2, PSME_dat, family = "gaussian")
 summary(PSME_mod)
+occ_plot_full2cat(PSME_mod1)
 
-PSME_mod1 <- lm(PSME ~ sev, PSME_dat)
+
+PSME_mod1 <- glm(PSME ~ sev, PSME_dat)
 summary(PSME_mod1)
 
 anova(PSME_mod, PSME_mod1)
 
-?glm
+
 # MECA
-
-MECA_dat <- plant_mrpp_d %>% 
+MECA_dat <- plant_glm_cov %>% 
   dplyr::select(site_id, MECA, tsf_cat, sev)
-
-MECA_mod <- lm(MECA ~ sev + tsf_cat, MECA_dat)
-summary(MECA_mod)
-
-MECA_mod1 <- lm(MECA ~ sev, MECA_dat)
-summary(MECA_mod1)
-
-anova(MECA_mod, MECA_mod1)
-
 
 MECA_mod <- glm(MECA ~ sev * tsf_cat, MECA_dat, family = "gaussian")
 summary(MECA_mod)
@@ -240,10 +412,245 @@ MECA_aic <- AIC(MECA_mod, MECA_mod1)
 
 ```
 
+# Occ_plot function for p/a
+```{r}
+## construct function; this works with sev and tsf_cat (3 categories)
+occ_plot_full <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs1_mean <- logit2prob(CEIN_tidy[1,2])
+hs2_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[4,2])
+hs3_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[5,2])
+ls1_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2])
+ls2_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2]) + logit2prob(CEIN_tidy[4,2])
+ls3_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2]) + logit2prob(CEIN_tidy[5,2])
+un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
+
+mean <- unlist(c(hs1_mean, hs2_mean, hs3_mean, ls1_mean, ls2_mean, ls3_mean, un_mean))
+
+hs1_SE <- logit2prob(CEIN_tidy[1,3])
+hs2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
+hs3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[5,3])
+ls1_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
+ls2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3]) + logit2prob(CEIN_tidy[4,3])
+ls3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3]) + logit2prob(CEIN_tidy[5,3])
+un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
+
+SE <- unlist(c(hs1_SE, hs2_SE, hs3_SE, ls1_SE, ls2_SE, ls3_SE, un_SE))
+
+hab <- c("hs1", "hs2", "hs3", "ls1", "ls2", "ls3", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+
+##THis works with sev_tsf
+occ_plot_sevtsf <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs1_mean <- logit2prob(CEIN_tidy[1,2])
+hs2_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2])
+hs3_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
+ls1_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[4,2])
+ls2_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[5,2])
+ls3_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[6,2])
+un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[7,2])
+
+mean <- unlist(c(hs1_mean, hs2_mean, hs3_mean, ls1_mean, ls2_mean, ls3_mean, un_mean))
+
+hs1_SE <- logit2prob(CEIN_tidy[1,3])
+hs2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
+hs3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
+ls1_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
+ls2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[5,3])
+ls3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[6,3])
+un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[7,3])
+
+SE <- unlist(c(hs1_SE, hs2_SE, hs3_SE, ls1_SE, ls2_SE, ls3_SE, un_SE))
+
+hab <- c("hs1", "hs2", "hs3", "ls1", "ls2", "ls3", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+#sev only
+occ_plot_sev <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs_mean <- logit2prob(CEIN_tidy[1,2])
+ls_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2])
+un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
+
+mean <- unlist(c(hs_mean, ls_mean, un_mean))
+
+hs_SE <- logit2prob(CEIN_tidy[1,3])
+ls_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
+un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
+
+SE <- unlist(c(hs_SE, ls_SE, un_SE))
+
+hab <- c("HS", "LS", "UN")
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+#tsf_cat only (3 categories plus UN)
+occ_plot_tsf <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+mean1 <- logit2prob(CEIN_tidy[1,2])
+mean2 <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2])
+mean3 <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
+un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[4,2])
+
+mean <- unlist(c(mean1, mean2, mean3, un_mean))
+
+SE1 <- logit2prob(CEIN_tidy[1,3])
+SE2 <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
+SE3 <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
+un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
+
+SE <- unlist(c(SE1, SE2, SE3, un_SE))
+
+hab <- c("1", "2", "3", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+#full with 2 tsf categories
+occ_plot_full2cat <- function(mod) {
+CEIN_tidy <- tidy(mod)
+# I think there should only be 2 age categories for ls and hs rather than 3
+hs1_mean <- logit2prob(CEIN_tidy[1,2])
+hs2_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[4,2])
+ls1_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2])
+ls2_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2]) + logit2prob(CEIN_tidy[4,2])
+un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
+
+mean <- unlist(c(hs1_mean, hs2_mean, ls1_mean, ls2_mean, un_mean))
+
+hs1_SE <- logit2prob(CEIN_tidy[1,3])
+hs2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
+ls1_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
+ls2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3]) + logit2prob(CEIN_tidy[4,3])
+un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
+
+SE <- unlist(c(hs1_SE, hs2_SE, ls1_SE, ls2_SE, un_SE))
+
+hab <- c("hs1", "hs2", "ls1", "ls2", 'un')
+
+
+plot_data <- data.frame(hab, mean, SE)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+```
+
+
+# Frank's goodness of fit code
+```{r}
+#Goodness-of-fit tests
+#This runs three GOF tests: Chi square, Freeman Tukey, and SSE. What you're basically looking for is that your data doesn't fall near the extremes of the bootstrapped distribution. A good threshold for each statistic might be >.1 and <0.9. Probably good to run at least 100 simulations, more is preferable (nsim in the bottom code). These can be slow.
+
+#m12 is your model fit - if this doesn't work, you made need to play around with the model output you are using and figure out how to extract the required elements below
+fm <- m12
+
+fm <- CEIN_mod
+
+str(CEIN_mod)
+#Function for the GOF tests - if this doesn't work, check your model output and make sure observed, expected, and residuals are being properly extracted and amend those first three lines as needed. I haven't tried this with a GLM output, but it should be an easy fix if it doesn't work out of the box.
+fitstats <- function(fm) {
+  observed <- fm$data
+  expected <- fm$fitted.values
+  resids <- fm$residuals
+  sse <- sum(resids^2)
+  chisq <- sum((observed - expected)^2 / expected)
+  freeTuke <- sum((sqrt(observed) - sqrt(expected))^2)
+  out <- c(SSE=sse, Chisq=chisq, freemanTukey=freeTuke)
+  return(out)
+}
+
+fitstats <- function(fm) {
+  observed <- fm$data
+  expected <- fm$fitted.values
+  resids <- fm$residuals
+  sse <- sum(resids^2)
+  chisq <- sum((observed - expected)^2 / expected)
+  freeTuke <- sum((sqrt(observed) - sqrt(expected))^2)
+  out <- c(SSE=sse, Chisq=chisq, freemanTukey=freeTuke)
+  return(out)
+}
+
+
+#Bootstrapping the GOF - this is using parboot() from Unmarked. It may not play nicely with GLM output. If not, try the boot() function from the boot package in place of parboot(). I think the syntax is nearly identical except maybe the 'report' part which isn't important.
+(pb <- parboot(fm, fitstats, nsim=100, report=1))
+
+library(boot)
+pb <- boot(fm, fitstats, R=100)
+
+?boot
+
+#Plot isn't necessary but might help you understand the outputs - may need some tweeking to work for boot()
+plot(pb, main="")
+
+
+
+
+#Next section
+
+#Converting logit scale to natural scale. The link function for binomial is logit, so you need to backtransform to get from that scale to a probability of occurence (0-1). Use the following function. Be sure to add together any coefficients and intercepts first - all arithmetic should be done before backtransformation:
+
+logit2prob <- function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+
+#If you do anything that uses Poisson, that's on the log scale so you can just use exp() to convert to the natural scale.
+```
+
+
 ```{r Moran's I}
 #library(ape)
 
-dists <- as.matrix(dist(cbind(plant_mrpp_d$lon, plant_mrpp_d$lat)))
+dists <- as.matrix(dist(cbind(plant_glm_cov$lon, plant_glm_cov$lat)))
 #dists.inv <- 1/dists
 #diag(dists.inv) <- 0
 #Moran.I(plant_mrpp_d$PSME, dists.inv, na.rm = T)
@@ -251,11 +658,11 @@ dists <- as.matrix(dist(cbind(plant_mrpp_d$lon, plant_mrpp_d$lat)))
 # convert w to a row standardised general weights object
 lw <- mat2listw(dists)
 lwW <- nb2listw(lw$neighbours, glist=lw$weights, style="W")
-CEIN_mi <- (moran.test(plant_mrpp_d$MECA, lwW, alternative="two.sided"))$statistic
+CEIN_mi <- (moran.test(plant_glm_cov$MECA, lwW, alternative="two.sided"))$statistic
 
 #CEIN_mi <- (moran.test(MECA_dat[,2], lwW, alternative="two.sided"))$statistic
 
-CEIN_mip <- (moran.test(plant_mrpp_d$MECA, lwW, alternative="two.sided"))$'p.value'
+CEIN_mip <- (moran.test(plant_glm_cov$MECA, lwW, alternative="two.sided"))$'p.value'
 ```
 
 ```{r AIC test}
@@ -381,25 +788,37 @@ tbl
 ```
 
 # SPP with more than 10 detections
+I also removed all that were not significant in the NMDS
 ```{r}
 colnames(plant_glm_cov)[2:35]
 ```
 
 
-# ACMA
+# ACMA (NS)
 ```{r ACMA}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ACMA, tsf_cat, sev, tsf)
+  dplyr::select(site_id, ACMA, tsf_cat, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(ACMA/100 ~ sev, sp_dat, family = gaussian)
+sp_mod2 <- glm(ACMA/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot1(sp_mod1)
+occ_plot2(sp_mod2)
 ```
 
 # ANMAD
 ```{r ANMAD}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ANMAD, tsf_cat, sev, tsf)
+  dplyr::select(site_id, ANMAD, tsf_cat, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(ANMAD/100 ~ sev, sp_dat, family = gaussian)
+sp_mod2 <- glm(ANMAD/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot_sev(sp_mod1)
+occ_plot2(sp_mod2)
+p
 ```
 
 # APAN
@@ -412,9 +831,15 @@ lmt(sp_dat)
 # ARME
 ```{r ARME}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ARME, tsf_cat, sev, tsf)
+  dplyr::select(site_id, ARME, tsf_cat, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(ARME/100 ~ sev + tsf_cat, sp_dat, family = gaussian)
+sp_mod2 <- glm(ARME/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot1(sp_mod1)
+occ_plot2(sp_mod2)
+summary(sp_mod)
 ```
 # CASC
 ```{r CASC}
@@ -426,9 +851,15 @@ lmt(sp_dat)
 # CEIN
 ```{r CEIN}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf)
+  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(CEIN/100 ~ sev + tsf_cat, sp_dat, family = gaussian)
+sp_mod2 <- glm(CEIN/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot1(sp_mod1)
+occ_plot2(sp_mod2)
+summary(sp_mod)
 ```
 # COCO
 ```{r COCO}
@@ -446,10 +877,31 @@ lmt(sp_dat)
 ```
 # CONU
 ```{r CONU}
-sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, CONU, tsf_cat, sev, tsf)
+# WHy are the estimates from the model so small? they don't add up to even 10%!
+sp_dat <- plant_glm_pa %>% 
+  dplyr::select(site_id, CONU, tsf_cat, sev, tsf, tsf_cat2, sev_tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(CONU ~ sev, sp_dat, family = binomial)
+sp_mod2 <- glm(CONU/100 ~ tsf_cat, sp_dat, family = gaussian)
+sp_mod3 <- glm(CONU/100 ~ sev + tsf_cat, sp_dat, family = gaussian)
+sp_mod4 <- glm(CONU/100 ~ sev + tsf_cat2, sp_dat, family = gaussian)
+sp_mod5 <- glm(CONU/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot_sev(sp_mod1)
+occ_plot_tsf(sp_mod2)
+occ_plot_full(sp_mod3)
+occ_plot_full2cat(sp_mod4)
+occ_plot_sevtsf(sp_mod5)
+
+summary(sp_mod3)
+
+logit2prob <- function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+
 ```
 # ELGL
 ```{r ELGL}
@@ -521,12 +973,15 @@ sp_dat <- plant_glm_cov %>%
 
 lmt(sp_dat)
 ```
-# NODE
+# NODE (S but lame)
 ```{r NODE}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, NODE, tsf_cat, sev, tsf)
+  dplyr::select(site_id, NODE, tsf_cat, sev, tsf, tsf_cat2)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(NODE/100 ~ sev, sp_dat, family = gaussian)
+occ_plot_sev(sp_mod1)
 ```
 # POIM
 ```{r POIM}
@@ -542,12 +997,18 @@ sp_dat <- plant_glm_cov %>%
 
 lmt(sp_dat)
 ```
-# PSME
+# PSME (S)
 ```{r PSME}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, PSME, tsf_cat, sev, tsf)
+  dplyr::select(site_id, PSME, tsf_cat, sev, tsf, tsf_cat2)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(PSME/100 ~ sev, sp_dat, family = gaussian)
+occ_plot_sev(sp_mod1)
+
+sp_mod1 <- glm(PSME/100 ~ tsf_cat, sp_dat, family = "gaussian")
+occ_plot_tsf(sp_mod1)
 ```
 # PTAQ
 ```{r PTAQ}

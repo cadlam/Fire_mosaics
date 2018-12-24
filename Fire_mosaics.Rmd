@@ -48,7 +48,7 @@ Sampling methods involved: surveys of all native plants and lichens (growing on 
 ```{r include = F}
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv)
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart)
 
 library(tidyverse)
 library(emmeans)
@@ -108,6 +108,13 @@ lichen_names <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fi
 
 # Insects
 insect_data <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/insect_data.csv")
+
+insect_dat_long <- insect_dat %>%
+  left_join(site_data, by = "site_id") %>% 
+  gather(key = "taxon", value = "number", 3:19)
+
+insect_dat_wide <- spread(insect_dat_long, key = "taxon", value = "number")
+#write.csv(insect_dat_wide, "output/insect_data_wide.csv")
 
 ```
 
@@ -181,6 +188,58 @@ plants_matrix <- as.matrix(plant_matrix1[, -1])
 ```
 
 # Results
+
+
+### Rarefaction curves (maybe div index better though)
+```{r}
+# rarefy only works with counts
+data(BCI)
+BCI <- plant_glm_pa %>% 
+#  filter(sev == "u") %>% 
+  dplyr::select(ABCO:WOFI) %>% 
+  mutate(sev_tsf2 = paste("sev", "tsf_cat2"))
+
+#Shannon
+diversity(BCI, index = "shannon", MARGIN = 1, base = exp(1))
+
+H <- diversity(BCI)
+
+plant_dat_pa_h <- plant_glm_pa %>% 
+  mutate(H = H) %>% 
+  mutate(sev_tsf2 = paste(sev, tsf_cat2))
+
+ggplot(plant_dat_pa_h, aes(x= sev_tsf2, y = H)) +
+  geom_boxplot()
+
+
+simp <- diversity(BCI, "simpson")
+invsimp <- diversity(BCI, "inv")
+r.2 <- rarefy(BCI, 2)
+alpha <- fisher.alpha(BCI)
+pairs(cbind(H, simp, invsimp, r.2, alpha), pch="+", col="blue")
+
+#specaccum
+sp1 <- specaccum(BCI)
+sp2 <- specaccum(BCI, "random")
+sp2
+summary(sp2)
+plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0, ci.col="lightblue")
+boxplot(sp2, col="yellow", add=TRUE, pch="+")
+## Fit Lomolino model to the exact accumulation
+mod1 <- fitspecaccum(sp1, "lomolino")
+coef(mod1)
+fitted(mod1)
+plot(sp1)
+## Add Lomolino model using argument 'add'
+plot(mod1, add = TRUE, col=2, lwd=2)
+## Fit Arrhenius models to all random accumulations
+mods <- fitspecaccum(sp2, "arrh")
+plot(mods, col="hotpink")
+boxplot(sp2, col = "yellow", border = "blue", lty=1, cex=0.3, add= TRUE)
+## Use nls() methods to the list of models
+sapply(mods$models, AIC)
+```
+
 
 ### NMDS
 
@@ -262,144 +321,36 @@ C1 <- cbind(C1, Env_factors = rownames(C1))
 Cred1<-subset(C1,pvals1<0.05)
 Cred1 <- cbind(Cred1, Env_factors = rownames(Cred1))
 
-data("mite")
-ordi <- ordisurf(sol ~ scrs_filt$folded_aspect) #created the ordisurf object
-ordi.grid <- ordi$grid #extracts the ordisurf object
-str(ordi.grid) #it's a list though - cannot be plotted as is
-ordi.plant <- expand.grid(x = ordi.grid$x, y = ordi.grid$y) #get x and ys
-ordi.plant$z <- as.vector(ordi.grid$z) #unravel the matrix for the z scores
-ordi.plant.na <- data.frame(na.omit(ordi.plant)) #gets rid of the nas
-str(ordi.plant.na) #looks ready for plotting!
-  
-df <- data.frame(
-  x = runif(100),
-  y = runif(100),
-  z1 = rnorm(100),
-  z2 = abs(rnorm(100))
-)
 
-# Default colour scale colours from light blue to dark blue
-ggplot(df, aes(x, y)) +
-  geom_point(aes(colour = z2))
+#library(ggrepel)
 
-# For diverging colour scales use gradient2
-ggplot(df, aes(x, y)) +
-  geom_point(aes(colour = z1)) +
-  scale_colour_gradient2()
 
-# Use your own colour scale with gradientn
-ggplot(df, aes(x, y)) +
-  geom_point(aes(colour = z1)) +
-  scale_colour_gradientn(colours = terrain.colors(10))
-
-# Equivalent fill scales do the same job for the fill aesthetic
-ggplot(faithfuld, aes(waiting, eruptions)) +
-  geom_raster(aes(fill = density)) +
-  scale_fill_gradientn(colours = terrain.colors(10))
-
-# Adjust colour choices with low and high
-ggplot(df, aes(x, y)) +
-  geom_point(aes(colour = z2)) +
-  scale_colour_gradient(low = "white", high = "black")
-# Avoid red-green colour contrasts because ~10% of men have difficulty
-# seeing them
-
-library(ggrepel)
-
-p <- ggplot(ordi.plant.na) +
-  stat_contour(aes(x, y, z = z)) +
-  scale_colour_gradientn(high = "darkgreen", low = "darkolivegreen1") 
-
-?scale_color_gradient
-+
-  geom_point(data = scrs, mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
-  coord_fixed() + ## need aspect ratio of 1!  
-  geom_segment(data = Cred,
-               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
-               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
-  geom_segment(data = C1,
-               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
-               arrow = arrow(length = unit(0.25, "cm")), colour = "red") +
-  geom_text(data = Cred, aes(x = NMDS1, y = NMDS2, label = species),
-            size = 3) +
-  geom_text_repel(data = C1, aes(x = NMDS1, y = NMDS2, label = Env_factors),
-            size = 3, colour = "red") +
-  labs(title = "Figure 1: NMDS for all native plants")
-
-p
-
-  
-  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
-  geom_contour(data = ordi.plant.na, aes(x = ordi.plant.na$x, y = ordi.plant.na$y, z = ordi.plant.na$z, colour = rev(..level..)), binwidth = 5)
-p
-
-  
-  coord_fixed() + ## need aspect ratio of 1!
-  geom_point(data = Cred, aes(x = NMDS1, y = NMDS2), shape = 3) +
-  geom_text_repel(data = Cred, aes(x = NMDS1, y = NMDS2, label = Species),
-            size = 3)
-p
-  
-  
 p <- ggplot(scrs) +
   geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!  
   geom_segment(data = Cred,
                aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
                arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
-    geom_segment(data = C1,
-               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
-               arrow = arrow(length = unit(0.25, "cm")), colour = "red") +
+#  geom_segment(data = C1,
+#               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "red") +
   geom_text(data = Cred, aes(x = NMDS1, y = NMDS2, label = species),
             size = 3) +
-  geom_text_repel(data = C1, aes(x = NMDS1, y = NMDS2, label = Env_factors),
-            size = 3, colour = "red") +
-  labs(title = "Figure 1: NMDS for all native plants") +
-  stat_contour(data = ordi.plant.na, aes(x, y, z = z)) + #can change the binwidth depending on how many contours you
-#  scale_colour_manual("Post-fire habitats",  values = c("red", "green", "blue")) + #sets the name of the legend for shape, and says which symbols we want (equivalent to the pch command in plot)
-  labs(colour = "Severity")+ #another way to set the labels, in this case, for the colour legend
-  scale_colour_gradient(high = "darkgreen", low = "darkolivegreen1") + #here we set the high and low of the colour scale.  Can delete to go back to the standard blue, or specify others
-  theme(legend.key = element_blank(),  #removes the box around each legend item
-        legend.position = "bottom", #legend at the bottom
-        legend.direction = "horizontal",
-        legend.box = "horizontal",
-        legend.box.just = "centre")
+#  geom_text_repel(data = C1, aes(x = NMDS1, y = NMDS2, label = Env_factors),
+#            size = 3, colour = "red") +
+  labs(title = "Figure 1: NMDS for all native plants")
+
 p
 
-?geom_density2d
-?stat_contour
-
-v <- ggplot(faithfuld, aes(waiting, eruptions, z = density))
-v + geom_contour()
-
-m <- ggplot(faithful, aes(x = eruptions, y = waiting)) +
- geom_point() +
- xlim(0.5, 6) +
- ylim(40, 110)
-m + geom_density_2d()
-
-m + stat_density_2d(aes(fill = stat(level)), geom = "polygon")
-
-set.seed(4393)
-dsmall <- diamonds[sample(nrow(diamonds), 1000), ]
-d <- ggplot(dsmall, aes(x, y))
-# If you map an aesthetic to a categorical variable, you will get a
-# set of contours for each value of that variable
-d + geom_density_2d(aes(colour = cut))
-
-# Similarly, if you apply faceting to the plot, contours will be
-# drawn for each facet, but the levels will calculated across all facets
-d + stat_density_2d(aes(fill = stat(level)), geom = "polygon") +
-  facet_grid(. ~ cut) + scale_fill_viridis_c()
-# To override this behavior (for instace, to better visualize the density
-# within each facet), use stat(nlevel)
-d + stat_density_2d(aes(fill = stat(nlevel)), geom = "polygon") +
-  facet_grid(. ~ cut) + scale_fill_viridis_c()
-
-# If we turn contouring off, we can use use geoms like tiles:
-d + stat_density_2d(geom = "raster", aes(fill = stat(density)), contour = FALSE)
-# Or points:
-d + stat_density_2d(geom = "point", aes(size = stat(density)), n = 20, contour = FALSE)
+#  stat_contour(data = ordi.plant.na, aes(x, y, z = z)) + #can change the binwidth depending on how many contours you
+#  scale_colour_manual("Post-fire habitats",  values = c("red", "green", "blue")) + #sets the name of the legend for shape, and says which symbols we want (equivalent to the pch command in plot)
+#  labs(colour = "Severity")+ #another way to set the labels, in this case, for the colour legend
+#  scale_colour_gradient(high = "darkgreen", low = "darkolivegreen1") + #here we set the high and low of the colour scale.  Can delete to go back to the standard blue, or specify others
+#  theme(legend.key = element_blank(),  #removes the box around each legend item
+#        legend.position = "bottom", #legend at the bottom
+#        legend.direction = "horizontal",
+#        legend.box = "horizontal",
+#        legend.box.just = "centre")
 
 ```
 
@@ -937,9 +888,40 @@ p <- ggplot(scrs) +
 p
 ```
 
+### Beta diversity (plants)
+```{r}
+# plot from https://www.fromthebottomoftheheap.net/2016/04/17/new-plot-default-for-betadisper/
+#install.packages("devtools")
+#devtools::install_github("vegandevs/vegan")
+#args(vegan:::plot.betadisper)
+
+
+plant_glm_cov2 <- plant_glm_cov %>% 
+  mutate(sev_tsf2 = paste(sev, tsf_cat2))
+
+# can use betapart package here: dist<-beta.pair(plant_matrix1[,-1], index.family="jaccard") FOR PRESENCE ABSENCE
+# for abundance data, use dist <- bray.part(plant_matrix1[,-1])
+# In both cases use dist[[3]] instead of dis in betadisper
+
+dis <- vegdist(plant_matrix1[,-1])
+groups <- factor(plant_glm_cov2$sev_tsf2)
+
+mod <- betadisper(dis, groups)  # Calculate multivariate dispersions
+
+scores(mod)
+
+plot(mod)
+boxplot(mod)
+anova(mod)
+```
+
+
 ### Plots for plants
 
 ```{r}
+plant_plot <- plant_mrpp_d %>% 
+  mutate(num_spp = rowSums(dplyr::select(.,ACMI:WOFI)))
+
 ggplot(plant_mrpp_d, aes(x = sev_tsf, y = tree_cov)) +
   geom_boxplot()
 
@@ -1028,9 +1010,41 @@ ggplot(bird_mat_num, aes(x = shrub_cov, y = num_spp)) +
   geom_smooth(method ="lm")
 ```
 
+### Plots for lichens
+```{r}
+# Bar graph with species frequency
+
+lichen_totals <- read.csv("data/lichen_data.csv", header = T) %>% 
+  dplyr::select(site_id, species, abund) %>% 
+  spread(key = species, value = abund, fill = 0) %>%
+  apply(., 2, function(c)sum(c!=0))
+
+lichen_dat_totals1 <- lichen_dat_wide[,-1] %>% 
+  bind_rows(., lichen_totals)
+
+lichen_dat_totals <- lichen_dat_totals1[-c(1:48),-59] %>% 
+  gather(key = species, value = frequency) %>% 
+  arrange(desc(frequency)) %>% 
+  filter(frequency > 11)
+
+ggplot(lichen_dat_totals, aes(x = reorder(species, -frequency), y = frequency)) +
+         geom_col()
+
+# Lichens of HS
+lichen_HS <- read.csv("data/lichen_data.csv", header = T) %>% 
+  dplyr::select(site_id, species, abund) %>% 
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "h") %>% 
+  filter(abund != 0) %>% 
+  filter(!site_id %in% c("7", "6", "34", "60", "14", "36", "5", "28", "16")) %>% 
+  spread(key = species, value = abund, fill = 0)
+```
 
 ### MRPP
 ```{r echo = F}
+site_data$site_id <- as.factor(site_data$site_id)
+plant_matrix1$site_id <- as.factor(plant_matrix1$site_id)
+
 plant_mrpp_d <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
   mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
 
@@ -2163,6 +2177,8 @@ insect_spp <- insect_dat_long %>%
   dplyr::select(taxon)
 
 complete_spp <- union(insect_spp, insect_dat_UN) # but should the dummy species be removed?
+
+#insect_dat_wide <- spread(insect_dat_long, key = "taxon", value = "number")
 
 ## Unburnt data: filter to get only UN; keep only species and cover columns
 insect_dat_UN <- insect_dat_long %>% 
