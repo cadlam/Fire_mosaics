@@ -48,49 +48,33 @@ Sampling methods involved: surveys of all native plants and lichens (growing on 
 ```{r include = F}
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart)
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart, lattice)
 
-library(tidyverse)
-library(emmeans)
-library(lme4)
-library(lmerTest)
-library(pbkrtest)
-library(car)
-library(ggplot2)
-library(cowplot)
-library(reshape2)
-library(splitstackshape)
+#library(lme4)
+#library(lmerTest)
+#library(pbkrtest)
+#library(car)
+#library(reshape2)
+#library(splitstackshape)
 #library(magrittr)
 #library(readr)
-library(vegan)
-library(viridis)
-library(cowplot)
-library(purrr)
-library(tibble)
-library(broom)
-#library(labdsv)
-library(indicspecies)
-library(permute)
-library(perm)
-library(magrittr)
-library(kableExtra)
+#library(viridis)
+#library(purrr)
+#library(tibble)
+#library(broom)
+#library(indicspecies)
+#library(permute)
+#library(perm)
+#library(magrittr)
 #library(knitr)
-library(rowr)
+#library(rowr)
 #knit2html("Fire_mosaics.html")
 
 ```
 
 ```{r include = FALSE}
 # This loads the data
-plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
-plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/plant_list.csv")
-plant_data$species <- as.character(plant_data$species)
-plant_data$site_id <- as.character(plant_data$site_id)
-plant_names$species <- as.character(plant_names$species)
-plant_names$full_name <- as.character(plant_names$full_name)
-plant_names$native_status <- as.factor(plant_names$native_status)
-plant_names$form <- as.factor(plant_names$form)
-
+## Site
 site_data_read <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
 site_data_read$tsf <- as.numeric(as.character(site_data_read$tsf))
 site_data_read$fire_yr <- as.numeric(as.character(site_data_read$fire_yr))
@@ -103,19 +87,46 @@ site_data$tsf_cat[site_data$tsf < 10] <-1
 
 site_data$site_id <- as.character(site_data$site_id) 
 
-#lichens
+## Plants
+plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
+plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/plant_list.csv")
+plant_data$species <- as.character(plant_data$species)
+plant_data$site_id <- as.character(plant_data$site_id)
+plant_names$species <- as.character(plant_names$species)
+plant_names$full_name <- as.character(plant_names$full_name)
+plant_names$native_status <- as.factor(plant_names$native_status)
+plant_names$form <- as.factor(plant_names$form)
+
+## Lichens
 lichen_names <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/lichen_list.csv")
 
-# Insects
-insect_data <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/insect_data.csv")
+## Insects
+insect_dat1 <- read.csv("data/insect_data.csv", header = T) %>% 
+  mutate(order = as.character(order)) %>% 
+  mutate(suborder = as.character(suborder))
 
-insect_dat_long <- insect_dat %>%
+insect_dat2 <- insect_dat1 %>% 
+  mutate(site_id = as.factor(site_id)) %>% 
+#  gsub(" ", "", order) %>% #get rid of spaces in some cells
+  filter(family != "Curculionidae", family != "Formicidae", order != "Arachnida", order != "Apterygota", order != "Collembola", order!= "Myriapoda") %>% # here, can decide to look at only pan, or only cones
+  mutate(trap_id = paste(site_id, trap)) %>% 
+  mutate(taxon = ifelse(suborder %in% "", order, suborder)) # use suborder when available
+
+insect_dat3 <- as.data.table(insect_dat2)[, sum(number), by = .(site_id, taxon)]# Adding rows when duplicate; could have done this using aggragate instead, but wasn't working
+
+insect_dat <- insect_dat3 %>% 
+  dplyr::select(site_id, taxon, V1) %>% 
+  spread(key = taxon, value = V1, fill = 0) %>%
+  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
+
+insect_dat$site_id <- as.character(insect_dat$site_id) # wide format, dummy species, column 2 is garbage
+
+insect_dat_long <- insect_dat %>% # Long format, with site data, dummmy species, row 2 is garbage
   left_join(site_data, by = "site_id") %>% 
   gather(key = "taxon", value = "number", 3:19)
 
-insect_dat_wide <- spread(insect_dat_long, key = "taxon", value = "number")
-#write.csv(insect_dat_wide, "output/insect_data_wide.csv")
-
+insect_dat_wide <- spread(insect_dat_long, key = "taxon", value = "number") %>% 
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-")) # wide format, with site data, dummy species, column 2 is garbage
 ```
 
 
@@ -188,6 +199,29 @@ plants_matrix <- as.matrix(plant_matrix1[, -1])
 ```
 
 # Results
+
+```{r}
+#plot for productivity
+tree_ht <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/sublayer_data.csv")
+tree_ht$site_id <- as.factor(tree_ht$site_id)
+
+site_data_HS <- site_data %>% 
+  left_join(tree_ht, by = "site_id") %>% 
+  filter(sev == "h")
+
+# use aggregate to create new data frame with the maxima
+# regr_ht is the tallest tree that grew/regrew after fire
+tree_ht_HS <- aggregate(regr_ht ~ site_id, site_data_HS, max) %>% 
+  left_join(site_data, by= "site_id")
+# then simply merge with the original
+#site_data_HS <- merge(df.agg, site_data_HS1)
+
+
+ggplot(tree_ht_HS, aes(x=tsf, y = regr_ht)) +
+  geom_point() +
+  geom_smooth(method="lm")
+
+```
 
 
 ### Rarefaction curves (maybe div index better though)
@@ -751,37 +785,6 @@ p
 
 #### Insects
 ```{r, echo=FALSE,results='hide',fig.keep='all'}
-# read in data
-insect_dat1 <- read.csv("data/insect_data.csv", header = T) %>% 
-  mutate(order = as.character(order)) %>% 
-  mutate(suborder = as.character(suborder))
-
-insect_dat2 <- insect_dat1 %>% 
-  mutate(site_id = as.factor(site_id)) %>% 
-#  gsub(" ", "", order) %>% #get rid of spaces in some cells
-  filter(family != "Curculionidae", family != "Formicidae", order != "Arachnida", order != "Apterygota", order != "Collembola", order!= "Myriapoda") %>% # here, can decide to look at only pan, or only cones
-  mutate(trap_id = paste(site_id, trap)) %>% 
-  mutate(taxon = ifelse(suborder %in% "", order, suborder)) # use suborder when available
-
-insect_dat3 <- as.data.table(insect_dat2)[, sum(number), by = .(site_id, taxon)]# Adding rows when duplicate; could have done this using aggragate instead, but wasn't working
-
-
-# but this drop all the other columns
-#insect_dat2$site_id <- insect_dat3$site_id
-#insect_dat2$order <- insect_dat3$order
-#insect_dat2$V1 <- insect_dat3$V1
-
-insect_dat <- insect_dat3 %>% 
-  dplyr::select(site_id, taxon, V1) %>% 
-  spread(key = taxon, value = V1, fill = 0) %>%
-  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
-
-insect_dat$site_id <- as.character(insect_dat$site_id)
-
-# presence/absence is not meaningful here
-#insect_dat_order <- insect_dat %>% 
-#  spread(key = order, value = V1, fill = 0)
-
 # calculate distance for NMDS
 NMDS.log<-log1p(insect_dat[,-c(1:2)])#[,-c(1:20)])
 sol <- metaMDS(NMDS.log)
@@ -915,12 +918,74 @@ boxplot(mod)
 anova(mod)
 ```
 
+```{r}
+# from ?oecosimu
+
+## Use the first eigenvalue of correspondence analysis as an index
+## of structure: a model for making your own functions.
+data(sipoo)
+out <- oecosimu(sipoo, decorana, "swap", burnin=100, thin=10, statistic="evals")
+out
+## Inspect the swap sequence as a time series object
+plot(as.ts(out))
+lag.plot(as.ts(out))
+acf(as.ts(out))
+## Density plot: needs lattice
+require(lattice)
+
+densityplot(out, as.table = TRUE)
+## Use quantitative null models to compare
+## mean Bray-Curtis dissimilarities
+data(dune)
+meandist <- function(x) mean(vegdist(x, "bray"))
+mbc1 <- oecosimu(dune, meandist, "r2dtable")
+mbc1
+## Define a custom function that shuffles
+## cells in each rows
+f <- function(x) {
+    apply(x, 2, function(z) sample(z, length(z)))
+}
+mbc2 <- oecosimu(as.matrix(dune), meandist, f)
+mbc2
+```
+
 
 ### Plots for plants
 
 ```{r}
 plant_plot <- plant_mrpp_d %>% 
-  mutate(num_spp = rowSums(dplyr::select(.,ACMI:WOFI)))
+  mutate(num_spp = rowSums(dplyr::select(.,ACMI:WOFI))) %>% 
+    mutate(tsf_cat2 = paste())
+
+# summarize data
+data_summary <- function(data, varname, groupnames){
+  require(plyr)
+  summary_func <- function(x, col){
+    c(mean = mean(x[[col]], na.rm=TRUE),
+      sd = sd(x[[col]], na.rm=TRUE))
+  }
+  data_sum<-ddply(data, groupnames, .fun=summary_func,
+                  varname)
+  data_sum <- rename(data_sum, c("mean" = varname))
+ return(data_sum)
+}
+
+df <- data_summary(plant_plot, varname="num_spp", groupnames="tsf_cat2")
+df
+
+#plot
+hist <- ggplot(df, aes(x = tsf_cat2, y = num_spp)) +
+  geom_histogram(stat = "identity") +
+  labs(title = "Figure X: number of species in each habitat", y = "# spp", x = "habitat") +
+  geom_errorbar(aes(ymin=num_spp-sd, ymax=num_spp+ sd), width=.2) 
+hist
+
+#%>%
+#  group_by(sev, tsf) %>%
+#  summarize(mean_size = mean(num_spp, na.rm = TRUE))
+
+ggplot(plant_plot, aes(x = num_spp)) +
+  geom_bar(aes(colour = sev))
 
 ggplot(plant_mrpp_d, aes(x = sev_tsf, y = tree_cov)) +
   geom_boxplot()
@@ -987,6 +1052,8 @@ ggplot(scrs1, aes(x = herb_cov, y = NMDS1)) +
 
 #Need to look at snag density/BA, total live tree density/BA, max tree height, proportion of conifer to hardwood cover
 
+
+
 ```
 ### Plots for birds
 
@@ -1031,7 +1098,8 @@ ggplot(lichen_dat_totals, aes(x = reorder(species, -frequency), y = frequency)) 
          geom_col()
 
 # Lichens of HS
-lichen_HS <- read.csv("data/lichen_data.csv", header = T) %>% 
+lichen_HS <- read.csv("data/lichen_data.csv", header = T) %>%
+  mutate(site_id = as.factor(site_id)) %>% 
   dplyr::select(site_id, species, abund) %>% 
   left_join(site_data, by = "site_id") %>% 
   filter(sev == "h") %>% 
@@ -1040,7 +1108,7 @@ lichen_HS <- read.csv("data/lichen_data.csv", header = T) %>%
   spread(key = species, value = abund, fill = 0)
 ```
 
-### MRPP
+### MRPP (plants)
 ```{r echo = F}
 site_data$site_id <- as.factor(site_data$site_id)
 plant_matrix1$site_id <- as.factor(plant_matrix1$site_id)
@@ -1048,7 +1116,7 @@ plant_matrix1$site_id <- as.factor(plant_matrix1$site_id)
 plant_mrpp_d <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
   mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
 
-plant.mrpp <- mrpp(plant_mrpp_d[,c(1:139)], plant_mrpp_d$sev_tsf)
+plant.mrpp <- mrpp(plant_mrpp_d[,c(2:139)], plant_mrpp_d$sev_tsf)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
@@ -1065,6 +1133,7 @@ with(plant.mrpp, {
      expression(bold(delta)), cex=1.5 )  }
 )
 par(def.par)
+
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
 plant.md <- meandist(vegdist(plant_mrpp_d[,c(2:139)]), plant_mrpp_d$sev_tsf)
@@ -1076,17 +1145,16 @@ plot(plant.md)
 ## MRPP (insects) 
 We see from the MRPP that the first 2 age categories for HS stand out, but the older HS burns cluster with the LS and UN.
 ```{r echo = F}
-insect_mrpp_d <- left_join(insect_dat, site_data, by = "site_id") %>% 
-  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
+#meandist not working now for some reason, same with plants above
 
-insect.mrpp <- mrpp(insect_mrpp_d[,c(3:19)], insect_mrpp_d$sev_tsf)
+insect.mrpp <- mrpp(insect_dat_wide[,c(29:45)], insect_dat_wide$sev_tsf)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(insect.ord <- metaMDS(insect_mrpp_d[,c(3:19)]), type="text", display="sites" )
-ordihull(insect.ord, insect_mrpp_d$sev_tsf, label = T)
+plot(insect.ord <- metaMDS(insect_dat_wide[,c(29:45)]), type="text", display="sites" )
+ordihull(insect.ord, insect_dat_wide$sev_tsf, label = T)
 
 with(insect.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1096,12 +1164,18 @@ with(insect.mrpp, {
      expression(bold(delta)), cex=1.5 )  }
 )
 par(def.par)
+
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-insect.md <- meandist(vegdist(insect_mrpp_d[,c(3:19)]), insect_mrpp_d$sev_tsf)
+insect.md <- meandist(vegdist(insect_dat_wide[,c(29:45)]), insect_dat_wide[["sev_tsf"]])
 insect.md
 summary(insect.md)
 plot(insect.md)
+
+data(dune)
+data(dune.env)
+
+
 ```
 
 
@@ -1390,7 +1464,7 @@ names(indvalsummary1)[1]<-"species"
 indval <- left_join(indvalsummary1, plant_names, by = "species") %>% 
   dplyr::select(full_name, group, indval, pvalue) %>% 
   mutate("Indicator value" = indval * 100) %>% 
-  filter(indval > 0.245) %>% 
+  filter(indval >= 0.25) %>% 
   filter(pvalue < 0.05)
 
 indval_hs <- indval %>% 

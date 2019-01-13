@@ -16,11 +16,11 @@ knitr::opts_chunk$set(echo = TRUE)
 if(!require('pacman'))install.packages('pacman')
 pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, bbmle, spdep, rsq,lmtest, unmarked, broom)
 
-library(dplyr)
-library(ggplot2)
+#library(dplyr)
+#library(ggplot2)
 library(purrr)
 library(tibble)
-library(tidyr)
+#library(tidyr)
 library(lmtest)
 library(bbmle)
 library(spdep)
@@ -29,57 +29,8 @@ library(lmtest)
 #options(contrasts =c("contr.sum", "contr.poly"))
 #options(contrasts = rep ("contr.treatment", 2))
 
-# Test of k-means cluster analysis?
-centers <- tibble(
-  cluster = factor(1:3), 
-  num_points = c(100, 150, 50),  # number points in each cluster
-  x1 = c(5, 0, -3),              # x1 coordinate of cluster center
-  x2 = c(-1, 1, -2)              # x2 coordinate of cluster center
-)
-
-labelled_points <- centers %>%
-  mutate(
-    x1 = map2(num_points, x1, rnorm),
-    x2 = map2(num_points, x2, rnorm)
-  ) %>% 
-  dplyr::select(-num_points) %>% 
-  unnest(x1, x2)
-
-ggplot(labelled_points, aes(x1, x2, color = cluster)) +
-  geom_point()
-
-
-points <- labelled_points %>% 
-  dplyr::select(-cluster)
-
-kclust <- kmeans(points, centers = 3)
-kclust
-
-kclusts <- tibble(k = 1:9) %>%
-  mutate(
-    kclust = map(k, ~kmeans(points, .x)),
-    tidied = map(kclust, tidy),
-    glanced = map(kclust, glance),
-    augmented = map(kclust, augment, points)
-  )
-
-kclusts
-
-clusters <- kclusts %>%
-  unnest(tidied)
-
-assignments <- kclusts %>% 
-  unnest(augmented)
-
-clusterings <- kclusts %>%
-  unnest(glanced, .drop = TRUE)
-
-p1 <- ggplot(assignments, aes(x1, x2)) +
-  geom_point(aes(color = .cluster)) + 
-  facet_wrap(~ k)
-p1
-
-
+# load scripts
+source("scripts/occ_plot.R")
 ```
 
 # Bird data
@@ -107,14 +58,19 @@ plant_names$full_name <- as.character(plant_names$full_name)
 plant_names$native_status <- as.factor(plant_names$native_status)
 plant_names$form <- as.factor(plant_names$form)
 
+# Keep only native species/ long format
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native") %>%
   dplyr::select(site_id, species, cover)
 
 site_data <- read.csv("data/site_data.csv")
 
-site_data <- site_data_read %>% 
+# Set tsf_cat in site_data NOT WORKING
+site_data$tsf <- as.numeric(as.character(site_data$tsf))
+
+site_data <- site_data %>% 
     mutate(tsf_cat2 = ifelse(is.na(tsf), "3", "2"))
+
 site_data$tsf_cat2[site_data$tsf < 15] <-1
 
 
@@ -160,35 +116,163 @@ plant_dat_pa <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2)
 # data for plant glm using p/a
 plant_glm_pa <- merge(plant_dat_pa, site_data, by= 'site_id') %>% 
   mutate(tsf_cat = as.factor(as.character(tsf_cat)))  %>% # if tsf_cat is numeric, model output is gibberish; must change to factor
-  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
+  mutate(sev_tsf = paste(sev, tsf_cat2, sep = "-"))
 
 plant_glm_pa$tsf_cat <- as.factor(plant_glm_pa$tsf_cat)
 
 # For cover instead of p/a, use the following, which is the same as plant_mrpp_d:
 site_data$site_id <- as.character(site_data$site_id) 
 plant_glm_cov <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
-  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
+  mutate(sev_tsf = paste(sev, tsf_cat2, sep = "-"))
 
 plant_glm_cov$tsf_cat <- as.factor(plant_glm_cov$tsf_cat)
 ```
 
-# GLM testing
+# Cluster analysis 1
+```{r}
+# Cluster Analysis
+mydata <- 
+str(mydata)
+head(mydata)
+pairs(mydata)
+
+# Scatter plot 
+plot(mydata$Fuel_Cost~ mydata$Sales, data = mydata)
+with(mydata,text(mydata$Fuel_Cost ~ mydata$Sales, labels=mydata$Company,pos=4))
+
+# Normalize 
+z = mydata[,-c(1,1)]
+means = apply(z,2,mean)
+sds = apply(z,2,sd)
+nor = scale(z,center=means,scale=sds)
+
+##calculate distance matrix (default is Euclidean distance)
+distance = dist(nor)
+
+# Hierarchical agglomerative clustering using default complete linkage 
+mydata.hclust = hclust(distance)
+plot(mydata.hclust)
+plot(mydata.hclust,labels=mydata$Company,main='Default from hclust')
+plot(mydata.hclust,hang=-1)
+
+# Hierarchical agglomerative clustering using "average" linkage 
+mydata.hclust<-hclust(distance,method="average")
+plot(mydata.hclust,hang=-1)
+
+# Cluster membership
+member = cutree(mydata.hclust,3)
+table(member)
+
+#Characterizing clusters 
+aggregate(nor,list(member),mean)
+aggregate(mydata[,-c(1,1)],list(member),mean)
+
+# Scree Plot
+wss <- (nrow(nor)-1)*sum(apply(nor,2,var))
+for (i in 2:20) wss[i] <- sum(kmeans(nor, centers=i)$withinss)
+plot(1:20, wss, type="b", xlab="Number of Clusters", ylab="Within groups sum of squares") 
+
+# K-means clustering
+kc<-kmeans(nor,3)
+```
+
+
+# Cluster analysis 2
+```{r}
+# the cluster analysis is to figure out the TSF thresholds; also at what point are UN and LS site indistinguishable? how about UN/LS and HS?
+
+
+#install.packages(c("cluster", "factoextra"))
+library(cluster)
+library(factoextra)
+
+df <- plant_glm_cov[, c(1:139)]
+
+df <- subset(df, select = -c(CESA, ALRH, SALU))
+
+df1 <- df[,-1]
+rownames(df1) <- df[,1]
+
+df.scaled <- scale(df1)
+
+#trying spearman correlation but returns all NAs
+dist_corr <- get_dist(df.scaled, stand = TRUE, method = "spearman")
+
+#Euclidean dist instead
+dist.eucl <- dist(df.scaled, method = "euclidean")
+#fviz_dist(dist.eucl) # visualization
+
+# for some reason this wouldn't work until I ran the fire_mosaics.Rmd....
+# But when scaled it just suggests 1 cluster vs 6 when not clustered
+mydata <- as.matrix(df1)
+fviz_nbclust(mydata, kmeans, method = "gap_stat")
+
+km.res <- kmeans(mydata, 4) #, nstart = 25)
+#which(apply(mydata, 2, var)==0) # to find columns with 0 variance
+
+# Visualize
+fviz_cluster(km.res, data = mydata, palette = "jco",
+             ggtheme = theme_minimal())
+
+```
+# Cluster analysis 2 TSF
+```{r}
+# the cluster analysis is to figure out the TSF thresholds; also at what point are UN and LS site indistinguishable? how about UN/LS and HS?
+
+
+#install.packages(c("cluster", "factoextra"))
+library(cluster)
+library(factoextra)
+
+plant_glm_cov1 <- plant_glm_cov %>% 
+  filter(sev== "l")
+
+df <- plant_glm_cov1[, c(1:139)] 
+
+df1 <- df[,-1]
+rownames(df1) <- df[,1]
+
+nosp <- as.data.frame(which(apply(df1, 2, var) == 0)) # to find columns with 0 variance
+nosp <- cbind(rownames(nosp), data.frame(nosp, row.names=NULL)) # change row names to column
+
+# remove spp not in lS
+df2 <- subset(df1, select = -c(nosp[,1]))
+
+#df1 <- df[,-1]
+#rownames(df1) <- df[,1]
+
+df.scaled <- scale(df2)
+
+#trying spearman correlation but returns all NAs
+dist_corr <- get_dist(df.scaled, stand = TRUE, method = "spearman")
+
+#Euclidean dist instead
+dist.eucl <- dist(df.scaled, method = "euclidean")
+#fviz_dist(dist.eucl) # visualization
+
+# for some reason this wouldn't work until I ran the fire_mosaics.Rmd....
+# But when scaled it just suggests 1 cluster vs 6 when not clustered
+mydata <- as.matrix(df.scaled)
+fviz_nbclust(mydata, kmeans, method = "gap_stat")
+
+km.res <- kmeans(mydata, 3) #, nstart = 25)
+
+# Visualize
+fviz_cluster(km.res, data = mydata, palette = "jco",
+             ggtheme = theme_minimal())
+
+```
+
+# Occ_plot function (cov)
 ```{r}
 # how to transform skewed data?
 # check if there is a nice bell curve or if it's truncated (gaussian not so good if skewed)
 # transform SE to standard dev
 
-CEIN_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf, sev_tsf, tsf_cat2)
-
-CEIN_dat$tsf_cat <- as.factor(CEIN_dat$tsf_cat)
-CEIN_dat$tsf_cat2 <- as.factor(CEIN_dat$tsf_cat2)
-
-CEIN_mod <- glm(CEIN/100 ~ sev + tsf_cat, CEIN_dat, family = gaussian)
-summary(CEIN_mod)
-
 # to extract the coefficients:
 #coef(summary(CEIN_mod))["(Intercept)","Estimate"]
+
+CEIN_tidy <- tidy(CEIN_mod)
 
 # equivalently using package broom:
 ## construct function; this works with sev and tsf_cat (3 categories)
@@ -359,62 +443,14 @@ p <- ggplot(plot_data, aes(x = hab, y = mean)) +
   return(p)
 }
 
-
-
-# why are the estimates all negative???
-CEIN_mod1 <- glm(CEIN/100 ~ tsf_cat, CEIN_dat, family = "gaussian")
-summary(CEIN_mod1)
-
-occ_plot_full2cat(CEIN_mod1)
-
-str(CEIN_dat)
-
-
-
-
-
-CEIN_mod1 <- glm(CEIN/100 ~ sev, CEIN_dat, family = "gaussian")
-summary(CEIN_mod1)
-
-anova(CEIN_mod, CEIN_mod1)
-
-
-#PSME
-PSME_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, PSME, tsf_cat, sev, tsf_cat2)
-
-PSME_mod <- glm(PSME ~ sev + tsf_cat2, PSME_dat, family = "gaussian")
-summary(PSME_mod)
-occ_plot_full2cat(PSME_mod1)
-
-
-PSME_mod1 <- glm(PSME ~ sev, PSME_dat)
-summary(PSME_mod1)
-
-anova(PSME_mod, PSME_mod1)
-
-
-# MECA
-MECA_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, MECA, tsf_cat, sev)
-
-MECA_mod <- glm(MECA ~ sev * tsf_cat, MECA_dat, family = "gaussian")
-summary(MECA_mod)
-
-MECA_mod1 <- glm(MECA ~ sev, MECA_dat, family = "gaussian")
-summary(MECA_mod1)
-
-anova(MECA_mod, MECA_mod1)
-
-# it's better to use AICc
-MECA_aic <- AIC(MECA_mod, MECA_mod1)
-
-
 ```
 
 # Occ_plot function for p/a
 ```{r}
 ## construct function; this works with sev and tsf_cat (3 categories)
+#mod <- sp_mod1
+
+#turns out the full, multiplicative model is never the best!
 occ_plot_full <- function(mod) {
 CEIN_tidy <- tidy(mod)
 # I think there should only be 2 age categories for ls and hs rather than 3
@@ -428,31 +464,31 @@ un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
 
 mean <- unlist(c(hs1_mean, hs2_mean, hs3_mean, ls1_mean, ls2_mean, ls3_mean, un_mean))
 
-hs1_SE <- logit2prob(CEIN_tidy[1,3])
-hs2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
-hs3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[5,3])
-ls1_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
-ls2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3]) + logit2prob(CEIN_tidy[4,3])
-ls3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3]) + logit2prob(CEIN_tidy[5,3])
-un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
+hs1_SD <- sqrt(logit2prob(CEIN_tidy[1,3]))
+hs2_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[4,3]))
+hs3_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[5,3]))
+ls1_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[2,3]))
+ls2_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[2,3])) + sqrt(logit2prob(CEIN_tidy[4,3]))
+ls3_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[2,3])) + sqrt(logit2prob(CEIN_tidy[5,3]))
+un_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[3,3]))
 
-SE <- unlist(c(hs1_SE, hs2_SE, hs3_SE, ls1_SE, ls2_SE, ls3_SE, un_SE))
+SD <- unlist(c(hs1_SD, hs2_SD, hs3_SD, ls1_SD, ls2_SD, ls3_SD, un_SD))
 
 hab <- c("hs1", "hs2", "hs3", "ls1", "ls2", "ls3", 'un')
 
 
-plot_data <- data.frame(hab, mean, SE)
+plot_data <- data.frame(hab, mean, SD)
 
 p <- ggplot(plot_data, aes(x = hab, y = mean)) +
   geom_col() +
-  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+  geom_errorbar(aes(ymin=mean-SD, ymax=mean+SD), width=.2,
                  position=position_dodge(.9))
 
   return(p)
 }
 
-
-##THis works with sev_tsf
+# I think there should only be 2 age categories for ls and hs rather than 3
+## This works with sev_tsf
 occ_plot_sevtsf <- function(mod) {
 CEIN_tidy <- tidy(mod)
 # I think there should only be 2 age categories for ls and hs rather than 3
@@ -466,53 +502,71 @@ un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[7,2])
 
 mean <- unlist(c(hs1_mean, hs2_mean, hs3_mean, ls1_mean, ls2_mean, ls3_mean, un_mean))
 
-hs1_SE <- logit2prob(CEIN_tidy[1,3])
-hs2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
-hs3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
-ls1_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
-ls2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[5,3])
-ls3_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[6,3])
-un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[7,3])
+hs1_SD <- sqrt(logit2prob(CEIN_tidy[1,3]))
+hs2_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[2,3]))
+hs3_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[3,3]))
+ls1_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[4,3]))
+ls2_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[5,3]))
+ls3_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[6,3]))
+un_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[7,3]))
 
-SE <- unlist(c(hs1_SE, hs2_SE, hs3_SE, ls1_SE, ls2_SE, ls3_SE, un_SE))
+SD <- unlist(c(hs1_SD, hs2_SD, hs3_SD, ls1_SD, ls2_SD, ls3_SD, un_SD))
 
 hab <- c("hs1", "hs2", "hs3", "ls1", "ls2", "ls3", 'un')
 
 
-plot_data <- data.frame(hab, mean, SE)
+plot_data <- data.frame(hab, mean, SD)
 
 p <- ggplot(plot_data, aes(x = hab, y = mean)) +
   geom_col() +
-  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+  geom_errorbar(aes(ymin=mean-SD, ymax=mean+SD), width=.2,
                  position=position_dodge(.9))
 
   return(p)
 }
 
-#sev only
+# sev only/ NOT WORKING; maybe something with the link function, or the logit2prob function
+
+
+
 occ_plot_sev <- function(mod) {
-CEIN_tidy <- tidy(mod)
-# I think there should only be 2 age categories for ls and hs rather than 3
-hs_mean <- logit2prob(CEIN_tidy[1,2])
-ls_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[2,2])
-un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
+# This works nicely but couldn't extract the values to make a graph
+#A <- allEffects(sp_mod1)
+#summary(A)
+# OR 
+#X <- predictorEffects((sp_mod1))
+#see also ?confint
+
+#hs
+predicted = predict(mod, data.frame(sev='h'), type='link', se.fit=TRUE)
+
+hs_mean = logit2prob(predicted$fit)
+hs_CI_high = logit2prob(predicted$fit + (predicted$se.fit*1.96)) - hs_mean 
+hs_CI_low = hs_mean - logit2prob(predicted$fit - (predicted$se.fit*1.96))
+
+#ls
+predicted = predict(mod, data.frame(sev='l'), type='link', se.fit=TRUE)
+ls_mean = logit2prob(predicted$fit)
+ls_CI_high = logit2prob(predicted$fit + (predicted$se.fit*1.96)) - ls_mean 
+ls_CI_low = ls_mean - logit2prob(predicted$fit - (predicted$se.fit*1.96))
+
+#ls
+predicted = predict(mod, data.frame(sev='u'), type='link', se.fit=TRUE)
+un_mean = logit2prob(predicted$fit)
+un_CI_high = logit2prob(predicted$fit + (predicted$se.fit*1.96)) - un_mean 
+un_CI_low = un_mean -logit2prob(predicted$fit - (predicted$se.fit*1.96))
 
 mean <- unlist(c(hs_mean, ls_mean, un_mean))
-
-hs_SE <- logit2prob(CEIN_tidy[1,3])
-ls_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
-un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
-
-SE <- unlist(c(hs_SE, ls_SE, un_SE))
+CI_high <- unlist(c(hs_CI_high, ls_CI_high, un_CI_high))
+CI_low <- unlist(c(hs_CI_low, ls_CI_low, un_CI_low))
 
 hab <- c("HS", "LS", "UN")
 
-
-plot_data <- data.frame(hab, mean, SE)
+plot_data <- data.frame(hab, mean, CI_high, CI_low)
 
 p <- ggplot(plot_data, aes(x = hab, y = mean)) +
   geom_col() +
-  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+  geom_errorbar(aes(ymin=mean-CI_low, ymax=mean+CI_high), width=.2,
                  position=position_dodge(.9))
 
   return(p)
@@ -529,21 +583,21 @@ un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[4,2])
 
 mean <- unlist(c(mean1, mean2, mean3, un_mean))
 
-SE1 <- logit2prob(CEIN_tidy[1,3])
-SE2 <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
-SE3 <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
-un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
+SD1 <- sqrt(logit2prob(CEIN_tidy[1,3]))
+SD2 <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[2,3]))
+SD3 <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[3,3]))
+un_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[4,3]))
 
-SE <- unlist(c(SE1, SE2, SE3, un_SE))
+SD <- unlist(c(SD1, SD2, SD3, un_SD))
 
 hab <- c("1", "2", "3", 'un')
 
 
-plot_data <- data.frame(hab, mean, SE)
+plot_data <- data.frame(hab, mean, SD)
 
 p <- ggplot(plot_data, aes(x = hab, y = mean)) +
   geom_col() +
-  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+  geom_errorbar(aes(ymin=mean-SD, ymax=mean+SD), width=.2,
                  position=position_dodge(.9))
 
   return(p)
@@ -561,22 +615,61 @@ un_mean <- logit2prob(CEIN_tidy[1,2]) + logit2prob(CEIN_tidy[3,2])
 
 mean <- unlist(c(hs1_mean, hs2_mean, ls1_mean, ls2_mean, un_mean))
 
-hs1_SE <- logit2prob(CEIN_tidy[1,3])
-hs2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[4,3])
-ls1_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3])
-ls2_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[2,3]) + logit2prob(CEIN_tidy[4,3])
-un_SE <- logit2prob(CEIN_tidy[1,3]) + logit2prob(CEIN_tidy[3,3])
+hs1_SD <- sqrt(logit2prob(CEIN_tidy[1,3]))
+hs2_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[4,3]))
+ls1_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[2,3]))
+ls2_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[2,3])) + sqrt(logit2prob(CEIN_tidy[4,3]))
+un_SD <- sqrt(logit2prob(CEIN_tidy[1,3])) + sqrt(logit2prob(CEIN_tidy[3,3]))
 
-SE <- unlist(c(hs1_SE, hs2_SE, ls1_SE, ls2_SE, un_SE))
+SD <- unlist(c(hs1_SD, hs2_SD, ls1_SD, ls2_SD, un_SD))
 
 hab <- c("hs1", "hs2", "ls1", "ls2", 'un')
 
 
-plot_data <- data.frame(hab, mean, SE)
+plot_data <- data.frame(hab, mean, SD)
 
 p <- ggplot(plot_data, aes(x = hab, y = mean)) +
   geom_col() +
-  geom_errorbar(aes(ymin=mean-SE, ymax=mean+SE), width=.2,
+  geom_errorbar(aes(ymin=mean-SD, ymax=mean+SD), width=.2,
+                 position=position_dodge(.9))
+
+  return(p)
+}
+
+
+#tsf_cat only (2 categories plus UN)
+occ_plot_tsf_cat2 <- function(mod) {
+  
+# 1
+predicted = predict(mod, data.frame(tsf_cat2='1'), type='link', se.fit=TRUE)
+
+mean1 = logit2prob(predicted$fit)
+CI_high1 = logit2prob(predicted$fit + (predicted$se.fit*1.96)) - mean1
+CI_low1 = mean1 - logit2prob(predicted$fit - (predicted$se.fit*1.96))
+
+# 2
+predicted = predict(mod, data.frame(tsf_cat2='2'), type='link', se.fit=TRUE)
+mean2 = logit2prob(predicted$fit)
+CI_high2 = logit2prob(predicted$fit + (predicted$se.fit*1.96)) - mean2 
+CI_low2 = mean2 - logit2prob(predicted$fit - (predicted$se.fit*1.96))
+
+# 3
+predicted = predict(mod, data.frame(tsf_cat2='3'), type='link', se.fit=TRUE)
+mean3 = logit2prob(predicted$fit)
+CI_high3 = logit2prob(predicted$fit + (predicted$se.fit*1.96)) - mean3 
+CI_low3 = mean3 -logit2prob(predicted$fit - (predicted$se.fit*1.96))
+
+mean <- unlist(c(mean1, mean2, mean3))
+CI_high <- unlist(c(CI_high1, CI_high2, CI_high3))
+CI_low <- unlist(c(CI_low1, CI_low2, CI_low3))
+
+hab <- c("0-15", "15-31", "UN")
+
+plot_data <- data.frame(hab, mean, CI_high, CI_low)
+
+p <- ggplot(plot_data, aes(x = hab, y = mean)) +
+  geom_col() +
+  geom_errorbar(aes(ymin=mean-CI_low, ymax=mean+CI_high), width=.2,
                  position=position_dodge(.9))
 
   return(p)
@@ -584,7 +677,7 @@ p <- ggplot(plot_data, aes(x = hab, y = mean)) +
 ```
 
 
-# Frank's goodness of fit code
+# Frank's goodness of fit code (not working)
 ```{r}
 #Goodness-of-fit tests
 #This runs three GOF tests: Chi square, Freeman Tukey, and SSE. What you're basically looking for is that your data doesn't fall near the extremes of the bootstrapped distribution. A good threshold for each statistic might be >.1 and <0.9. Probably good to run at least 100 simulations, more is preferable (nsim in the bottom code). These can be slow.
@@ -629,21 +722,6 @@ pb <- boot(fm, fitstats, R=100)
 
 #Plot isn't necessary but might help you understand the outputs - may need some tweeking to work for boot()
 plot(pb, main="")
-
-
-
-
-#Next section
-
-#Converting logit scale to natural scale. The link function for binomial is logit, so you need to backtransform to get from that scale to a probability of occurence (0-1). Use the following function. Be sure to add together any coefficients and intercepts first - all arithmetic should be done before backtransformation:
-
-logit2prob <- function(logit){
-  odds <- exp(logit)
-  prob <- odds / (1 + odds)
-  return(prob)
-}
-
-#If you do anything that uses Poisson, that's on the log scale so you can just use exp() to convert to the natural scale.
 ```
 
 
@@ -690,70 +768,166 @@ row.names(reported.table) <- model.names
 
 ```
 
-# function
+# lmt function (p/a)
 ```{r lmt function}
+#Converting logit scale to natural scale. The link function for binomial is logit, so you need to backtransform to get from that scale to a probability of occurence (0-1). Use the following function. Be sure to add together any coefficients and intercepts first - all arithmetic should be done before backtransformation:
+
+logit2prob <- function(logit){
+  odds <- exp(logit)
+  prob <- odds / (1 + odds)
+  return(prob)
+}
+
+#If you do anything that uses Poisson, that's on the log scale so you can just use exp() to convert to the natural scale.
+
+
 # before the function can add a line to the table, need to create the table!
 tbl_headr <- c("sp", "Model", "dAICc", "w", "X2", "df", "p", "R2", 'Moran I', 'Moran I (p)')
 
 #function:
 lmt <- function(sp_dat) {
-tsf <- glm(sp_dat[,2]/100 ~ tsf_cat, sp_dat, family = "gaussian") #sp cover /100 because it has to be between 0 and 1
-sev <- glm(sp_dat[,2]/100 ~ sev, sp_dat, family = "gaussian")
-sp_null  <-glm(sp_dat[,2]/100 ~ 1, sp_dat, family = "gaussian")
-full <- glm(sp_dat[,2]/100 ~ sev + tsf_cat, sp_dat, family = "gaussian")
+tsf <- glm(sp_dat[,2] ~ tsf_cat2, sp_dat, family = binomial) #sp cover /100 because it has to be between 0 and 1
+sev <- glm(sp_dat[,2] ~ sev, sp_dat, family = binomial)
+sp_null  <-glm(sp_dat[,2] ~ 1, sp_dat, family = binomial)
+add <- glm(sp_dat[,2] ~ sev + tsf_cat2, sp_dat, family = binomial)
+mult <- glm(sp_dat[,2] ~ sev * tsf_cat2, sp_dat, family = binomial)
+null <- glm(sp_dat[,2] ~ 1, sp_dat, family = binomial)
   
 # AIC and likelihood ratio test
-sp_aic <- AICctab(full, sev, tsf, base=T, delta=T, weights=T)
+sp_aic <- AICctab(null, add, mult, sev, tsf, base=T, delta=T, weights=T)
 
 # R2 values 
+
 # row 1 R2
-if(attr(sp_aic, "row.names")[1] == "sev")
-    {sp_R2_1 <- rsq(sev, adj = T)}
-if(attr(sp_aic, "row.names")[1] == "tsf")
-    {sp_R2_1 <- rsq(tsf, adj = T)}
-else 
-    {sp_R2_1 <- rsq(full, adj = T)}
+if(attr(sp_aic, "row.names")[1] == "sev") {
+  sp_R2_1 <- rsq(sev, adj = T)
+} else if(attr(sp_aic, "row.names")[1] == "tsf") {
+  sp_R2_1 <- rsq(tsf, adj = T)
+} else if(attr(sp_aic, "row.names")[1] == "add") {
+  sp_R2_1 <- rsq(add, adj = T)
+} else if(attr(sp_aic, "row.names")[1] == "null") {
+  sp_R2_1 <- rsq(null, adj = T)
+} else {
+  sp_R2_1 <- rsq(mult, adj = T)
+}
 
 # row 2 R2
-if(attr(sp_aic, "row.names")[2] == "sev")
-    {sp_R2_2 <- rsq(sev, adj = T)}
-if(attr(sp_aic, "row.names")[2] == "tsf")
-    {sp_R2_2 <- rsq(tsf, adj = T)}
-else 
-    {sp_R2_2 <- rsq(full, adj = T)}
+if(attr(sp_aic, "row.names")[2] == "sev") {
+  sp_R2_2 <- rsq(sev, adj = T)
+} else if(attr(sp_aic, "row.names")[2] == "tsf") {
+  sp_R2_2 <- rsq(tsf, adj = T)
+} else if(attr(sp_aic, "row.names")[2] == "add") {
+  sp_R2_2 <- rsq(add, adj = T)
+} else if(attr(sp_aic, "row.names")[2] == "null") {
+  sp_R2_2 <- rsq(null, adj = T)
+} else {
+  sp_R2_2 <- rsq(mult, adj = T)
+}
 
 # row 3 R2
-if(attr(sp_aic, "row.names")[3] == "sev")
-    {sp_R2_3 <- rsq(sev, adj = T)}
-if(attr(sp_aic, "row.names")[3] == "tsf")
-    {sp_R2_3 <- rsq(tsf, adj = T)}
-else 
-    {sp_R2_3 <- rsq(full, adj = T)}
+if(attr(sp_aic, "row.names")[3] == "sev") {
+  sp_R2_3 <- rsq(sev, adj = T)
+} else if(attr(sp_aic, "row.names")[3] == "tsf") {
+  sp_R2_3 <- rsq(tsf, adj = T)
+} else if(attr(sp_aic, "row.names")[3] == "add") { 
+  sp_R2_3 <- rsq(add, adj = T)
+} else if(attr(sp_aic, "row.names")[3] == "null") {
+  sp_R2_3 <- rsq(null, adj = T)
+} else {
+  sp_R2_3 <- rsq(mult, adj = T)
+}
+
+# row 4 R2
+if(attr(sp_aic, "row.names")[4] == "sev") {
+  sp_R2_4 <- rsq(sev, adj = T)
+} else if(attr(sp_aic, "row.names")[4] == "tsf") {
+  sp_R2_4 <- rsq(tsf, adj = T)
+} else if(attr(sp_aic, "row.names")[4] == "add") {
+  sp_R2_4 <- rsq(add, adj = T)
+} else if(attr(sp_aic, "row.names")[4] == "null") {
+  sp_R2_4 <- rsq(null, adj = T)
+} else {
+  sp_R2_4 <- rsq(mult, adj = T)
+}
+
+# row 5 R2
+if(attr(sp_aic, "row.names")[5] == "sev") {
+  sp_R2_5 <- rsq(sev, adj = T)
+} else if(attr(sp_aic, "row.names")[5] == "tsf") {
+  sp_R2_5 <- rsq(tsf, adj = T)
+} else if(attr(sp_aic, "row.names")[5] == "add") {
+  sp_R2_5 <- rsq(add, adj = T)
+} else if(attr(sp_aic, "row.names")[5] == "null") {
+  sp_R2_5 <- rsq(null, adj = T)
+} else {
+  sp_R2_5 <- rsq(mult, adj = T)
+}
 
 # Likelihood Ratio Test
 # row 1 R2
-if(attr(sp_aic, "row.names")[1] == "sev")
-    {sp_lrt_1 <- lrtest(sev, sp_null)}
-if(attr(sp_aic, "row.names")[1] == "tsf")
-    {sp_lrt_1 <- lrtest(tsf, sp_null)}
-else 
-    {sp_lrt_1 <- lrtest(full, sp_null)}
+if(attr(sp_aic, "row.names")[1] == "sev") {
+  sp_lrt_1 <- lrtest(sev, sp_null)
+} else if(attr(sp_aic, "row.names")[1] == "tsf") {
+  sp_lrt_1 <- lrtest(tsf, sp_null)
+} else if(attr(sp_aic, "row.names")[1] == "add") {
+  sp_lrt_1 <- lrtest(add, sp_null)
+} else if(attr(sp_aic, "row.names")[1] == "null") {
+  sp_lrt_1 <- lrtest(null, sp_null)
+} else {
+  sp_lrt_1 <- lrtest(mult, sp_null)
+}
 
 # row 2 R2
-if(attr(sp_aic, "row.names")[2] == "sev")
-    {sp_lrt_2 <- lrtest(sev, sp_null)}
-if(attr(sp_aic, "row.names")[2] == "tsf")
-    {sp_lrt_2 <- lrtest(tsf, sp_null)}
-else 
-    {sp_lrt_2 <- lrtest(full, sp_null)}
+if(attr(sp_aic, "row.names")[2] == "sev") {
+  sp_lrt_2 <- lrtest(sev, sp_null)
+} else if(attr(sp_aic, "row.names")[2] == "tsf") {
+  sp_lrt_2 <- lrtest(tsf, sp_null)
+} else if(attr(sp_aic, "row.names")[2] == "add") {
+  sp_lrt_2 <- lrtest(add, sp_null)
+} else if(attr(sp_aic, "row.names")[2] == "null") {
+  sp_lrt_2 <- lrtest(null, sp_null)
+} else {
+  sp_lrt_2 <- lrtest(mult, sp_null)
+}
 
 # row 3 R2
-if(attr(sp_aic, "row.names")[3] == "sev")
-    {sp_lrt_3 <- lrtest(sev, sp_null)}
-if(attr(sp_aic, "row.names")[3] == "tsf")
-    {sp_lrt_3 <- lrtest(tsf, sp_null)}
-else 
-    {sp_lrt_3 <- lrtest(full, sp_null)}
+if(attr(sp_aic, "row.names")[3] == "sev") {
+  sp_lrt_3 <- lrtest(sev, sp_null)
+} else if(attr(sp_aic, "row.names")[3] == "tsf") {
+  sp_lrt_3 <- lrtest(tsf, sp_null)
+} else if(attr(sp_aic, "row.names")[3] == "add") {
+  sp_lrt_3 <- lrtest(add, sp_null)
+} else if(attr(sp_aic, "row.names")[3] == "null") {
+  sp_lrt_3 <- lrtest(null, sp_null)
+} else {
+  sp_lrt_3 <- lrtest(mult, sp_null)
+}
+
+# row 4 R2
+if(attr(sp_aic, "row.names")[4] == "sev") {
+  sp_lrt_4 <- lrtest(sev, sp_null)
+} else if(attr(sp_aic, "row.names")[4] == "tsf") {
+  sp_lrt_4 <- lrtest(tsf, sp_null)
+} else if(attr(sp_aic, "row.names")[4] == "add") {
+  sp_lrt_4 <- lrtest(add, sp_null)
+} else if(attr(sp_aic, "row.names")[4] == "null") {
+  sp_lrt_4 <- lrtest(null, sp_null)
+} else {
+  sp_lrt_4 <- lrtest(mult, sp_null)
+}
+
+# row 5 R2
+if(attr(sp_aic, "row.names")[5] == "sev") {
+  sp_lrt_5 <- lrtest(sev, sp_null)
+} else if(attr(sp_aic, "row.names")[5] == "tsf") {
+  sp_lrt_5 <- lrtest(tsf, sp_null)
+} else if(attr(sp_aic, "row.names")[5] == "add") {
+  sp_lrt_5 <- lrtest(add, sp_null)
+} else if(attr(sp_aic, "row.names")[5] == "null") {
+  sp_lrt_5 <- lrtest(null, sp_null)
+} else {
+    sp_lrt_5 <- lrtest(mult, sp_null)
+}
 
 
 #sp_lrt_full <- lrtest(full, sp_null)
@@ -771,7 +945,185 @@ sp_tbl2 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[2], sp_aic$dAICc[2],
 
 sp_tbl3 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[3], sp_aic$dAICc[3], sp_aic$weight[3], sp_lrt_3$Chisq[2], sp_lrt_3$'#Df'[1], sp_lrt_3$'Pr(>Chisq)'[2], sp_R2_3, sp_mi, sp_mip)
 
-tbl <- data.frame(rbind(tbl_headr, sp_tbl1, sp_tbl2, sp_tbl3)) 
+sp_tbl4 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[4], sp_aic$dAICc[4], sp_aic$weight[4], sp_lrt_4$Chisq[2], sp_lrt_4$'#Df'[1], sp_lrt_4$'Pr(>Chisq)'[2], sp_R2_4, sp_mi, sp_mip)
+
+sp_tbl5 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[5], sp_aic$dAICc[5], sp_aic$weight[5], sp_lrt_5$Chisq[2], sp_lrt_5$'#Df'[1], sp_lrt_5$'Pr(>Chisq)'[2], sp_R2_5, sp_mi, sp_mip)
+
+tbl <- data.frame(rbind(tbl_headr, sp_tbl1, sp_tbl2, sp_tbl3, sp_tbl4, sp_tbl5)) 
+
+# Turn first row into column names
+names(tbl) <- lapply(tbl[1, ], as.character)
+tbl <- tbl[-1,]
+
+# convert to numeric
+tbl[,c(3:10)] <- as.numeric(as.character(unlist(tbl[,c(3:10)]))) 
+
+#remove row names
+rownames(tbl) <- c()
+
+tbl
+}
+```
+
+# lmt function (cov)
+```{r}
+#need to fix if else like above
+#function:
+lmt <- function(sp_dat) {
+tsf <- glm(sp_dat[,2]/100 ~ tsf_cat, sp_dat, family = gaussian) #sp cover /100 because it has to be between 0 and 1
+sev <- glm(sp_dat[,2]/100 ~ sev, sp_dat, family = gaussian)
+sp_null  <-glm(sp_dat[,2]/100 ~ 1, sp_dat, family = gaussian)
+add <- glm(sp_dat[,2]/100 ~ sev + tsf_cat, sp_dat, family = gaussian)
+mult <- glm(sp_dat[,2]/100 ~ sev * tsf_cat, sp_dat, family = gaussian)
+null <- glm(sp_dat[,2]/100 ~ 1, sp_dat, family = gaussian)
+  
+# AIC and likelihood ratio test
+sp_aic <- AICctab(null, add, mult, sev, tsf, base=T, delta=T, weights=T)
+
+# R2 values 
+
+# row 1 R2
+if(attr(sp_aic, "row.names")[1] == "sev")
+    {sp_R2_1 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[1] == "tsf")
+    {sp_R2_1 <- rsq(tsf, adj = T)}
+if(attr(sp_aic, "row.names")[1] == "add")
+    {sp_R2_1 <- rsq(add, adj = T)}
+if(attr(sp_aic, "row.names")[1] == "null")
+    {sp_R2_1 <- rsq(null, adj = T)}
+else 
+    {sp_R2_1 <- rsq(mult, adj = T)}
+
+# row 2 R2
+if(attr(sp_aic, "row.names")[2] == "sev")
+    {sp_R2_2 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[2] == "tsf")
+    {sp_R2_2 <- rsq(tsf, adj = T)}
+if(attr(sp_aic, "row.names")[2] == "add")
+    {sp_R2_2 <- rsq(add, adj = T)}
+if(attr(sp_aic, "row.names")[2] == "null")
+    {sp_R2_5 <- rsq(null, adj = T)}
+else 
+    {sp_R2_2 <- rsq(mult, adj = T)}
+
+# row 3 R2
+if(attr(sp_aic, "row.names")[3] == "sev")
+    {sp_R2_3 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[3] == "tsf")
+    {sp_R2_3 <- rsq(tsf, adj = T)}
+if(attr(sp_aic, "row.names")[3] == "add")
+    {sp_R2_3 <- rsq(add, adj = T)}
+if(attr(sp_aic, "row.names")[3] == "null")
+    {sp_R2_5 <- rsq(null, adj = T)}
+else 
+    {sp_R2_3 <- rsq(mult, adj = T)}
+
+# row 4 R2
+if(attr(sp_aic, "row.names")[4] == "sev")
+    {sp_R2_4 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[4] == "tsf")
+    {sp_R2_4 <- rsq(tsf, adj = T)}
+if(attr(sp_aic, "row.names")[4] == "add")
+    {sp_R2_4 <- rsq(add, adj = T)}
+if(attr(sp_aic, "row.names")[4] == "null")
+    {sp_R2_5 <- rsq(null, adj = T)}
+else 
+    {sp_R2_4 <- rsq(mult, adj = T)}
+
+# row 5 R2
+if(attr(sp_aic, "row.names")[5] == "sev")
+    {sp_R2_5 <- rsq(sev, adj = T)}
+if(attr(sp_aic, "row.names")[5] == "tsf")
+    {sp_R2_5 <- rsq(tsf, adj = T)}
+if(attr(sp_aic, "row.names")[5] == "add")
+    {sp_R2_5 <- rsq(add, adj = T)}
+if(attr(sp_aic, "row.names")[5] == "null")
+    {sp_R2_5 <- rsq(null, adj = T)}
+else 
+    {sp_R2_5 <- rsq(mult, adj = T)}
+
+# Likelihood Ratio Test
+# row 1 R2
+if(attr(sp_aic, "row.names")[1] == "sev")
+    {sp_lrt_1 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[1] == "tsf")
+    {sp_lrt_1 <- lrtest(tsf, sp_null)}
+if(attr(sp_aic, "row.names")[1] == "add")
+    {sp_lrt_1 <- lrtest(add, sp_null)}
+if(attr(sp_aic, "row.names")[1] == "null")
+    {sp_lrt_1 <- lrtest(null, sp_null)}
+else 
+    {sp_lrt_1 <- lrtest(mult, sp_null)}
+
+# row 2 R2
+if(attr(sp_aic, "row.names")[2] == "sev")
+    {sp_lrt_2 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[2] == "tsf")
+    {sp_lrt_2 <- lrtest(tsf, sp_null)}
+if(attr(sp_aic, "row.names")[2] == "add")
+    {sp_lrt_2 <- lrtest(add, sp_null)}
+if(attr(sp_aic, "row.names")[2] == "null")
+    {sp_lrt_2 <- lrtest(null, sp_null)}
+else 
+    {sp_lrt_2 <- lrtest(mult, sp_null)}
+
+# row 3 R2
+if(attr(sp_aic, "row.names")[3] == "sev")
+    {sp_lrt_3 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[3] == "tsf")
+    {sp_lrt_3 <- lrtest(tsf, sp_null)}
+if(attr(sp_aic, "row.names")[3] == "add")
+    {sp_lrt_3 <- lrtest(add, sp_null)}
+if(attr(sp_aic, "row.names")[3] == "null")
+    {sp_lrt_3 <- lrtest(null, sp_null)}
+else 
+    {sp_lrt_3 <- lrtest(mult, sp_null)}
+
+# row 4 R2
+if(attr(sp_aic, "row.names")[4] == "sev")
+    {sp_lrt_4 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[4] == "tsf")
+    {sp_lrt_4 <- lrtest(tsf, sp_null)}
+if(attr(sp_aic, "row.names")[4] == "add")
+    {sp_lrt_4 <- lrtest(add, sp_null)}
+if(attr(sp_aic, "row.names")[4] == "null")
+    {sp_lrt_4 <- lrtest(null, sp_null)}
+else 
+    {sp_lrt_4 <- lrtest(mult, sp_null)}
+
+# row 5 R2
+if(attr(sp_aic, "row.names")[5] == "sev")
+    {sp_lrt_5 <- lrtest(sev, sp_null)}
+if(attr(sp_aic, "row.names")[5] == "tsf")
+    {sp_lrt_ <- lrtest(tsf, sp_null)}
+if(attr(sp_aic, "row.names")[5] == "add")
+    {sp_lrt_5 <- lrtest(add, sp_null)}
+if(attr(sp_aic, "row.names")[5] == "null")
+    {sp_lrt_5 <- lrtest(null, sp_null)}
+else 
+    {sp_lrt_5 <- lrtest(mult, sp_null)}
+
+
+#sp_lrt_full <- lrtest(full, sp_null)
+#sp_lrt_sev <- lrtest(sev, sp_null)
+#sp_lrt_tsfcat <- lrtest(tsf, sp_null)
+
+#moran's I (first load function)
+sp_mi <- (moran.test(sp_dat[,2], lwW, alternative="two.sided"))$statistic
+sp_mip <- (moran.test(sp_dat[,2], lwW, alternative="two.sided"))$'p.value'
+
+# construct table
+sp_tbl1 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[1], sp_aic$dAICc[1], sp_aic$weight[1], sp_lrt_1$Chisq[2], sp_lrt_1$'#Df'[1], sp_lrt_1$'Pr(>Chisq)'[2], sp_R2_1, sp_mi, sp_mip)
+
+sp_tbl2 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[2], sp_aic$dAICc[2], sp_aic$weight[2], sp_lrt_2$Chisq[2], sp_lrt_2$'#Df'[1], sp_lrt_2$'Pr(>Chisq)'[2], sp_R2_2, sp_mi, sp_mip)
+
+sp_tbl3 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[3], sp_aic$dAICc[3], sp_aic$weight[3], sp_lrt_3$Chisq[2], sp_lrt_3$'#Df'[1], sp_lrt_3$'Pr(>Chisq)'[2], sp_R2_3, sp_mi, sp_mip)
+
+sp_tbl4 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[4], sp_aic$dAICc[4], sp_aic$weight[4], sp_lrt_4$Chisq[2], sp_lrt_4$'#Df'[1], sp_lrt_4$'Pr(>Chisq)'[2], sp_R2_4, sp_mi, sp_mip)
+
+sp_tbl5 <- c(colnames(sp_dat)[2], attr(sp_aic, "row.names")[5], sp_aic$dAICc[5], sp_aic$weight[5], sp_lrt_5$Chisq[2], sp_lrt_5$'#Df'[1], sp_lrt_5$'Pr(>Chisq)'[2], sp_R2_5, sp_mi, sp_mip)
+
+tbl <- data.frame(rbind(tbl_headr, sp_tbl1, sp_tbl2, sp_tbl3, sp_tbl4, sp_tbl5)) 
 
 # Turn first row into column names
 names(tbl) <- lapply(tbl[1, ], as.character)
@@ -790,14 +1142,45 @@ tbl
 # SPP with more than 10 detections
 I also removed all that were not significant in the NMDS
 ```{r}
-colnames(plant_glm_cov)[2:35]
+plant_dat_sum <- rbind(plant_dat_pa[,-1], colSums(plant_dat_pa[-1,-1]))
+
+plant_sum <- data.frame(t(plant_dat_sum[-c(1:48),])) 
+
+plant_sum <- cbind(rownames(plant_sum), data.frame(plant_sum, row.names=NULL))
+
+colnames(plant_sum) <- c("species", "sum")
+
+plant_sum <- plant_sum %>% 
+  arrange(desc(sum))
+
+# NMDS significant species --- But is is a good idea anyway? I don't even know what those numbers mean!
+ar <- data.frame(A$arrows)
+r <- data.frame(A$r)
+pv <- data.frame(A$pvals)
+NMDS_signif_plant2 <- cbind(ar, r, pv)
+
+NMDS_signif_plant1 <- cbind(rownames(NMDS_signif_plant2), data.frame(NMDS_signif_plant2, row.names=NULL))
+
+colnames(NMDS_signif_plant1) <- c("species", "NMDS1", "NMDS2", "r", "pval")
+
+NMDS_signif_plant <- NMDS_signif_plant1 %>% 
+  left_join(plant_sum, by = "species") %>% 
+  filter(sum >= 5)# %>% 
+  #filter(pval <= 0.05)
+
+print(NMDS_signif_plant[,1])
+
+write.csv(NMDS_signif_plant, "more_plant_models.csv")
+
 ```
 
 
 # ACMA (NS)
 ```{r ACMA}
+plant_glm_cov <- plant_glm_pa # instead of changing each chunk, use this if using p/a instead of cover
+
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ACMA, tsf_cat, sev, tsf, sev_tsf)
+  dplyr::select(site_id, ACMA, tsf_cat2, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
 
@@ -810,28 +1193,41 @@ occ_plot2(sp_mod2)
 # ANMAD
 ```{r ANMAD}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ANMAD, tsf_cat, sev, tsf, sev_tsf)
+  dplyr::select(site_id, ANMAD, tsf_cat2, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
 
-sp_mod1 <- glm(ANMAD/100 ~ sev, sp_dat, family = gaussian)
-sp_mod2 <- glm(ANMAD/100 ~ sev_tsf, sp_dat, family = gaussian)
+sp_mod1 <- glm(ANMAD ~ sev, sp_dat, family = binomial)
+#sp_mod2 <- glm(ANMAD/100 ~ sev_tsf, sp_dat, family = gaussian)
 occ_plot_sev(sp_mod1)
-occ_plot2(sp_mod2)
-p
+#occ_plot2(sp_mod2)
 ```
 
 # APAN
 ```{r APAN}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, APAN, tsf_cat, sev, tsf)
+  dplyr::select(site_id, APAN, tsf_cat2, sev, tsf)
+
+lmt(sp_dat)
+
+sp_mod1 <- glm(APAN/100 ~ sev, sp_dat, family = gaussian)
+sp_mod2 <- glm(APAN/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot_sev(sp_mod1)
+occ_plot2(sp_mod2)
+```
+
+# ARDI
+```{r ARDI}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, ARDI, tsf_cat2, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
 ```
+
 # ARME
 ```{r ARME}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ARME, tsf_cat, sev, tsf, sev_tsf)
+  dplyr::select(site_id, ARME, tsf_cat2, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
 
@@ -839,39 +1235,40 @@ sp_mod1 <- glm(ARME/100 ~ sev + tsf_cat, sp_dat, family = gaussian)
 sp_mod2 <- glm(ARME/100 ~ sev_tsf, sp_dat, family = gaussian)
 occ_plot1(sp_mod1)
 occ_plot2(sp_mod2)
-summary(sp_mod)
 ```
 # CASC
 ```{r CASC}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, CASC, tsf_cat, sev, tsf)
+  dplyr::select(site_id, CASC, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(CASC ~ sev, sp_dat, family = binomial(link = "logit"))
+occ_plot_sev(sp_mod1)
 ```
 # CEIN
 ```{r CEIN}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, CEIN, tsf_cat, sev, tsf, sev_tsf)
+  dplyr::select(site_id, CEIN, tsf_cat2, sev, tsf, sev_tsf)
 
 lmt(sp_dat)
 
-sp_mod1 <- glm(CEIN/100 ~ sev + tsf_cat, sp_dat, family = gaussian)
-sp_mod2 <- glm(CEIN/100 ~ sev_tsf, sp_dat, family = gaussian)
-occ_plot1(sp_mod1)
-occ_plot2(sp_mod2)
-summary(sp_mod)
+sp_mod1 <- glm(CEIN ~ sev, sp_dat, family = binomial(link = "logit"))
+#sp_mod2 <- glm(CEIN/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot_sev(sp_mod1)
+#occ_plot2(sp_mod2)
 ```
 # COCO
 ```{r COCO}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, COCO, tsf_cat, sev, tsf)
+  dplyr::select(site_id, COCO, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # COHE
 ```{r COHE}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, COHE, tsf_cat, sev, tsf)
+  dplyr::select(site_id, COHE, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
@@ -879,7 +1276,7 @@ lmt(sp_dat)
 ```{r CONU}
 # WHy are the estimates from the model so small? they don't add up to even 10%!
 sp_dat <- plant_glm_pa %>% 
-  dplyr::select(site_id, CONU, tsf_cat, sev, tsf, tsf_cat2, sev_tsf)
+  dplyr::select(site_id, CONU, tsf_cat2, sev, tsf, tsf_cat2, sev_tsf)
 
 lmt(sp_dat)
 
@@ -906,170 +1303,230 @@ logit2prob <- function(logit){
 # ELGL
 ```{r ELGL}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ELGL, tsf_cat, sev, tsf)
+  dplyr::select(site_id, ELGL, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # FECA
 ```{r FECA}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, FECA, tsf_cat, sev, tsf)
+  dplyr::select(site_id, FECA, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # FEOC
 ```{r FEOC}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, FEOC, tsf_cat, sev, tsf)
+  dplyr::select(site_id, FEOC, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # GABO
 ```{r GABO}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, GABO, tsf_cat, sev, tsf)
+  dplyr::select(site_id, GABO, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # GATR
 ```{r GATR}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, GATR, tsf_cat, sev, tsf)
+  dplyr::select(site_id, GATR, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(GATR ~ sev, sp_dat, family = binomial(link = "logit"))
+occ_plot_sev(sp_mod1)
 ```
 # HIAL
 ```{r HIAL}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, HIAL, tsf_cat, sev, tsf)
+  dplyr::select(site_id, HIAL, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # IRTE
 ```{r IRTE}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, IRTE, tsf_cat, sev, tsf)
+  dplyr::select(site_id, IRTE, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # LOHI
 ```{r LOHI}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, LOHI, tsf_cat, sev, tsf)
+  dplyr::select(site_id, LOHI, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # MAGR
 ```{r MAGR}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, MAGR, tsf_cat, sev, tsf)
+  dplyr::select(site_id, MAGR, tsf_cat2, sev)
 
 lmt(sp_dat)
 ```
+
+# MANE
+```{r MAGR}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, MANE, tsf_cat2, sev, tsf)
+
+lmt(sp_dat)
+```
+
 # MECA
 ```{r MECA}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, MECA, tsf_cat, sev, tsf)
+  dplyr::select(site_id, MECA, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(MECA ~ sev, sp_dat, family = binomial(link = "logit"))
+occ_plot_sev(sp_mod1)
 ```
 # NODE (S but lame)
 ```{r NODE}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, NODE, tsf_cat, sev, tsf, tsf_cat2)
+  dplyr::select(site_id, NODE, tsf_cat2, sev, tsf, tsf_cat2)
 
 lmt(sp_dat)
 
 sp_mod1 <- glm(NODE/100 ~ sev, sp_dat, family = gaussian)
 occ_plot_sev(sp_mod1)
 ```
+
+# PILA
+```{r PILA}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, PILA, tsf_cat2, sev, tsf)
+
+lmt(sp_dat)
+```
+
+# PIPO
+```{r PIPO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, PIPO, tsf_cat2, sev, tsf)
+
+lmt(sp_dat)
+```
+
+# POCO
+```{r POCO}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, POCO, tsf_cat2, sev, tsf)
+
+lmt(sp_dat)
+```
+
 # POIM
 ```{r POIM}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, POIM, tsf_cat, sev, tsf)
+  dplyr::select(site_id, POIM, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # PRHO
 ```{r PRHO}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, PRHO, tsf_cat, sev, tsf)
+  dplyr::select(site_id, PRHO, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # PSME (S)
 ```{r PSME}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, PSME, tsf_cat, sev, tsf, tsf_cat2)
+  dplyr::select(site_id, PSME, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 
 sp_mod1 <- glm(PSME/100 ~ sev, sp_dat, family = gaussian)
 occ_plot_sev(sp_mod1)
 
-sp_mod1 <- glm(PSME/100 ~ tsf_cat, sp_dat, family = "gaussian")
+sp_mod1 <- glm(PSME/100 ~ tsf_cat, sp_dat, family = gaussian)
 occ_plot_tsf(sp_mod1)
 ```
 # PTAQ
 ```{r PTAQ}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, PTAQ, tsf_cat, sev, tsf)
+  dplyr::select(site_id, PTAQ, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # QUCH
 ```{r QUCH}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, QUCH, tsf_cat, sev, tsf)
+  dplyr::select(site_id, QUCH, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # QUKE
 ```{r QUKE}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, QUKE, tsf_cat, sev, tsf)
+  dplyr::select(site_id, QUKE, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(QUKE/100 ~ tsf_cat, sp_dat, family = gaussian)
+occ_plot_tsf(sp_mod1)
 ```
 # RIRO
 ```{r RIRO}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, RIRO, tsf_cat, sev, tsf)
+  dplyr::select(site_id, RIRO, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(RIRO ~ sev, sp_dat, family = binomial(link = "logit"))
+occ_plot_sev(sp_mod1)
 ```
 # ROGY
 ```{r ROGY}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, ROGY, tsf_cat, sev, tsf)
+  dplyr::select(site_id, ROGY, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(ROGY ~ sev, sp_dat, family = binomial(link = "logit"))
+occ_plot_sev(sp_mod1)
 ```
 # RULE
 ```{r RULE}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, RULE, tsf_cat, sev, tsf)
+  dplyr::select(site_id, RULE, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
+
+sp_mod1 <- glm(RULE ~ tsf_cat2, sp_dat, family = binomial(link = "logit"))
+occ_plot_tsf_cat2(sp_mod1)
 ```
 # RUPA
 ```{r RUPA}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, RUPA, tsf_cat, sev, tsf)
+  dplyr::select(site_id, RUPA, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
+# RUUR
+```{r RUUR}
+sp_dat <- plant_glm_cov %>% 
+  dplyr::select(site_id, RUUR, tsf_cat2, sev, tsf)
+
+lmt(sp_dat)
+```
+
 # SYMO
 ```{r SYMO}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, SYMO, tsf_cat, sev, tsf)
+  dplyr::select(site_id, SYMO, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
 # TODI
 ```{r TODI}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, TODI, tsf_cat, sev, tsf)
+  dplyr::select(site_id, TODI, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
@@ -1077,7 +1534,7 @@ lmt(sp_dat)
 # TRLA
 ```{r TRLA}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, TRLA, tsf_cat, sev, tsf)
+  dplyr::select(site_id, TRLA, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
@@ -1085,7 +1542,7 @@ lmt(sp_dat)
 # WHMO
 ```{r WHMO}
 sp_dat <- plant_glm_cov %>% 
-  dplyr::select(site_id, WHMO, tsf_cat, sev, tsf)
+  dplyr::select(site_id, WHMO, tsf_cat2, sev, tsf)
 
 lmt(sp_dat)
 ```
