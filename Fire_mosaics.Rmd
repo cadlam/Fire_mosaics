@@ -48,7 +48,7 @@ Sampling methods involved: surveys of all native plants and lichens (growing on 
 ```{r include = F}
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart, lattice)
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart, lattice, rowr)
 
 #library(lme4)
 #library(lmerTest)
@@ -67,66 +67,8 @@ pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExt
 #library(perm)
 #library(magrittr)
 #library(knitr)
-#library(rowr)
 #knit2html("Fire_mosaics.html")
 
-```
-
-```{r include = FALSE}
-# This loads the data
-## Site
-site_data_read <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
-site_data_read$tsf <- as.numeric(as.character(site_data_read$tsf))
-site_data_read$fire_yr <- as.numeric(as.character(site_data_read$fire_yr))
-
-# here I'm setting the TSF categories; change as necessary.
-site_data <- site_data_read %>% 
-    mutate(tsf_cat = ifelse(is.na(tsf), "4", "3"))
-site_data$tsf_cat[site_data$tsf < 17] <-2
-site_data$tsf_cat[site_data$tsf < 10] <-1
-
-site_data$site_id <- as.character(site_data$site_id) 
-
-## Plants
-plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
-plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/plant_list.csv")
-plant_data$species <- as.character(plant_data$species)
-plant_data$site_id <- as.character(plant_data$site_id)
-plant_names$species <- as.character(plant_names$species)
-plant_names$full_name <- as.character(plant_names$full_name)
-plant_names$native_status <- as.factor(plant_names$native_status)
-plant_names$form <- as.factor(plant_names$form)
-
-## Lichens
-lichen_names <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/lichen_list.csv")
-
-## Insects
-insect_dat1 <- read.csv("data/insect_data.csv", header = T) %>% 
-  mutate(order = as.character(order)) %>% 
-  mutate(suborder = as.character(suborder))
-
-insect_dat2 <- insect_dat1 %>% 
-  mutate(site_id = as.factor(site_id)) %>% 
-#  gsub(" ", "", order) %>% #get rid of spaces in some cells
-  filter(family != "Curculionidae", family != "Formicidae", order != "Arachnida", order != "Apterygota", order != "Collembola", order!= "Myriapoda") %>% # here, can decide to look at only pan, or only cones
-  mutate(trap_id = paste(site_id, trap)) %>% 
-  mutate(taxon = ifelse(suborder %in% "", order, suborder)) # use suborder when available
-
-insect_dat3 <- as.data.table(insect_dat2)[, sum(number), by = .(site_id, taxon)]# Adding rows when duplicate; could have done this using aggragate instead, but wasn't working
-
-insect_dat <- insect_dat3 %>% 
-  dplyr::select(site_id, taxon, V1) %>% 
-  spread(key = taxon, value = V1, fill = 0) %>%
-  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
-
-insect_dat$site_id <- as.character(insect_dat$site_id) # wide format, dummy species, column 2 is garbage
-
-insect_dat_long <- insect_dat %>% # Long format, with site data, dummmy species, row 2 is garbage
-  left_join(site_data, by = "site_id") %>% 
-  gather(key = "taxon", value = "number", 3:19)
-
-insect_dat_wide <- spread(insect_dat_long, key = "taxon", value = "number") %>% 
-  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-")) # wide format, with site data, dummy species, column 2 is garbage
 ```
 
 
@@ -199,6 +141,116 @@ plants_matrix <- as.matrix(plant_matrix1[, -1])
 ```
 
 # Results
+
+```{r}
+# Calculating the average cover in each trt
+plant_glm_cov1 <- plant_glm_cov %>% 
+  dplyr::select(site_id:WOFI)
+
+#plant_glm_cov1$site_id <- as.numeric(as.character(plant_glm_cov1$site_id))
+
+#plant_glm_cov1 <- rbind(plant_glm_cov1, colSums(plant_glm_cov1[-1,])) %>%
+#  select_if(function(.) last(.) >=5) # keep only species with at least 20% cumulative cover
+
+#plant_glm_cov1$site_id <- as.factor(plant_glm_cov1$site_id)
+
+plant_mat_UNLS <- plant_glm_cov1 %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev!="h") %>% 
+  dplyr::select(ACMA:WHMO)
+
+plant_mat_HS <- plant_glm_cov1 %>% 
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev=="h") %>% 
+  dplyr::select(ACMA:WHMO)
+
+
+plant_dat_sum_HS <- rbind(plant_mat_HS[,-1], colSums(plant_mat_HS[-1,-1]))
+plant_sum_HS <- data.frame(t(plant_dat_sum_HS[-c(1:23),])) 
+plant_sum_HS <- cbind(rownames(plant_sum_HS), data.frame(plant_sum_HS, row.names=NULL))
+colnames(plant_sum_HS) <- c("species", "sum")
+
+plant_dat_sum_UNLS <- rbind(plant_mat_UNLS[,-1], colSums(plant_mat_UNLS[-1,-1]))
+plant_sum_UNLS <- data.frame(t(plant_dat_sum_UNLS[-c(1:25),])) 
+plant_sum_UNLS <- cbind(rownames(plant_sum_UNLS), data.frame(plant_sum_UNLS, row.names=NULL))
+colnames(plant_sum_UNLS) <- c("species", "sum")
+
+plant_dat_sum <- plant_sum_UNLS %>% 
+  left_join(plant_sum_HS, by = "species")
+colnames(plant_dat_sum) <- c("species", "cov_UNLS", "cov_HS")
+
+# species that are found at least 2x more in HS
+plant_dat_cov1 <- plant_dat_sum %>% 
+  mutate(ratio = cov_HS/cov_UNLS)# %>% 
+#  filter(ratio >= 2)
+
+# species that are found at least 2x more in HS
+plant_dat_cov2 <- plant_dat_sum %>% 
+  mutate(ratio = cov_HS/cov_UNLS)# %>% 
+#  filter(ratio <= 0.5)
+
+cov_tbl <- plant_dat_cov1 %>% 
+  rbind(plant_dat_cov2)
+
+pa_tbl <- plant_dat_sum1 %>% 
+  rbind(plant_dat_sum2)
+
+pa_cov_tbl <- plant_dat_cov1 %>% 
+  full_join(plant_dat_sum1, by = "species") %>% 
+  filter(!is.na(sum_HS)) %>% 
+  filter_at(vars(ratio.x, ratio.y), all_vars(.>1.5 | .<0.5))
+
+write.csv(pa_cov_tbl, file = "output/pa_cov_tbl_complete.csv")
+
+```
+
+```{r}
+# Calculating the frequency in each trt
+plant_glm_pa1 <- plant_glm_pa %>% 
+  dplyr::select(site_id:WOFI)
+
+plant_glm_pa1$site_id <- as.numeric(as.character(plant_glm_pa1$site_id))
+
+plant_glm_pa1 <- rbind(plant_glm_pa1, colSums(plant_glm_pa1[-1,])) %>%
+  select_if(function(.) last(.) > 4) # keep only species detected 5 or more times
+
+plant_glm_pa1$site_id <- as.factor(plant_glm_pa1$site_id)
+
+plant_mat_UNLS <- plant_glm_pa1 %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev!="h") %>% 
+  dplyr::select(ACMA:WHMO)
+
+plant_mat_HS <- plant_glm_pa1 %>% 
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev=="h") %>% 
+  dplyr::select(ACMA:WHMO)
+
+plant_dat_sum_HS <- rbind(plant_mat_HS[,-1], colSums(plant_mat_HS[-1,-1]))
+plant_sum_HS <- data.frame(t(plant_dat_sum_HS[-c(1:23),])) 
+plant_sum_HS <- cbind(rownames(plant_sum_HS), data.frame(plant_sum_HS, row.names=NULL))
+colnames(plant_sum_HS) <- c("species", "sum")
+
+plant_dat_sum_UNLS <- rbind(plant_mat_UNLS[,-1], colSums(plant_mat_UNLS[-1,-1]))
+plant_sum_UNLS <- data.frame(t(plant_dat_sum_UNLS[-c(1:25),])) 
+plant_sum_UNLS <- cbind(rownames(plant_sum_UNLS), data.frame(plant_sum_UNLS, row.names=NULL))
+colnames(plant_sum_UNLS) <- c("species", "sum")
+
+plant_dat_sum <- plant_sum_UNLS %>% 
+  left_join(plant_sum_HS, by = "species")
+colnames(plant_dat_sum) <- c("species", "sum_UNLS", "sum_HS")
+
+# species that are found at least 2x more in HS
+plant_dat_sum1 <- plant_dat_sum %>% 
+  mutate(ratio = sum_HS/sum_UNLS)# %>% 
+#  filter(ratio >= 2)
+
+# species that are found at least 2x more in HS
+plant_dat_sum2 <- plant_dat_sum %>% 
+  mutate(ratio = sum_HS/sum_UNLS)# %>% 
+#  filter(ratio <= 0.5)
+
+```
 
 ```{r}
 #plot for productivity
@@ -518,6 +570,7 @@ hist <- ggplot(plant_spp_num, aes(x = sev, y = num_spp)) +
   labs(title = "Figure 2: Number of species in each habitat")
 hist
 
+
 # or use plant_spp_mean <- tapply(plant_spp_num$num_spp, INDEX = plant_spp_num$sev, FUN = mean)
 
 #str(plant_spp_num$sev)
@@ -741,11 +794,11 @@ lichen_dat_genus_pa <- lichen_dat_genus_pa_l %>%
 # for species: 
 #NMDS.log<-log1p(lichen_dat_wide[,-1])#[,-c(1:20)])
 #for genus:
-NMDS.log<-log1p(lichen_dat_genus_pa[,-1])#[,-c(1:20)])
+NMDS.log<-log1p(lichen_dat_genus_pa_w[,-1])#[,-c(1:20)])
 sol <- metaMDS(NMDS.log)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = lichen_dat_wide$site_id)
+scrs <- cbind(scrs, site_id = lichen_mat_species_w$site_id)
 scrs <- merge(scrs, site_data, by = "site_id")
 
 vf <- envfit(sol, NMDS.log, perm = 9)
@@ -838,8 +891,16 @@ lichen_dat_genus_pa_l <- lichen_dat_genus_pa_l %>%
   mutate(species = genus) %>% 
   dplyr::select(site_id, species, pa)
 
+insect_dat_long_filt1 <- insect_dat_l %>% 
+  dplyr::select(-c(2:28)) %>% 
+  filter(number != 0)
+
+insect_dat_long_filt <- splist2presabs(insect_dat_long_filt1, sites.col = 1, sp.col = 2)  %>% 
+  gather(key = species, value = pa, Aculeata:Thysanoptera)
+
 all_spp <- rbind(lichen_dat_genus_pa_l, bird_dat_pa) %>% 
-  rbind(., plant_dat_long)
+  rbind(., plant_dat_long) %>% 
+  rbind(., insect_dat_long_filt)
 
 # convert to wide matrix
 all_spp_w_pa <- unique(all_spp[ , c(1:3)]) %>%
@@ -854,7 +915,7 @@ NMDS.log<-log1p(all_spp_w_pa[,-1])#[,-c(1:20)])
 sol <- metaMDS(NMDS.log)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = lichen_dat_wide$site_id)
+scrs <- cbind(scrs, site_id = lichen_mat_species_w$site_id)
 scrs <- merge(scrs, site_data, by = "site_id")
 
 vf <- envfit(sol, NMDS.log, perm = 9)
@@ -875,7 +936,7 @@ pvals<-as.data.frame(A$pvals)
 arrows<-as.data.frame(A$arrows*sqrt(A$r))
 C<-cbind(arrows, pvals)
 #subset
-Cred<-subset(C,pvals<0.05)
+Cred<-subset(C,pvals<0.001)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
@@ -1086,7 +1147,7 @@ lichen_totals <- read.csv("data/lichen_data.csv", header = T) %>%
   spread(key = species, value = abund, fill = 0) %>%
   apply(., 2, function(c)sum(c!=0))
 
-lichen_dat_totals1 <- lichen_dat_wide[,-1] %>% 
+lichen_dat_totals1 <- lichen_mat_species_w[,-1] %>% 
   bind_rows(., lichen_totals)
 
 lichen_dat_totals <- lichen_dat_totals1[-c(1:48),-59] %>% 
@@ -1172,10 +1233,6 @@ insect.md
 summary(insect.md)
 plot(insect.md)
 
-data(dune)
-data(dune.env)
-
-
 ```
 
 
@@ -1204,7 +1261,7 @@ plant_matrix$site_id <- as.character(plant_matrix$site_id)
 ## Using all tsf_cat and sev, we see a strong effect of sev, and a marginal effect of tsf_cat
 
 comp.data <- left_join(plant_matrix, site_data, by = "site_id")
-comp.sub <- subset(comp.data, select = ACTR:WHMO)
+comp.sub <- subset(comp.data, select = ACMA:WHMO)
 comp.env <- subset(comp.data, select = c(fire:tsf_cat))
 attach(comp.env)
 kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 2: PERMANOVA results", digits = 2) %>%
@@ -1288,7 +1345,7 @@ comp.data <- comp.data %>%
 pair <- pairwise.adonis(comp.sub, comp.data$sev2) %>% 
   dplyr::select(pairs, F.Model, p.adjusted)
 
-kable(pair, caption = "Table 3: pairwise PERMANOVA results", digits = 2) %>%
+kable(pair, caption = "Table 3: pairwise PERMANOVA results", digits = 4) %>%
   kable_styling()
 
 ```
@@ -1400,7 +1457,7 @@ site_data$site_id <- as.character(site_data$site_id)
 insect_dat <- left_join(insect_data, insect_names, by = "species") %>%
   filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
   dplyr::select(site_id, species, cover)
-insect_matrix <- spread(data = insect_dat, key = species, value = cover, fill = 0)
+insect_matrix <- spread(data = insect_mat, key = species, value = cover, fill = 0)
 
 comp.data <- left_join(insect_matrix, site_data, by = "site_id") %>% 
   mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3"))) #%>%  %>% filter(sev == "h")
@@ -1488,6 +1545,61 @@ kable(indval_table, caption = "Table 3: Indicator species for different habitats
 #write.csv(prob.corrected1, file = "prob.corrected1.csv")
 ```
 
+
+#### Birds 
+```{r echo = F}
+bird_matrix1 <- bird_matrix1 %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu"))
+
+### Vector for site classification
+### severity
+data <- bird_matrix1[,c(28:83)]
+groups1 <- as.vector(bird_matrix1$sev2)
+
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+#kable(indvalsummary1)
+
+indvalsummary1 <- cbind(rownames(indvalsummary1), data.frame(indvalsummary1, row.names=NULL))
+
+names(indvalsummary1)[1]<-"species"
+
+indval <- indvalsummary1 %>% 
+  dplyr::select(species, group, indval, pvalue) %>% 
+  mutate("Indicator value" = indval * 100) %>% 
+  filter(indval > 0.245) %>% 
+  filter(pvalue < 0.05)
+
+indval_hs <- indval %>% 
+  filter(group =="1") %>% 
+  dplyr::select(species, "Indicator value")
+
+indval_ls <- indval %>% 
+  filter(group =="2")%>% 
+  dplyr::select(species, "Indicator value")
+
+names(indval_hs)[1]<-"Indicators of HS"
+names(indval_ls)[1]<-"Indicators of LS/UN"
+
+#names(spp_diff2)[1]<-"taxon found only in LS/UN"
+indval_table <- list(indval_hs, indval_ls)
+
+kable(indval_table, caption = "Table 3: Bird indicator species for different habitats", digits = 0) %>%
+  kable_styling()
+#write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
+
 #### Insects
 
 There are no species that are indicators of LS/UN. Several orders/suborders have a high indicator value for HS though: Hemiptera (Homoptera specifically), Coleoptera, and Hymenoptera (Aculeata specifically). Brachyceran flies are also indicators of HS (but not Diptera as a whole).
@@ -1495,12 +1607,7 @@ There are no species that are indicators of LS/UN. Several orders/suborders have
 # Putting Hemiptera and Hymenoptera back together, the indicator value stays the same as when splitting, but when split, Homoptera and Aculeata replace the order (respectively). Splitting Diptera takes it out of the final output altogether.
 
 ### Community data matrix
-
-insect_dat_long <- insect_dat %>%
-  left_join(site_data, by = "site_id") %>% 
-  gather(key = "taxon", value = "number", 3:19)
-
-insect_dat_ind1 <- insect_dat_long %>%  
+insect_dat_ind1 <- insect_dat_l %>%  
   mutate(sev_tsf = paste(sev, tsf_cat, sep = "")) %>% 
   mutate(sev2 = ifelse(sev == 'h' , "h", "lu")) %>% 
   mutate(taxon = recode(taxon, Aculeata="Hymenoptera")) %>% 
@@ -1533,8 +1640,6 @@ groups1 <- as.vector(insect_matrix1$sev2)
 
 #groups1 = as.vector(insect_dat$tsf_cat2)
 #groups1 = as.vector(insect_dat$sev_tsf)
-str(data)
-str(groups1)
 
 Indval_out1 <- indval(data, groups1, numitr=10000)
 gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
@@ -2235,7 +2340,7 @@ plot(hist)
 # w = data are in wide format; a, b, c, d keep growth stages in order
 
 #select just the species column
-insect_dat_long <- insect_dat %>%
+insect_dat_long <- insect_mat %>%
   left_join(site_data, by = "site_id") %>% 
   gather(key = "taxon", value = "number", 3:19)# %>% 
 #  dplyr::select(site_id, taxon, number)
