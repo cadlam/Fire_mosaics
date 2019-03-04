@@ -68,10 +68,13 @@ pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExt
 #library(magrittr)
 #library(knitr)
 #knit2html("Fire_mosaics.html")
+source("scripts/data_load.R")
+source("scripts/splist2presabs.R")
+
 
 ```
 
-
+# Plant data selection
 ```{r echo = F}
 # Select data (pick one)
 # CHECK FOR TYPOS - ALL GOOD
@@ -108,15 +111,13 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   dplyr::select(site_id, species, cover)
 ```
 
-```{r eval = F, include = F}
-#Only run this chunk if converting to presence-absence
-plant_dat$cover[plant_dat$cover > 0] <- 1 
-```
-
 
 ```{r include=F}
-# running this more than once without rerunning code above will mess it up
-# Data prep
+# To get p/a:
+plant_dat_pa_l <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2) %>% 
+  gather(key = species, value = pa, ABCO:WOFI)
+
+# The following is to remove species detected too few times
 # convert to wide format for following analysis
 plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
 
@@ -128,7 +129,7 @@ plant_matrix2 <- spread(data = plant_dat, key = species, value = cover, fill = 0
 
 plant_matrix <- plant_matrix1 %>%
   bind_rows(., plant_matrix2[49,]) %>%
-  mutate("DUMB" = "0.5") # adding dummy species (eg. Webster 2010)  
+  mutate("DUMB" = "0.5") # adding dummy species (eg. Webster 2010)
 
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
 plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 10]
@@ -137,14 +138,21 @@ plant_matrix <- plant_matrix[-49, ] %>%
   mutate_if(is.character, as.numeric)
 
 # Make Bray-Curtis (?) dissimilarity matrix
-plants_matrix <- as.matrix(plant_matrix1[, -1])
+#plants_matrix <- as.matrix(plant_matrix1[, -1])
+
+#this used to be plant_dat_cov, same as plant_mrpp_d
+plant_dat_cov_w <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
+  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
+
+plant_dat_cov_w$tsf_cat <- as.factor(plant_dat_cov_w$tsf_cat)
 ```
 
 # Results
-
 ```{r}
+# This chunk is about comparing the frequency of different species in each habitat (see Wayman 2007)
+
 # Calculating the average cover in each trt
-plant_glm_cov1 <- plant_glm_cov %>% 
+plant_mat_cov_w <- plant_dat_cov_w %>% 
   dplyr::select(site_id:WOFI)
 
 #plant_glm_cov1$site_id <- as.numeric(as.character(plant_glm_cov1$site_id))
@@ -154,12 +162,12 @@ plant_glm_cov1 <- plant_glm_cov %>%
 
 #plant_glm_cov1$site_id <- as.factor(plant_glm_cov1$site_id)
 
-plant_mat_UNLS <- plant_glm_cov1 %>%
+plant_mat_UNLS <- plant_mat_cov_w %>%
   left_join(site_data, by = "site_id") %>% 
   filter(sev!="h") %>% 
   dplyr::select(ACMA:WHMO)
 
-plant_mat_HS <- plant_glm_cov1 %>% 
+plant_mat_HS <- plant_mat_cov_w %>% 
   left_join(site_data, by = "site_id") %>% 
   filter(sev=="h") %>% 
   dplyr::select(ACMA:WHMO)
@@ -189,7 +197,7 @@ plant_dat_cov2 <- plant_dat_sum %>%
   mutate(ratio = cov_HS/cov_UNLS)# %>% 
 #  filter(ratio <= 0.5)
 
-cov_tbl <- plant_dat_cov1 %>% 
+cov_tbl <- plant_mat_cov_w %>% 
   rbind(plant_dat_cov2)
 
 pa_tbl <- plant_dat_sum1 %>% 
@@ -344,6 +352,7 @@ NMDS.log<- log1p(plant_matrix[,-1])
 #NMDS
 sol <- metaMDS(NMDS.log)
 
+str(sol)
 # scrs is the base for the plot
 scrs <- as.data.frame(scores(sol, display = "sites"))
 scrs <- cbind(scrs, site_id = plant_matrix$site_id)
@@ -437,6 +446,20 @@ p
 #        legend.direction = "horizontal",
 #        legend.box = "horizontal",
 #        legend.box.just = "centre")
+
+# Plant NMDS 3D
+
+sol3 <- metaMDS(NMDS.log, k = 3)
+  
+sol3$MDS1
+
+str(sol3)
+
+library("plotly")
+
+plot_ly(color = ~sev, showlegend = F) %>%
+  add_markers(data = sol3, x = ~MDS1, y = ~MDS2, z = ~MDS3) %>%
+  add_paths(data = m, x = ~MDS1, y = ~MDS2, z = ~MDS3)
 
 ```
 
@@ -618,7 +641,7 @@ x2 <- cbind.fill(ls_spp, hs_spp, un_spp, fill = NA)
 #kable(spp_diff <- setdiff(hs_spp1, ls_spp1))
 
 #spp in HS not in LS or UN
-hs_spp1 <- rep(NA, 119)
+hs_spp1 <- rep(NA, 119) #change this number to the total number of species HS
 ls_spp1 <- x2[,3]
 un_df <- data.frame(hs_spp1, ls_spp1)
 x3 <- rbind(x1, un_df)
@@ -819,7 +842,7 @@ pvals<-as.data.frame(A$pvals)
 arrows<-as.data.frame(A$arrows*sqrt(A$r))
 C<-cbind(arrows, pvals)
 #subset
-Cred<-subset(C,pvals<0.05)
+Cred<-subset(C,pvals<0.001)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
@@ -1014,9 +1037,44 @@ mbc2
 ### Plots for plants
 
 ```{r}
-plant_plot <- plant_mrpp_d %>% 
-  mutate(num_spp = rowSums(dplyr::select(.,ACMI:WOFI))) %>% 
-    mutate(tsf_cat2 = paste())
+plant_plot <- plant_dat_pa_w  %>% 
+  mutate(num_spp = rowSums(dplyr::select(.,ACMI:WOFI)))
+
+# Spp number in each habitat
+ggplot(plant_plot, aes(x = sev_tsf, y = num_spp)) +
+  geom_boxplot() +
+  labs(title = "Figure X: spp num in each habitat", y = "# spp", x = "habitat")
+
+ggplot(plant_plot, aes(x = tsf, y = num_spp, color = sev)) +
+  geom_smooth(method = "loess", aes(group = sev)) +
+  geom_jitter() +
+  labs(title = "Figure X: spp num in each habitat", y = "number of spp", x = "TSF")
+
+ggplot(plant_plot, aes(x = tsf, y = num_spp, color = sev)) +
+  geom_boxplot(aes(group = tsf_cat)) +
+  geom_jitter() +
+  labs(title = "Figure X: spp num in each habitat", y = "number of spp", x = "TSF")
+
+?geom_smooth
+
+
+# Relationship of spp number to shrub cover
+ggplot(plant_plot, aes(x = shrub_cov, y = num_spp)) +
+  geom_jitter(aes(color = sev)) +
+  geom_smooth(method = "glm") +
+  labs(title = "Figure X: shrub cover vs spp number", y = "# spp", x = "shrub cover (%)")
+
+# Relationship of spp number to tree cover
+ggplot(plant_plot, aes(x = tree_cov, y = num_spp)) +
+  geom_jitter(aes(color = sev_tsf2)) +
+  geom_smooth(method = "glm") +
+  labs(title = "Figure X: tree cover vs spp number", y = "# spp", x = "tree cover (%)")
+
+# Relationship of spp number to herbaceous cover
+ggplot(plant_plot, aes(x = herb_cov, y = num_spp)) +
+  geom_jitter(aes(color = sev)) +
+  geom_smooth(method = "glm") +
+  labs(title = "Figure X: herbaceous cover vs spp number", y = "# spp", x = "herbaceous cover (%)")
 
 # summarize data
 data_summary <- function(data, varname, groupnames){
@@ -1031,7 +1089,7 @@ data_summary <- function(data, varname, groupnames){
  return(data_sum)
 }
 
-df <- data_summary(plant_plot, varname="num_spp", groupnames="tsf_cat2")
+df <- data_summary(plant_plot, varname="num_spp", groupnames="sev_tsf2")
 df
 
 #plot
@@ -1150,7 +1208,7 @@ lichen_totals <- read.csv("data/lichen_data.csv", header = T) %>%
 lichen_dat_totals1 <- lichen_mat_species_w[,-1] %>% 
   bind_rows(., lichen_totals)
 
-lichen_dat_totals <- lichen_dat_totals1[-c(1:48),-59] %>% 
+lichen_dat_totals <- lichen_dat_totals1[-c(1:48),-60] %>% 
   gather(key = species, value = frequency) %>% 
   arrange(desc(frequency)) %>% 
   filter(frequency > 11)
@@ -1167,23 +1225,124 @@ lichen_HS <- read.csv("data/lichen_data.csv", header = T) %>%
   filter(abund != 0) %>% 
   filter(!site_id %in% c("7", "6", "34", "60", "14", "36", "5", "28", "16")) %>% 
   spread(key = species, value = abund, fill = 0)
+
+lichen_HS_list1 <- lichen_HS %>% 
+  dplyr::select(-c(1:30)) %>% 
+  dplyr::select(-c(CONI, PECO, FUME, NOPU))
+
+lichen_HS_list2 <- t(lichen_HS_list1)
+
+lichen_HS_list2 <- cbind(rownames(lichen_HS_list2), data.frame(lichen_HS_list2, row.names=NULL)) 
+
+names(lichen_HS_list2)[1]<-"species"
+
+lichen_HS_list <- lichen_HS_list2 %>% 
+  left_join(., lichen_names, by = "species") %>% 
+  dplyr::select(full_name)
+
+#write.table(lichen_HS_list, file = "lichen_HS_list.csv")
+
+
+
+
+
+
+
+plant_dat$cover[plant_dat$cover > 0] <- 1 # convert to pa
+plant_matrix2 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
+
+plant_spp_num <- left_join(lichen_mat_genus_pa_w, site_data, by = "site_id") %>%
+  mutate(num_spp = rowSums(dplyr::select(.,Ahtiana:Xanthomendoza)))
+
+plant_spp_mean <- plant_spp_num %>% 
+  group_by(sev) %>%
+  summarize(mean_items = mean(num_spp))
+
+hist <- ggplot(plant_spp_num, aes(x = sev, y = num_spp)) +
+  geom_boxplot() +
+  labs(title = "Figure 2: Number of species in each habitat")
+hist
+
+
+# or use plant_spp_mean <- tapply(plant_spp_num$num_spp, INDEX = plant_spp_num$sev, FUN = mean)
+
+#str(plant_spp_num$sev)
+
+#plant_nums <- aggregate(num_spp ~ sev, data = plant_spp_num, FUN = count)
+
+#sepal.lengths <- tapply(plant_spp_num$num_spp, INDEX = iris$Species, FUN = mean)
+
+hs <- lichen_dat_genus_pa_w %>% filter(sev =="h") %>% dplyr::select(c(Ahtiana:Xanthomendoza))
+hs1 <- rbind(hs, colSums(hs))
+#plant_dat$cover[plant_dat$cover > 0] <- 1 
+hs1[hs1 > 0] <-1
+hs2 <- cbind(hs1, rowSums(hs1)) #121 species in HS (23 sites)
+#hs3 <-hs2 %>% dplyr::select(hs2[24,] > 0)
+hs3 <- hs2[,(hs2[24,]) == 1]
+hs_spp <- data.frame(names = colnames(hs3))
+
+ls <- lichen_dat_genus_pa_w %>% filter(sev =="l") %>% dplyr::select(c(Ahtiana:Xanthomendoza))
+ls1 <- rbind(ls, colSums(ls))
+ls1[ls1 > 0] <-1
+ls2 <- cbind(ls1, rowSums(ls1)) #90 species in LS (19 sites)
+ls3 <- ls2[,(ls2[20,]) == 1]
+ls_spp <- data.frame(names = colnames(ls3))
+
+un <- lichen_dat_genus_pa_w %>% filter(sev =="u") %>% dplyr::select(c(Ahtiana:Xanthomendoza))
+un1 <- rbind(un, colSums(un))
+un1[un1 > 0] <-1
+un2 <- cbind(un1, rowSums(un1)) #42 species in un (6 sites)
+un3 <- un2[,(un2[7,]) == 1]
+un_spp <- data.frame(names = colnames(un3))
+
+#spp in HS not in LS
+x1 <- cbind.fill(hs_spp, ls_spp, fill = NA)
+names(x1)[1]<-"hs_spp1"
+names(x1)[2]<-"ls_spp1"
+hs_spp1 <- x1[,1]
+ls_spp1 <- x1[,2]
+#kable(spp_diff <- setdiff(hs_spp1, ls_spp1))
+
+
+#spp in HS not in LS or UN
+hs_spp1 <- rep(NA, 26)
+ls_spp1 <- x2[,3]
+un_df <- data.frame(hs_spp1, ls_spp1)
+x3 <- rbind(x1, un_df)
+hs_spp1 <- x3[,1]
+ls_spp1 <- x3[,2]
+spp_diff1 <- setdiff(hs_spp1, ls_spp1)
+spp_diff1 <- data.frame(spp_diff1)
+names(spp_diff1)[1]<-"species"
+spp_diff1 <- left_join(spp_diff1, plant_names, by = "species") %>% dplyr::select(species)
+
+#spp in LS not in HS
+x2 <- cbind.fill(ls_spp, hs_spp, un_spp, fill = NA)
+
+#spp in LS or UN not in HS
+spp_diff2 <- setdiff(ls_spp1, hs_spp1)
+spp_diff2 <- data.frame(spp_diff2)
+names(spp_diff2)[1] <- "species"
+spp_diff2 <- left_join(spp_diff2, plant_names, by = "species") %>% 
+  dplyr::select(full_name)
+
+names(spp_diff1)[1]<-"Species found only in HS"
+names(spp_diff2)[1]<-"Species found only in LS/UN"
+spp_diff_table <- list(spp_diff1, spp_diff2) 
+
+kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN") %>%
+  kable_styling()
 ```
 
 ### MRPP (plants)
 ```{r echo = F}
-site_data$site_id <- as.factor(site_data$site_id)
-plant_matrix1$site_id <- as.factor(plant_matrix1$site_id)
-
-plant_mrpp_d <- left_join(plant_matrix1, site_data, by = "site_id") %>% 
-  mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))
-
-plant.mrpp <- mrpp(plant_mrpp_d[,c(2:139)], plant_mrpp_d$sev_tsf)
+plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:139)], plant_dat_cov_w$sev_tsf)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(plant.ord <- metaMDS(plant_mrpp_d[,c(2:139)]), type="text", display="sites" )
+plot(plant.ord <- metaMDS(plant_dat_cov_w[,c(2:139)]), type="text", display="sites" )
 ordihull(plant.ord, plant_mrpp_d$sev_tsf, label = T)
 
 with(plant.mrpp, {
@@ -1197,7 +1356,7 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-plant.md <- meandist(vegdist(plant_mrpp_d[,c(2:139)]), plant_mrpp_d$sev_tsf)
+plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:139)]), plant_dat_cov_w$sev_tsf)
 plant.md
 summary(plant.md)
 plot(plant.md)
@@ -1208,14 +1367,14 @@ We see from the MRPP that the first 2 age categories for HS stand out, but the o
 ```{r echo = F}
 #meandist not working now for some reason, same with plants above
 
-insect.mrpp <- mrpp(insect_dat_wide[,c(29:45)], insect_dat_wide$sev_tsf)
+insect.mrpp <- mrpp(insect_dat_w[,c(29:45)], insect_dat_w$sev_tsf)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(insect.ord <- metaMDS(insect_dat_wide[,c(29:45)]), type="text", display="sites" )
-ordihull(insect.ord, insect_dat_wide$sev_tsf, label = T)
+plot(insect.ord <- metaMDS(insect_dat_w[,c(29:45)]), type="text", display="sites" )
+ordihull(insect.ord, insect_dat_w$sev_tsf, label = T)
 
 with(insect.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1228,10 +1387,42 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-insect.md <- meandist(vegdist(insect_dat_wide[,c(29:45)]), insect_dat_wide[["sev_tsf"]])
+insect.md <- meandist(vegdist(insect_dat_w[,c(29:45)]), insect_dat_w[["sev_tsf"]])
 insect.md
 summary(insect.md)
 plot(insect.md)
+
+```
+
+## MRPP (lichens) 
+
+```{r echo = F}
+#meandist not working now for some reason, same with plants above
+
+lichen.mrpp <- mrpp(lichen_mat_species_w[,c(2:60)], insect_dat_w$sev_tsf)
+
+# Save and change plotting parameters
+def.par <- par(no.readonly = TRUE)
+layout(matrix(1:2,nr=1))
+
+plot(lichen.ord <- metaMDS(lichen_mat_species_w[,c(2:60)]), type="text", display="sites" )
+ordihull(lichen.ord, insect_dat_w$sev_tsf, label = T)
+
+with(lichen.mrpp, {
+  fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
+                 main="Test of Differences Among Groups")
+  abline(v=delta); 
+  text(delta, 2*mean(fig.dist$counts), adj = -0.5,
+     expression(bold(delta)), cex=1.5 )  }
+)
+par(def.par)
+
+## meandist 
+# calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
+lichen.md <- meandist(vegdist(lichen_mat_species_w[,c(2:60)]), insect_dat_w[["sev_tsf"]])
+lichen.md
+summary(lichen.md)
+plot(lichen.md)
 
 ```
 
