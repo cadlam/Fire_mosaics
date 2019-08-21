@@ -14,6 +14,16 @@ site_data$tsf_cat[site_data$tsf < 10] <-1
 
 site_data$tsf_2cat[site_data$tsf < 15] <-1
 
+site_data <- site_data_read %>% 
+  mutate(tsf_cat = ifelse(is.na(tsf), "5", "4")) %>% 
+  mutate(tsf_2cat = ifelse(is.na(tsf), "3", "2"))
+
+site_data$tsf_cat[site_data$tsf < 17] <-3
+site_data$tsf_cat[site_data$tsf < 13] <-2
+site_data$tsf_cat[site_data$tsf < 6] <-1
+
+site_data$tsf_2cat[site_data$tsf < 15] <-1
+
 site_data <- site_data %>% 
   mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))  %>% 
   mutate(sev_tsf2 = paste(sev, tsf_2cat, sep = "-"))

@@ -1,0 +1,646 @@
+---
+title: "Fungi"
+author: "Chris Adlam"
+date: "4/11/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+if(!require('pacman'))install.packages('pacman')
+pacman::p_load(tidyverse, ggplot2, vegan, purrr, labdsv, knitr)
+
+#install.packages("devtools")
+#library(devtools)
+#install_github("phytomosaic/ecole")
+#library(ecole)
+
+```
+
+# Data load
+```{r data}
+site_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv")
+
+#from FITS data (DC)
+fungi_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/fungi_data.csv")
+
+#from PITS data (DC)
+PITS_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/PITS_data.csv")
+
+#from CO1 data  (DC)
+invert_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/invert_data.csv")
+#names(invert_data) <- c("site_id", "sum.taxonomy", c(1:394)) # renaming columns because many had the same name
+
+data_18S <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/18S_data.csv")
+data_16S <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/16S_data.csv")
+
+#all in 1
+all_edna <- list(fungi_data[,-2], PITS_data[,-2], invert_data[,-2], data_16S[,-2], data_18S[,-2]) %>% 
+  reduce(left_join, by = "site_id")
+
+# the long version:
+all_edna[19,] <- seq.int(ncol(all_edna)) # create row of consecutive integers
+d <- rbind(colnames(all_edna), data.frame(all_edna, row.names=NULL)) # make dataframe with column names from all_edna and the contents itself
+all_edna[20,] <- paste(d[1,], ".", all_edna[19,]) # in all_edna, make a row with column names, a period, and the integer --- this is to avoid duplicates
+#all_edna[19,1] <- "site_id"
+
+#colnames(all_edna) = all_edna[19, ] # the first row will be the header
+all_edna = all_edna[-c(19,20), ] #remove the unwanted columns
+  
+all_edna_l <- all_edna %>% 
+  gather(taxon, number, 2:2907)
+
+all_edna_l$taxon <- gsub(' ', '_', all_edna_l$taxon) 
+
+all_edna_l <- all_edna_l %>% 
+  separate(., taxon, c("tax1", "tax2", "tax3", "tax4", "tax5", "tax6", "tax7", "tax8", "tax9", "tax10", "tax11", "tax12","tax13"), sep = "\\.")
+
+#all_edna_l <- sapply(all_edna_l, as.numeric)
+
+all_edna_l$number <- as.numeric(all_edna_l$number)
+
+
+#all in 1 except PITS and FITS
+all_edna <- list(invert_data[,-2], data_16S[,-2], data_18S[,-2]) %>% 
+  reduce(left_join, by = "site_id")
+
+# the long version:
+all_edna[19,] <- seq.int(ncol(all_edna)) # create row of consecutive integers
+d <- rbind(colnames(all_edna), data.frame(all_edna, row.names=NULL)) # make dataframe with column names from all_edna and the contents itself
+all_edna[20,] <- paste(d[1,], ".", all_edna[19,]) # in all_edna, make a row with column names, a period, and the integer --- this is to avoid duplicates
+#all_edna[19,1] <- "site_id"
+
+#colnames(all_edna) = all_edna[19, ] # the first row will be the header
+all_edna = all_edna[-c(19,20), ] #remove the unwanted columns
+  
+all_edna_l <- all_edna %>% 
+  gather(taxon, number, 2:2116)
+
+all_edna_l$taxon <- gsub(' ', '_', all_edna_l$taxon) 
+
+all_edna_l <- all_edna_l %>% 
+  separate(., taxon, c("tax1", "tax2", "tax3", "tax4", "tax5", "tax6", "tax7", "tax8", "tax9", "tax10", "tax11", "tax12","tax13"), sep = "\\.")
+
+#all_edna_l <- sapply(all_edna_l, as.numeric)
+
+all_edna_l$number <- as.numeric(all_edna_l$number)
+
+```
+
+#FITS
+##NMDS
+```{r}
+# calculate distance for NMDS.
+# 2 points are dropped because of a suspiciously low number of hits (sites 30 and 1)
+NMDS.log<-fungi_data[-c(7,8),-c(1:2)]#could use log1p but very similar
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = fungi_data[-c(7,8),]$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.01)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+# maye subset only species detected at least 5 times?
+p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, color = sev), label = site_id) +
+  geom_point() +
+  coord_fixed() + ## need aspect ratio of 1!
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+#            size = 3) +
+  labs(title = "Figure 1: NMDS for fungi") +
+  geom_text(aes(label=site_id),hjust=0, vjust=0)
+p
+```
+#PITS
+```{r}
+# calculate distance for NMDS.
+NMDS.log<-log1p(PITS_data[,-c(1:2)])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = PITS_data$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.01)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+# maye subset only species detected at least 5 times?
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+  geom_segment(data = Cred,
+               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+#            size = 3) +
+  labs(title = "Figure 2: NMDS for plants (PITS)")
+p
+```
+
+#Invert
+##NMDS
+```{r}
+# calculate distance for NMDS.
+#try p/a?
+
+invert_data_red <- rbind(invert_data[,-2], colSums(invert_data[,-2]))
+invert_data_red <- as.data.frame(invert_data_red) %>%
+  select_if(function(.) last(.) >=1) %>% 
+  mutate(group = ifelse(site_id %in% c("6", "52","34","33","38","30","1","53"), 1, 2)) %>% 
+  filter(group == 2)
+
+#NMDS.log<-log1p(invert_data_red[,-c(1, 381)])
+NMDS.log<-log1p(invert_data[,-c(1,2)])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = invert_data$site_id) # = invert_data_red$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.01)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+# maye subset only species detected at least 5 times?
+p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, color = sev), label = site_id) +
+  geom_point() +
+  coord_fixed() + ## need aspect ratio of 1!
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+#            size = 3) +
+  labs(title = "Figure 3: NMDS for invertebrates (CO1)") +
+  geom_text(aes(label=site_id),hjust=0, vjust=0)
+p
+```
+
+```{r}
+# why are there 2 groups????????
+
+invert1 <- scrs %>% 
+  filter(NMDS1 < 0)
+
+invert2 <- scrs %>% 
+  filter(NMDS1 > 0)
+
+invert <- scrs %>% 
+  mutate(group = ifelse(NMDS1<0, 1, 2))
+
+summary(invert1)
+summary(invert2)
+
+ggplot(invert) +
+  geom_point(aes(x = group, y = heat_load))
+
+#ind analysis
+
+
+```
+## Invert Indval
+```{r}
+#Indicator species analysis for group
+#all_edna1 <- sapply(all_edna, as.numeric )
+#all_edna_red <- rbind(all_edna1, colSums(all_edna1))
+
+invert_data_red <- invert_data_red %>%
+  select_if(function(.) last(.) >=10) %>% 
+  mutate(group = ifelse(site_id %in% c("6", "52","34","33","38","30","1","53"), 1, 2))
+```
+
+```{r echo = F}
+### Vector for site classification
+### severity
+data <- invert_data[,-c(1,2)] #invert_data_red[-19,-c(1,300)]
+groups1 <- as.vector(invert_data$group)
+
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+#kable(indvalsummary1)
+
+str(Indval_out1)
+
+Indval_out1$maxcls
+
+
+indvalsummary2 <- cbind(rownames(indvalsummary1), data.frame(indvalsummary1, row.names=NULL))
+
+names(indvalsummary2)[1]<-"Taxon"
+
+indval <- indvalsummary2 %>% 
+  dplyr::select(Taxon, group, indval, pvalue) %>% 
+  mutate("Indicator value" = indval * 100) %>% 
+  filter(indval >= 0.25) %>% 
+  filter(pvalue < 0.05)
+
+indval_hs <- indval %>% 
+  filter(group =="1") %>% 
+  dplyr::select(Taxon, "Indicator value")
+
+indval_ls <- indval %>% 
+  filter(group =="2")%>% 
+  dplyr::select(Taxon, "Indicator value")
+
+names(indval_hs)[1]<-"Indicators of group 1"
+names(indval_ls)[1]<-"Indicators of group 2"
+
+#names(spp_diff2)[1]<-"Species found only in LS/UN"
+indval_table <- list(indval_hs, indval_ls)
+
+kable(indval_table, caption = "Table 1: Indicator species for groups", digits = 0) %>%
+  kable_styling()
+
+write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
+
+
+
+#18S
+```{r}
+# calculate distance for NMDS.
+data_18S_red <- rbind(data_18S[,-2], colSums(data_18S[,-2]))
+data_18S_red <- as.data.frame(data_18S_red) %>%
+  select_if(function(.) last(.) >=1)
+
+NMDS.log<-log1p(data_18S_red[,-1])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = data_18S_red$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.01)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+# maye subset only species detected at least 5 times?
+p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, colour = sev), label = site_id) +
+  geom_point() +
+  coord_fixed() + ## need aspect ratio of 1!
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+#            size = 3) +
+  labs(title = "Figure 4: NMDS for eukaryotes (18S)") +
+  geom_text(aes(label=site_id),hjust=0, vjust=0)
+p
+
+data_18S1 <- scrs %>% 
+  filter(NMDS1 < 0)
+
+data_18S2 <- scrs %>% 
+  filter(NMDS1 > 0)
+```
+
+#16S
+```{r}
+# calculate distance for NMDS.
+data_16S_red <- rbind(data_16S[,-2], colSums(data_16S[,-2]))
+data_16S_red <- as.data.frame(data_16S_red) %>%
+  select_if(function(.) last(.) >=1)
+
+NMDS.log<-log1p(data_16S_red[,-1])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = data_16S_red$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.01)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+# maye subset only species detected at least 5 times?
+p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, colour = sev), label = site_id) +
+  geom_point() +
+  coord_fixed() + ## need aspect ratio of 1!
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+#            size = 3) +
+  labs(title = "Figure 5: NMDS for bacteria and archea (16S)") +
+  geom_text(aes(label=site_id),hjust=0, vjust=0)
+p
+
+
+data_16S1 <- scrs %>% 
+  filter(NMDS1 < 0)
+
+data_16S2 <- scrs %>% 
+  filter(NMDS1 > 0)
+```
+
+# All edna data
+```{r}
+#All edna data
+# takes a looooong time to execute 
+#pres abs
+#all_edna_l$number[all_edna_l$number >= 1] <- 1 
+#all_edna_l$number[all_edna_l$number < 10] <- 0
+
+# calculate distance for NMDS.
+
+
+all_edna_mat <- all_edna_l %>% 
+  unite(tax, c("tax1", "tax2", "tax3", "tax4", "tax5", "tax6", "tax7", "tax8", "tax9", "tax10", "tax11", "tax12","tax13")) %>% 
+  spread(tax, number)
+
+all_edna_mat <- sapply(all_edna_mat, as.numeric )
+
+all_edna_red <- rbind(all_edna_mat, colSums(all_edna_mat))
+all_edna_red <- as.data.frame(all_edna_red[-19,]) %>%
+  select_if(function(.) last(.) >=1)
+
+NMDS<-all_edna_red[,-1]
+sol <- metaMDS(NMDS)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = all_edna_red$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.01)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+# maye subset only species detected at least 5 times?
+
+#scrs1 <- scrs %>% 
+#  left_join(., all_edna_red, by = "site_id")
+
+#scrs1$group <- as.factor(scrs1$group)
+scrs$sev
+
+p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, colour = sev), label = site_id) +
+  geom_point() +
+  coord_fixed() + ## need aspect ratio of 1!
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+#            size = 3) +
+  labs(title = "Figure 6: NMDS for CO1, 18S, and 16S")  +
+  geom_text(aes(label=site_id),hjust=0, vjust=0)
+p
+``` 
+
+```{r}
+
+
+#All edna data- subset
+# takes a looooong time to execute 
+
+# calculate distance for NMDS.
+
+chromista <- all_edna_l %>% 
+  filter(tax2 != "Chromista") #select desired taxon
+
+chromista_mat <- chromista %>% 
+  unite(tax, c("tax1", "tax2", "tax3", "tax4", "tax5", "tax6", "tax7", "tax8", "tax9", "tax10", "tax11", "tax12","tax13")) %>% 
+  spread(tax, number)
+
+chromista_mat <- sapply( chromista_mat, as.numeric )
+
+chromista_mat_red <- rbind(chromista_mat, colSums(chromista_mat))
+chromista_mat_red <- as.data.frame(chromista_mat) %>%
+  select_if(function(.) last(.) >=1)
+
+NMDS.log<-log1p(chromista_mat_red[,-1])
+sol <- metaMDS(NMDS.log)
+
+scrs <- as.data.frame(scores(sol, display = "sites"))
+scrs <- cbind(scrs, site_id = chromista_mat_red$site_id)
+scrs <- merge(scrs, site_data, by = "site_id")
+
+vf <- envfit(sol, NMDS.log, perm = 9)
+
+spp.scrs <- as.data.frame(scores(vf, display = "vectors"))
+spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
+
+# To only show statistically significant species:
+ef<-envfit(sol$points, NMDS.log, perm=1000)
+ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+ef.df$species<-rownames(ef.df)
+
+#only significant pvalues
+#shortcutting ef$vectors
+A <- as.list(ef$vectors)
+#creating the dataframe
+pvals<-as.data.frame(A$pvals)
+arrows<-as.data.frame(A$arrows*sqrt(A$r))
+C<-cbind(arrows, pvals)
+#subset
+Cred<-subset(C,pvals<0.01)
+Cred <- cbind(Cred, Species = rownames(Cred))
+
+#only stat. signif. spp
+# maye subset only species detected at least 5 times?
+
+#chrom <- scrs %>% 
+#  mutate(group = ifelse(NMDS1<0, 1, 2))
+
+p <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  coord_fixed() + ## need aspect ratio of 1!
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+#            size = 3) +
+  labs(title = "Figure 6: NMDS for chromista data")
+p
+```
+
+```{r}
+#Indicator species analysis for group
+all_edna1 <- sapply(all_edna, as.numeric )
+
+all_edna_red <- rbind(all_edna1, colSums(all_edna1))
+all_edna_red <- as.data.frame(all_edna_red) %>%
+  select_if(function(.) last(.) >=20) %>% 
+  mutate(group = ifelse(site_id %in% c("6", "52","34","33","38","30","1","53"), 1, 2))
+```
+
+```{r echo = F}
+### Vector for site classification
+### severity
+data <- all_edna_red[-19,-c(1, 1728)]
+groups1 <- as.vector(all_edna_red$group)
+
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+#kable(indvalsummary1)
+
+str(Indval_out1)
+
+Indval_out1$maxcls
+
+
+indvalsummary2 <- cbind(rownames(indvalsummary1), data.frame(indvalsummary1, row.names=NULL))
+
+names(indvalsummary2)[1]<-"Taxon"
+
+indval <- indvalsummary2 %>% 
+  dplyr::select(Taxon, group, indval, pvalue) %>% 
+  mutate("Indicator value" = indval * 100) %>% 
+  filter(indval >= 0.25) %>% 
+  filter(pvalue < 0.05)
+
+indval_hs <- indval %>% 
+  filter(group =="1") %>% 
+  dplyr::select(Taxon, "Indicator value")
+
+indval_ls <- indval %>% 
+  filter(group =="2")%>% 
+  dplyr::select(Taxon, "Indicator value")
+
+names(indval_hs)[1]<-"Indicators of group 1"
+names(indval_ls)[1]<-"Indicators of group 2"
+
+#names(spp_diff2)[1]<-"Species found only in LS/UN"
+indval_table <- list(indval_hs, indval_ls)
+
+kable(indval_table, caption = "Table 1: Indicator species for groups", digits = 0) %>%
+  kable_styling()
+
+write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
+

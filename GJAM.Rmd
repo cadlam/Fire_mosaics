@@ -1,0 +1,28 @@
+---
+title: "GJAM"
+author: "Chris Adlam"
+date: "3/7/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+if(!require('pacman'))install.packages('pacman')
+pacman::p_load(gjam)
+```
+
+
+```{r}
+?gjam
+
+f <- gjamSimData(n = 500, S = 10, Q = 4, typeNames = 'CA')
+summary(f)
+
+f$formula
+
+```
+

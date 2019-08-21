@@ -1050,12 +1050,12 @@ ggplot(plant_plot, aes(x = tsf, y = num_spp, color = sev)) +
   geom_jitter() +
   labs(title = "Figure X: spp num in each habitat", y = "number of spp", x = "TSF")
 
-ggplot(plant_plot, aes(x = tsf, y = num_spp, color = sev)) +
-  geom_boxplot(aes(group = tsf_cat)) +
+ggplot(plant_plot, aes(x = sev_tsf, y = num_spp, color = sev)) +
+  geom_boxplot(aes(group = sev_tsf)) +
   geom_jitter() +
   labs(title = "Figure X: spp num in each habitat", y = "number of spp", x = "TSF")
 
-?geom_smooth
+?geom_boxplot
 
 
 # Relationship of spp number to shrub cover

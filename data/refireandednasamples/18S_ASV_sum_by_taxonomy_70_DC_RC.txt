@@ -1,0 +1,832 @@
+sum.taxonomy	EB01	EB02	EB03	EB04	EB05	EB06	EB07	EB08	EB09	EB10	EB11	EB12	EB13	EB14	EB15	EB16	EB17	EB18
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Pseudomonadales;Pseudomonadaceae;Pseudomonas;	1	0	0	8	23	11	25	25	0	0	1	4	1	1	0	1	0	0
+Eukaryota;Animalia;Arthropoda;Insecta;Diptera;Tachinidae;NA;	0	0	0	0	0	1	31	0	1	0	0	0	0	1	1	1	0	1606
+Eukaryota;Animalia;Arthropoda;Maxillopoda;Calanoida;Paracalanidae;Paracalanus;	0	85	168	29	354	18	26	151	293	0	0	7	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Didymellaceae;NA;	0	0	1	0	0	0	0	0	0	0	1	1	112	34	0	149	0	8
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Aspergillaceae;Penicillium;	154	1594	6074	1	1	1	1	0	41	291	1082	488	133	957	356	209	197	345
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;;	136	29	120	0	0	0	0	0	1	191	60	62	74	352	120	506	45	230
+Eukaryota;Chromista;Miozoa;Bacillariophyceae;Bacillariales;Bacillariaceae;NA;	0	3	9	0	1	28	121	6059	3	0	0	0	129	0	0	12	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Hygrophoraceae;Hygrophorus;	2	401	537	109	256	53	106	336	478	5794	0	0	0	0	0	0	2	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Inocybaceae;Inocybe;	27	0	0	61	0	2	1	0	0	1264	1	5	2	22	56	1533	3960	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Tricholomataceae;Laccaria;Laccaria sp.	1	0	1	0	0	0	0	4	5	19	0	0	0	1	8	42	42	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Boletales;Suillaceae;Suillus;	9	0	0	0	0	0	0	0	0	2	2353	118	3	11	10	6	9	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Russulaceae;Lactarius;Lactarius southworthiae	406	0	1	0	0	0	0	0	0	96	0	0	0	0	12	3	156	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Russulaceae;NA;	0	28	233	1	6	0	0	0	22	0	0	0	0	1	12	2	71	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Sebacinales;Sebacinaceae;Sebacina;Sebacina incrustans	960	67	133	154	109	172	62	601	82	2339	104	33	0	0	6	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Sebacinales;Serendipitaceae;Serendipita;Serendipita vermifera	0	2	1	1	1	165	654	1	2	30	32	3	34	24	0	110	26	236
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Thelephorales;Thelephoraceae;Tomentella;Tomentella sp. AFTOL-ID 1016	42	0	0	4	0	0	0	0	0	17	8	46	0	2	7	24	2	0
+Eukaryota;Fungi;Zygomycota;NA;Umbelopsidales;Umbelopsidaceae;Umbelopsis;	135	1	9	21	1	8753	1	2	3	557	139	2882	0	18	335	31	129	87
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chromulinaceae;NA;	6	0	0	0	0	0	107	0	0	2	0	0	48	2	0	3	0	64
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Marynidae;Maryna;Maryna ovata	14	2	3641	150	1	16	485	2756	2	19	21	2	4	19	4	14	1	21
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas parincurva	11	66	507	1	121	0	0	31	552	25	7	1	34	7	11	54	4	58
+Eukaryota;Chromista;Cercozoa;NA;Cryomonadida;Rhogostomidae;Rhogostoma;Rhogostoma schuessleri	297	0	0	3	1	2003	6	22	0	267	90	97	95	167	100	553	94	179
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	206	5	70	0	3	0	0	1	42	234	283	224	308	665	90	637	101	493
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	127	1	21	3	4	3	2	9	20	204	78	22	878	148	46	919	74	287
+NA;NA;NA;NA;;NA;;	2	10	28	3	34	5	3	7	45	51	5	6	284	12	6	1390	34	76
+Eukaryota;Plantae;Streptophyta;Polytrichopsida;Polytrichales;Polytrichaceae;NA;	0	149	287	82	104	51	47	117	646	0	0	0	0	0	0	426	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Caulobacter;	0	307	396	73	72	115	89	204	415	1	1	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;NA;	0	52	1711	30	14	0	0	0	4	1	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	6	0	0	0	0	0	0	0	0	16	4	6	4	12	0	3	1	9
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Afipia;Afipia sp. SP17	0	0	1	1	1	0	0	14	333	0	0	0	0	0	1	1	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Bradyrhizobium;	1	0	0	0	0	0	0	0	6	10	3	12	5	11	3	4	1	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;NA;	4	105	13	9	512	0	1	41	5627	15	1	8	4	12	2	3	0	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Nitrobacter;	2	0	0	0	0	51	1	0	0	12	7	2	7	8	1	9	1	8
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Devosia;	0	0	0	1492	31	25	17	1678	1	6	5	1	3	0	1	2	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;NA;	2	0	0	2	0	0	0	12	0	1	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;Methylobacterium;	1	0	0	0	0	0	0	0	0	1	4	0	8	0	0	1	1	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;;	4	0	1	3	0	0	0	4	0	12	6	4	6	4	2	3	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;Methyloligella;Methyloligella halotolerans	0	0	0	35	0	34	9	85	13	0	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Rhizobiaceae;NA;	0	0	0	0	0	0	0	1	0	1	0	1	0	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Rhizobiaceae;Rhizobium;	0	0	1	0	0	0	0	0	1	0	0	0	0	2	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;NA;	0	2	10	3	4	2	8	5	13	1	0	1	0	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Azospirillum;Azospirillum lipoferum	0	0	0	0	0	1	0	1	1	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;NA;	0	0	6	2	13	0	4	2	10	0	0	0	2	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Erythrobacteraceae;Altererythrobacter;Altererythrobacter sp. AMV9	0	0	8	2	6	7	4	4	8	0	0	0	1	0	0	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;NA;;	0	1	3	1	3	5	2	10	4	2	0	2	2	1	1	5	0	4
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;NA;	3	0	3	0	2	1	0	0	1	8	4	4	23	10	0	9	1	11
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Rhizorhapis;	0	0	1	1	1	1	0	0	3	4	2	0	0	1	0	2	1	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;	0	0	11	1	2	0	0	0	8	1	3	5	3	1	2	8	1	6
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp.	0	0	5	2	2	6	3	2	7	17	11	1	14	10	0	7	4	14
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	1	0	0	0	0	1	0	0	2	0	0	0	3	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Nitrosomonadaceae;Nitrosospira;	0	0	1	1	0	2	0	0	0	0	0	0	2	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Yersinia;Yersinia intermedia	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	0	0	2	0	0	0	0	1	0	1	0	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Oceanospirillales;Oceanospirillaceae;Marinomonas;	0	0	0	0	0	1	0	0	2	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;NA;	0	0	1	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0
+Eukaryota;Animalia;Annelida;Clitellata;Haplotaxida;Enchytraeidae;NA;	0	0	0	0	0	0	0	0	0	0	0	1	3	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Babesiidae;Babesia;Babesia divergens	0	0	1	0	12	0	2	1	0	4	2	0	0	0	0	1	2	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Babesiidae;Babesia;Babesia microti	0	1	21	1	10	2	0	0	14	15	1	67	3	0	1	0	0	11
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Babesiidae;Babesia;Babesia sp. BiCM002	4	1	3	0	24	0	0	0	4	0	0	0	0	0	19	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Cardiosporidium;Cardiosporidium cionae	0	1	5	3	2	2	1	0	3	0	0	0	0	5	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Theileriidae;Theileria;Theileria sp.	0	2	5	0	11	1	2	3	13	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Theileriidae;Theileria;Theileria tachyglossi	0	0	0	0	1	0	0	1	0	0	10	2	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Coccidia;Eucoccidiorida;Cryptosporidiidae;Cryptosporidium;	1	0	0	0	0	0	0	0	1	0	1	1	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Coccidia;Eucoccidiorida;Cryptosporidiidae;Cryptosporidium;Cryptosporidium parvum	0	0	3	0	0	0	0	0	1	0	4	4	0	0	0	0	0	8
+Eukaryota;Chromista;Miozoa;Coccidia;Eucoccidiorida;Sarcocystidae;NA;	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0	2	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Astigmata;NA;;	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Mesostigmata;Veigaiidae;Veigaia;Veigaia nemorensis	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	2	0	0	0	0	1	0	0	1	10	664	44	0	0	0	5	84	1
+Eukaryota;Animalia;Arthropoda;Arachnida;Oribatida;Cosmochthoniidae;Cosmochthonius;Cosmochthonius lanatus	0	0	207	0	0	3	0	0	12	206	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Oribatida;Ctenacaridae;Ctenacarus;Ctenacarus sp. 1 PBK-2011	0	0	0	0	2	0	65	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Oribatida;Oribatulidae;Oribatula;	0	0	0	0	0	0	0	0	0	0	0	2	0	1	0	1	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Oribatida;Oribatulidae;Oribatula;Oribatula sakamorii	0	0	0	0	0	0	6	0	0	0	0	0	0	1	0	1	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Oribatida;Steganacaridae;Atropacarus;Atropacarus striculus	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Oribatida;Tectocepheidae;Tectocepheus;	0	0	3	0	4	0	1	0	5	0	6	321	0	350	291	0	1	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Pseudoscorpiones;Larcidae;Larca;Larca lata	0	0	0	0	0	1	0	0	1	2	0	0	3	0	0	0	0	2
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Cheyletidae;NA;	0	0	0	0	0	0	0	0	2	0	0	3	0	0	100	0	3	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Diptilomiopidae;Diptacus;Diptacus sp. NJAUEriHN69	0	0	0	0	0	0	0	26	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Eupodidae;Linopodes;Linopodes sp. AD1085	0	0	0	0	0	0	46	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;NA;;	0	0	0	0	0	0	0	0	0	0	19	4	0	0	5	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Rhagidiidae;NA;Rhagidiidae gen. sp. AD1060	6	0	0	0	0	10	0	0	0	8	4	0	1	21	0	20	4	8
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Stigmaeidae;Eustigmaeus;Eustigmaeus sp. AD1329	0	0	0	0	0	0	0	0	7	0	0	0	0	0	73	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Tenuipalpidae;Brevipalpus;Brevipalpus sp. AD1016	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Tetranychidae;Tetranychus;Tetranychus urticae	0	0	0	3	0	0	0	0	0	0	22	1	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Arachnida;Trombidiformes;Trombiculidae;Eutrombicula;Eutrombicula splendens	2	0	0	0	0	0	0	0	3	2	0	0	0	0	0	0	0	0
+NA;NA;NA;NA;Scolopendromorpha;Cryptopidae;Cryptops;Cryptops sarasini	0	0	0	0	0	1	0	0	52	0	11	0	0	0	0	0	0	0
+NA;NA;NA;NA;Scutigeromorpha;Scutigeridae;NA;	0	0	0	4	0	0	0	0	0	2	0	0	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Dicyrtomidae;NA;Dicyrtomidae sp. R6	0	0	0	0	0	0	0	30	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Entomobryidae;NA;	2	0	0	0	0	0	0	0	0	670	0	0	245	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Katiannidae;NA;	246	0	2	6	0	4	0	2	10	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	4	0	0	0	0	0	0	0	0	1533	0	9	0	0	172	0	102	282
+Eukaryota;Animalia;Arthropoda;Diplopoda;Polydesmida;NA;;	0	0	0	0	0	0	0	0	6	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Insecta;Blattodea;Lamproblattidae;Lamproblatta;Lamproblatta albipalpus	2	0	0	0	0	0	0	0	0	7	0	1	0	0	0	0	1	2
+Eukaryota;Animalia;Arthropoda;Insecta;Diptera;Cecidomyiidae;NA;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Insecta;Diptera;NA;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	20
+Eukaryota;Animalia;Arthropoda;Insecta;Hemiptera;NA;;	0	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0	0	27
+Eukaryota;Animalia;Arthropoda;Insecta;Hymenoptera;NA;;	0	0	0	0	0	0	0	3	0	0	9	0	0	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Insecta;Mantodea;Mantidae;Mantis;Mantis religiosa	0	0	2	0	0	1	4	3	0	7	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	0	0	0	0	0	0	0	1	0	0	555	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Insecta;Orthoptera;Rhaphidophoridae;NA;	0	0	72	1	0	10	18	5	462	0	0	0	6	0	0	0	0	0
+Eukaryota;Animalia;Arthropoda;Insecta;Thysanoptera;Thripidae;NA;	0	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	13
+Eukaryota;Animalia;Arthropoda;Insecta;Thysanoptera;Thripidae;Palmiothrips;Palmiothrips sp. TH65	0	0	0	1	0	1	0	1	1	3	0	0	0	0	20	0	0	0
+Eukaryota;Animalia;Arthropoda;Maxillopoda;Cyclopoida;Oithonidae;Oithona;Oithona similis	0	0	9	0	0	0	0	0	0	0	0	6	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	1	0	0	0	0	0	0	0	161	0	20	42	0	195	47	23	0	0
+Eukaryota;Animalia;Arthropoda;Maxillopoda;Poecilostomatoida;Taeniacanthidae;NA;	0	0	0	0	0	0	0	0	29	0	2	0	0	1	0	4	0	0
+NA;NA;NA;NA;;NA;;	0	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0	0	3
+NA;NA;NA;NA;Symphyla;Scutigerellidae;Scutigerella;Scutigerella sp. MG-2003	0	0	0	5	0	0	0	0	0	0	0	0	0	0	0	1	0	0
+Eukaryota;Fungi;Ascomycota;Archaeorhizomycetes;Archaeorhizomycetales;Archaeorhizomycetaceae;Archaeorhizomyces;	0	0	0	0	2	1	65	11	0	0	0	21	1	18	0	0	0	1
+Eukaryota;Fungi;Ascomycota;Archaeorhizomycetes;Archaeorhizomycetales;Archaeorhizomycetaceae;Archaeorhizomyces;Archaeorhizomyces borealis	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Archaeorhizomycetes;Archaeorhizomycetales;Archaeorhizomycetaceae;Archaeorhizomyces;Archaeorhizomyces sp.	0	0	0	0	0	0	0	0	0	0	0	87	1	20	0	0	1	3
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Botryosphaeriales;Botryosphaeriaceae;Alanphillipsia;	5	0	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Capnodiales;Cladosporiaceae;Cladosporium;	2	0	0	0	0	0	0	0	0	0	5	0	24	3	0	13	1	27
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Capnodiales;Mycosphaerellaceae;NA;	13	0	0	7	0	94	0	171	312	25	0	0	0	0	2	0	1	1
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Capnodiales;Mycosphaerellaceae;Staninwardia;Staninwardia suttonii	7	0	0	0	0	0	0	0	0	28	0	0	0	0	4	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Capnodiales;NA;;	16	0	0	0	0	0	0	0	0	31	12	5	2	0	1	0	3	3
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Capnodiales;Teratosphaeriaceae;NA;	0	0	0	0	0	3	0	0	0	0	3	1	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Dothideales;Dothideaceae;Dothidea;	6	0	0	0	0	15	19	0	4	30	1	1	14	1	0	27	0	25
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Dothideales;Dothideaceae;Dothidea;Dothidea sp. RWT7	1	0	0	0	0	156	0	0	0	45	17	4	13	5	0	204	0	6
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Dothideales;Dothideaceae;NA;	8	1	3	0	0	0	0	0	0	7	186	19	0	36	0	14	0	19
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Dothideales;Dothioraceae;Dothiora;	0	0	0	0	0	0	0	2	0	0	0	0	0	2	0	52	0	7
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Dothideales;Dothioraceae;Hormonema;Hormonema sp. BF13	2	7	79	2	0	0	1	15	18	0	7	0	17	1	0	29	0	10
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Dothideales;NA;;	0	0	0	5	0	0	0	1	2	0	45	5	69	17	0	20	1	35
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Micropeltidaceae;Stomiopeltis;Stomiopeltis betulae	0	0	0	2	0	0	0	0	0	0	12	0	0	2	0	23	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	109	0	8	3	13	0	2	5	1	153	83	19	27	19	15	234	40	306
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Tyrannosorus;Tyrannosorus pinicola	0	7	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Tyrannosorus;Tyrannosorus pinicola	1	22	71	7	13	3	1	16	20	0	69	3	281	7	3	0	0	112
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Delitschiaceae;Delitschia;Delitschia didyma	0	47	13	0	67	1	0	3	23	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Didymellaceae;Neoascochyta;Neoascochyta exitialis	0	0	14	6	42	7	1	11	3	0	0	0	5	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Massariaceae;Massaria;Massaria ulmi	0	0	12	0	0	0	0	0	0	0	0	0	0	0	0	52	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;NA;;	107	17	6	2	1	0	0	4	0	157	468	59	426	143	184	1925	63	739
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Phaeosphaeriaceae;Ophiosphaerella;	0	13	77	2	0	4	0	3	3	2	4	0	7	0	0	1	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Pleosporaceae;Embellisia;Embellisia sp. DAR 74619	0	0	0	0	0	0	0	0	0	0	0	0	32	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Pleosporaceae;NA;	0	11	1171	46	83	28	12	203	621	0	2	0	28	0	0	57	9	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Teichosporaceae;Teichospora;	1	0	0	0	0	0	0	0	1	2	0	0	4	0	0	23	0	1
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Teichosporaceae;Teichospora;Teichospora grandicipis	0	82	93	26	18	0	0	7	139	0	0	0	0	11	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Thyridariaceae;Thyridaria;Thyridaria broussonetiae	0	0	3	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Venturiales;Sympoventuriaceae;NA;	11	0	0	0	0	0	0	0	0	6	109	9	10	0	0	66	3	21
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Venturiales;Sympoventuriaceae;Ochroconis;	0	0	0	0	0	0	0	0	0	5	6	0	3	4	10	18	0	65
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Chaetothyriales;Herpotrichiellaceae;Cladophialophora;Cladophialophora sp. 20104730d	0	717	2372	76	154	43	8	80	780	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Chaetothyriales;Herpotrichiellaceae;Exophiala;	2	9	208	0	0	0	0	0	1	70	0	1	0	0	0	1	0	1
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Chaetothyriales;Herpotrichiellaceae;Exophiala;Exophiala xenobiotica	3	0	8	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Chaetothyriales;Herpotrichiellaceae;NA;	955	0	32	0	0	0	0	0	0	1086	483	354	48	192	219	831	103	356
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Chaetothyriales;Herpotrichiellaceae;Phialophora;Phialophora sp. NH1-1	0	0	10	0	0	0	0	0	2	0	9	2	66	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Chaetothyriales;NA;;	15	0	0	0	0	0	0	0	0	106	67	7	0	16	4	40	17	46
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Aspergillaceae;Aspergillus;	0	0	1	0	0	0	0	0	0	0	4	11	102	4	0	13	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Aspergillaceae;NA;	38	0	141	14	1	3	3	16	30	60	42	731	6	47	77	18	34	22
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Aspergillaceae;Thysanophora;	2	0	55	4	0	0	0	2	37	2	0	1	0	0	5	0	3	22
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;NA;;	7	0	11	0	0	0	0	0	1	12	26	35	1	9	12	27	24	10
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Trichocomaceae;NA;	0	0	0	3	2	3	3	0	0	0	0	0	0	2	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Trichocomaceae;Talaromyces;	0	0	1	1	0	2	1	1	0	3	82	17	6	3	12	13	1	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	2	0	25	0	0	0	0	5	0	14	11	263	13	0	9	10	4	15
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Onygenales;Gymnoascaceae;NA;	2	5	20	24	23	4	0	2	27	0	1	0	0	0	1	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Onygenales;NA;;	0	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Onygenales;Onygenaceae;Keratinophyton;Keratinophyton terreum	0	5	15	25	11	60	995	164	297	0	0	0	0	11	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Phaeomoniellales;NA;Aequabiliella;Aequabiliella effusa	0	0	21	0	0	1	0	1	20	0	2	0	5	0	0	0	0	6
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Sclerococcales;NA;Fusichalara;Fusichalara minuta	1	3	7	4	44	122	85	72	181	1	0	0	0	0	0	0	1	0
+Eukaryota;Fungi;Ascomycota;Lecanoromycetes;Caliciales;Caliciaceae;NA;	0	0	0	0	0	0	1	0	0	2	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Lecanoromycetes;Lecanorales;Parmeliaceae;Hypogymnia;	0	0	0	4	1	0	0	1	10	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	13	29	2	2	12	6	22	21	52	5	1	2	2	0	1	16	6	90
+Eukaryota;Fungi;Ascomycota;Lecanoromycetes;Umbilicariales;Umbilicariaceae;Umbilicaria;	0	0	0	0	1	0	3	0	0	2	0	1	1	0	1	0	0	0
+Eukaryota;Fungi;Ascomycota;Lecanoromycetes;Umbilicariales;Umbilicariaceae;Umbilicaria;Umbilicaria antarctica	0	0	0	0	4	0	0	0	0	0	0	2	0	0	0	0	0	1
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Cenangiaceae;NA;	0	0	0	0	0	0	0	0	0	0	0	0	0	5	0	118	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Chlorociboriaceae;Chlorociboria;Chlorociboria aeruginosa	0	0	0	0	0	0	0	0	1	6	12	1	16	2	2	32	1	457
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Dermateaceae;Pezicula;	0	0	0	0	0	1	0	0	0	1	2	1	0	0	1	8	1	1
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Helotiaceae;Articulospora;Articulospora proliferata	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Hyaloscyphaceae;Hyaloscypha;Hyaloscypha minuta	3	0	0	5	0	0	0	1	0	1	4	208	0	178	109	41	1	5
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Leotiaceae;Alatospora;Alatospora acuminata	0	7	1	8	5	2	5	3	5	0	1	0	61	17	2	51	0	26
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;Cadophora;Cadophora gregata	2	0	0	0	0	1	0	2	0	1	1	8	0	1	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;Chalara;Chalara aurea	0	0	0	0	0	0	2	0	0	0	0	1	7	0	0	0	1	8
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;Chalara;Chalara sessilis	0	0	0	0	0	0	0	0	0	15	1	0	0	32	2	4	3	38
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;NA;Helotiales sp.	0	108	3	6	0	12	0	5	49	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;Phialocephala;Phialocephala fortinii	1	0	0	7	0	0	0	1	0	0	0	3	3	1	1	6	1	1
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;Spirosphaera;Spirosphaera beverwijkiana	0	0	7	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;Spirosphaera;Spirosphaera minuta	28	0	0	3	3	144	4	0	0	31	1	5	0	0	15	16	3	1
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Rutstroemiaceae;Lambertella;	0	10	190	3	4	0	0	8	74	0	0	0	0	5	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Sclerotiniaceae;Sclerotinia;	0	0	32	0	0	0	0	0	0	0	1	0	6	4	2	11	0	1
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Sclerotiniaceae;Sclerotinia;Sclerotinia homoeocarpa	0	0	0	0	0	0	0	0	0	0	1	0	0	9	0	131	2	19
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Leohumicola;	9	0	2	0	4	1	0	2	5	1	1	4	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Leohumicola;Leohumicola verrucosa	57	0	393	0	0	0	0	0	0	102	511	25	4	78	46	141	42	8
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Myxotrichaceae;Oidiodendron;Oidiodendron tenuissimum	0	0	4	2	1	3	6	0	0	3	4	25	0	0	3	1	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	210	0	3	0	0	0	0	0	0	424	53	142	61	212	450	640	388	571
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Pseudeurotiaceae;Pseudogymnoascus;	1	0	0	20	1	11	47	95	6	2	0	0	1	0	0	0	1	1
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Phacidiales;Bulgariaceae;Bulgaria;Bulgaria inquinans	0	0	0	0	0	0	2	0	0	0	0	1	0	0	2	0	4	18
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Rhytismatales;Cudoniaceae;NA;	0	1	0	0	0	0	0	1	3	0	4	0	0	8	0	3	0	2
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Thelebolales;Thelebolaceae;Thelebolus;	2	0	427	2	0	0	0	0	0	113	0	0	0	5	2	8	12	1
+NA;NA;NA;NA;;NA;Dictyocatenulata;Dictyocatenulata alba	2	1	0	0	2	30	1	4	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Saitoella;Saitoella complicata	0	91	23	43	1	85	26	145	8	0	0	0	16	0	0	0	0	6
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Troposporella;Troposporella monospora	83	1	0	1	0	0	16	2	0	11	0	3	0	1	3	73	1	11
+NA;NA;NA;NA;;NA;Tetracladium;	0	153	51	492	129	268	43	287	491	10	35	5	239	21	53	142	12	9
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;NA;;	4	0	0	0	0	1	0	0	5	4	3	1	39	0	0	3	5	13
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;NA;Lecophagus;	0	0	0	0	0	0	0	2	1	1	0	0	0	0	0	4	0	37
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;Orbiliaceae;Arthrobotrys;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;Orbiliaceae;Brachyphoris;Brachyphoris brevistipitata	20	0	7	58	4	0	2	3	36	22	0	7	2	0	0	0	0	3
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;Orbiliaceae;Drechslerella;Drechslerella bembicodes	0	0	0	2	0	0	0	0	0	0	0	0	0	1	0	0	0	1
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;Orbiliaceae;Hyalorbilia;	37	28	0	0	0	0	0	0	23	109	5	10	0	55	10	0	1	4
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;Orbiliaceae;NA;	22	30	1	7	17	57	2	19	11	196	0	1	6	0	0	2	0	29
+Eukaryota;Fungi;Ascomycota;Orbiliomycetes;Orbiliales;Orbiliaceae;Orbilia;	27	32	933	3	1	59	1	3	315	5	6	0	0	4	0	3	1	27
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Ascodesmidaceae;NA;	0	2	0	12	18	0	0	74	51	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Chorioactidaceae;Neournula;Neournula pouchetii	0	4	0	0	3	0	0	0	11	331	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Discinaceae;Gyromitra;	0	1	0	0	0	0	0	0	14	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Discinaceae;Hydnotrya;Hydnotrya cerebriformis	0	0	0	4	0	26	0	1	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Helvellaceae;Helvella;	40	0	0	0	0	1	0	0	0	3	58	5	0	1	0	7	52	1
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Helvellaceae;NA;	0	0	0	10	25	15	11	8	1	0	409	26	0	4296	2	1209	36	1
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Karstenellaceae;Karstenella;Karstenella vernalis	0	0	0	19	70	5	2	79	11	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Morchellaceae;Morchella;Morchella elata	0	0	0	5	0	2	0	0	0	0	0	0	58	0	0	0	0	11
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Morchellaceae;Verpa;Verpa conica	0	2	32	0	0	0	0	0	0	0	7	0	0	0	18	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;NA;;	1	0	0	0	0	1	0	0	0	0	0	0	0	5	0	34	3	8
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pezizaceae;Mycoclelandia;Mycoclelandia arenacea	0	0	0	0	0	0	0	5	0	0	6	1	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pezizaceae;NA;	0	0	0	0	0	0	0	0	93	0	0	0	14	0	4	5	0	462
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pezizaceae;Peziza;Peziza badiofusca	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pezizaceae;Peziza;Peziza echinospora	0	0	3	0	0	0	0	0	0	2	0	0	23	0	0	0	0	4
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Geopora;	0	1	0	0	0	0	0	0	126	0	169	11	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Geopora;Geopora cooperi	244	0	0	10	0	0	0	0	0	162	954	51	0	0	0	19	98	205
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Melastiza;	4	0	23	0	13	0	0	18	0	0	0	0	0	63	0	76	0	1
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Miladina;Miladina lecithina	0	0	0	0	6	0	0	1	0	0	3	0	0	0	0	3	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Octospora;Octospora hygrohypnophila	0	38	5	2	0	0	0	12	894	0	0	0	0	0	0	17	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Paurocotylis;Paurocotylis sp. MES 1666	0	0	0	0	0	0	0	0	3	0	0	0	0	0	0	0	18	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Pyronema;	1	0	0	0	0	0	0	0	0	1	34	0	1	0	0	0	0	8
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Tarzetta;Tarzetta catinus	3	0	1	1	1210	0	1	0	4	1	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Pyronemataceae;Tricharina;Tricharina praecox	0	0	1	7	1	2	24	0	0	0	0	0	3	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Sarcoscyphaceae;Pithya;Pithya cupressina	0	376	0	0	0	0	0	0	20	18	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Sarcosomataceae;NA;	14	0	702	1	0	0	1	0	1	106	1	4	0	0	47	49	1	4
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Sarcosomataceae;Selenaspora;Selenaspora guernisacii	0	0	0	0	84	0	0	1	3	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Tuberaceae;Tuber;	3	0	15	0	0	0	0	0	1704	0	36	1	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Pezizomycetes;Pezizales;Tuberaceae;Tuber;Tuber sp. CBS 272 72	1	0	0	2	0	0	0	742	0	352	12	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Lipomycetaceae;Lipomyces;Lipomyces anomalus	0	0	0	0	0	0	0	0	0	0	0	3	0	4	1	0	2	0
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Metschnikowiaceae;Kodamaea;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Metschnikowiaceae;NA;	0	0	2	262	56	6	0	0	1	0	0	0	0	3	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;NA;;	0	15	1	0	0	0	0	0	0	0	0	0	0	0	3	0	1	1
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;NA;Candida;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Phaffomycetaceae;Starmera;Starmera dryadoides	0	0	1	0	0	0	0	0	0	0	0	0	0	8	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Saccharomycetaceae;Saccharomyces;Saccharomyces cerevisiae	0	0	0	0	2	15	0	0	7	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Trichomonascaceae;Wickerhamiella;	0	0	0	0	0	0	0	0	43	2	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Trichomonascaceae;Wickerhamiella;Wickerhamiella sp. 11-1422	0	0	0	0	0	0	0	0	0	0	0	0	0	4	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Saccharomycetes;Saccharomycetales;Trichomonascaceae;Zygoascus;Zygoascus bituminiphila	0	0	0	0	0	43	0	2	162	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Schizosaccharomycetes;Schizosaccharomycetales;Schizosaccharomycetaceae;Schizosaccharomyces;Schizosaccharomyces pombe	0	0	0	0	0	0	0	2	12	0	0	0	0	4	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Sordariomycetes;Coniochaetales;NA;NA;Coniochaetales sp. GMG_C4	5	0	0	0	0	0	0	0	0	14	3	8	24	19	2	12	2	31
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	1	0	0	0	0	0	0	10	0	0	0	1	0	0	0	0	1
+Eukaryota;Fungi;Ascomycota;Sordariomycetes;Sordariales;Chaetomiaceae;NA;	0	0	0	0	0	0	0	4	0	0	0	0	3	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Taphrinomycetes;Taphrinales;Protomycetaceae;Protomyces;	0	0	0	0	0	0	4	0	0	0	0	0	2	0	0	0	0	4
+Eukaryota;Fungi;Ascomycota;Taphrinomycetes;Taphrinales;Protomycetaceae;Protomyces;Protomyces macrosporus	0	0	0	0	0	0	0	0	32	0	2	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Taphrinomycetes;Taphrinales;Taphrinaceae;Taphrina;	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Taphrinomycetes;Taphrinales;Taphrinaceae;Taphrina;Taphrina pruni	0	2	1	5	0	2	15	10	10	0	1	0	0	0	0	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	2	0	0	0	0	0	0	1	0	0	0	0	0	0	10	0	0
+Eukaryota;Chromista;Miozoa;Bacillariophyceae;Naviculales;NA;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	6	0	0
+Eukaryota;Chromista;Miozoa;Bacillariophyceae;Naviculales;Pinnulariaceae;Pinnularia;	0	2	0	0	0	0	0	0	3	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Bacillariophyceae;Naviculales;Stauroneidaceae;NA;	0	0	1	0	0	0	1	0	0	0	0	0	0	0	0	8	0	0
+NA;NA;NA;NA;;NA;;	0	0	0	0	0	0	0	0	0	2	1	7	5	2	0	2	0	9
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Agaricaceae;NA;	1	0	0	0	0	0	0	0	1	5	7	7	19	17	59	6	1	16
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Agaricaceae;NA;Agaricaceae sp. RC_Mart06_016	1	5	0	0	0	0	0	0	0	0	0	0	0	0	47	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Cortinariaceae;Cortinarius;	0	3	0	0	0	0	0	0	0	3	0	6	3	0	0	4	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Cortinariaceae;Cortinarius;Cortinarius iodes	0	5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Cortinariaceae;Cortinarius;Cortinarius violaceus	0	0	0	0	0	0	0	0	0	0	6	459	0	2	0	1	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Crepidotaceae;Crepidotus;Crepidotus variabilis	0	17	15	0	0	0	0	2	0	0	1	1	0	0	0	0	0	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Hygrophoraceae;Chrysomphalina;Chrysomphalina grossula	0	2	1177	0	3	0	0	6	80	0	0	0	0	5	0	0	3	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Hygrophoraceae;Hygrophorus;Hygrophorus pudorinus	0	0	0	0	0	0	0	0	0	98	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Hygrophoraceae;Hygrophorus;Hygrophorus russula	0	0	1	0	0	0	0	0	0	3	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Hygrophoraceae;NA;	0	0	0	238	0	0	0	0	0	0	0	3	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Inocybaceae;Inocybe;Inocybe aff. asterospora PBM-2014	0	0	1	0	0	1	0	0	0	20	0	0	0	0	0	4	62	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Inocybaceae;Inocybe;Inocybe geophylla	52	0	0	0	0	0	0	0	4	90	1	0	1	10	2621	51	27	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Lycoperdaceae;Handkea;Handkea utriformis	0	0	0	0	1	1	4	0	1	2	2	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Lycoperdaceae;Lycoperdon;Lycoperdon pyriforme	0	0	0	0	0	0	0	0	1	1	0	0	0	0	3	0	0	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Lycoperdaceae;NA;	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Mycenaceae;Mycena;	0	0	0	3	0	33	9	0	0	128	0	0	0	0	4	18	1	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Mycenaceae;Mycena;Mycena galericulata	3	0	2	2	1073	2	2	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Mycenaceae;Mycena;Mycena sp.	641	0	0	0	0	0	0	0	0	5	2	0	8	269	4	0	18	51
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Omphalotaceae;Gymnopus;Gymnopus dryophilus	0	0	0	4	0	0	0	0	0	0	10	1	0	0	279	0	0	46
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Strophariaceae;NA;	1	0	1	6	5	70	0	419	18	3	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Tricholomataceae;Laccaria;	3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Tricholomataceae;Laccaria;Laccaria ochropurpurea	1073	1	1	24	16	0	3	1683	1	2	0	1	0	0	123	3	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Tricholomataceae;NA;	4	0	17	0	0	0	0	0	0	0	0	0	0	0	32	4	0	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Tricholomataceae;Pseudoclitocybe;Pseudoclitocybe cyathiformis	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	18	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Tricholomataceae;Tricholoma;	1	0	0	0	0	0	0	0	0	9	0	0	0	0	1	0	1	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Auriculariales;Exidiaceae;Exidia;	0	0	3	4	3	2	3	0	3	0	0	0	0	0	0	0	0	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Auriculariales;Hyaloriaceae;Pseudohydnum;Pseudohydnum gelatinosum	0	0	0	51	0	3	2	497	1	28	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Auriculariales;NA;;	3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Boletales;Coniophoraceae;Coniophora;	0	0	0	27	0	6	1	0	0	2	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Boletales;Coniophoraceae;Coniophora;Coniophora marmorata	0	0	14	0	0	0	0	0	0	0	0	0	5	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Boletales;Gomphidiaceae;Chroogomphus;Chroogomphus vinicolor	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Boletales;NA;;	39	0	0	0	0	1	0	0	0	12	98	8	0	7	1	18	1	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Boletales;Paxillaceae;Paxillus;Paxillus vernalis	1	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Cantharellales;Botryobasidiaceae;Botryobasidium;	0	0	0	0	0	0	0	0	0	0	0	0	0	2	5	3	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Cantharellales;Clavulinaceae;Clavulina;	0	0	0	0	0	0	0	0	0	0	0	0	0	60	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Cantharellales;Hydnaceae;Hydnum;Hydnum albomagnum	0	1	3	6	23	1	0	16	9	0	0	0	0	0	35	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Cantharellales;Tulasnellaceae;Epulorhiza;	0	0	0	0	0	0	0	0	4	0	21	2	0	113	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Cantharellales;Tulasnellaceae;Tulasnella;Tulasnella asymmetrica	0	3	0	1	0	0	0	0	0	0	4	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Cantharellales;Tulasnellaceae;Tulasnella;Tulasnella violea	13	0	0	0	0	0	0	0	0	0	17	0	0	28	1	33	0	4
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Corticiales;Corticiaceae;Haplotrichum;Haplotrichum conspersum	0	0	0	0	0	0	0	0	0	0	0	0	0	12	0	0	14	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Corticiales;Corticiaceae;Hyphodontia;Hyphodontia rimosissima	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	3	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Corticiales;Corticiaceae;Repetobasidium;Repetobasidium mirificum	28	0	0	0	0	0	0	0	0	36	0	0	0	0	29	0	1	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Corticiales;Corticiaceae;Sistotrema;	0	0	0	13	18	13	0	45	0	0	0	0	41	0	0	5	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Corticiales;Corticiaceae;Sistotrema;Sistotrema brinkmannii	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	2	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Corticiales;Corticiaceae;Sistotrema;Sistotrema coronilla	0	0	1	1	0	0	0	0	0	0	0	0	3	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Gomphales;Gomphaceae;NA;	1	0	0	0	0	138	0	0	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Gomphales;Gomphaceae;Ramaria;Ramaria rubella	0	0	0	0	0	0	3	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Gomphales;NA;;	10	0	0	1	0	0	0	166	0	18	0	3	0	3	1	1	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Hymenochaetales;Hymenochaetaceae;NA;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Hymenochaetales;Hymenochaetaceae;Phellinus;Phellinus ribis	23	0	0	0	0	11	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Polyporales;Meripilaceae;Rigidoporus;Rigidoporus corticola	0	0	0	0	0	0	10	0	0	0	1	0	2	1	0	4	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Polyporales;NA;;	2	0	1	6	26	9	5939	0	1	12	5	1	3	1	1	17	261	3
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Polyporales;Polyporaceae;NA;	0	0	0	7	0	0	0	0	0	1	4	0	2	0	3	1	0	8
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Polyporales;Polyporaceae;Polyporus;	0	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Lachnocladiaceae;Vararia;Vararia abortiphysa	0	0	0	0	0	0	0	0	12	0	1	0	0	0	0	0	0	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;NA;;	280	3	5	0	3	1	0	1	127	297	24	1200	3	27	179	49	4	8
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Russulaceae;Lactarius;	0	0	3	0	0	1	0	0	4	1	0	0	0	0	2	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Russulaceae;NA;russuloid isolate BB1	0	0	0	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Stereaceae;NA;	0	1	4	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Stereaceae;Stereum;	0	5	26	294	26151	841	664	8	6	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Russulales;Stereaceae;Stereum;Stereum rugosum	0	0	0	0	0	0	88	0	0	0	0	4	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Sebacinales;NA;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	5	354
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Sebacinales;Sebacinaceae;NA;	5	0	0	0	27	0	0	0	0	158	0	1	0	2382	68	0	0	28
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Sebacinales;Sebacinaceae;Sebacina;	6	0	0	0	15	0	0	0	0	21	0	0	0	0	14	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Sebacinales;Sebacinaceae;Tremellodendron;Tremellodendron sp. PBM2324	0	0	0	0	77	0	0	0	0	0	0	0	0	6	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Thelephorales;NA;;	0	0	0	0	0	0	0	0	26	0	0	0	0	0	0	336	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Thelephorales;Thelephoraceae;Tomentella;	780	0	11	1	2	77	1343	5	1	901	5	12	1	0	714	1131	899	1
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Trechisporales;Hydnodontaceae;Trechispora;Trechispora alnicola	0	0	15	1	0	81	0	534	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Trechisporales;Hydnodontaceae;Trechispora;Trechispora farinacea	0	0	0	0	0	0	0	0	0	7	0	0	0	0	0	18	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Trechisporales;Hydnodontaceae;Trechispora;Trechispora sp. PBM418	0	0	0	0	0	0	103	0	0	2	0	2	0	0	0	0	0	2
+Eukaryota;Fungi;Basidiomycota;Agaricostilbomycetes;Agaricostilbales;Agaricostilbaceae;NA;Agaricostilbaceae sp.	0	2	3	697	36	56	146	1258	1	1	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricostilbomycetes;Agaricostilbales;Agaricostilbaceae;Pseudobensingtonia;	0	0	3	0	0	0	0	0	0	0	3	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricostilbomycetes;Agaricostilbales;Agaricostilbaceae;Sterigmatomyces;Sterigmatomyces hyphaenes	0	0	0	5	0	7	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricostilbomycetes;Agaricostilbales;Kondoaceae;Bensingtonia;Bensingtonia naganoensis	4	0	2	0	0	0	0	0	4	27	2	1	0	13	5	20	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricostilbomycetes;Agaricostilbales;NA;;	0	0	0	0	0	0	0	0	2	0	2	9	0	0	0	2	1	0
+Eukaryota;Fungi;Basidiomycota;Agaricostilbomycetes;Agaricostilbales;Ruineniaceae;Ruinenia;	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	3	0	0	0	0	0	0	0	7	0	9	0	1	0	10	0	0	0
+Eukaryota;Fungi;Basidiomycota;Atractiellomycetes;Atractiellales;Hoehnelomycetaceae;Proceropycnis;Proceropycnis pinicola	0	0	0	0	4	0	1	2	2	0	1	0	4	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Atractiellomycetes;Atractiellales;NA;Helicogloea;Helicogloea lagerheimii	0	0	3	1	5	0	19	0	4	0	0	0	0	0	0	2	0	0
+Eukaryota;Fungi;Basidiomycota;Cystobasidiomycetes;Erythrobasidiales;Erythrobasidiaceae;Bannoa;	0	0	0	0	0	0	0	1	0	0	0	4	0	0	0	0	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	2	1	3	3	0	7	3	0	1	0	8	0	0	1	0	7
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Symmetrospora;Symmetrospora coprosmae	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	2	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Sakaguchia;Sakaguchia lamellibrachiae	0	0	0	0	0	1	0	0	0	0	0	4	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Geminibasidiomycetes;Geminibasidiales;Geminibasidiaceae;Basidioascus;Basidioascus magus	0	0	0	0	0	3	0	0	0	0	10	1	1	2	2	3	1	0
+Eukaryota;Fungi;Basidiomycota;Microbotryomycetes;Leucosporidiales;Leucosporidiaceae;Leucosporidium;	1	1	1	0	0	0	0	0	3	1	0	0	0	0	0	2	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Chrysozymaceae;Bannozyma;Bannozyma yamatoana	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Chrysozymaceae;NA;	8	0	0	0	0	0	8	0	0	26	6	18	0	0	22	6	15	18
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Chrysozymaceae;Slooffia;Slooffia cresolica	0	0	6	0	21	0	0	0	1	0	1	0	5	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	3	0	1	7	0	1	0	3	2	4	18	0	16	46	4	18	1	215
+Eukaryota;Fungi;Basidiomycota;Microbotryomycetes;Sporidiobolales;NA;;	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	1	0	31
+Eukaryota;Fungi;Basidiomycota;Microbotryomycetes;Sporidiobolales;Sporidiobolaceae;NA;	1	1	0	4	95	10	43	1	13	9	2	30	0	0	1	5	0	1
+Eukaryota;Fungi;Basidiomycota;Microbotryomycetes;Sporidiobolales;Sporidiobolaceae;Rhodotorula;	0	0	0	0	0	0	0	0	0	1	0	0	6	0	0	3	1	5
+NA;NA;NA;NA;;NA;;	214	3	5	2	15	2	2	7	19	169	147	157	0	69	257	605	142	201
+Eukaryota;Fungi;Basidiomycota;Pucciniomycetes;Helicobasidiales;Helicobasidiaceae;Helicobasidium;Helicobasidium corticioides	0	1	0	1	4	1	0	8	0	0	0	0	0	0	0	6	3	1
+Eukaryota;Fungi;Basidiomycota;Pucciniomycetes;Pucciniales;Melampsoraceae;Melampsora;Melampsora albertensis	0	0	0	5	4	12	1	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Pucciniomycetes;Pucciniales;Pucciniaceae;Puccinia;Puccinia pelargonii-zonalis	0	29	2	0	0	0	0	0	8	0	0	0	13	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Spiculogloeomycetes;Spiculogloeales;Spiculogloeaceae;Phyllozyma;	0	304	204	147	2097	22	69	183	110	4	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Cystofilobasidiales;Cystofilobasidiaceae;Cystofilobasidium;Cystofilobasidium capitatum	0	4	0	5	1	0	0	0	0	0	0	0	0	0	0	0	0	69
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Cystofilobasidiales;Mrakiaceae;Itersonilia;Itersonilia pannonica	0	0	0	0	0	0	0	4	0	0	0	0	2	0	0	0	0	1
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Cystofilobasidiales;Mrakiaceae;Krasilnikovozyma;Krasilnikovozyma huempii	16	0	0	0	0	0	0	0	0	6	0	0	0	1	1	3	3	76
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Cystofilobasidiales;Mrakiaceae;NA;	0	0	0	3	0	0	0	0	0	2	0	1	1	0	5	6	0	11
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Cystofilobasidiales;NA;;	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Filobasidiales;Filobasidiaceae;Goffeauzyma;Goffeauzyma gastrica	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Filobasidiales;Filobasidiaceae;NA;	0	0	12	9	1	1	0	4	54	0	0	0	0	0	0	1	0	4
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Filobasidiales;NA;;	71	14	0	0	0	0	0	0	23	40	125	27	60	56	10	224	5	273
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Filobasidiales;Piskurozymaceae;Piskurozyma;	0	0	0	0	0	0	0	0	3	0	2	1	1	0	0	2	0	18
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Holtermanniales;NA;;	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	2
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Tremellales;Bulleribasidiaceae;Dioszegia;	0	0	4	2	5	0	0	0	1	0	0	0	0	0	0	2	0	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Tremellales;Bulleribasidiaceae;NA;	0	86	116	15	17	14	4	31	91	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Tremellales;Carcinomycetaceae;Carcinomyces;	0	1	0	0	1	0	0	1	11	0	11	1	0	3	0	4	0	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Tremellales;NA;;	109	0	0	0	0	0	0	0	0	67	84	94	4	9	13	43	8	45
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Tremellales;Phaeotremellaceae;Phaeotremella;	0	0	1	0	0	0	0	0	0	0	1	0	0	0	0	2	0	6
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Trichosporonales;NA;;	0	0	3	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Trichosporonales;Tetragoniomycetaceae;Cryptotrichosporon;Cryptotrichosporon tibetense	4	0	0	0	0	0	0	0	0	0	23	0	0	1	0	0	1	5
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Trichosporonales;Trichosporonaceae;Apiotrichum;Apiotrichum porosum	0	9	45	45	42	28	14	2	7	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Tremellomycetes;Trichosporonales;Trichosporonaceae;Cutaneotrichosporon;Cutaneotrichosporon dermatis	0	2	1	1	0	1	0	0	0	0	0	0	1	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Tritirachiomycetes;Tritirachiales;Tritirachiaceae;Paratritirachium;Paratritirachium curvibasidium	1	0	4	0	0	0	0	0	0	0	0	0	0	0	0	0	5	0
+Eukaryota;Fungi;Basidiomycota;Ustilaginomycetes;Ustilaginales;Uleiellaceae;Uleiella;Uleiella chilensis	1	1	0	0	6	0	2	0	3	0	0	0	0	0	1	0	1	5
+Eukaryota;Fungi;Chytridiomycota;Blastocladiomycetes;Blastocladiales;Blastocladiaceae;NA;Blastocladiaceae sp.	0	0	0	0	0	0	0	0	18	0	0	0	0	55	1	0	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chaetophorales;Chaetophoraceae;Coccobotrys;	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chaetophorales;Chaetophoraceae;Pleurococcus;Pleurococcus sp. WJT43VFNP24	0	0	0	0	0	0	0	0	0	0	0	0	4	1	0	2	0	1
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;Chlamydomonadaceae;Chlamydomonas;	0	0	0	0	0	0	0	0	0	0	5	0	1	0	0	0	0	5
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;Chlamydomonadaceae;Chloromonas;Chloromonas reticulata	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;Chlamydomonadaceae;NA;	0	0	5	0	0	0	0	0	0	0	5	0	0	3	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;Chlorococcaceae;NA;	0	16	11	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;NA;;	0	0	6	0	1	0	0	0	9	0	2	0	0	8	0	1	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;NA;Heterochlamydomonas;	0	4	0	0	0	0	0	0	0	0	0	0	1	2	0	44	1	5
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	22	0	0	0	0	0	0	0	0	0	0	0	0	0	1	6
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Bracteacoccaceae;Bracteacoccus;	0	0	4	0	0	0	0	0	0	1	1	0	13	9	0	11	0	6
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Bracteacoccaceae;Bracteacoccus;Bracteacoccus glacialis	0	2	22	0	0	0	0	0	1	0	0	0	0	0	0	0	0	1
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Bracteacoccaceae;Bracteacoccus;Bracteacoccus ruber	0	59	94	0	0	0	0	0	2	0	0	0	6	0	0	0	0	6
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Bracteacoccaceae;Bracteacoccus;Bracteacoccus sp. DB-9-3	0	1	50	0	0	0	0	0	22	0	0	0	0	0	0	2	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Bracteacoccaceae;Bracteacoccus;Bracteacoccus sp. KF-2011f	0	2	12	0	0	0	0	0	3	0	0	0	1	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Bracteacoccaceae;Bracteacoccus;Bracteacoccus sp. WB18	0	0	4	0	0	0	0	0	1	0	5	0	0	0	0	0	0	4
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Pseudomuriellaceae;Pseudomuriella;	0	0	2	0	0	0	0	0	5	0	0	0	0	0	0	3	0	1
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Tumidellaceae;Tumidella;Tumidella tumida	0	0	36	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1
+NA;NA;NA;NA;;NA;;	2	0	2	0	0	0	0	0	0	0	0	0	39	2	0	71	1	21
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Chlorellales;Chlorellaceae;Nannochloris;Nannochloris sp. ANR-9	0	3	1	0	0	0	0	0	7	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Chlorellales;NA;;	32	4	59	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Chlorellales;NA;NA;Chlorellales sp. LH10HG7090	0	0	28	0	0	0	0	0	1	0	1	0	1	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Microthamniales;NA;;	0	270	71	1	2	0	0	1	2	0	0	0	0	0	0	0	0	1
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Microthamniales;NA;Elliptochloris;Elliptochloris marina	0	0	10	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Microthamniales;NA;Elliptochloris;Elliptochloris perforata	0	0	0	0	0	1	0	0	0	3	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Microthamniales;NA;Trochisciopsis;Trochisciopsis tetraspora	0	1	16	0	0	0	0	0	2	0	0	0	0	0	0	3	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Coccomyxaceae;Coccomyxa;	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Coccomyxaceae;NA;	0	3	0	0	0	0	0	0	1	2	0	0	6	2	0	2	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Myrmecia;	0	0	0	0	0	0	0	0	1	0	2	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	4	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Coenocystis;Coenocystis inconstans	0	7	27	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Myrmecia;Myrmecia biatorellae	0	1	0	0	0	0	0	0	0	1	2	0	2	0	0	32	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Parietochloris;Parietochloris sp. WJT71VFNP8	0	18	6	0	0	0	0	0	4	0	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Neocystis;	0	10	9	0	0	0	0	0	8	0	0	0	17	5	0	13	0	18
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Parietochloris;	0	2	0	0	0	0	0	0	1	0	2	1	49	31	0	21	0	25
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Chytridiales;Chytriomycetaceae;Entophlyctis;Entophlyctis confervae-glomeratae	0	0	18	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Chytridiales;NA;NA;Chytridiales sp. JEL187	0	0	2	0	0	0	0	0	0	6	0	3	26	0	1	3	0	27
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Cladochytriales;Cladochytriaceae;Cladochytrium;Cladochytrium replicatum	3	15	38	0	0	0	0	0	18	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Lobulomycetales;Lobulomycetaceae;Lobulomyces;	0	55	191	0	1	0	0	0	32	0	0	0	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	2	0	0	0	0	0	1	7	0	0	4	0	0	2	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Catenomyces;Catenomyces persicinus	0	0	0	0	0	3	0	2	58	3	0	0	3	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Synchytriaceae;Synchytrium;Synchytrium taraxaci	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Rhizophlyctidales;Rhizophlyctidaceae;Rhizophlyctis;Rhizophlyctis rosea	0	0	0	0	0	0	0	0	15	0	0	0	3	0	0	3	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Rhizophydiales;Rhizophydiaceae;Rhizophydium;Rhizophydium sp. JEL151	0	0	5	0	0	0	0	0	3	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Rhizophydiales;Rhizophydiaceae;Rhizophydium;Rhizophydium sp. JEL223	0	0	2	0	0	0	0	0	2	1	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Spizellomycetales;NA;;	0	0	0	0	0	6	0	0	0	0	3	0	9	2	0	4	0	2
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Spizellomycetales;NA;NA;Spizellomycetales sp.	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Spizellomycetales;Powellomycetaceae;Powellomyces;Powellomyces sp. NBRC 105427	0	0	0	0	0	0	0	0	11	2	1	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Spizellomycetales;Spizellomycetaceae;Gaertneriomyces;Gaertneriomyces semiglobifer	0	0	0	0	0	0	0	0	12	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Spizellomycetales;Spizellomycetaceae;Spizellomyces;	0	0	1	0	0	0	0	0	0	0	0	0	6	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Spizellomycetales;Spizellomycetaceae;Spizellomyces;Spizellomyces punctatus	0	0	0	0	0	0	0	3	0	0	1	0	2	0	0	1	0	0
+Eukaryota;Fungi;Chytridiomycota;Monoblepharidomycetes;Monoblepharidales;Harpochytriaceae;Harpochytrium;Harpochytrium sp. JEL290	0	0	27	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Monoblepharidomycetes;Monoblepharidales;Monoblepharidaceae;Monoblepharis;	0	3	5	0	0	0	0	0	0	1	7	2	18	0	0	3	2	39
+Eukaryota;Fungi;Chytridiomycota;Monoblepharidomycetes;Monoblepharidales;NA;;	0	0	0	0	0	0	0	0	2	0	1	0	20	2	0	6	0	0
+Eukaryota;Fungi;Chytridiomycota;Monoblepharidomycetes;Monoblepharidales;NA;Hyaloraphidium;Hyaloraphidium curvatum	0	0	6	0	0	0	0	0	1	0	0	0	4	0	0	0	0	3
+Eukaryota;Fungi;Chytridiomycota;Monoblepharidomycetes;Monoblepharidales;Oedogoniomycetaceae;Oedogoniomyces;Oedogoniomyces sp. CR84	0	1	0	1	0	0	0	1	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Chytridiomycota;Monoblepharidomycetes;Monoblepharidales;Sanchytriaceae;Sanchytrium;Sanchytrium tribonematis	0	16	47	0	3	0	0	3	53	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Cnidaria;Anthozoa;Alcyonacea;Alcyoniidae;Anthomastus;Anthomastus sp.	0	0	5	0	8	0	0	0	0	0	0	0	0	0	0	0	0	0
+NA;NA;NA;NA;Ptychodactiaria;Ptychodactiidae;Dactylanthus;Dactylanthus antarcticus	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0	0	0
+Eukaryota;Animalia;Cnidaria;Anthozoa;Scleractinia;Dendrophylliidae;Tubastraea;	0	0	16	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Cnidaria;Anthozoa;Scleractinia;Poritidae;Porites;Porites lutea	0	8	0	0	0	0	0	0	0	0	0	0	0	1	2	0	3	8
+NA;NA;NA;NA;;NA;;	0	0	0	0	0	0	0	4	0	0	1	0	0	0	1	0	1	0
+Eukaryota;Animalia;Cnidaria;Scyphozoa;Coronatae;Periphyllidae;Periphylla;Periphylla periphylla	0	0	1	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Paramicrosporidium;Paramicrosporidium vannellae	0	0	3	0	0	0	0	0	2	0	0	0	0	0	0	0	0	1
+NA;NA;NA;NA;;NA;Paramicrosporidium;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0
+Eukaryota;Animalia;Gastrotricha;NA;Chaetonotida;Chaetonotidae;Halichaetonotus;Halichaetonotus schromi	0	0	0	0	6	0	0	3	0	0	29	2	0	0	1	0	0	9
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	10	0	0	0	0	0	0	0	0	0	0	0	0	2	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	0	0	4	0	0	0	7	23	0	0	5	0	0	1	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Peltospiridae;NA;	0	0	0	0	0	2	0	0	12	0	1	0	0	0	0	1	0	0
+NA;NA;NA;NA;;NA;;	0	0	0	0	0	2	28	0	5	0	0	0	4	0	0	0	0	0
+Eukaryota;Animalia;Mollusca;Polyplacophora;Neoloricata;Ischnochitonidae;Stenoplax;Stenoplax alata	0	0	0	0	0	0	0	0	0	1	0	0	3	0	0	0	2	4
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Archaeosporales;Ambisporaceae;Ambispora;	0	2	0	0	5	0	0	0	0	0	0	0	0	0	0	2	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Archaeosporales;Archaeosporaceae;Archaeospora;	0	6	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Archaeosporales;Archaeosporaceae;Archaeospora;Archaeospora schenckii	0	0	16	0	0	0	0	0	0	0	0	0	0	0	0	0	0	4
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Archaeosporales;Archaeosporaceae;Archaeospora;Archaeospora trappei	0	2	2	0	5	0	0	0	7	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Diversisporales;Diversisporaceae;Corymbiglomus;Corymbiglomus tortuosum	0	4	0	2	0	0	0	0	108	1	0	0	0	0	0	0	0	1
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Diversisporales;Diversisporaceae;Diversispora;	0	0	22	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Diversisporales;Diversisporaceae;Diversispora;Diversispora sp. MAY-2014	0	0	4	0	0	0	0	0	2	0	0	0	0	1	0	30	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Diversisporales;NA;;	0	0	7	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Claroideoglomeraceae;Claroideoglomus;	0	0	50	0	0	0	0	0	34	0	0	0	6	1	0	6	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Claroideoglomeraceae;Claroideoglomus;Claroideoglomus claroideum	0	0	228	0	0	0	0	0	0	13	0	0	0	2	0	1	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Funneliformis;	1	0	0	0	0	0	0	0	0	0	0	0	12	0	9	0	0	133
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Funneliformis;Funneliformis coronatum	0	0	1	0	0	0	0	0	0	1	1	11	32	0	1	12	8	152
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Glomus;	2	0	84	0	26	0	0	0	0	3	0	0	19	0	0	0	0	4
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Glomus;Glomus compressum	0	0	0	0	14	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Glomus;Glomus invermaium	0	0	2	3	0	0	0	4	99	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Glomus;Glomus macrocarpum	0	2	100	3	0	0	0	5	585	0	0	0	2	0	0	0	0	2
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Glomus;Glomus sp. NBR3.1	0	0	101	8	0	1	1	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Kamienskia;Kamienskia bistrata	0	0	16	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;NA;	9	0	282	0	0	0	0	0	0	7	4	23	63	3	2	18	3	7
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Rhizophagus;	3	0	0	0	333	0	0	0	4	2	0	0	0	4	0	9	0	1
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Rhizophagus;Rhizophagus intraradices	0	0	0	0	0	0	0	0	12	1	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Rhizophagus;Rhizophagus irregularis	9	0	0	0	0	0	0	0	0	0	108	7	9	1	0	3	0	132
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;Glomeraceae;Septoglomus;Septoglomus fuscum	0	0	193	1	4	5	6	15	205	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Glomeromycota;Glomeromycetes;Glomerales;NA;;	0	1	7	0	0	1	9	0	6	0	0	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	0	0	0	2	0	0	0	0	0	0	5	0	0	0	0	14
+Eukaryota;Fungi;Zygomycota;NA;Endogonales;Endogonaceae;Jimgerdemannia;Jimgerdemannia lactiflua	0	0	0	0	0	0	0	0	12	0	3	0	0	1	0	35	6	0
+Eukaryota;Fungi;Zygomycota;NA;Endogonales;NA;Calcarisporiella;Calcarisporiella sp. NBRC 105922	0	0	178	2	0	0	0	0	5	0	0	0	1	0	0	3	0	0
+Eukaryota;Fungi;Zygomycota;NA;Endogonales;NA;Calcarisporiella;Calcarisporiella thermophila	0	0	7	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mortierellales;Mortierellaceae;Dissophora;Dissophora decumbens	0	0	61	0	0	0	0	3	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mortierellales;Mortierellaceae;Mortierella;	63	0	0	0	11	0	0	0	0	48	9	28	5	99	24	12	29	39
+Eukaryota;Fungi;Zygomycota;NA;Mortierellales;Mortierellaceae;Mortierella;Mortierella calciphila	0	0	151	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mortierellales;Mortierellaceae;Mortierella;Mortierella chlamydospora	1	0	0	0	0	0	0	0	4	2	0	0	1	1	0	5	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mortierellales;Mortierellaceae;Mortierella;Mortierella verticillata	20	4	52	10	27	34	83	79	2028	0	1	181	0	5	0	1	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mortierellales;Mortierellaceae;NA;	9	0	0	0	0	0	0	0	13	51	14	1	3	0	4	78	11	9
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Cunninghamellaceae;Absidia;Absidia glauca	0	0	0	0	0	0	0	2	24	0	0	1	0	0	0	0	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Cunninghamellaceae;Absidia;Absidia repens	0	0	5	11	0	32	0	2	0	0	0	87	0	0	0	0	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Cunninghamellaceae;Cunninghamella;	0	0	24	3	0	0	10	28	65	0	6	535	0	0	0	0	0	1
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Cunninghamellaceae;Cunninghamella;Cunninghamella sp. UES Ag2b	0	0	0	0	0	0	1	23	0	0	0	15	0	0	0	0	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Mucoraceae;Mucor;	25	0	0	0	0	1	0	0	2	6	1	41	11	6	1	24	0	27
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Mucoraceae;NA;	1	0	0	0	0	0	0	0	0	8	6	10	0	1	3	7	1	5
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Mucoraceae;NA;Mucoraceae sp. LM546	0	15	53	6	1	1	0	26	5	0	0	1	0	2	0	0	0	0
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;NA;;	0	3	1	1	0	1	9	2	5	0	0	0	0	2	2	17	0	0
+NA;NA;NA;NA;;NA;;	0	0	0	0	0	0	4	0	0	0	0	0	0	3	0	27	0	0
+Eukaryota;Fungi;Zygomycota;NA;Umbelopsidales;Umbelopsidaceae;Umbelopsis;Umbelopsis ramanniana	1	0	0	0	0	0	0	0	0	2	6	19	0	0	3	17	0	2
+Eukaryota;Fungi;Zygomycota;NA;Umbelopsidales;Umbelopsidaceae;Umbelopsis;Umbelopsis sp. Mykopat 134	0	0	0	2	182	0	5	0	0	0	0	6	0	23	0	31	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Amoeboaphelidium;Amoeboaphelidium protococcarum	0	0	8	2	0	1	1	0	15	0	0	0	5	0	0	0	0	9
+Eukaryota;Protozoa;Amoebozoa;NA;Arcellinida;Cryptodifflugiidae;Cryptodifflugia;	18	0	0	0	66	0	35	0	0	22	6	2	8	57	1	74	10	12
+Eukaryota;Protozoa;Amoebozoa;NA;Arcellinida;Hyalospheniidae;NA;	0	0	0	0	0	0	0	0	3	0	0	0	0	0	1	0	0	0
+Eukaryota;Plantae;Rhodophyta;Bangiophyceae;Cyanidiales;Cyanidiaceae;Cyanidioschyzon;Cyanidioschyzon sp. Y16	2	5	56	5	2	1	0	26	73	1	9	2	0	3	0	0	0	1
+Eukaryota;Plantae;Rhodophyta;Bangiophyceae;Porphyridiales;Porphyridiaceae;Porphyridium;Porphyridium aerugineum	0	0	0	2	0	1	0	2	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Bigyra;NA;Bicosoecida;Cafeteriaceae;Cafeteria;	0	0	20	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Bigyra;NA;Bicosoecida;NA;Caecitellus;Caecitellus parvulus	0	0	1	0	0	0	0	0	2	0	0	0	0	0	0	0	0	3
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cavernomonas;	0	0	1	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;	53	0	0	0	0	0	0	0	1	120	41	47	119	59	47	165	55	145
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Eocercomonas;	15	2	11	0	0	0	0	0	0	10	4	8	4	11	3	16	3	1
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;NA;	1	56	225	39	158	47	117	55	246	0	0	1	5	4	0	6	1	9
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Paracercomonas;	0	2	25	7	23	3	1	8	7	1	0	0	1	1	0	2	0	1
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Heteromitidae;NA;	1	0	115	0	1	0	0	3	3	1	0	0	9	14	3	27	3	12
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;NA;;	12	0	0	0	0	0	0	1	4	20	27	22	17	12	21	32	5	39
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Acanthoecidae;Acanthoeca;	0	2	28	0	35	1	0	24	19	0	0	0	0	3	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;NA;;	2	7	58	7	75	16	9	19	87	5	23	3	4	5	2	9	0	9
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Monosiga;Monosiga ovata	1	0	0	0	0	0	2	0	0	0	3	0	2	0	0	3	0	2
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;NA;	1	2	13	0	5	0	1	2	9	7	4	4	9	0	0	11	2	1
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Salpingoeca;	0	0	4	0	0	0	1	0	2	2	1	0	0	0	0	0	0	1
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Stephanoecidae;Didymoeca;Didymoeca costata	1	0	15	0	18	2	1	1	6	0	2	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chromulinaceae;Ochromonas;	0	1	3	0	0	0	0	0	1	0	0	0	2	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chromulinaceae;Ochromonas;Ochromonas sp. CCMP2761	3	0	0	0	0	0	0	0	0	3	15	1	1	0	0	7	2	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chromulinaceae;Ochromonas;Ochromonas tuberculata	1	0	0	0	0	0	0	0	81	0	0	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chromulinaceae;Spumella;	24	0	0	1	2	1	1	8	12	36	5	7	39	8	4	71	6	15
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chromulinaceae;Spumella;Spumella danica	0	0	0	0	0	0	0	1	0	0	0	0	0	1	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chrysocapsaceae;Chrysocapsa;	0	7	20	6	14	7	5	10	91	1	0	0	0	0	0	4	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chrysocapsaceae;Chrysocapsa;Chrysocapsa paludosa	0	0	0	0	6	0	1	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;NA;;	1	333	1	0	1	0	1	0	0	4	5	0	2	2	0	14	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Paraphysomonadaceae;Paraphysomonas;	0	0	0	0	0	0	0	3	0	0	0	0	0	0	3	0	0	6
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Paraphysomonadaceae;Paraphysomonas;Paraphysomonas bandaiensis	1	49	35	0	0	0	0	2	17	1	2	0	2	0	0	0	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;Chrysophyceae sp. EK-2010a	5	0	0	0	0	0	0	0	5	2	18	1	3	0	0	0	0	8
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Chrysophyceae sp.	0	0	10	0	0	0	0	1	5	0	0	0	0	0	0	10	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Spumella-like flagellate JBC22	0	0	17	1	1	0	0	1	3	8	28	0	0	0	0	7	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Spumella-like flagellate JBC29	0	0	0	0	0	0	0	0	6	5	0	0	0	0	3	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Spumella-like flagellate JBC/S23	0	0	6	0	2	0	0	0	4	0	1	0	6	0	0	7	1	6
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Spumella-like flagellate JBM28	2	0	0	0	0	0	0	2	0	8	0	4	4	2	7	4	3	1
+Eukaryota;Chromista;Ciliophora;Colpodea;Bryometopida;Bryometopidae;Bryometopus;Bryometopus sphagni	1	0	1	0	0	0	0	2	2	8	5	1	37	17	1	12	0	34
+Eukaryota;Chromista;Ciliophora;Colpodea;Bryometopida;Kreyellidae;Microdiaphanosoma;Microdiaphanosoma arcuatum	12	0	1	3	15	2	0	1	9	5	4	4	0	0	0	0	0	3
+Eukaryota;Chromista;Ciliophora;Colpodea;Bursariomorphida;Bursariidae;Bursaria;	7	0	3	17	12	4	1	7	18	1	3	0	9	3	1	11	0	5
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Colpodidae;Bresslaua;Bresslaua vorax	7	0	9	2	1	12	0	3	17	1	17	2	20	1	0	22	0	17
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Colpodidae;Colpoda;	6	1	4	4	2	0	0	3	14	12	3	4	15	3	7	2	0	10
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Colpodidae;Colpoda;Colpoda inflata	0	0	28	4	1	2	0	1	74	2	24	1	14	17	0	3	0	0
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Colpodidae;Colpoda;Colpoda maupasi	0	1	16	4	0	1	7	4	19	1	0	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Colpodidae;Colpoda;Colpoda steinii	1	0	8	1	0	6	17	2	4	0	10	0	9	4	2	3	0	10
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Colpodidae;Exocolpoda;Exocolpoda augustini	0	0	0	1	0	3	0	1	0	5	13	2	25	1	0	2	3	2
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Colpodidae;NA;	2	0	13	1	0	1	0	15	6	17	2	2	72	15	0	51	3	14
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Marynidae;Maryna;	25	1	56	1	1	0	0	1	1	51	1	12	19	12	2	11	2	69
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;Marynidae;Maryna;Maryna umbrellata	0	1	10	0	1	0	7	7	21	0	0	0	0	0	0	0	0	2
+Eukaryota;Chromista;Ciliophora;Colpodea;Colpodida;NA;;	12	2	19	9	7	8	3	15	43	93	58	12	256	47	12	51	1	156
+Eukaryota;Chromista;Ciliophora;Colpodea;Cyrtolophosidida;Cyrtolophosididae;Pseudocyrtolophosis;Pseudocyrtolophosis alpestris	5	0	0	0	0	0	0	0	1	3	1	4	2	0	0	8	0	3
+Eukaryota;Chromista;Ciliophora;Colpodea;Cyrtolophosidida;NA;;	3	0	73	13	21	21	6	134	127	4	4	0	5	17	1	27	3	4
+Eukaryota;Chromista;Ciliophora;Colpodea;Cyrtolophosidida;Platyophryidae;Platyophrya;Platyophrya vorax	1	0	15	0	2	1	0	5	20	4	1	0	1	2	0	0	1	9
+Eukaryota;Chromista;Ciliophora;Colpodea;Grossglockneriida;Grossglockneriidae;Pseudoplatyophrya;Pseudoplatyophrya nana	10	4	7	4	10	1	0	1	20	7	41	4	18	12	11	56	3	46
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	21	0	49	2	6	2	1	2	2	39	38	29	147	57	21	88	4	170
+Eukaryota;Chromista;Ciliophora;Colpodea;Sorogenida;Sorogenidae;Sorogena;Sorogena stoianovitchae	0	3	14	7	1	7	1	14	85	0	0	0	1	0	0	9	0	10
+Eukaryota;Chromista;Cercozoa;NA;Cryomonadida;NA;;	0	18	125	18	63	19	16	60	310	1	0	0	1	0	0	13	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cryomonadida;Rhogostomidae;NA;	6	0	1	0	0	0	0	0	1	8	0	4	0	0	2	30	5	29
+Eukaryota;Chromista;Cercozoa;NA;Cryomonadida;Rhogostomidae;Rhogostoma;	8	0	1	0	0	0	0	0	0	55	16	3	7	7	7	54	2	7
+Eukaryota;Plantae;Rhodophyta;Cryptophyta;Cryptomonadales;Goniomonadaceae;Goniomonas;Goniomonas sp. SH-3	1	10	58	4	3	1	0	10	34	11	8	2	1	4	1	1	2	7
+Eukaryota;Plantae;Rhodophyta;Cryptophyta;Cryptomonadales;Goniomonadaceae;Goniomonas;Goniomonas sp. SH-8	0	13	80	7	12	4	1	12	42	1	0	1	0	0	0	0	0	1
+Eukaryota;Plantae;Rhodophyta;Cryptophyta;Pyrenomonadales;Chroomonadaceae;Chroomonas;Chroomonas vectensis	0	0	11	5	0	1	0	8	31	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Dinophyceae;Gymnodiniales;Gymnodiniaceae;Amphidinium;	0	0	0	0	0	0	4	0	3	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Dinophyceae;Gymnodiniales;Gymnodiniaceae;Amphidinium;Amphidinium mootonorum	2	0	0	0	9	0	0	0	0	0	0	0	0	0	3	0	0	0
+Eukaryota;Chromista;Miozoa;Dinophyceae;Gymnodiniales;NA;;	0	0	0	0	0	0	0	0	7	0	0	3	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Dinophyceae;Gymnodiniales;Polykrikaceae;Polykrikos;Polykrikos lebourae	13	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	15	0	0	0	0	0	0	0	0	9	0	12	11	21	2	17	0	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Halostylodinium;Halostylodinium arenarium	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Dinophyceae;Peridiniales;NA;;	3	1	12	6	1	2	2	5	7	2	0	0	0	0	0	0	1	0
+Eukaryota;Chromista;Miozoa;Dinophyceae;Peridiniales;Oxytoxaceae;Thecadinium;Thecadinium dragescoi	0	0	0	0	0	0	0	2	0	0	2	8	0	15	1	0	1	7
+Eukaryota;Chromista;Miozoa;Dinophyceae;Peridiniales;Peridiniaceae;Pentapharsodinium;Pentapharsodinium tyrrhenicum	8	0	0	0	0	0	0	6	0	0	23	1	0	39	0	0	0	0
+Eukaryota;Chromista;Miozoa;Dinophyceae;Prorocentrales;Prorocentraceae;Exuviaella;Exuviaella pusilla	3	0	68	1	0	0	2	5	1	5	3	1	4	0	0	7	2	9
+Eukaryota;Chromista;Miozoa;Dinophyceae;Syndiniales;Amoebophryaceae;Amoebophrya;	0	0	0	0	0	0	15	9	0	0	1	2	2	0	0	0	0	0
+NA;NA;NA;NA;Torodiniales;Torodiniaceae;Torodinium;Torodinium robustum	0	2	6	0	2	0	0	0	9	3	1	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Euglyphidae;Assulina;	2	1	0	1	0	0	0	0	0	9	35	79	0	0	0	7	0	3
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Euglyphidae;Euglypha;	22	0	0	0	0	0	0	0	0	103	77	34	50	32	40	128	22	68
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Euglyphidae;Euglypha;Euglypha filifera	12	1	8	7	1	25	15	12	0	36	1	4	2	17	1	20	2	4
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;NA;;	4	192	55	35	19	26	11	78	94	22	6	4	22	21	5	17	6	7
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Trinematidae;Trinema;	2	15	67	9	2	0	3	17	50	0	0	6	0	22	0	0	0	0
+Eukaryota;Plantae;Glaucophyta;Glaucocystophyceae;Glaucocystales;Glaucocystaceae;Glaucocystis;Glaucocystis nostochinearum	2	13	20	10	8	1	0	4	10	23	8	2	13	10	8	5	2	4
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;NA;;	14	0	0	0	1	2	107	12	0	21	46	10	187	31	23	116	16	118
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;NA;Proleptomonas;Proleptomonas faecicola	0	0	13	1	17	0	2	14	11	2	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;	4	196	530	8	24	2	0	35	93	4	9	3	47	8	3	27	2	9
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;Bodomorpha minima	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	2	0	1
+Eukaryota;Chromista;Ciliophora;Heterotrichea;Heterotrichida;Blepharismidae;Blepharisma;	2	5	38	1	11	2	11	1	16	34	8	2	17	6	4	30	3	22
+Eukaryota;Chromista;Ciliophora;Heterotrichea;Heterotrichida;Blepharismidae;Blepharisma;Blepharisma elongatum	0	0	0	0	0	1	0	0	0	3	0	0	0	0	1	2	0	6
+Eukaryota;Chromista;Ciliophora;Heterotrichea;Heterotrichida;NA;Phacodinium;Phacodinium metchnikoffi	0	2	105	17	22	5	1	5	27	0	0	0	31	0	0	0	0	167
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Hyphochytriaceae;Hyphochytrium;Hyphochytrium catenoides	1	0	0	0	0	0	0	7	0	0	14	1	0	1	0	10	0	0
+Eukaryota;Protozoa;Choanozoa;Ichthyosporea;Dermocystida;NA;;	0	0	0	0	0	0	0	20	40	0	1	4	1	4	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;Ichthyosporea;Dermocystida;NA;Rhinosporidium;Rhinosporidium cygnus	0	4	1	0	0	0	0	3	4	0	0	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;Ichthyosporea;Ichthyophonida;NA;Anurofeca;Anurofeca sp. LAH-2003	0	0	4	0	5	0	14	1	9	2	2	1	1	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Capsaspora;Capsaspora owczarzaki	4	0	0	0	20	0	0	0	0	0	0	0	0	0	0	0	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Katablepharidaceae;Hatena;Hatena arenicola	0	0	3	0	0	0	0	0	1	7	1	0	3	0	5	2	8	5
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Katablepharidaceae;Katablepharis;Katablepharis japonica	0	0	4	0	0	0	0	0	0	0	0	0	0	2	0	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Diplophrys;Diplophrys sp. ATCC_50360	2	1	0	0	0	0	0	0	1	0	1	0	0	0	0	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Sorodiplophrys;Sorodiplophrys stercorea	6	0	1	5	3	0	0	5	0	2	0	20	3	0	1	6	2	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Thraustochytriaceae;Aplanochytrium;Aplanochytrium sp. PBS07	0	0	2	0	0	0	0	3	4	3	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Thraustochytriaceae;Oblongichytrium;	1	5	6	1	1	0	0	0	29	0	0	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Amoebozoa;NA;Leptomyxida;Flabellulidae;Flabellula;Flabellula sp. AK-2016a	0	0	0	0	0	0	0	0	0	1	0	1	2	1	2	0	1	24
+Eukaryota;Chromista;Ciliophora;Litostomatea;Entodiniomorphida;NA;;	0	0	0	0	1	4	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Litostomatea;Entodiniomorphida;Ophryoscolecidae;NA;	0	0	5	0	0	0	0	0	4	3	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Litostomatea;Haptorida;Didiniidae;NA;	0	0	0	0	0	0	0	0	4	0	0	0	3	0	0	0	0	1
+Eukaryota;Chromista;Ciliophora;Litostomatea;Haptorida;Enchelyidae;Enchelys;Enchelys polynucleata	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	6	0	0
+Eukaryota;Chromista;Ciliophora;Litostomatea;Haptorida;NA;;	24	4	0	0	0	0	0	0	7	120	79	55	264	25	52	83	7	185
+Eukaryota;Chromista;Ciliophora;Litostomatea;Haptorida;Spathidiidae;NA;	1	0	0	0	0	0	0	0	0	6	0	1	12	0	2	16	1	18
+Eukaryota;Chromista;Ciliophora;Litostomatea;Haptorida;Spathidiidae;Spathidium;	2	60	112	29	61	29	24	74	330	0	8	1	0	0	0	15	0	0
+Eukaryota;Chromista;Ciliophora;Litostomatea;Haptorida;Spathidiidae;Spathidium;Spathidium papilliferum	6	7	2	0	0	1	0	0	185	8	6	1	7	0	8	25	1	17
+Eukaryota;Chromista;Ciliophora;Litostomatea;Haptorida;Spathidiidae;Spathidium;Spathidium securiforme	0	2	5	0	0	0	1	2	11	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Amylovoracidae;Bitricha;Bitricha tasmaniensis	0	2	4	3	12	4	2	6	46	0	0	0	0	2	0	3	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	2	0	0	0	0	0	0	4	0	13	3	1	6	4	4	1	0	23
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;Acanthamoebidae;Acanthamoeba;	9	0	0	0	0	0	0	0	0	42	4	7	3	14	14	8	6	11
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;Acanthamoebidae;Acanthamoeba;Acanthamoeba lenticulata	1	10	27	5	0	2	2	3	5	0	1	7	0	0	0	1	0	1
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;Acanthamoebidae;Luapeleamoeba;Luapeleamoeba arachisporum	0	1	7	20	36	26	8	2	13	0	0	0	6	0	0	0	0	0
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;Acanthamoebidae;NA;	2	0	0	0	3	5	1	0	1	1	0	0	0	1	2	0	0	0
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;NA;;	0	0	0	0	0	0	0	1	6	0	0	1	1	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Apusomonadidae;Apusomonas;Apusomonas proboscidea	1	0	0	0	0	0	0	0	0	3	4	2	25	5	1	10	0	5
+Eukaryota;Protozoa;Amoebozoa;NA;Arcellinida;Hyalospheniidae;Cornutheca;Cornutheca ansata	0	0	3	0	0	2	0	1	0	5	0	0	0	0	0	0	0	3
+Eukaryota;Chromista;Bigyra;NA;Bicosoecida;Bicosoecidae;Bicosoeca;Bicosoeca petiolata	2	2	16	0	6	4	2	4	13	4	0	0	22	1	0	9	0	6
+Eukaryota;Chromista;Bigyra;NA;Bicosoecida;NA;Caecitellus;Caecitellus parvulus	0	0	0	0	0	2	0	1	0	0	0	0	1	1	0	0	0	0
+Eukaryota;Chromista;Bigyra;NA;Bicosoecida;NA;Filos;Filos agilis	0	1	6	1	3	0	1	1	4	0	0	0	7	2	2	4	1	10
+Eukaryota;Chromista;Bigyra;NA;Bicosoecida;NA;NA;Bicosoecida gen. 2 sp. EK-2010a	0	0	4	0	0	0	0	0	1	1	0	1	0	0	1	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cavernomonas;Cavernomonas mira	0	3	0	0	6	0	0	0	14	0	0	0	6	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cavernomonas;Cavernomonas stercoris	0	0	0	1	0	3	0	0	5	1	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas braziliensis	0	1	1	0	0	0	0	3	0	3	2	3	13	6	2	24	0	17
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas celer	4	0	0	0	0	0	0	1	3	15	9	5	2	9	21	12	8	10
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas directa	3	0	32	5	0	3	0	2	20	2	2	0	0	0	1	0	0	2
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas edax	0	40	0	5	21	4	189	2	27	1	1	0	0	0	0	1	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas effusa	0	5	0	1	0	0	0	1	1	11	1	0	0	8	0	0	1	10
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas fastiga	1	0	3	0	0	0	0	0	6	1	0	1	16	1	1	9	1	4
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas jendrali	4	0	5	1	0	0	0	1	0	11	1	0	0	6	6	4	4	7
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas plasmodialis	1	2	0	1	1	0	0	3	4	1	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas radiata	0	0	14	0	5	3	2	2	11	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas rapida	0	0	0	1	0	0	0	0	1	0	3	0	2	0	0	0	0	1
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Cercomonas;Cercomonas sp. HFCC 900	0	0	15	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Eocercomonas;Eocercomonas echina	0	0	3	0	0	0	0	1	0	1	3	1	1	3	2	0	1	3
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Eocercomonas;Eocercomonas exploratorii	3	0	2	0	0	0	0	0	0	7	11	2	0	7	2	14	4	5
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Eocercomonas;Eocercomonas perecta	0	0	2	0	0	0	0	0	4	1	0	1	3	0	0	4	0	3
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Eocercomonas;Eocercomonas tribula	0	0	21	1	26	2	6	6	8	0	0	0	0	0	0	3	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Paracercomonas;Paracercomonas sp. 16-11.4_NZ	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Cercomonadidae;Paracercomonas;Paracercomonas sp. 9-NZ	0	0	0	0	0	0	0	0	0	0	0	0	16	1	1	1	1	3
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Heteromitidae;Heteromita;Heteromita globosa	1	2	2	0	0	0	0	0	0	0	0	0	0	1	0	0	0	2
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Heteromitidae;Heteromita;Heteromita sp. HFCC 924	0	14	13	0	6	0	7	1	11	0	0	0	0	0	0	5	0	0
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Heteromitidae;Heteromita;Heteromita sp. PRA-74	0	1	10	0	0	0	0	0	0	0	0	0	0	0	0	3	0	2
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Heteromitidae;NA;Rigidomastix-like sp. (SA)	8	0	0	0	0	0	0	0	0	11	5	0	43	3	2	3	5	14
+Eukaryota;Chromista;Cercozoa;NA;Cercomonadida;Heteromitidae;NA;soil flagellate AND24	0	0	0	0	1	0	0	0	6	0	0	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Acanthoecidae;Acanthoeca;Acanthoeca spectabilis	0	7	45	8	14	0	0	0	5	0	4	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Acanthoecidae;Acanthoeca;Acanthoeca sp. SIOpierAcanth1	0	9	1	0	0	0	0	0	0	1	0	0	0	0	1	0	0	1
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Choanoeca;Choanoeca perplexa	0	0	6	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Hartaetosiga;Hartaetosiga gracilis	3	0	1	0	0	0	0	0	4	0	0	0	0	6	0	15	3	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Monosiga;Monosiga brevicollis	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Salpingoeca;Salpingoeca fusiformis	0	1	6	1	12	0	0	0	0	1	0	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Salpingoeca;Salpingoeca kvevrii	0	0	0	0	0	0	0	0	3	0	0	0	0	1	0	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Salpingoeca;Salpingoeca macrocollata	0	0	0	0	0	0	0	0	2	0	1	0	1	0	0	2	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Choanoflagellida;Salpingoecidae;Sphaeroeca;Sphaeroeca volvox	8	0	0	0	0	0	0	0	3	9	1	0	0	3	0	10	4	3
+Eukaryota;Chromista;Cercozoa;NA;Cryomonadida;NA;Cryothecomonas;Cryothecomonas sp. APCC MC5-1Cryo	0	0	11	1	0	0	2	0	0	0	0	0	2	0	0	7	1	18
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Echinamoebidae;Filamoeba;	0	1	14	3	0	1	3	3	4	0	3	0	0	3	0	4	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Euglyphidae;Euglypha;Euglypha penardi	0	1	36	0	0	0	0	0	4	0	0	0	0	0	0	6	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Euglyphidae;Euglypha;Euglypha rotunda	19	0	1	0	0	0	0	0	3	42	24	9	5	24	4	173	11	12
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Euglyphidae;Tracheleuglypha;Tracheleuglypha dentata	10	0	0	0	13	0	0	0	0	0	3	4	0	11	4	0	0	0
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Paulinellidae;Paulinella;Paulinella chromatophora	0	4	122	29	219	20	5	56	17	2	4	0	1	101	0	2	0	1
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Sphenoderiidae;Sphenoderia;Sphenoderia pseudominuta	20	0	0	0	0	1	11	1	2	37	11	18	19	18	10	43	20	24
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Sphenoderiidae;Trachelocorythion;Trachelocorythion pulchellum	12	1	0	0	0	4	0	1	2	8	12	7	2	6	1	4	3	15
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Trinematidae;Trinema;Trinema enchelys	44	57	18	20	12	9	17	16	72	140	50	32	24	53	26	131	10	50
+Eukaryota;Protozoa;Choanozoa;NA;Euglyphida;Trinematidae;Trinema;Trinema lineare	7	0	5	0	0	0	0	14	0	10	1	13	9	4	1	27	2	6
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Allapsidae;Allapsa;Allapsa vibrans	1	15	220	51	31	10	68	82	218	0	1	0	0	0	0	0	0	1
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;NA;Allantion;Allantion sp. CCAP 1906/1	5	11	13	2	0	3	0	2	14	8	8	6	43	17	5	40	4	33
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;NA;Sandona;Sandona mutans	0	0	3	0	0	0	0	1	1	7	2	0	3	1	1	5	0	2
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;Bodomorpha minima	0	7	38	5	22	1	8	2	54	0	2	0	1	0	0	1	0	0
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;Bodomorpha sp. HFCC56	0	3	2	2	6	0	0	0	0	1	1	0	0	0	0	0	0	9
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;Bodomorpha sp. HFCC 926	0	0	0	0	0	0	0	2	7	1	0	1	6	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;Bodomorpha sp. HFCC 927	0	1	4	0	0	0	0	0	1	0	0	0	2	0	0	1	0	0
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;Bodomorpha sp. Panama105	0	0	3	1	0	0	0	0	1	0	0	0	0	0	1	0	0	1
+Eukaryota;Chromista;Cercozoa;NA;Glissomonadida;Sandonidae;Bodomorpha;Bodomorpha sp. Panama115	0	0	0	0	0	0	0	0	1	0	1	0	0	0	0	1	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Heterophryidae;Chlamydaster;Chlamydaster sterni	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	5
+Eukaryota;Protozoa;Amoebozoa;NA;Leptomyxida;Leptomyxidae;Leptomyxa;Leptomyxa reticulata	13	0	0	0	0	0	0	0	0	24	21	2	7	14	11	98	12	29
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;Balamuthiidae;Balamuthia;Balamuthia mandrillaris	0	0	0	0	0	0	0	2	0	0	1	1	8	0	2	0	0	1
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;NA;Mayorella;Mayorella gemmifera	0	0	85	5	25	3	7	11	58	0	0	0	0	0	1	0	1	3
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;NA;Mayorella;Mayorella sp. JJP-2003	0	0	2	0	0	0	0	0	4	1	0	0	0	0	0	1	0	0
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;NA;Paradermamoeba;Paradermamoeba levis	1	0	2	2	0	0	0	1	1	0	0	0	0	0	1	0	0	2
+Eukaryota;Protozoa;Amoebozoa;NA;Longamoebia;Thecamoebida;Stenamoeba;Stenamoeba limacina	1	0	1	0	2	1	0	0	0	1	0	2	1	0	0	0	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Acanthocystidae;Pterocystis;Pterocystis sp. JJP-2003	0	0	1	0	0	0	0	0	5	0	0	0	4	5	0	4	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Apusomonadidae;Amastigomonas;Amastigomonas mutabilis	1	0	0	0	0	0	0	0	0	5	1	0	0	4	0	0	0	5
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Apusomonadidae;Apusomonas;Apusomonas proboscidea	0	0	0	0	1	0	0	0	13	1	1	0	1	1	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Colpodellidae;Colpodella;Colpodella edax	0	0	2	3	1	0	1	2	8	5	1	0	2	0	0	3	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Echinamoebidae;Echinamoeba;Echinamoeba exundans	1	0	3	2	0	0	0	0	0	3	1	0	2	1	0	3	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Oikomonadaceae;Oikomonas;Oikomonas sp. SA-2.1	1	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Pseudodifflugiidae;Pseudodifflugia;Pseudodifflugia cf. gracilis	3	0	0	0	11	1	2	3	2	2	4	1	7	0	6	28	4	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Spongomonadidae;Spongomonas;Spongomonas minima	8	0	2	1	0	0	0	0	0	11	15	6	17	15	8	24	8	30
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Vannellidae;Platyamoeba;Platyamoeba sp. strain DB282	0	10	3	1	0	0	2	2	4	0	0	0	1	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Vannellidae;Vannella;Vannella sp. ISCRH	0	31	21	13	11	6	4	10	33	0	0	0	1	0	0	1	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Nucleariidae;Nuclearia;	5	1	0	0	0	0	0	0	1	5	6	8	5	1	0	3	2	17
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Olpidiaceae;Olpidium;Olpidium bornovanus	0	0	1	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Olpidiaceae;Olpidium;Olpidium brassicae	0	2	17	1	0	1	5	15	40	0	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Paramoebidae;Korotnevella;	0	0	25	0	0	0	0	0	0	2	0	0	1	0	1	2	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Paramoebidae;Korotnevella;Korotnevella pelagolacustris	0	0	6	0	0	0	0	0	0	0	0	0	0	0	0	2	0	1
+Eukaryota;Chromista;Miozoa;NA;Perkinsida;Perkinsidae;Parvilucifera;Parvilucifera prorocentri	5	0	6	0	0	0	0	3	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Amoebozoa;NA;Protosteliales;Cavosteliaceae;NA;Cavosteliaceae sp. M71	0	0	3	0	0	0	0	0	6	0	0	0	0	0	0	0	1	13
+Eukaryota;Protozoa;Amoebozoa;NA;Protosteliales;Protosteliaceae;Nematostelium;Nematostelium ovatum	0	0	0	1	0	0	1	0	0	0	0	0	0	1	0	1	0	0
+Eukaryota;Protozoa;Amoebozoa;NA;Protosteliales;Protosteliaceae;Schizoplasmodiopsis;Schizoplasmodiopsis pseudoendospora	1	0	0	0	0	0	0	0	3	0	0	0	0	0	0	0	0	1
+Eukaryota;Protozoa;Amoebozoa;NA;Protosteliales;Protosteliaceae;Schizoplasmodium;Schizoplasmodium cavostelioides	17	0	0	0	1	0	0	0	0	41	6	19	3	49	3	32	2	9
+Eukaryota;Protozoa;Amoebozoa;NA;Protosteliales;Protosteliaceae;Schoutedamoeba;Schoutedamoeba minuta	0	0	0	1	0	0	0	0	2	0	3	0	0	0	0	0	0	0
+Eukaryota;Protozoa;Sulcozoa;NA;Rigifilida;NA;Micronuclearia;Micronuclearia podoventralis	0	33	55	17	15	13	8	43	40	0	0	0	1	0	0	0	1	1
+Eukaryota;Chromista;Ciliophora;Nassophorea;Microthoracida;Microthoracidae;Leptopharynx;	0	0	0	0	0	0	0	0	1	0	0	0	2	3	0	1	0	0
+Eukaryota;Chromista;Ciliophora;Nassophorea;Microthoracida;Microthoracidae;Leptopharynx;Leptopharynx bromelicola	2	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Nassophorea;Microthoracida;Microthoracidae;Leptopharynx;Leptopharynx costatus	0	0	0	0	0	0	0	1	0	2	3	0	0	0	0	5	0	2
+Eukaryota;Chromista;Ciliophora;Nassophorea;Microthoracida;Microthoracidae;NA;	0	0	0	0	0	0	6	0	4	5	0	0	0	7	1	3	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Nassophorea sp. bTTo1	0	0	5	0	0	0	0	2	0	3	0	0	2	0	0	0	0	3
+Eukaryota;Chromista;Ciliophora;Nassophorea;Nassulida;Furgasoniidae;Parafurgasonia;Parafurgasonia sp. s-011	0	0	0	0	1	1	0	5	2	0	0	0	4	0	1	1	0	4
+Eukaryota;Chromista;Ciliophora;Nassophorea;Nassulida;NA;;	0	0	1	0	0	0	0	2	1	0	0	0	2	0	0	0	0	1
+Eukaryota;Protozoa;Amoebozoa;NA;Stemonitida;Stemonitidae;Lamproderma;Lamproderma sp. SAPA:100012	0	0	0	0	0	0	4	1	0	14	17	6	31	16	4	0	2	17
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;NA;Allas;Allas sp. JJP-2003	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	4	0	0
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;NA;Esquamula;Esquamula lacrimiformis	3	0	10	3	5	2	9	22	51	3	3	0	13	2	1	14	0	6
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;NA;Scutellomonas;Scutellomonas patella	0	0	0	0	3	0	0	0	0	1	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;Thaumatomastigidae;Peregrinia;Peregrinia clavideferens	4	4	10	2	1	0	2	1	17	27	4	2	14	7	18	27	32	4
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;Thaumatomastigidae;Thaumatomonas;Thaumatomonas sp. 6 JMS-2012	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	2	0	0
+Eukaryota;Chromista;Cercozoa;NA;Vampyrellida;Leptophryidae;NA;Leptophryidae sp. BAra1	0	8	7	9	0	0	12	4	172	1	0	0	0	0	0	0	2	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Vannellidae;Vannella;	0	0	0	0	1	0	0	0	0	2	3	0	6	0	0	1	0	2
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Astomatida;NA;;	0	0	0	1	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Hymenostomatida;NA;;	0	0	2	0	0	0	0	1	4	0	0	0	0	0	0	0	3	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Hymenostomatida;NA;Ophryoglena;Ophryoglena catenula	0	0	0	0	0	0	0	3	0	0	0	0	0	23	11	0	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Hymenostomatida;Tetrahymenidae;Tetrahymena;	0	0	0	0	0	0	0	0	0	0	1	0	4	1	0	1	0	7
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Peniculida;Lembadionidae;Lembadion;	0	1	4	0	0	0	0	0	3	0	0	0	2	0	0	1	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Philasterida;Loxocephalidae;Dexiotricha;Dexiotricha cf. granulosa	0	0	0	0	0	0	0	2	0	3	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Philasterida;Loxocephalidae;NA;	0	0	0	0	0	0	0	0	12	1	1	0	2	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Philasterida;NA;;	4	0	0	0	0	0	0	0	0	6	0	1	6	3	2	11	0	2
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Philasterida;Philasteridae;Miamiensis;Miamiensis avidus	0	0	1	0	0	0	0	0	1	0	1	1	2	0	1	0	0	6
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Philasterida;Philasteridae;NA;	0	2	5	0	0	0	0	8	12	0	0	0	0	2	0	1	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Philasterida;Uronematidae;Homalogastra;Homalogastra setosa	5	0	0	0	0	0	1	2	0	6	0	1	0	1	1	23	3	7
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Pleuronematida;Cyclidiidae;Cyclidium;Cyclidium porcatum	0	0	0	0	2	0	1	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Oligohymenophorea;Pleuronematida;Cyclidiidae;NA;	0	1	0	1	3	3	1	6	7	1	0	0	0	0	0	0	0	2
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Myzocytiopsidales;Myzocytiopsidaceae;Myzocytiopsis;Myzocytiopsis humicola	0	0	0	0	0	0	0	1	3	2	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Haptoglossa;	5	0	0	0	0	0	0	0	0	0	2	1	17	0	2	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	6	0	0	0	0	0	0	0	0	27	2	2	29	0	2	1	6	77
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Peronosporales;NA;;	0	0	0	0	0	0	0	0	0	0	6	0	0	0	0	0	0	0
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Pythiales;Pythiaceae;NA;	0	0	2	12	1	0	0	9	14	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Pythiales;Pythiaceae;Pythium;	1	0	0	0	0	0	0	0	0	3	6	1	12	2	0	19	0	40
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Pythiales;Pythiaceae;Pythium;Pythium monospermum	0	0	4	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Pythiales;Pythiaceae;Pythium;Pythium rostratifingens	0	15	8	10	3	0	1	0	18	0	0	0	9	0	0	0	0	0
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Pythiales;Pythiaceae;Pythium;Pythium rostratum	0	0	0	0	0	0	0	1	3	0	0	0	113	0	0	0	0	4
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Saprolegniales;Saprolegniaceae;Aphanomyces;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	5
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Saprolegniales;Saprolegniaceae;Aplanopsis;Aplanopsis terrestris	0	2	10	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Saprolegniales;Saprolegniaceae;NA;	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0	0
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Saprolegniales;Saprolegniaceae;Pythiopsis;Pythiopsis cymosa	0	0	0	0	0	0	0	22	0	2	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Phyllopharyngea;Chlamydodontida;Chilodonellidae;NA;	1	0	0	0	0	0	0	0	0	4	1	0	62	1	1	1	0	49
+Eukaryota;Chromista;Ciliophora;Phyllopharyngea;Chlamydodontida;Chilodonellidae;Phascolodon;Phascolodon vorticella	0	0	0	1	0	3	0	0	0	0	27	1	1	1	0	0	0	144
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	2	7	2	4	0	0	0	14	3	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Suigetsumonas;Suigetsumonas clinomigrationis	0	0	0	0	4	0	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	6	0	0	0	0	0	0	0	0	0	0	2	0	0	5	0	0
+Eukaryota;Chromista;Ciliophora;Prostomatea;Prorodontida;Colepidae;NA;	0	0	1	0	0	0	0	0	2	4	4	2	0	0	0	6	1	13
+Eukaryota;Chromista;Ciliophora;Prostomatea;Prorodontida;Colepidae;Tiarina;Tiarina sp.	0	0	0	1	0	0	0	0	1	0	0	0	0	0	1	0	0	1
+Eukaryota;Chromista;Ciliophora;Prostomatea;Prorodontida;Prorodontidae;Prorodon;	1	0	0	0	2	0	0	0	0	2	0	0	1	0	0	0	0	3
+Eukaryota;Protozoa;Amoebozoa;NA;Protosteliales;NA;;	1	0	0	0	0	0	0	0	4	12	0	10	0	1	2	11	0	3
+Eukaryota;Protozoa;Amoebozoa;NA;Protosteliales;Protosteliaceae;NA;	0	4	0	0	1	0	0	1	14	0	1	0	0	0	0	4	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Bistichella;Bistichella variabilis	0	0	6	4	10	7	6	0	3	3	0	0	15	0	0	7	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Stichotrichia sp. St20	0	0	17	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Gonostomatidae;Gonostomum;	6	0	0	1	0	1	0	0	12	0	0	6	10	34	17	14	0	20
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Gonostomatidae;Gonostomum;Gonostomum sp. MD-2012	3	109	0	0	0	0	0	0	0	0	0	0	1	19	0	0	0	173
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Gonostomatidae;Gonostomum;Gonostomum strenuum	0	2	86	7	94	7	18	24	50	2	0	0	80	0	15	15	12	0
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Halteriidae;Halteria;Halteria sp. bBoG1	3	2	0	2	17	30	45	28	0	0	0	0	0	0	0	0	0	2
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;NA;;	6	44	1	0	0	1	69	0	45	12	58	11	56	69	0	68	5	9
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Oxytrichidae;NA;	0	1	1	1	0	0	0	3	3	18	222	13	1150	16	3	11	0	129
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Oxytrichidae;Oxytricha;	0	20	22	13	2	6	7	43	32	0	14	0	13	0	0	0	0	8
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Oxytrichidae;Rigidohymena;Rigidohymena candens	0	53	43	3	0	12	0	4	15	0	9	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Oxytrichidae;Rigidohymena;Rigidohymena inquieta	0	0	0	0	0	0	0	0	0	0	34	4	0	0	0	1	0	0
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Oxytrichidae;Sterkiella;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	18
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Sporadotrichida;Oxytrichidae;Urosomoida;Urosomoida agilis	0	3	0	0	0	8	0	0	0	0	0	0	18	0	0	29	0	2
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Stichotrichida;NA;;	0	0	20	0	0	0	7	4	0	0	0	0	46	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Urostylida;Holostichidae;Anteholosticha;	2	0	0	0	0	0	0	0	0	2	3	1	6	1	0	2	0	3
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Urostylida;Holostichidae;Anteholosticha;Anteholosticha monilata	0	16	2	0	0	0	1	0	6	0	0	0	0	0	0	25	0	0
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Urostylida;Holostichidae;NA;	0	0	0	0	0	0	0	0	0	2	2	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Urostylida;Holostichidae;Neourostylopsis;	0	0	1	2	0	0	0	0	5	2	0	0	13	4	3	1	0	1
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Urostylida;NA;;	10	0	0	1	0	0	1	7	12	87	14	9	420	53	30	61	12	193
+Eukaryota;Chromista;Ciliophora;Spirotrichea;Urostylida;Urostylidae;NA;	0	32	32	27	24	38	45	35	225	1	0	0	6	0	2	0	0	0
+Eukaryota;Chromista;NA;NA;Telonemida;NA;Telonema;Telonema subtile	0	17	0	0	0	0	4	1	0	0	0	0	1	0	0	0	0	1
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;NA;;	2	0	0	0	0	0	0	1	12	12	18	2	17	11	6	20	6	50
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;Thaumatomastigidae;NA;	0	34	78	0	40	1	5	9	53	2	3	0	0	0	0	0	0	0
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;Thaumatomastigidae;Protaspis;	1	0	0	0	1	0	0	0	0	0	2	2	5	3	0	3	1	6
+Eukaryota;Chromista;Cercozoa;NA;Thaumatomonadida;Thaumatomastigidae;Thaumatomonas;	9	1	1	0	7	0	0	0	15	11	4	3	3	0	3	0	3	5
+Eukaryota;Chromista;Cercozoa;NA;Vampyrellida;Leptophryidae;NA;	7	0	4	4	0	2	0	6	17	4	5	0	8	6	5	14	2	22
+Eukaryota;Chromista;Cercozoa;NA;Vampyrellida;Leptophryidae;Platyreta;Platyreta germanica	0	7	79	1	12	3	2	10	72	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Nematoda;Enoplea;Dorylaimida;NA;;	0	0	2	0	0	0	0	0	2	0	68	19	11	23	35	0	0	10
+Eukaryota;Animalia;Nematoda;Enoplea;Dorylaimida;Nordiidae;Enchodelus;Enchodelus veletensis	0	0	1	0	4	0	0	12	5	12	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Nematoda;Enoplea;Dorylaimida;Nordiidae;NA;	0	0	0	0	0	0	0	0	0	2	10	0	0	0	0	0	0	0
+Eukaryota;Animalia;Nematoda;Enoplea;Dorylaimida;Qudsianematidae;NA;	0	0	103	2	1	0	0	0	51	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Nematoda;Enoplea;Dorylaimida;Tylencholaimidae;Tylencholaimus;Tylencholaimus sp. n. WJW-2016	0	0	0	0	0	4	0	0	0	0	0	32	0	0	6	0	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Stenostomidae;Stenostomum;Stenostomum leucops	0	0	0	3	0	3	3	0	0	0	0	3	0	0	0	0	0	0
+Eukaryota;Animalia;Platyhelminthes;NA;Rhabdocoela;Byrsophlebidae;Byrsophlebs;Byrsophlebs delamarei	3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Platyhelminthes;NA;Rhabdocoela;NA;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Platyhelminthes;NA;Rhabdocoela;Typhloplanidae;Acrochordonoposthia;Acrochordonoposthia conica	0	0	125	0	0	0	0	0	0	330	0	0	9	0	0	0	0	0
+Eukaryota;Animalia;Platyhelminthes;NA;Rhabdocoela;Typhloplanidae;NA;	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	520
+Eukaryota;Animalia;Porifera;Demospongiae;Clionaida;Placospongiidae;Placospongia;Placospongia sp. UCMPWC1092	2	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	1	0	12	0	0	3	0	2	8	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Porifera;Hexactinellida;Lyssacinosida;Euplectellidae;Bolosoma;Bolosoma sp. USNM 1097546	0	0	0	0	3	4	0	0	0	4	0	3	0	0	0	0	0	0
+Eukaryota;Animalia;Porifera;Hexactinellida;Lyssacinosida;NA;;	0	0	0	1	0	2	0	0	0	2	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Rotifera;Bdelloidea;Adinetida;Adinetidae;Adineta;	0	0	0	0	0	1	0	0	0	6	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	61	0	0	0	0	0	0	0	0	52	45	16	56	29	14	64	7	81
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Rotaria;Rotaria sordida	0	37	74	18	12	7	0	56	54	0	0	0	0	0	0	0	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Rotaria;	0	0	0	0	0	0	0	1	0	1	1	0	0	1	0	0	0	0
+Eukaryota;Animalia;Rotifera;Bdelloidea;Philodinida;Habrotrochidae;Otostephanos;Otostephanos jolantae	0	0	0	0	6	0	0	3	1	1	0	0	0	0	0	0	0	1
+Eukaryota;Animalia;Rotifera;Bdelloidea;Philodinida;NA;;	4	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	9
+Eukaryota;Animalia;Rotifera;Bdelloidea;Philodinida;Philodinidae;Didymodactylos;Didymodactylos carnosus	2	0	0	0	0	0	0	0	0	0	0	14	0	0	1	4	0	1
+Eukaryota;Animalia;Rotifera;Bdelloidea;Philodinida;Philodinidae;NA;	0	0	0	0	0	0	0	0	0	11	3	0	14	0	0	16	0	13
+Eukaryota;Animalia;Rotifera;Monogononta;Flosculariacea;Flosculariidae;NA;	0	0	4	0	16	0	0	0	0	23	0	0	3	0	0	0	0	3
+Eukaryota;Animalia;Rotifera;Monogononta;Flosculariacea;NA;;	5	0	0	0	0	3	0	0	1	13	12	6	1	0	5	37	0	15
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	16	29	1	7	1	2	1	1	6	7	2	0	5	0	5	0	0	32
+Eukaryota;Animalia;Rotifera;Monogononta;Ploima;NA;;	6	0	0	1	0	3	2	9	27	5	19	8	19	11	0	7	1	21
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;	0	7	11	0	0	4	1	12	17	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;Bryopsida;Funariales;Funariaceae;NA;	7	0	3	0	0	0	0	0	0	4	1	2	150	5	1	9	3	56
+Eukaryota;Plantae;Streptophyta;Jungermanniopsida;Porellales;Lejeuneaceae;Cyclolejeunea;	0	4880	598	3	2	3	0	2	163	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;Jungermanniopsida;Porellales;Lejeuneaceae;NA;	2	1	62	1	0	0	0	0	0	1	0	0	4	0	10	4	10	1
+Eukaryota;Plantae;Streptophyta;Klebsormidiophyceae;Klebsormidiales;Klebsormidiaceae;NA;	0	11	3739	4	0	1	1	0	0	0	0	0	16	0	0	19	0	0
+Eukaryota;Plantae;Streptophyta;Liliopsida;Poales;Poaceae;NA;	0	13	17	0	0	0	0	0	2	0	0	0	182	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;NA;Apiales;Apiaceae;NA;	0	0	10	1	0	0	0	0	0	0	0	0	0	0	1	0	0	0
+Eukaryota;Plantae;Streptophyta;NA;Asterales;Asteraceae;NA;	1	0	89	0	0	0	0	0	0	0	0	0	46	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;NA;Boraginales;Boraginaceae;Oreocarya;Oreocarya schoolcraftii	0	0	350	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0
+Eukaryota;Plantae;Streptophyta;NA;Brassicales;Brassicaceae;NA;	0	0	1	1	0	0	0	0	0	0	0	0	137	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;NA;Myrtales;Onagraceae;Oenothera;	0	0	6	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;NA;Rosales;Rosaceae;Rosa;	0	0	0	0	0	0	0	0	29	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;Polypodiopsida;Polypodiales;Pteridaceae;Adiantum;Adiantum raddianum	0	0	0	0	0	0	0	0	3	1	0	0	5	0	0	0	0	1
+Eukaryota;Plantae;Streptophyta;Zygnemophyceae;Desmidiales;Gonatozygaceae;Gonatozygon;Gonatozygon brebissonii	5	0	0	0	0	0	0	0	0	9	1	0	0	0	1	2	1	5
+Eukaryota;Plantae;Streptophyta;Zygnemophyceae;Zygnematales;Mesotaeniaceae;Ancylonema;Ancylonema nordenskioeldii	0	2	0	2	9	1	0	11	25	0	0	0	0	0	0	0	0	1
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;Diphascon;Diphascon pingue	0	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;Hypsibius;	0	0	0	0	0	0	0	21	0	0	0	0	11	0	0	0	0	0
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;Hypsibius;Hypsibius convergens	36	0	0	13	0	0	0	0	0	189	0	0	0	0	0	37	0	28
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;Hypsibius;Hypsibius klebelsbergi	0	0	0	21	0	14	0	0	335	0	0	0	0	0	0	0	0	1
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;Hypsibius;Hypsibius sp. CJS-2008	0	0	1	0	0	10	0	14	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;Isohypsibius;Isohypsibius sp. Tar194	0	0	0	10	0	0	0	0	124	0	0	0	5	0	3	5	3	37
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;NA;	45	0	91	0	0	0	0	2	144	125	0	6	14	40	11	75	0	119
+Eukaryota;Animalia;Tardigrada;Eutardigrada;Parachela;Hypsibiidae;Thulinius;Thulinius stephaniae	0	0	0	0	0	0	7	0	8	0	3	1	0	0	0	0	0	2
+Eukaryota;Chromista;Ochrophyta;NA;Mischococcales;Botryidiopsidaceae;Botrydiopsis;	0	0	4	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;NA;Mischococcales;NA;;	0	3	16	0	0	0	0	1	8	0	0	0	0	0	0	0	0	6
+Eukaryota;Chromista;Ochrophyta;NA;Mischococcales;Pleurochloridaceae;Monodus;	0	0	2	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;NA;Tribonematales;Heteropediaceae;Heterococcus;	0	0	5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;NA;Tribonematales;Heteropediaceae;Heterococcus;Heterococcus caespitosus	0	7	22	0	0	0	0	0	2	0	4	0	1	6	0	1	0	0
+Eukaryota;Fungi;Zoopagomycota;Basidiobolomycetes;Basidiobolales;Basidiobolaceae;Basidiobolus;Basidiobolus haptosporus	0	0	6	1	0	0	0	0	0	0	2	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;Basidiobolomycetes;Basidiobolales;Basidiobolaceae;Schizangiella;Schizangiella serpentis	0	0	0	1	0	0	0	0	0	0	6	1	0	0	0	0	5	0
+Eukaryota;Fungi;Zoopagomycota;Entomophthoromycetes;Entomophthorales;Ancylistaceae;Conidiobolus;Conidiobolus coronatus	2	0	0	0	0	0	3	10	2	9	0	0	0	12	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;Entomophthoromycetes;Entomophthorales;Ancylistaceae;Conidiobolus;Conidiobolus firmipilleus	0	0	34	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;Entomophthoromycetes;Entomophthorales;Ancylistaceae;Conidiobolus;Conidiobolus osmodes	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;Entomophthoromycetes;Entomophthorales;NA;;	0	0	0	0	0	0	0	0	7	1	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Kickxellales;Kickxellaceae;Mycoemilia;Mycoemilia scoparia	0	0	0	0	0	6	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Kickxellales;Kickxellaceae;NA;Kickxellaceae sp.	0	0	0	0	0	0	0	1	0	1	0	5	0	0	1	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Kickxellales;Kickxellaceae;Spiromyces;Spiromyces minutus	0	0	0	0	0	4	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;Cochlonemataceae;Cochlonema;Cochlonema euryblastum	3	0	0	0	0	0	0	0	0	0	0	0	4	4	0	1	0	5
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;NA;;	0	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;Piptocephalidaceae;NA;	0	0	4	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;Piptocephalidaceae;NA;Piptocephalidaceae sp.	0	2	15	3	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;Piptocephalidaceae;Piptocephalis;	2	0	0	0	0	0	0	0	3	5	2	0	0	4	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;Piptocephalidaceae;Piptocephalis;Piptocephalis xenophila	0	0	0	0	0	0	10	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;Piptocephalidaceae;Syncephalis;	0	0	0	0	0	0	1	0	0	4	2	0	0	0	0	5	0	5
+Eukaryota;Fungi;Zoopagomycota;NA;Zoopagales;Piptocephalidaceae;Syncephalis;Syncephalis pyriformis	0	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0

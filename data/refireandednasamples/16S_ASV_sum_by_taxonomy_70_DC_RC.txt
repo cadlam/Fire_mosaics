@@ -1,0 +1,891 @@
+sum.taxonomy	EB01	EB02	EB03	EB04	EB05	EB06	EB07	EB08	EB09	EB10	EB11	EB12	EB13	EB14	EB15	EB16	EB17	EB18
+Prokaryota;Bacteria;Acidobacteria;Acidobacteriia;Acidobacteriales;Acidobacteriaceae;NA;bacterium Ellin6099;	0	72	752	154	322	138	270	377	336	17	0	11	0	3	1	0	6	2
+Prokaryota;Bacteria;Acidobacteria;Acidobacteriia;Acidobacteriales;Acidobacteriaceae;NA;bacterium Ellin6100;	0	43	89	26	32	72	109	72	113	2	0	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Acidobacteria;Acidobacteriia;Acidobacteriales;Acidobacteriaceae;NA;bacterium Ellin6115;	0	0	0	0	0	1	0	0	0	6	3	0	0	2	1	2	3	2
+Prokaryota;Bacteria;Acidobacteria;Acidobacteriia;Acidobacteriales;Acidobacteriaceae;Terriglobus;;	0	2	0	0	0	1	1	0	0	0	3	1	0	0	0	1	0	0
+Prokaryota;Bacteria;Acidobacteria;Acidobacteriia;Acidobacteriales;Acidobacteriaceae;Terriglobus;Terriglobus roseus;	0	35	63	8	15	0	0	10	25	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Acidobacteria;Acidobacteriia;Acidobacteriales;Acidobacteriaceae;Terriglobus;Terriglobus sp. L56;	6	31	437	125	195	43	642	99	40	8	1	18	0	0	5	1	3	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Aridibacter;;	2	221	385	125	241	165	213	286	355	19	16	0	20	12	5	64	5	37
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	74	2	22	14	10	18	51	59	49	406	696	70	56	187	159	367	196	71
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Blastocatella;Blastocatella fastidiosa;	1	22	187	35	73	91	151	131	157	29	11	17	9	8	3	12	11	17
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Pyrinomonadaceae;Arenimicrobium;Arenimicrobium luteum;	6	8	58	2	4	0	0	5	41	303	256	6	38	91	13	60	19	10
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Pyrinomonadaceae;Brevitalea;;	0	0	0	0	0	0	0	0	0	25	24	0	1	23	14	10	55	7
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Pyrinomonadaceae;Brevitalea;Brevitalea aridisoli;	0	0	13	2	0	0	8	5	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Pyrinomonadaceae;Brevitalea;Brevitalea deliciosa;	0	24	226	50	78	60	83	123	205	31	242	3	0	9	0	3	9	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Pyrinomonadaceae;NA;;	16	45	69	32	123	28	183	116	76	183	578	23	20	62	17	93	42	19
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Stenotrophobacter;;	2	0	0	0	0	0	0	0	8	0	0	0	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Stenotrophobacter;Stenotrophobacter terrae;	16	0	94	0	3	0	0	0	5	74	38	20	23	35	23	42	46	316
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Tellurimicrobium;Tellurimicrobium multivorans;	1	0	0	0	0	3	0	1	0	0	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Acidobacteria;Holophagae;Holophagales;Holophagaceae;Holophaga;;	11	0	0	0	0	5	0	0	0	121	4	5	1	18	5	22	12	1
+Prokaryota;Bacteria;Acidobacteria;Holophagae;Holophagales;Holophagaceae;Holophaga;Holophaga sp. oral clone CA002;	0	0	0	1	4	2	2	0	0	11	8	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Acidobacteria;Holophagae;Holophagales;Holophagaceae;Holophaga;Holophaga sp. WY42;	1	0	13	0	2	0	6	3	1	32	8	0	83	12	3	70	16	39
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	0	0	0	1	3	0	0	0	0	0	0	0	4	1	0	0
+NA;NA;NA;NA;;NA;;;	92	0	0	0	0	50	14	0	0	524	154	46	50	330	139	282	256	968
+Prokaryota;Bacteria;Acidobacteria;NA;;NA;Luteitalea;Luteitalea pratensis;	102	0	0	0	0	16	17	3	0	936	336	75	198	450	185	265	156	189
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Luteitalea;Luteitalea pratensis;	0	0	0	0	0	3	0	2	1	0	0	0	0	5	0	0	0	0
+Prokaryota;Bacteria;Acidobacteria;Solibacteres;Solibacterales;Bryobacteraceae;NA;;	0	8	17	11	34	97	100	39	17	3	1	1	4	5	2	2	2	1
+Prokaryota;Bacteria;Acidobacteria;Solibacteres;Solibacterales;NA;;;	2	0	0	3	5	2	8	6	0	4	1	0	0	0	0	0	2	0
+Prokaryota;Bacteria;Acidobacteria;Solibacteres;Solibacterales;Solibacteraceae;Candidatus Solibacter;Candidatus Solibacter usitatus;	0	0	0	1	1	8	2	0	0	4	0	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Actinobacteria;Acidimicrobiia;Acidimicrobiales;Acidimicrobiaceae;Acidimicrobium;Acidimicrobium ferrooxidans;	0	0	0	0	8	0	1	1	0	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Acidimicrobiia;Acidimicrobiales;Acidimicrobiaceae;Aciditerrimonas;Aciditerrimonas ferrireducens;	0	0	0	3	4	32	17	2	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Acidimicrobiia;Acidimicrobiales;Acidimicrobiaceae;Ilumatobacter;Ilumatobacter fluminis;	0	0	1	0	27	2	4	7	1	2	0	0	0	2	0	0	0	1
+Prokaryota;Bacteria;Actinobacteria;Acidimicrobiia;Acidimicrobiales;Iamiaceae;Aquihabitans;Aquihabitans daechungensis;	0	0	0	1	2	6	3	1	0	2	0	1	4	4	0	1	2	4
+Prokaryota;Bacteria;Actinobacteria;Acidimicrobiia;Acidimicrobiales;Iamiaceae;Iamia;;	0	0	0	0	0	2	0	0	0	0	1	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Acidimicrobiia;Acidimicrobiales;Iamiaceae;Iamia;Iamia majanohamensis;	4	0	0	0	2	0	0	0	0	4	2	3	1	0	1	2	1	2
+Prokaryota;Bacteria;Actinobacteria;Acidimicrobiia;Acidimicrobiales;NA;NA;Acidimicrobiales bacterium URHD0090;	1	0	0	0	0	0	0	0	0	3	0	1	6	1	0	2	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	1	0	0	0	0	0	0	1	0	8	1	1	4	3	0	0	1	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Acidimicrobidae bacterium Ellin7143;	5	0	0	11	1	4	31	4	0	32	7	7	0	13	9	4	3	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium TH3;	0	0	0	0	1	0	1	1	0	1	0	0	1	0	0	0	2	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;NA;;;	1	13	1	3	3	6	1	1	1	1	0	0	2	0	0	1	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;NA;;Actinomycetales bacterium;	0	0	1	0	0	1	4	0	1	0	3	0	4	2	1	6	3	4
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;NA;NA;Actinomycetales bacterium;	0	0	1	0	0	0	3	2	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Actinomycetales;NA;NA;NA;	11	1	0	3	4	48	30	3	0	22	2	41	0	4	3	0	2	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Corynebacteriales;Mycobacteriaceae;Mycobacterium;;	17	4	88	3	4	7	6	18	21	125	107	76	24	37	187	56	42	53
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Corynebacteriales;Mycobacteriaceae;Mycobacterium;Mycobacterium sp. I15A-00823;	1	0	142	3	1138	7	14	5	3	0	1	1	0	0	1	1	2	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Corynebacteriales;Nocardiaceae;Rhodococcus;;	0	1	16	3	16	0	2	10	0	0	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Corynebacteriales;Williamsiaceae;Williamsia;;	0	0	3	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;Cryptosporangiaceae;Cryptosporangium;;	0	0	6	4	12	0	0	1	0	1	1	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;Cryptosporangiaceae;NA;;	0	0	432	20	74	1	3	21	4	0	0	0	6	3	0	0	0	6
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;Frankiaceae;Frankia;;	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;Frankiaceae;Jatrophihabitans;Jatrophihabitans sp.;	0	114	96	26	28	16	10	30	91	0	2	1	0	0	1	2	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;NA;;;	1	0	2	0	1	8	2	0	0	14	3	6	0	0	1	2	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;NA;NA;Frankiales bacterium;	0	49	125	9	6	8	8	1	0	8	4	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;Sporichthyaceae;Sporichthya;;	0	0	0	2	0	0	23	0	3	16	2	0	3	2	3	6	1	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;Sporichthyaceae;Sporichthya;Sporichthya polymorpha;	0	7	138	3	4	0	37	101	34	0	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Frankiales;Sporichthyaceae;Sporichthya;Sporichthya sp.;	1	0	0	21	0	0	0	0	0	2	0	0	1	5	3	0	2	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Geodermatophilales;Geodermatophilaceae;Blastococcus;;	1	140	390	107	210	35	204	333	337	13	37	1	104	22	1	51	6	64
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Geodermatophilales;Geodermatophilaceae;Blastococcus;Blastococcus sp. CB 286510;	0	0	1	0	2	0	0	0	2	1	0	0	2	0	0	0	0	2
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Geodermatophilales;Geodermatophilaceae;Blastococcus;Blastococcus sp. URHB0062;	0	1	0	0	4	1	7	3	3	0	0	0	3	0	0	0	0	2
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Geodermatophilales;Geodermatophilaceae;Geodermatophilus;;	0	3	0	2	0	0	2	3	0	1	1	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Geodermatophilales;Geodermatophilaceae;Modestobacter;;	0	0	0	2	1	0	0	2	0	5	28	0	31	4	0	15	0	30
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Geodermatophilales;Geodermatophilaceae;NA;;	0	1	4	0	49	1	1	2	0	5	3	0	14	2	0	16	0	14
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Kineosporiales;Kineosporiaceae;Angustibacter;Angustibacter sp.;	0	0	3	0	0	0	0	0	0	0	3	0	2	0	0	1	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Kineosporiales;Kineosporiaceae;Kineosporia;;	2	0	2	0	0	0	1	0	0	10	10	5	5	12	5	2	0	7
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Kineosporiales;Kineosporiaceae;NA;;	1	1	6	1	0	0	3	1	5	2	8	2	0	2	0	1	0	2
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Brevibacteriaceae;Brevibacterium;;	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Cellulomonadaceae;Cellulomonas;;	3	2	3	1	0	1	1	2	5	3	7	5	32	5	7	6	1	13
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Intrasporangiaceae;Janibacter;;	0	1	0	0	0	0	1	1	2	2	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Intrasporangiaceae;NA;;	0	2	4	2	2	1	1	5	4	0	1	0	0	1	0	2	0	3
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Intrasporangiaceae;Phycicoccus;;	0	0	2	4	4	7	12	11	8	0	0	0	1	0	0	0	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Microbacteriaceae;Amnibacterium;Amnibacterium sp. SC-16;	1	0	0	0	0	0	4	0	1	0	2	0	1	3	0	3	1	9
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Microbacteriaceae;Frigoribacterium;;	0	0	2	0	0	0	0	0	0	4	2	0	0	0	2	2	0	2
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Microbacteriaceae;Microbacterium;;	0	20	12	1	3	0	0	5	4	5	1	2	6	2	2	0	0	3
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Microbacteriaceae;NA;;	11	2	3	0	0	0	0	0	0	47	20	27	78	27	33	22	6	50
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Micrococcaceae;Arthrobacter;;	0	0	0	12	8	24	13	0	0	8	61	1	520	20	0	65	6	511
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Micrococcaceae;Arthrobacter;Arthrobacter sp. SOZ3-2091;	0	8	34	30	37	105	157	39	44	0	1	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Micrococcaceae;NA;;	0	0	0	0	0	0	2	0	0	0	0	0	8	1	0	4	0	8
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micrococcales;Sanguibacteraceae;Sanguibacter;;	0	0	0	0	0	0	0	0	2	0	0	0	0	2	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;Actinocatenispora;Actinocatenispora rupis;	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;Actinoplanes;;	0	0	4	0	0	0	0	1	1	23	7	12	13	4	3	6	2	4
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;Allocatelliglobosispora;Allocatelliglobosispora scoriae;	0	0	1	0	2	0	0	3	1	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;Dactylosporangium;;	1	0	0	0	0	1	0	0	0	4	7	5	1	5	3	0	0	2
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;Luedemannella;Luedemannella sp. 119-1-07;	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;Micromonospora;;	0	2	0	1	1	3	0	0	1	1	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;NA;;	1	0	0	0	0	6	0	0	0	33	11	5	14	9	1	3	0	6
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Micromonosporales;Micromonosporaceae;Planosporangium;;	0	0	8	1	0	0	2	0	6	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Nakamurellales;Nakamurellaceae;NA;;	0	0	0	0	0	2	2	1	0	0	3	0	1	2	0	5	0	14
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Nakamurellales;Nakamurellaceae;Nakamurella;;	1	0	2	0	0	0	3	1	1	17	13	1	9	9	6	28	5	77
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	23	29	119	0	18	0	0	15	50	165	25	26	41	40	15	23	15	71
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Actinobacteria bacterium IMCC26256;	5	0	2	0	0	0	0	0	0	22	8	2	2	11	2	11	2	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium BGR 127;	0	0	3	0	0	0	0	0	1	0	3	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium CH9;	0	0	4	0	1	0	0	0	0	0	1	0	0	0	1	1	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium enrichment culture clone CTBE CDB1001A04;	0	35	41	0	2	0	1	3	16	1	1	0	1	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium enrichment culture clone Lpl4-94;	0	3	24	1	1	1	0	2	3	5	0	0	11	0	0	0	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium L2002;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium SCGC AAA007-L10;	0	4	34	2	1	3	5	9	17	0	0	0	0	1	0	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium SCGC AAA041-L20;	1	0	4	1	2	0	2	3	0	3	2	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium YJF1-30;	3	0	10	0	0	6	0	9	28	18	2	6	0	1	0	1	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;actinobacterium YNPRH1P-1;	1	0	0	0	0	0	1	0	0	0	0	0	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin5129;	0	0	1	0	0	0	0	1	2	0	0	2	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin6090;	1	0	6	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Aeromicrobium;;	2	9	2	0	2	0	0	6	1	1	6	1	8	4	3	9	0	5
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Aeromicrobium;Aeromicrobium sp. HJX17;	0	0	0	0	1	0	2	1	3	0	0	0	0	1	0	1	1	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Kribbella;;	2	0	1	3	1	0	3	1	2	22	1	6	16	6	9	5	5	10
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Kribbella;Kribbella sp. enrichment culture clone VanCtr42;	0	19	61	13	3	45	35	49	68	11	1	1	4	4	0	0	1	3
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Marmoricola;;	3	405	868	1	16	1	2	135	345	16	5	2	23	13	9	18	0	32
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Marmoricola;Marmoricola aequoreus;	1	0	1	0	0	0	0	0	3	1	0	1	0	0	1	1	1	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;NA;;	12	1	10	0	0	0	0	3	3	19	9	22	1	7	9	13	2	6
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Nocardioides;;	3	0	0	1	0	0	0	0	7	13	6	1	57	19	5	14	2	48
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Nocardioides;Nocardioides dilutus;	0	0	2	0	0	0	0	0	1	0	0	0	5	0	0	0	0	2
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Nocardioides;Nocardioides sp. MSL 21;	0	5	31	1	9	11	11	6	9	1	0	0	1	0	0	1	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Nocardioidaceae;Nocardioides;Nocardioides sp. URHD0050;	3	0	7	0	0	0	3	0	0	5	0	2	8	2	2	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Propionibacteriales;Propionibacteriaceae;Aestuariimicrobium;Aestuariimicrobium kwangyangense;	0	0	8	3	1	12	5	2	4	1	0	0	0	2	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Actinomycetospora;;	0	0	0	0	0	0	3	0	0	52	27	3	8	6	13	30	7	8
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Actinophytocola;;	0	1	0	0	0	0	0	0	0	1	0	0	0	1	3	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Amycolatopsis;;	0	1	22	6	2	23	9	6	4	4	0	6	7	3	7	4	1	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Goodfellowiella;Goodfellowiella coeruleoviolacea;	1	0	7	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Kibdelosporangium;;	0	0	0	1	0	0	0	0	4	17	1	1	0	0	2	1	0	3
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Lentzea;;	0	2	4	4	1	10	6	10	52	0	2	0	8	3	0	1	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;NA;;	0	19	90	18	32	33	30	38	48	2	3	2	2	3	5	3	2	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Pseudonocardia;;	11	1	3	3	2	2	1	5	5	74	55	7	22	27	15	27	9	36
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Pseudonocardia;Pseudonocardia sp.;	0	0	0	0	0	0	0	0	0	3	2	0	0	0	0	1	1	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Pseudonocardia;Pseudonocardia spinosispora;	0	0	1	0	0	1	0	0	0	3	0	3	1	0	1	0	2	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Umezawaea;;	0	0	3	1	1	0	0	1	0	1	0	0	2	0	0	0	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Pseudonocardiales;Pseudonocardiaceae;Umezawaea;Umezawaea tangerina;	0	2	3	1	1	1	3	1	3	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptomycetales;Streptomycetaceae;NA;;	0	0	0	0	0	0	1	0	1	3	0	3	1	0	1	1	1	3
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptomycetales;Streptomycetaceae;Streptacidiphilus;Streptacidiphilus sp. MUSC34T;	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptomycetales;Streptomycetaceae;Streptomyces;;	5	0	0	1	5	0	2	0	0	29	10	211	5	15	18	13	8	8
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptomycetales;Streptomycetaceae;Streptomyces;Streptomyces sp.;	0	0	0	0	10	2	11	10	1	1	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Streptosporangiaceae;NA;;	0	0	0	0	1	2	0	0	0	0	6	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Streptosporangiaceae;Nonomuraea;;	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Streptosporangiaceae;Streptosporangium;;	0	0	0	0	0	1	0	0	0	4	2	0	5	0	0	2	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Thermomonosporaceae;Actinoallomurus;;	0	2	16	1	0	0	2	3	5	10	10	8	0	1	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Thermomonosporaceae;Actinoallomurus;Actinoallomurus bryophytorum;	1	0	4	0	0	0	1	0	1	2	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Thermomonosporaceae;Actinocorallia;Actinocorallia longicatena;	0	4	11	1	9	3	13	9	5	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Thermomonosporaceae;NA;;	0	0	3	0	2	0	3	3	2	1	0	1	0	0	0	0	0	1
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Thermomonosporaceae;NA;Thermomonosporaceae bacterium YE4-D4-16-CH2;	0	12	17	5	3	4	7	6	17	3	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Thermomonosporaceae;NA;Thermomonosporaceae str. IM-6903;	0	1	0	0	0	1	0	0	0	2	1	1	0	0	0	1	0	0
+Prokaryota;Bacteria;Actinobacteria;Actinobacteria;Streptosporangiales;Thermomonosporaceae;Thermomonospora;Thermomonospora chromogena;	0	5	5	4	4	9	8	12	9	0	20	0	0	0	0	0	0	0
+NA;NA;NA;NA;;NA;;;	61	3	64	2	6	2	6	16	39	443	172	85	165	112	97	136	68	64
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	7	0	5	0	1	0	0	0	1	63	42	26	6	26	12	46	17	10
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin301;	6	0	0	0	0	0	0	0	1	6	6	23	0	0	0	3	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin325;	0	0	0	1	0	0	2	2	3	0	0	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin504;	1	0	0	0	0	0	0	1	1	7	6	0	1	2	1	4	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin5082;	0	11	16	3	4	12	6	7	1	7	1	1	0	1	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Rubrobacteria;Rubrobacterales;NA;;;	0	0	0	0	0	0	14	0	0	1	0	0	1	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	1	1	5	1	1	0	4	5	4	14	3	0	2	4	1	9	1	4
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;Conexibacteraceae;Conexibacter;;	7	0	0	0	0	4	0	0	0	95	14	15	33	20	15	22	5	13
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;NA;;;	4	0	7	3	1	1	5	3	0	86	28	15	24	17	11	15	4	21
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;NA;NA;Solirubrobacterales bacterium;	0	0	28	0	0	0	0	0	4	1	0	0	2	0	1	0	0	2
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;Parviterribacteraceae;Parviterribacter;;	1	1	8	1	1	8	6	1	2	3	4	0	8	6	0	1	1	4
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;Parviterribacteraceae;Parviterribacter;Parviterribacter kavangonensis;	0	0	2	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;Parviterribacteraceae;Parviterribacter;Parviterribacter multiflagellatus;	0	0	0	0	0	2	2	2	0	0	0	0	7	0	0	3	0	0
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;Parviterribacteraceae;Parviterribacter;Parviterribacter sp.;	0	0	1	0	0	0	0	0	0	2	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;Solirubrobacteraceae;Solirubrobacter;;	1	0	1	0	0	0	0	1	2	64	32	11	22	43	7	29	8	18
+Prokaryota;Bacteria;Actinobacteria;Thermoleophilia;Solirubrobacterales;Solirubrobacteraceae;Solirubrobacter;Solirubrobacter sp. URHE0046;	0	0	2	0	3	22	0	0	0	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Armatimonadetes;Armatimonadia;Armatimonadales;Armatimonadaceae;Armatimonas;Armatimonas rosea;	3	4	0	0	0	0	0	0	0	2	2	2	2	5	2	4	0	2
+Prokaryota;Bacteria;Armatimonadetes;Chthonomonadetes;Chthonomonadales;Chthonomonadaceae;Chthonomonas;Chthonomonas calidirosea;	6	0	67	6	7	90	83	32	29	44	20	6	0	20	5	29	13	15
+Prokaryota;Bacteria;Bacteroidetes;Bacteroidia;Bacteroidales;Bacteroidaceae;NA;benzene mineralizing consortium clone SB-5;	0	0	1	0	0	0	0	0	0	9	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Bacteroidetes;Bacteroidia;Bacteroidales;NA;;;	0	0	3	0	0	1	5	0	0	0	0	0	0	0	0	3	0	1
+Prokaryota;Bacteria;Bacteroidetes;Bacteroidia;Bacteroidales;Porphyromonadaceae;Porphyromonas;Porphyromonas sp. feline oral taxon 110;	0	0	1	0	0	0	5	0	0	15	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Bacteroidia;Marinilabiliales;Marinilabiliaceae;NA;;	1	0	5	1	0	10	8	1	0	2	1	0	1	1	0	0	2	1
+Prokaryota;Bacteria;Bacteroidetes;Bacteroidia;Marinilabiliales;NA;;;	0	0	0	4	2	7	4	2	0	1	0	0	0	3	0	1	1	1
+Prokaryota;Bacteria;Bacteroidetes;Bacteroidia;Marinilabiliales;Prolixibacteraceae;Sunxiuqinia;;	1	0	0	1	0	3	3	2	0	0	0	0	1	0	0	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	4	0	0	0	0	0	1	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Chitinophaga;;	0	0	1	0	0	1	0	0	1	8	3	6	0	0	1	1	1	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Chitinophaga;Chitinophaga pinensis;	12	0	0	0	0	0	0	0	0	19	6	3	0	7	0	4	3	3
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Chitinophaga;Chitinophaga sp. AM20-66;	0	0	3	0	0	0	2	0	0	1	0	0	0	0	0	0	3	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Chitinophaga;Chitinophaga sp. AS20-54;	0	0	1	0	0	0	0	0	0	1	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Chitinophaga;Chitinophaga sp. BN130233;	1	33	404	69	199	69	114	130	179	3	2	3	0	2	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Chitinophaga;Chitinophaga sp. S136;	0	9	45	13	63	23	26	20	11	0	0	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Edaphobaculum;Edaphobaculum flavum;	0	0	2	3	5	6	4	6	0	0	0	0	1	0	0	0	0	4
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Ferruginibacter;;	9	0	0	0	0	2	0	0	0	32	17	9	8	14	19	10	19	20
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Ferruginibacter;Ferruginibacter lapsinanis;	0	3	5	0	4	3	1	1	1	0	2	1	0	0	0	0	3	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Ferruginibacter;Ferruginibacter paludis;	0	0	0	0	0	0	1	2	1	0	0	0	1	0	1	2	1	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Filimonas;Filimonas sp. BG6;	1	0	0	0	2	0	3	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Flaviaesturariibacter;Flaviaesturariibacter sp.;	0	0	20	1	6	2	0	1	1	0	0	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Flavisolibacter;;	5	22	32	11	13	33	50	22	23	18	17	2	31	16	0	18	8	42
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Flavisolibacter;Flavisolibacter rigui;	0	15	35	7	11	9	19	17	20	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Flavisolibacter;Flavosolibacter sp. HU1-JC5;	0	3	2	0	0	0	0	0	0	0	0	0	1	0	1	0	0	5
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Flavitalea;;	0	0	40	0	0	0	2	4	3	3	9	1	3	3	2	0	1	5
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Flavitalea;Flavitalea sp.;	1	1	1	0	0	0	0	0	1	10	9	0	2	2	2	1	1	12
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Flavitalea;Flavitalea sp. AN120636;	0	0	11	0	0	0	0	1	0	0	1	0	13	0	0	7	0	14
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Lacibacter;;	0	2	1	0	0	0	2	0	1	2	0	0	0	1	0	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;NA;;	108	3	29	5	23	2	19	16	22	557	208	139	236	228	105	186	138	281
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;NA;Chitinophagaceae bacterium;	0	7	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;NA;Chitinophagaceae bacterium HU1-GB11;	0	11	14	3	0	1	5	3	4	1	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Niabella;;	0	63	12	11	13	12	15	16	12	0	0	0	0	14	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Niabella;Niabella ginsengisoli;	0	0	0	0	1	0	1	4	4	0	0	0	0	1	0	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Niastella;;	0	0	0	0	0	0	0	0	0	8	1	2	0	1	0	1	2	1
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Niastella;Niastella sp. YIM114;	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	1	0	1
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Panacibacter;Panacibacter ginsenosidivorans;	0	0	4	0	1	1	0	0	1	1	2	5	0	0	0	1	0	4
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Panacibacter;Panacibacter sp.;	0	1	3	4	0	2	0	0	0	1	2	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Parasegetibacter;Parasegetibacter terrae;	0	0	0	0	1	0	0	0	0	6	3	0	0	4	4	0	0	7
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Puia;Puia dinghuensis;	1	0	0	0	2	0	1	0	0	3	3	8	0	2	0	2	2	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Rurimicrobium;Rurimicrobium arvi;	0	0	2	2	1	1	0	5	12	2	1	0	2	3	0	1	3	2
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Sediminibacterium;;	4	1	2	6	2	5	11	5	14	4	3	18	1	3	5	1	2	5
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Sediminibacterium;Sediminibacterium aquarii;	6	0	0	0	0	0	0	0	0	16	3	8	0	9	8	1	1	13
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Sediminibacterium;Sediminibacterium goheungense;	0	0	0	1	0	6	1	2	0	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Sediminibacterium;Sediminibacterium salmoneum;	0	3	0	3	6	0	2	0	1	2	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Segetibacter;;	0	0	0	2	0	0	0	0	0	1	2	0	16	1	0	18	3	7
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Segetibacter;Segetibacter aerophilus;	0	0	0	0	1	0	0	0	0	5	11	1	10	2	0	27	0	36
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Segetibacter;Segetibacter koreensis;	1	21	22	12	6	10	24	31	49	2	6	0	1	7	0	9	3	12
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Taibaiella;;	5	1	0	1	0	0	3	0	0	4	2	2	8	2	2	9	1	5
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Terrimonas;;	11	0	0	0	0	0	0	0	14	81	12	20	18	29	8	15	19	17
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Terrimonas;Terrimonas aquatica;	1	0	0	0	0	0	0	6	0	7	1	2	1	1	5	0	2	1
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Terrimonas;Terrimonas arctica;	0	0	0	1	0	1	1	0	0	0	0	0	0	3	0	9	0	2
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Terrimonas;Terrimonas sp.;	1	16	50	3	107	9	0	9	27	29	2	4	3	19	0	1	3	6
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Terrimonas;Terrimonas sp. CB 286475;	0	0	8	0	0	0	0	0	0	0	0	0	1	0	0	0	0	3
+Prokaryota;Bacteria;Bacteroidetes;Chitinophagia;Chitinophagales;Chitinophagaceae;Terrimonas;Terrimonas sp. M1-33108;	0	0	0	0	2	0	0	1	1	2	1	3	0	0	3	1	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Catalimonadaceae;Tunicatimonas;Tunicatimonas pelagia;	0	1	2	1	2	0	3	8	6	0	0	0	5	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Cytophaga;;	0	1	15	1	4	0	3	5	10	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Dyadobacter;;	0	1	18	0	0	0	0	1	12	1	1	0	0	0	0	3	0	6
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Dyadobacter;Dyadobacter sp. Aws11;	2	0	0	0	0	0	0	2	1	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Flexibacter;Flexibacter flexilis;	0	0	0	0	0	0	12	0	0	7	0	1	0	2	15	0	1	4
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Larkinella;;	0	0	0	0	0	0	1	0	0	0	0	0	2	1	1	0	0	1
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Larkinella;Larkinella sp. 15J6-3T6;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Larkinella;Larkinella sp. 15J8-8;	0	0	2	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;NA;;	0	0	1	1	1	6	1	8	2	5	1	1	5	1	1	1	2	2
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Ohtaekwangia;;	0	0	5	0	0	0	0	0	2	2	0	0	1	0	0	4	0	6
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Ohtaekwangia;Ohtaekwangia koreensis;	0	5	1	1	5	0	0	2	2	0	0	0	2	2	1	0	6	4
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Cytophagaceae;Spirosoma;;	0	2	1	0	0	0	0	0	2	0	1	1	2	1	0	2	1	4
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Flammeovirgaceae;Fulvivirga;;	0	0	12	0	0	3	5	5	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Flammeovirgaceae;Fulvivirga;Fulvivirga lutimaris;	0	0	1	3	1	8	15	11	0	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Flammeovirgaceae;NA;;	0	2	3	0	0	0	0	1	4	0	1	0	0	0	1	1	0	1
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Hymenobacteraceae;Adhaeribacter;;	1	4	2	11	2	0	5	15	7	1	0	1	9	0	0	2	0	13
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Hymenobacteraceae;Adhaeribacter;Adhaeribacter aerolatus;	1	1	2	2	2	5	8	15	16	0	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Hymenobacteraceae;Adhaeribacter;Adhaeribacter aquaticus;	0	0	0	0	0	0	0	0	2	0	0	0	99	3	0	2	0	58
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Hymenobacteraceae;Hymenobacter;;	0	0	0	0	0	0	0	0	3	0	0	0	3	0	0	0	1	1
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Hymenobacteraceae;Hymenobacter;Hymenobacter sp. 9PNM-21;	0	56	37	1	7	1	0	4	12	1	2	0	1	2	0	4	1	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;Hymenobacteraceae;NA;;	0	43	80	0	58	0	0	2	19	0	0	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;NA;;;	0	28	39	2	7	0	0	2	2	1	0	0	4	10	0	1	3	4
+Prokaryota;Bacteria;Bacteroidetes;Cytophagia;Cytophagales;NA;Chryseolinea;Chryseolinea serpens;	0	2	9	0	3	0	17	5	6	8	4	0	0	2	6	0	4	1
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Cryomorphaceae;Owenweeksia;;	0	0	15	10	23	9	29	26	16	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Cryomorphaceae;Owenweeksia;Owenweeksia hongkongensis;	0	0	4	2	3	1	3	2	5	4	0	1	0	2	0	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Cryomorphaceae;Salibacter;Salibacter halophilus;	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Chryseobacterium;;	0	0	1	3	6	6	13	9	3	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Flavobacterium;;	4	0	1	0	1	0	0	0	0	13	1	29	6	2	9	2	3	23
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Flavobacterium;Flavobacterium buctense;	0	0	5	0	0	1	3	1	6	0	0	0	0	0	0	0	0	3
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Flavobacterium;Flavobacterium sp.;	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	2
+Prokaryota;Bacteria;Bacteroidetes;Flavobacteriia;Flavobacteriales;Flavobacteriaceae;Flavobacterium;Flavobacterium sp. HME6645;	0	0	0	0	0	0	0	0	3	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Flavobacteria symbiont 5 of Acromyrmex otcospinosus;	0	0	6	0	1	0	0	2	9	5	7	8	0	0	1	0	4	0
+NA;NA;NA;NA;;NA;;;	28	0	1	0	0	0	0	0	0	149	42	44	12	49	33	33	32	38
+Prokaryota;Bacteria;Bacteroidetes;Saprospiria;Saprospirales;Haliscomenobacteraceae;Haliscomenobacter;;	0	1	10	0	3	0	2	1	11	0	2	1	0	4	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Saprospiria;Saprospirales;Lewinellaceae;Lewinella;;	3	0	0	0	0	0	0	1	0	5	0	0	2	0	0	1	1	2
+Prokaryota;Bacteria;Bacteroidetes;Saprospiria;Saprospirales;Lewinellaceae;Lewinella;Lewinella cohaerens;	0	0	3	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Saprospiria;Saprospirales;Lewinellaceae;Lewinella;Lewinella nigricans;	0	0	3	0	0	0	0	0	0	3	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Saprospiria;Saprospirales;NA;;;	0	1	3	3	6	0	7	4	2	17	1	1	6	3	4	4	0	3
+Prokaryota;Bacteria;Bacteroidetes;Saprospiria;Saprospirales;Saprospiraceae;NA;;	0	0	19	0	0	0	1	0	6	2	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Bacteroidetes;Saprospiria;Saprospirales;Saprospiraceae;NA;Saprospiraceae bacterium enrichment culture clone Lt-H9;	0	2	8	3	6	0	3	1	2	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;NA;;;	16	0	4	0	1	0	0	4	6	46	14	16	5	36	19	6	7	18
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;NA;NA;Sphingobacteriales bacterium TP498;	23	0	1	1	0	0	1	0	1	82	20	44	0	35	23	7	19	9
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;NA;NA;Sphingobacteriales bacterium TP524;	2	0	0	0	12	0	0	0	0	5	0	0	1	1	0	0	1	2
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Mucilaginibacter;;	36	0	0	0	0	0	0	0	0	91	40	68	3	9	50	21	11	24
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Mucilaginibacter;Mucilaginibacter gracilis;	0	1	9	0	2	0	1	5	3	0	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Mucilaginibacter;Mucilaginibacter gynuensis;	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Mucilaginibacter;Mucilaginibacter sp. BR5-28;	0	15	98	0	12	0	0	24	54	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Mucilaginibacter;Mucilaginibacter sp. HME7565;	1	0	0	0	0	0	0	1	0	7	0	2	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Mucilaginibacter;Mucilaginibacter sp. J1U2;	1	7	7	0	0	0	0	0	4	0	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Mucilaginibacter;Mucilaginibacter sp. M0-13;	0	0	3	1	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;NA;;	12	6	25	0	0	0	1	2	19	27	2	31	3	4	13	10	8	10
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;NA;Sphingobacteriaceae bacterium BR5-29;	6	1	0	2	1	1	5	2	4	25	3	7	0	0	7	5	1	1
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;NA;Sphingobacteriaceae bacterium enrichment culture clone hao06;	5	0	1	0	0	0	0	0	1	21	0	1	1	10	0	0	2	2
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;NA;Sphingobacteriaceae bacterium HP2I;	0	0	0	0	1	0	0	1	2	1	0	2	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;NA;Sphingobacteriaceae bacterium Tibet-IIK55;	0	0	0	0	0	0	0	0	2	0	0	0	0	1	1	0	1	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Pedobacter;;	3	0	0	0	0	0	0	0	2	25	4	3	14	6	10	11	2	15
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Pedobacter;Pedobacter sp. AR-382;	0	0	4	1	0	7	8	1	29	2	0	0	1	2	1	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Pedobacter;Pedobacter sp. FGR-05;	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	2
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Solitalea;;	1	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Solitalea;Solitalea koreensis;	9	0	0	0	0	0	0	1	2	28	2	5	0	22	2	2	5	4
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Sphingobacterium;Sphingobacterium sp. P-38;	0	0	0	0	0	0	2	0	0	6	2	0	3	3	1	1	0	7
+Prokaryota;Bacteria;Bacteroidetes;Sphingobacteriia;Sphingobacteriales;Sphingobacteriaceae;Sphingobacterium;Sphingobacterium sp. P-7;	0	37	93	37	59	50	34	71	90	2	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Vampirovibrio;Vampirovibrio chlorellavorus;	1	0	0	1	0	0	6	0	3	0	3	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Bellilinea;Bellilinea caldifistulae;	0	1	7	0	4	0	10	4	4	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Brevefilum;Brevefilum fermentans;	0	0	0	0	0	0	0	1	1	8	5	0	2	2	1	4	5	8
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Leptolinea;Leptolinea tardivitalis;	0	0	0	0	0	0	0	0	0	2	0	1	0	0	0	0	1	0
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Levilinea;Levilinea saccharolytica;	1	3	7	2	0	0	2	7	10	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Longilinea;Longilinea arvoryzae;	1	0	0	0	0	0	0	0	0	20	2	0	0	5	1	1	1	1
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;NA;;	5	0	0	0	0	0	6	0	1	31	15	3	3	9	3	19	3	2
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;NA;Anaerolineaceae bacterium enrichment culture;	0	3	4	28	2	24	99	63	36	0	0	0	1	2	1	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;NA;Anaerolineaceae bacterium enrichment culture clone B6_39;	0	0	14	2	0	0	2	10	5	0	0	0	3	0	0	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Ornatilinea;Ornatilinea apprima;	0	12	17	29	19	64	142	126	43	13	12	1	0	6	2	4	2	1
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Thermanaerothrix;Thermanaerothrix daxensis;	0	0	0	3	0	1	0	1	0	24	1	0	5	6	6	10	2	8
+Prokaryota;Bacteria;Chloroflexi;Anaerolineae;Anaerolineales;Anaerolineaceae;Thermomarinilinea;Thermomarinilinea lacunifontana;	0	0	0	0	0	1	2	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	0	3	0	0	0	0	0	2	1	1	9	6	1	2	1	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;anaerobic bacterium MO-CFX2;	19	0	0	0	0	1	0	3	0	84	43	19	34	55	24	23	15	57
+Prokaryota;Bacteria;Chloroflexi;Caldilineae;Caldilineales;Caldilineaceae;Caldilinea;;	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Chloroflexi;Caldilineae;Caldilineales;Caldilineaceae;Litorilinea;Litorilinea aerophila;	0	1	0	0	0	0	17	0	0	2	2	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Caldilineae;Caldilineales;Caldilineaceae;NA;;	0	6	26	11	13	72	84	22	10	8	4	0	1	0	0	5	2	1
+Prokaryota;Bacteria;Chloroflexi;Caldilineae;Caldilineales;Caldilineaceae;NA;Caldilineaceae bacterium enrichment culture clone Ac-G2;	2	0	0	19	5	13	8	4	0	7	2	0	10	0	1	2	1	0
+Prokaryota;Bacteria;Chloroflexi;Chloroflexia;Chloroflexales;Chloroflexaceae;NA;Chloroflexaceae bacterium sp-jj-1;	0	0	0	2	1	4	13	13	5	0	0	0	0	0	0	4	0	0
+Prokaryota;Bacteria;Chloroflexi;Chloroflexia;Chloroflexales;NA;;;	0	0	0	0	0	0	0	1	0	0	0	0	1	0	0	0	0	8
+Prokaryota;Bacteria;Chloroflexi;Chloroflexia;Chloroflexales;Oscillochloridaceae;Oscillochloris;;	0	0	0	0	1	1	4	0	0	1	0	0	1	0	0	0	0	2
+Prokaryota;Bacteria;Chloroflexi;Chloroflexia;Chloroflexales;Oscillochloridaceae;Oscillochloris;Oscillochloris trichoides;	0	12	14	2	10	8	11	13	32	0	0	0	2	3	0	0	0	1
+Prokaryota;Bacteria;Chloroflexi;Chloroflexia;Kallotenuales;Kallotenuaceae;Kallotenue;Kallotenue papyrolyticum;	0	0	0	0	0	0	1	1	0	0	0	0	2	0	0	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Ktedonobacteria;Ktedonobacterales;Ktedonobacteraceae;Ktedonobacter;bacterium SOSP1-85;	0	0	0	0	0	0	0	0	1	2	1	0	0	2	4	2	0	6
+Prokaryota;Bacteria;Chloroflexi;Ktedonobacteria;Ktedonobacterales;NA;;;	14	2	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	4	1	5	6	3	2	9	6	12	5	0	1	0	0	0	0	7	0
+NA;NA;NA;NA;;NA;;;	0	0	15	1	6	0	2	5	11	1	0	0	2	0	0	0	0	1
+Prokaryota;Bacteria;Chloroflexi;NA;;NA;Kouleothrix;Kouleothrix aurantiaca;	5	0	0	1	0	0	0	0	0	56	11	3	7	37	7	9	5	19
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	0	0	5	0	6	3	0	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Chloroflexi;Thermomicrobia;Sphaerobacterales;Sphaerobacteraceae;NA;;	0	0	0	0	0	0	0	0	3	0	1	0	1	0	0	3	0	0
+Prokaryota;Bacteria;Chloroflexi;Thermomicrobia;Sphaerobacterales;Sphaerobacteraceae;Sphaerobacter;Sphaerobacter thermophilus;	0	0	7	0	2	0	5	4	8	3	1	0	0	0	2	5	0	3
+Prokaryota;Bacteria;Cyanobacteria;NA;Chroococcales;Aphanothecaceae;Candidatus Atelocyanobacterium;Candidatus Atelocyanobacterium thalassa;	0	0	0	0	0	0	2	0	0	0	1	0	3	0	0	2	0	1
+Prokaryota;Bacteria;Cyanobacteria;NA;Chroococcales;Microcystaceae;Microcystis;Microcystis sp. SAG 43.90;	0	0	13	1	0	1	0	0	0	0	0	0	3	0	0	0	0	2
+NA;NA;NA;NA;;NA;;;	0	0	15	3	0	2	2	4	3	0	0	0	4	0	0	0	0	0
+Prokaryota;Bacteria;Cyanobacteria;NA;Nostocales;Nostocaceae;NA;;	0	4	33	10	2	2	10	9	19	0	0	0	0	0	0	3	0	0
+Prokaryota;Bacteria;Cyanobacteria;NA;Nostocales;Nostocaceae;Nostoc;;	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Cyanobacteria;NA;Nostocales;Nostocaceae;Nostoc;Nostoc sp. pmiA;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Cyanobacteria;NA;Oscillatoriales;Oscillatoriaceae;Oscillatoria;Oscillatoria tenuis;	0	8	17	7	0	3	6	1	3	0	0	0	5	0	0	0	0	0
+Prokaryota;Bacteria;Cyanobacteria;NA;Synechococcales;Leptolyngbyaceae;Leptolyngbya;;	0	0	12	0	0	0	2	9	32	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Cyanobacteria;NA;Synechococcales;Leptolyngbyaceae;Leptolyngbya;Leptolyngbya sp. MMG-1;	0	0	12	0	0	0	0	0	2	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Fibrobacteres;Fibrobacteria;Fibrobacterales;Fibrobacteraceae;Fibrobacter;;	0	0	6	1	0	2	4	2	6	0	0	3	0	0	0	0	0	0
+Prokaryota;Bacteria;Fibrobacteres;Fibrobacteria;Fibrobacterales;Fibrobacteraceae;Fibrobacter;Fibrobacter sp.;	0	42	234	18	9	17	48	56	69	4	1	0	2	0	1	1	1	0
+Prokaryota;Bacteria;Fibrobacteres;Fibrobacteria;Fibrobacterales;Fibrobacteraceae;Fibrobacter;Fibrobacter succinogenes;	0	0	3	1	1	0	0	0	0	0	1	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Alicyclobacillaceae;Alicyclobacillus;;	0	2	5	1	1	0	0	5	1	0	0	0	0	0	0	1	1	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Alicyclobacillaceae;Tumebacillus;;	0	3	7	0	0	0	1	1	12	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Alicyclobacillaceae;Tumebacillus;Tumebacillus algifaecis;	0	5	7	0	2	0	7	4	4	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;;	0	0	5	0	0	0	0	0	0	10	44	1	17	24	4	7	6	22
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus pumilus;	0	0	12	0	0	0	0	0	0	3	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus selenatarsenatis;	0	1	6	0	0	0	0	0	0	0	0	0	0	0	0	2	1	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus sp. DV9-6;	0	5	2	1	1	1	0	3	2	0	1	0	4	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus sp. TUB3;	0	0	1	0	0	0	0	0	0	3	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Bacillus;Bacillus subtilis;	0	1	5	0	0	1	1	1	4	0	2	0	0	1	0	1	0	1
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;NA;;	0	0	0	0	0	0	0	0	0	0	14	1	6	2	1	1	1	11
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Bacillaceae;Tepidibacillus;;	0	0	1	0	4	10	0	25	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;NA;;;	0	0	1	0	0	0	0	0	1	1	7	0	2	4	3	0	0	1
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillaceae;Ammoniphilus;Ammoniphilus oxalivorans;	1	11	71	11	2	16	13	23	29	4	0	0	0	1	0	1	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillaceae;Brevibacillus;Brevibacillus sp. SA2U2;	0	0	0	0	0	0	0	0	2	2	0	2	0	0	0	1	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillaceae;Cohnella;;	1	1	7	0	0	0	0	1	0	1	3	0	1	0	4	0	0	1
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillaceae;Paenibacillus;;	0	2	13	2	0	2	2	2	9	2	1	0	5	0	3	0	5	3
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillaceae;Paenibacillus;Paenibacillus barengoltzii;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillaceae;Paenibacillus;Paenibacillus sp. 27-9;	3	0	13	0	0	0	0	0	0	30	25	2	1	9	7	11	3	1
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Paenibacillaceae;Paenibacillus;Paenibacillus sp. MT-06;	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Planococcaceae;Ureibacillus;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Planococcaceae;Ureibacillus;Ureibacillus thermosphaericus;	0	111	72	0	0	0	0	0	0	0	0	0	0	0	0	4	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Bacillales;Thermoactinomycetaceae;NA;;	0	76	1	0	0	0	0	0	0	0	0	0	0	2	0	1	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Lactobacillales;Carnobacteriaceae;NA;;	0	0	0	0	0	0	0	0	0	1	0	0	4	5	0	2	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Lactobacillales;Enterococcaceae;Enterococcus;Enterococcus hirae;	0	0	3	0	0	0	0	0	0	3	0	0	0	1	0	1	0	0
+Prokaryota;Bacteria;Firmicutes;Bacilli;Lactobacillales;NA;;;	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	6	1	0	0	0	0	0	0	0	29	7	12	3	18	8	21	9	6
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Christensenellaceae;Christensenella;Christensenella massiliensis;	0	0	2	1	4	0	0	2	2	0	0	2	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Clostridiaceae;Clostridium;;	0	0	1	0	1	0	0	0	0	1	0	0	0	0	0	0	1	1
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Clostridiaceae;Clostridium;Clostridium merdae;	0	0	0	0	1	0	0	0	0	2	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Clostridiaceae;Clostridium;Clostridium sp. 6-69;	0	0	0	0	2	0	0	0	0	1	1	0	0	0	0	4	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Clostridiaceae;Clostridium;Clostridium sp. AN-AS3B;	0	0	0	0	0	0	0	1	1	1	1	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Clostridiaceae;Clostridium;Clostridium sp. E033;	0	2	84	1	86	0	3	13	53	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Clostridiales Family XVII. Incertae Sedis;Thermaerobacter;;	0	0	2	2	1	0	0	1	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Eubacteriaceae;Alkalibacter;Alkalibacter sp. enrichment culture;	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	2
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Heliobacteriaceae;Candidatus Heliomonas;Candidatus Heliomonas lunata;	0	0	2	0	0	0	0	1	0	7	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;NA;;;	1	0	0	0	0	2	0	1	0	15	10	0	8	13	14	5	4	5
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;NA;NA;anaerobic bacterium Glu3;	2	0	0	0	0	0	0	0	2	6	2	0	0	2	0	0	1	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Peptococcaceae;Desulfotomaculum;Desulfotomaculum profundi;	0	9	31	0	4	0	0	16	7	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Peptostreptococcaceae;NA;Peptostreptococcaceae bacterium canine oral taxon 332;	0	0	3	0	0	0	0	0	0	1	0	2	0	0	0	1	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Peptostreptococcaceae;NA;Peptostreptococcaceae bacterium feline oral taxon 042;	0	0	15	0	13	0	0	1	3	0	0	0	0	0	0	0	1	1
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Ruminococcaceae;Ruminiclostridium;;	0	2	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Ruminococcaceae;Ruminiclostridium;[Clostridium] cellobioparum;	0	1	0	0	0	2	1	4	0	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Ruminococcaceae;Ruminococcus;Ruminococcus flavefaciens;	0	0	7	0	1	1	0	7	2	1	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Ruminococcaceae;Ruminococcus;Ruminococcus sp.;	0	0	3	2	15	5	9	3	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Clostridiales;Symbiobacteriaceae;Symbiobacterium;Symbiobacterium thermophilum;	0	0	5	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	38	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Clostridia;Thermoanaerobacterales;Thermoanaerobacteraceae;Thermoanaerobacter;Thermoanaerobacter mathranii;	0	0	6	0	0	0	1	0	0	0	0	0	0	0	0	1	1	0
+Prokaryota;Bacteria;Firmicutes;Erysipelotrichia;Erysipelotrichales;Erysipelotrichaceae;Erysipelothrix;Erysipelothrix sp. CE1;	0	0	0	2	0	0	0	2	0	2	0	0	0	0	0	1	0	0
+NA;NA;NA;NA;;NA;;;	7	0	5	0	0	0	0	0	1	53	35	1	5	25	5	30	10	8
+Prokaryota;Bacteria;Firmicutes;Negativicutes;Veillonellales;Veillonellaceae;NA;;	0	7	15	6	15	2	11	10	15	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Tissierellia;Tissierellales;Tissierellaceae;Tissierella;Tissierella creatinini;	0	0	0	1	0	0	2	0	0	0	0	0	0	2	0	0	0	0
+Prokaryota;Bacteria;Firmicutes;Tissierellia;Tissierellales;Tissierellaceae;Tissierella;Tissierella sp. LW10;	0	0	0	0	3	0	2	0	0	1	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Gemmatimonadetes;Gemmatimonadetes;Gemmatimonadales;Gemmatimonadaceae;Gemmatimonas;;	0	0	0	0	2	0	0	0	0	22	13	2	8	14	10	13	4	2
+Prokaryota;Bacteria;Gemmatimonadetes;Gemmatimonadetes;Gemmatimonadales;Gemmatimonadaceae;Gemmatimonas;Gemmatimonas aurantiaca;	4	0	0	1	0	0	0	0	0	23	12	5	2	12	8	4	3	2
+Prokaryota;Bacteria;Gemmatimonadetes;Gemmatimonadetes;Gemmatimonadales;Gemmatimonadaceae;Gemmatimonas;Gemmatimonas phototrophica;	4	0	0	0	0	0	0	0	0	26	9	5	3	35	4	8	12	14
+Prokaryota;Bacteria;Gemmatimonadetes;Gemmatimonadetes;Gemmatimonadales;Gemmatimonadaceae;Gemmatimonas;Gemmatimonas sp. URHD0086;	1	1	0	0	0	0	1	0	1	13	5	3	5	3	3	5	0	5
+Prokaryota;Bacteria;Gemmatimonadetes;Gemmatimonadetes;Gemmatimonadales;Gemmatimonadaceae;Gemmatirosa;Gemmatirosa kalamazoonesis;	0	0	3	0	0	0	0	0	0	1	0	0	0	0	0	3	0	0
+Prokaryota;Bacteria;Gemmatimonadetes;Gemmatimonadetes;Gemmatimonadales;Gemmatimonadaceae;NA;;	1	0	0	0	0	0	1	0	2	0	0	0	2	1	0	3	2	1
+Prokaryota;Bacteria;Ignavibacteriae;Ignavibacteria;Ignavibacteriales;Ignavibacteriaceae;Ignavibacterium;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Ignavibacteriae;Ignavibacteria;Ignavibacteriales;Ignavibacteriaceae;Ignavibacterium;Ignavibacterium album;	0	2	18	10	6	4	28	12	42	0	0	0	1	1	0	0	2	3
+Prokaryota;Bacteria;Ignavibacteriae;Ignavibacteria;Ignavibacteriales;NA;;;	0	0	1	4	2	0	2	8	1	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Tenericutes;NA;Haloplasmatales;Haloplasmataceae;Haloplasma;Haloplasma contractile;	0	0	0	0	0	0	0	0	3	1	0	0	0	0	0	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	20	0	0	2	0	3	0	0	0	250	82	30	29	70	40	82	27	67
+NA;NA;NA;NA;;NA;;;	0	0	2	0	0	0	0	0	0	2	0	1	2	0	1	1	0	0
+Prokaryota;Bacteria;Planctomycetes;Phycisphaerae;Phycisphaerales;NA;;;	0	0	0	0	0	0	0	1	0	9	2	0	0	6	1	1	0	0
+Prokaryota;Bacteria;Planctomycetes;Phycisphaerae;Tepidisphaerales;Tepidisphaeraceae;Tepidisphaera;Tepidisphaera mucosa;	0	0	3	0	0	0	0	1	1	1	1	0	0	1	0	0	0	1
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Candidatus Brocadiales;Candidatus Brocadiaceae;Candidatus Brocadia;Candidatus Brocadia fulgida;	0	2	1	0	5	0	2	0	2	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Candidatus Brocadiales;Candidatus Brocadiaceae;Candidatus Kuenenia;Candidatus Kuenenia stuttgartiensis;	0	0	0	0	17	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Candidatus Brocadiales;Candidatus Brocadiaceae;Candidatus Scalindua;;	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Candidatus Brocadiales;Candidatus Brocadiaceae;Candidatus Scalindua;Candidatus Scalindua marina;	0	0	4	0	0	0	0	0	10	0	1	0	0	2	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Candidatus Brocadiales;Candidatus Brocadiaceae;NA;;	0	1	1	0	0	0	0	0	0	3	0	0	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	36	0	0	0	0	0	0	0	0	144	62	35	31	38	37	54	38	41
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Planctomycetia bacterium LP82;	4	7	33	10	31	4	7	23	20	38	23	3	12	11	4	21	3	15
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Planctomycetia bacterium WSF3-27;	2	0	0	0	5	0	0	0	0	18	5	3	1	3	2	6	1	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;Fimbriiglobus;Fimbriiglobus ruber;	1	0	0	0	0	0	0	1	0	17	9	2	6	6	3	10	5	4
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;Gemmata;;	6	0	0	0	0	1	0	0	0	31	21	4	19	11	12	20	3	13
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;Gemmata;Gemmata sp. Br1-1;	0	14	24	3	14	2	9	3	6	1	1	0	4	0	0	1	0	1
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;Gemmata;Gemmata sp. Br1-2;	2	2	24	2	13	6	7	4	4	7	1	0	0	1	1	2	1	3
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;Gemmata;Gemmata sp. SD2-6;	0	7	14	4	19	7	8	1	6	3	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;Gemmata;Gemmata sp. Wa1-6;	0	0	9	3	7	0	1	10	6	1	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;NA;;	7	0	6	0	0	0	0	0	0	36	28	10	4	9	4	16	8	6
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Gemmataceae;Zavarzinella;Zavarzinella formosa;	0	13	17	0	0	1	1	0	0	3	7	0	0	0	0	2	0	3
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Isosphaeraceae;NA;;	0	0	1	0	4	0	0	0	0	1	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Isosphaeraceae;Singulisphaera;Singulisphaera acidiphila;	2	0	1	1	0	0	0	2	1	14	0	0	4	1	2	1	4	6
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Isosphaeraceae;Singulisphaera;Singulisphaera sp. Io4-3;	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;;;	47	0	0	0	0	0	0	1	0	257	65	40	53	87	34	102	107	48
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;bacterium Ellin5111;	0	17	165	24	96	31	63	107	276	2	4	1	0	0	1	1	0	2
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;metal-contaminated soil clone K20-02;	9	0	1	3	0	0	1	0	5	82	28	5	5	15	18	12	9	18
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;metal-contaminated soil clone K20-31;	1	0	1	0	0	0	3	1	0	5	0	0	0	0	1	0	0	1
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;metal-contaminated soil clone K20-75;	5	2	1	0	0	0	2	0	0	25	5	0	9	7	2	7	2	10
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Nostocoida limicola III;	0	0	0	0	0	0	0	3	0	0	0	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Planctomycetales bacterium Ellin6207;	0	0	3	0	0	0	0	0	0	3	0	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Planctomycetales bacterium Ellin7224;	19	0	4	0	0	0	0	0	0	42	19	5	12	18	10	28	18	19
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Planctomycetales bacterium Ellin7244;	1	0	0	0	0	0	0	0	0	6	10	9	0	2	2	1	1	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Planctomycete enrichment culture clone Ac-C5;	3	0	0	0	0	1	2	1	0	36	4	0	1	6	8	6	11	13
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Planctomycete enrichment culture clone B418;	0	61	62	49	86	75	43	52	69	1	0	0	0	0	1	0	0	3
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Planctomycete enrichment culture clone Lt-C7;	3	0	43	7	7	1	7	14	26	6	10	11	8	4	0	3	3	9
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;Planctomycete enrichment culture clone phylotype P12;	0	1	11	0	6	5	3	10	13	1	4	0	3	2	3	2	0	5
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;NA;unidentified planctomycete;	0	4	18	3	1	1	3	4	9	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;NA;;Nostocoida limicola III;	3	9	58	4	12	5	7	7	29	9	2	2	0	6	2	5	1	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Gimesia;Gimesia maris;	0	1	1	0	1	0	0	0	0	9	1	0	0	1	0	0	0	2
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;NA;;	53	0	1	1	0	0	0	1	1	276	160	47	36	74	29	61	55	60
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;NA;Gemmata-like str. CJuql4;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;NA;planctomycete DDSe3011;	0	0	4	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;NA;planctomycete DDSe3021;	3	12	34	4	17	5	7	10	18	27	7	5	1	3	2	2	1	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;NA;planctomycete DDSW1318;	0	1	0	0	6	1	0	1	1	2	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;NA;planctomycete LX80;	9	0	3	0	0	0	1	0	0	49	26	5	6	12	7	27	22	6
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;NA;planctomycete WWH14;	7	3	4	1	9	0	3	7	3	48	23	7	7	30	13	19	18	8
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Pirellula;;	1	0	0	0	2	0	0	0	0	4	0	2	0	3	2	0	0	1
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Pirellula;Pirellula sp.;	0	53	264	64	156	74	88	106	120	1	1	0	1	1	1	1	0	1
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Pirellula;Pirellula sp. Br1-4;	0	0	3	1	1	6	0	2	3	4	0	0	1	4	1	0	1	3
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Pirellula;Pirellula staleyi;	0	3	46	12	5	19	17	22	40	2	2	6	3	2	7	2	1	1
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Planctomyces;Planctomyces sp.;	2	0	0	0	0	0	3	0	0	6	2	1	2	3	2	1	1	2
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Planctomyces;Planctomyces sp. FF15;	0	6	34	6	6	7	14	9	19	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Planctomyces;Planctomyces sp. Io1-3;	0	1	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Planctomycetes;Planctomycetia;Planctomycetales;Planctomycetaceae;Rhodopirellula;Rhodopirellula sp. enrichment culture clone Y125;	0	13	0	2	0	5	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Asticcacaulis;;	0	7	26	11	80	7	12	29	20	3	2	1	0	1	0	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Asticcacaulis;Asticcacaulis sp. 148B;	0	6	0	3	4	14	5	6	0	5	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Brevundimonas;;	0	10	32	11	32	4	3	11	31	0	1	0	1	0	2	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Caulobacter;;	2	0	0	0	0	0	0	3	0	8	2	0	6	2	8	2	0	5
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Caulobacter;Caulobacter sp. WW137;	0	0	4	2	22	1	4	7	15	0	1	0	0	0	0	2	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;NA;;	7	1	7	3	14	1	0	4	7	15	1	8	4	6	3	10	5	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;;	4	0	2	0	0	0	0	0	3	20	6	4	3	13	6	4	6	18
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium hankyongense;	0	0	4	3	1	4	2	2	4	0	0	0	2	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium immobile;	0	0	1	0	0	1	0	0	1	1	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium koreense;	0	12	176	54	94	53	90	86	110	0	0	0	0	0	2	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium sp.;	8	1	1	0	0	0	0	0	1	17	2	12	0	1	3	7	1	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium sp. BJC15-D9;	0	0	2	0	0	0	0	0	2	1	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium sp. enrichment culture;	0	0	4	7	1	5	11	7	7	1	0	0	1	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium sp. enrichment culture clone LplF-80;	0	0	0	0	0	0	0	0	2	0	1	0	2	0	0	1	1	7
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium sp. TMB1-24;	0	20	12	16	29	24	15	23	20	1	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Phenylobacterium;Phenylobacterium sp. URHA0004;	1	23	14	17	95	10	18	39	15	11	0	0	4	7	7	6	7	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Caulobacterales;Caulobacteraceae;Woodsholea;Woodsholea maritima;	0	0	3	0	0	0	1	1	1	1	1	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Holosporales;Holosporaceae;Holospora;Holospora curviuscula;	0	0	4	0	0	0	2	0	2	1	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Micropepsales;Micropepsaceae;Micropepsis;Micropepsis pineolensis;	0	0	24	0	0	0	2	1	8	5	1	0	2	3	1	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Micropepsales;Micropepsaceae;NA;;	8	1	7	3	0	1	0	0	1	33	10	17	0	3	11	1	1	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Micropepsales;Micropepsaceae;NA;bacterium Ellin335;	2	0	7	0	2	2	8	1	2	43	7	5	6	11	7	2	13	10
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Micropepsales;Micropepsaceae;Rhizomicrobium;;	39	0	0	0	0	0	2	1	0	36	16	28	6	14	18	9	7	5
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Micropepsales;Micropepsaceae;Rhizomicrobium;Rhizomicrobium sp. URHD0049;	2	0	0	0	0	0	1	0	1	1	0	1	0	0	0	0	2	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Micropepsales;Micropepsaceae;Rhizomicrobium;Rhizomicrobium sp. URHE0053;	0	0	3	0	0	0	0	0	0	2	3	0	0	2	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Micavibrio;;	0	1	1	1	0	3	5	2	5	0	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	50	0	1	0	0	0	1	0	0	319	121	95	68	114	99	66	35	76
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;bacterium episymbiont of Kiwa sp.;	0	0	3	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Alphaproteobacteria bacterium IP-45A;	0	1	4	3	0	4	6	4	10	1	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Alphaproteobacteria bacterium IP-52G;	0	0	0	1	0	0	0	1	1	2	0	0	1	1	2	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Alphaproteobacteria bacterium SJ-64A;	2	2	13	1	0	4	11	11	18	2	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Alphaproteobacteria bacterium SJR-4G;	0	2	12	10	13	7	15	12	24	11	5	5	0	1	2	2	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium A0839;	0	0	2	0	0	0	0	0	0	6	3	0	4	4	9	2	2	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium AP-25;	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium BAC11;	1	0	0	0	0	0	0	0	0	1	1	3	0	7	6	1	3	10
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium CN37;	1	5	2	2	3	21	11	10	10	6	0	2	2	2	5	0	0	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium CRIB-04;	0	0	1	0	0	1	3	0	0	2	0	3	0	1	1	2	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium enrichment culture;	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	1	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium enrichment culture clone CTBE CDB1001H07;	5	0	4	0	0	0	0	0	0	0	0	6	0	2	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium KC-IT-F2;	0	0	0	0	0	1	0	1	0	6	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium KC-IT-H1;	0	2	0	1	0	0	1	2	8	4	0	0	1	1	3	0	4	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium KC-IT-H2;	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0	1	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium LS7-MT;	0	0	0	0	0	2	0	0	1	12	15	0	0	11	6	1	8	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium MA2802;	0	0	2	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium OR-205;	0	1	6	3	0	10	11	20	4	7	1	3	0	7	1	0	1	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium SCGC AAA043-C09;	0	1	13	4	6	12	19	15	19	0	0	0	0	0	3	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium SCGC AAA158-C16;	1	3	3	7	6	37	29	31	20	1	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium Schreyahn_AOB_Aster_Kultur_5;	0	0	0	0	0	1	2	0	0	3	0	0	0	0	3	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium Shinshu-th1;	5	0	6	0	5	1	1	1	0	18	10	2	2	6	3	7	1	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium so41;	0	0	0	0	1	0	1	1	0	1	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium zo42;	1	0	0	0	2	0	0	0	0	4	0	1	0	1	0	2	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;alpha proteobacterium zo44;	2	1	0	0	0	0	0	4	0	17	0	1	0	8	6	0	5	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin362;	5	3	1	2	1	1	0	2	2	8	3	1	0	0	4	4	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin5003;	0	0	0	0	0	2	0	0	0	4	1	1	0	1	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin5032;	0	0	0	1	0	1	2	2	0	1	0	0	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin5299;	0	0	3	3	0	2	7	4	2	0	0	1	0	0	0	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin6089;	0	0	4	0	0	0	0	0	0	1	1	0	0	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;metal-contaminated soil clone K20-40;	2	0	2	2	1	1	4	0	3	9	4	1	0	7	1	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;metal-contaminated soil clone K20-80;	0	0	0	0	0	0	2	7	4	3	0	0	1	3	1	1	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Beijerinckiaceae;Beijerinckia;;	1	0	5	0	0	1	1	0	0	2	0	1	6	2	2	4	0	5
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Beijerinckiaceae;Beijerinckia;Beijerinckia sp. ICBR-76;	0	0	0	0	0	0	0	1	0	2	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Beijerinckiaceae;NA;;	0	0	0	0	0	0	1	3	0	3	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Beijerinckiaceae;Rhodoblastus;Rhodoblastus acidophilus;	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Beijerinckiaceae;Rhodoblastus;Rhodoblastus sp. hjH1;	0	0	2	1	1	1	3	0	4	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Afipia;;	0	0	0	0	0	0	0	0	0	1	0	1	0	0	1	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Afipia;Afipia genosp. 12;	0	0	1	2	2	0	1	0	0	2	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Bosea;;	0	0	0	0	0	0	2	1	0	1	0	0	2	0	2	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Bradyrhizobium;;	91	0	0	0	0	4	3	0	1	589	288	182	39	174	257	192	119	105
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Bradyrhizobium;Bradyrhizobium sp.;	0	0	2	0	0	1	0	1	3	0	0	0	1	0	1	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Bradyrhizobium;Bradyrhizobium sp. URHA0024;	0	0	0	0	1	0	0	0	0	30	4	2	0	11	9	9	4	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;NA;;	4	0	0	0	0	0	1	0	0	36	21	5	14	7	26	19	6	16
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Rhodopseudomonas;;	0	3	9	10	11	3	6	9	6	3	0	0	0	2	0	0	1	5
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Rhodopseudomonas;Rhodopseudomonas sp.;	0	0	1	0	0	0	0	0	0	3	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Bradyrhizobiaceae;Variibacter;Variibacter gotjawalensis;	0	0	0	1	1	0	0	2	1	6	4	0	3	3	6	6	2	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Brucellaceae;Ochrobactrum;;	0	1	3	2	5	3	9	10	8	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Chelatococcaceae;Chelatococcus;;	0	0	0	1	1	4	7	0	1	0	2	1	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Blastochloris;;	0	0	2	0	3	1	3	1	0	0	0	0	1	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Devosia;;	9	0	0	0	2	0	0	0	0	65	12	15	27	5	17	19	6	20
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Devosia;Devosia confluentis;	0	0	0	0	0	0	0	1	0	0	0	0	4	0	0	1	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Devosia;Devosia sp. Emb19;	0	0	0	0	0	1	1	0	0	1	2	0	1	1	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Hyphomicrobium;;	0	0	0	4	1	0	6	2	2	6	2	0	5	7	3	8	2	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Hyphomicrobium;Hyphomicrobium sp.;	0	0	0	1	0	1	4	0	1	0	0	0	0	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Hyphomicrobium;Hyphomicrobium sp. Pd-E-(r)-e-D-5(2);	0	1	6	0	0	4	1	2	3	0	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;NA;;	0	0	1	0	0	0	0	0	0	27	5	0	13	17	13	6	2	8
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Pedomicrobium;;	0	0	0	0	0	0	0	0	2	10	1	0	0	2	1	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Prosthecomicrobium;Prosthecomicrobium sp. enrichment culture clone a113;	0	0	0	0	0	0	1	0	4	0	1	0	0	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Rhodomicrobium;;	0	0	2	0	0	0	0	1	0	3	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Rhodomicrobium;Rhodomicrobium sp. L-6-160;	0	0	0	0	3	0	12	0	0	0	1	0	0	1	1	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Rhodoplanes;;	0	0	0	0	1	0	0	0	0	1	0	0	2	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Hyphomicrobiaceae;Rhodoplanes;Rhodoplanes sp. enrichment culture clone ANA-RAS-62;	0	0	2	1	0	0	0	1	4	1	7	0	9	0	5	6	3	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;Methylobacterium;;	2	2	16	0	0	0	0	1	9	22	41	2	31	3	2	53	4	35
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;Methylobacterium;Methylobacterium sp. G03 78-21;	0	3	1	7	3	6	36	9	3	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;Methylobacterium;Methylobacterium sp. Pao14;	0	8	33	5	8	27	15	26	28	0	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;Microvirga;;	0	1	2	1	0	2	0	0	2	0	26	0	10	1	0	0	0	5
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;NA;;	0	3	0	0	0	0	0	1	0	3	27	2	11	0	1	30	1	9
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;Neomegalonema;Neomegalonema perideroedes;	0	1	4	1	3	7	1	0	5	3	3	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylobacteriaceae;Psychroglaciecola;Psychroglaciecola sp.;	0	0	0	0	0	0	1	2	0	0	5	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylocystaceae;Methylosinus;Methylosinus sporium;	0	0	6	0	0	0	0	0	0	3	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylocystaceae;NA;;	0	0	0	0	0	0	1	0	0	3	1	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Methylocystaceae;NA;Methylocystaceae bacterium PKR-39;	0	0	4	0	0	0	0	0	1	0	0	0	0	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;;;	16	0	0	0	0	1	3	0	0	208	121	29	93	104	52	49	31	66
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;Bauldia;Bauldia litoralis;	0	0	8	0	2	3	5	11	4	0	0	0	0	3	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;NA;Rhizobiales bacteriumSA-279;	0	0	0	0	0	0	0	0	6	1	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;NA;Rhizobiales bacterium URHC0029;	3	0	0	1	0	2	2	1	0	51	23	5	9	9	4	9	2	4
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;NA;Rhizobiales bacterium URHC032R;	0	0	17	2	2	3	15	15	25	0	0	0	0	2	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;NA;Rhizobiales bacterium URHD0078;	5	0	1	0	1	0	1	0	0	40	12	0	3	19	5	9	9	8
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;NA;Nordella;;	0	0	0	0	0	0	1	0	2	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Phyllobacteriaceae;Chelativorans;Chelativorans sp. A52C2;	0	0	0	0	0	1	1	0	0	7	0	1	2	0	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Phyllobacteriaceae;Mesorhizobium;;	0	0	0	0	0	0	3	1	3	15	4	6	7	1	19	5	1	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Phyllobacteriaceae;Mesorhizobium;Mesorhizobium huakuii;	0	0	1	0	1	0	0	0	2	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Phyllobacteriaceae;NA;;	0	0	13	0	15	0	0	5	0	0	0	0	9	0	0	1	1	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Phyllobacteriaceae;Phyllobacterium;;	0	0	2	0	0	0	0	0	0	4	0	0	0	3	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Phyllobacteriaceae;Phyllobacterium;Phyllobacterium sp. DSM 17640;	0	0	2	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Rhizobiaceae;Kaistia;;	0	0	74	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Rhizobiaceae;NA;;	3	2	57	0	7	0	0	1	9	4	3	2	1	3	3	0	2	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Rhizobiaceae;Rhizobium;;	6	0	0	0	0	0	1	0	0	26	17	21	8	15	19	15	3	25
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Xanthobacteraceae;Ancylobacter;;	0	0	1	0	0	0	0	0	0	0	2	0	0	0	1	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Xanthobacteraceae;Labrys;;	2	0	0	0	0	0	0	0	0	8	7	5	1	5	2	7	0	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Xanthobacteraceae;Labrys;Labrys sp.;	2	0	0	1	0	0	0	0	0	1	1	0	0	0	0	1	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Xanthobacteraceae;NA;;	0	0	0	0	0	0	6	1	1	1	2	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Xanthobacteraceae;Pseudolabrys;Pseudolabrys sp.;	0	18	235	43	78	24	128	92	77	0	0	0	0	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhizobiales;Xanthobacteraceae;Pseudolabrys;Pseudolabrys sp. enrichment culture clone SJC7;	0	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodobacterales;Hyphomonadaceae;Euryhalocaulis;Euryhalocaulis caribicus;	0	0	0	0	0	1	1	0	0	3	0	0	0	0	1	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodobacterales;Rhodobacteraceae;NA;;	0	2	35	3	24	5	5	11	8	1	0	0	1	6	0	0	0	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodobacterales;Rhodobacteraceae;Rhodobacter;;	0	0	0	0	0	0	0	1	0	0	1	5	0	0	2	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodobacterales;Rhodobacteraceae;Rhodovulum;Rhodovulum sp.;	0	5	10	4	6	1	11	16	21	1	0	1	0	1	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodobacterales;Rhodobacteraceae;Roseinatronobacter;Roseinatronobacter sp. JAM-AL0205;	0	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodobacterales;Rhodobacteraceae;Rubrimonas;;	0	0	2	0	1	0	2	2	0	0	0	0	0	0	0	0	1	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Acidisoma;Acidisoma sp. L85;	2	2	4	4	7	1	13	7	5	2	0	0	0	0	1	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Acidisphaera;;	3	0	0	0	2	0	0	0	0	4	4	0	0	0	2	4	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Acidisphaera;Acidisphaera sp. C37;	0	0	6	0	1	0	0	2	5	1	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Acidocella;;	0	0	0	0	0	0	1	2	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;NA;;	3	0	0	0	0	1	0	0	0	23	11	9	12	6	1	13	4	11
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;NA;Acetobacteraceae bacterium;	0	0	0	0	0	0	0	0	2	1	0	0	2	1	0	3	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;NA;Acetobacteraceae bacterium LX45;	0	0	3	0	2	2	3	7	5	0	0	1	0	0	1	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;NA;Acetobacteraceae bacterium MP03;	1	3	20	10	6	39	25	19	42	10	1	3	0	3	1	2	1	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;NA;Acetobacteraceae bacterium MS302e;	0	0	0	0	0	0	0	1	0	0	0	0	6	0	1	0	0	7
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;NA;Acetobacteraceae bacterium W1.09-37;	0	0	10	2	3	0	6	3	9	3	0	1	0	0	1	4	1	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Rhodopila;Rhodopila globiformis;	2	0	0	0	0	0	0	0	0	15	2	1	0	3	3	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Rhodovastum;Rhodovastum atsumiense;	0	0	0	0	0	0	1	0	0	2	0	0	0	0	4	1	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Roseomonas;;	0	1	0	0	0	1	2	0	1	1	0	0	5	0	0	0	0	5
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Acetobacteraceae;Siccirubricoccus;Siccirubricoccus deserti;	0	0	0	0	0	0	0	1	0	0	1	0	4	0	0	1	0	6
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;NA;;;	0	0	0	0	0	1	1	1	0	6	3	4	0	1	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;NA;NA;Rhodospirillales bacterium enrichment culture clone CTBE CDB1001B08;	0	0	0	1	0	1	2	2	7	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;NA;Reyranella;;	0	0	0	1	1	0	0	2	2	1	2	0	1	0	2	2	0	2
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;NA;Reyranella;Reyranella graminifolii;	0	0	0	0	0	0	0	1	3	1	0	2	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Aliidongia;Aliidongia dinghuensis;	0	0	3	0	0	0	0	0	0	5	0	3	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Azospirillum;Azospirillum sp. T2-YC6788;	6	0	1	0	0	0	0	0	0	12	1	9	0	7	3	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Dongia;;	17	0	0	0	1	3	0	2	0	44	8	11	2	9	6	3	2	4
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Dongia;Dongia sp.;	0	2	0	3	2	6	7	4	0	5	0	4	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Dongia;Dongia sp. CB 286422;	0	0	0	0	0	0	2	0	0	1	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Inquilinus;;	0	0	0	0	0	0	10	0	0	0	0	3	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;NA;;	2	9	17	5	3	8	6	16	15	11	2	6	0	0	5	2	0	4
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;NA;Rhodospirillaceae bacterium;	0	0	10	0	1	0	0	1	7	8	0	6	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;NA;Rhodospirillaceae bacterium IA_FO_10;	0	0	2	0	0	0	0	1	1	1	1	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Skermanella;;	0	1	2	1	1	10	1	1	0	0	3	0	22	0	0	7	0	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Thalassobaculum;Thalassobaculum fulvum;	0	0	0	0	0	1	0	0	2	1	0	1	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Rhodospirillales;Rhodospirillaceae;Tistlia;Tistlia consotensis;	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Erythrobacteraceae;Altererythrobacter;;	0	2	0	0	3	1	3	5	3	0	0	0	1	0	0	1	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Erythrobacteraceae;Altererythrobacter;Altererythrobacter sp. CB 286495;	0	0	0	0	0	3	2	0	0	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Erythrobacteraceae;Altererythrobacter;Altererythrobacter sp. R88(2010);	0	2	1	0	0	0	0	1	1	0	1	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Erythrobacteraceae;NA;;	0	0	2	0	0	0	0	1	3	0	2	0	2	0	2	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;NA;;;	0	0	1	2	2	2	3	0	0	1	0	0	5	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Hephaestia;Hephaestia sp. DUSK 48;	0	0	0	0	4	0	1	0	0	0	0	0	5	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;NA;;	6	1	1	0	1	1	3	2	5	172	73	9	96	27	21	42	30	68
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;NA;Sphingomonadaceae bacterium 417;	0	0	0	0	0	1	0	0	0	1	3	0	1	1	0	2	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;NA;Sphingomonadaceae bacterium Gsoil 690;	1	0	0	0	0	13	7	0	0	38	11	0	33	22	4	20	9	32
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Novosphingobium;;	0	0	0	3	1	9	8	8	7	0	1	0	4	2	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Novosphingobium;Novosphingobium sp. LP3.2;	0	0	2	3	3	21	81	29	9	0	0	1	2	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingobium;;	0	0	0	1	0	2	2	1	0	0	0	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingobium;Sphingobium sp.;	0	0	2	0	0	0	1	1	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;;	18	0	0	0	0	1	1	0	0	89	49	29	20	38	45	45	18	30
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas crusticola;	0	0	4	3	6	14	8	1	4	0	0	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas daechungensis;	0	0	0	0	2	6	3	1	0	0	1	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp.;	0	0	0	0	0	0	0	0	0	0	2	0	0	0	1	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp. AB23C7;	0	5	30	0	1	0	0	0	10	1	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp. CB 286425;	0	0	0	0	0	0	0	1	0	0	0	0	1	0	0	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp. CB 286429;	0	5	0	0	1	1	0	0	0	0	0	0	1	0	2	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp. I15B-00863;	0	1	3	0	1	0	0	0	1	0	1	0	0	3	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp. TES7;	0	0	0	0	0	0	0	2	0	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingomonas;Sphingomonas sp. YJ09;	0	1	1	0	1	0	0	0	0	0	0	0	0	0	2	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingopyxis;;	0	0	0	1	0	0	0	0	1	0	0	0	0	0	2	0	0	3
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingosinicella;;	0	0	2	1	5	0	0	0	1	0	6	0	2	0	1	0	1	16
+Prokaryota;Bacteria;Proteobacteria;Alphaproteobacteria;Sphingomonadales;Sphingomonadaceae;Sphingosinicella;Sphingosinicella sp.;	4	0	1	0	0	0	0	0	1	44	8	4	0	9	11	9	3	9
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Alcaligenaceae;Derxia;;	1	14	100	5	20	17	63	20	133	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Alcaligenaceae;Derxia;Derxia gummosa;	1	0	2	0	0	0	0	0	1	5	0	2	0	0	0	1	1	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Alcaligenaceae;Derxia;Derxia lacustris;	0	4	132	0	160	0	5	8	20	2	0	1	0	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Alcaligenaceae;NA;;	1	0	1	0	0	0	0	0	0	2	0	0	0	0	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Burkholderia;;	21	0	0	0	0	0	0	0	0	47	94	371	0	24	57	29	30	16
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Burkholderia;Burkholderia sp. M1Ju15;	0	1	4	0	0	1	0	0	1	0	0	0	0	0	5	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Cupriavidus;;	0	0	2	0	0	2	0	1	0	0	3	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Lautropia;Lautropia sp. CB 286320;	0	25	52	29	103	24	69	27	40	0	0	0	2	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;NA;;	1	0	2	0	0	0	0	0	0	43	28	111	5	12	97	15	9	20
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Pandoraea;Pandoraea sp.;	0	0	1	0	0	0	0	0	1	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Paraburkholderia;Paraburkholderia diazotrophica;	1	6	0	2	0	5	0	0	2	12	0	1	0	10	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Quisquiliibacterium;Quisquiliibacterium transsilvanicum;	0	0	0	0	0	0	1	0	1	0	1	0	0	0	1	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Burkholderiaceae;Ralstonia;Ralstonia sp. enrichment culture;	0	0	0	0	0	0	0	0	0	6	2	7	0	0	3	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Acidovorax;;	1	0	1	0	0	0	0	0	1	0	0	0	5	0	3	1	0	7
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Caenimonas;;	1	0	1	0	0	0	0	0	0	2	0	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Caenimonas;Caenimonas sp. TSX9-5;	0	0	2	0	0	0	0	1	0	0	0	0	5	4	0	0	0	5
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;NA;;	8	0	0	0	0	0	0	0	0	22	7	5	53	21	5	18	9	43
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;NA;Comamonadaceae bacterium CNRF18;	0	0	0	0	0	0	0	0	0	6	0	1	0	0	3	6	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Polaromonas;;	0	0	5	1	0	0	0	0	0	1	0	0	2	0	2	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Ramlibacter;;	2	14	5	6	29	6	6	7	22	7	2	1	11	4	2	7	3	13
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Rhodoferax;;	0	0	0	0	0	0	0	2	0	1	0	0	3	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Comamonadaceae;Variovorax;;	25	2	0	0	1	10	2	1	0	26	35	15	17	15	17	18	9	46
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;;;	39	1	0	1	1	3	0	0	1	137	47	46	51	57	72	65	20	110
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;Aquabacterium;Aquabacterium sp. DNG29;	0	0	0	0	0	2	5	2	1	0	0	0	1	0	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;Ideonella;;	0	4	5	19	16	269	89	29	35	0	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;NA;Burkholderiales bacterium LSUCC0118;	0	0	0	0	0	1	4	2	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;NA;Burkholderiales bacterium PDD-69b-30;	4	1	0	0	0	0	0	0	1	9	0	1	3	2	0	1	2	8
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;NA;Burkholderiales bacterium X4;	0	0	0	0	1	0	0	1	0	3	0	0	0	0	0	1	0	1
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;Rhizobacter;;	0	3	7	6	16	80	182	24	15	1	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;NA;Thiobacter;Thiobacter sp. enrichment culture clone 35Fe79;	0	0	6	0	0	0	0	0	0	7	3	1	0	11	1	2	2	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Collimonas;;	0	0	0	1	0	4	1	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Herbaspirillum;;	0	0	0	0	1	0	1	0	1	12	1	0	17	2	0	9	1	7
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Herbaspirillum;Herbaspirillum sp. 156;	0	0	0	1	0	0	4	2	0	0	0	0	0	0	1	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Herbaspirillum;Herbaspirillum sp. S20-88;	0	1	3	0	1	0	1	0	7	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Herminiimonas;;	0	0	1	1	0	0	0	0	1	0	0	0	0	0	0	3	0	1
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Janthinobacterium;;	0	3	9	0	1	0	0	3	2	0	0	0	6	0	0	1	6	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Massilia;;	2	12	51	2	8	3	2	16	46	21	9	5	55	8	7	28	6	58
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Massilia;Massilia eurypsychrophila;	0	0	5	0	0	1	2	1	5	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;NA;;	2	0	0	0	0	0	0	0	1	62	9	8	68	5	10	22	4	82
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;NA;Oxalobacteraceae bacterium 9HR-5;	0	8	15	6	3	2	1	6	10	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Burkholderiales;Oxalobacteraceae;Undibacterium;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	59	7	34	6	3	21	19	23	87	324	121	75	74	195	91	85	77	184
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin6067;	3	0	1	0	3	0	0	0	1	6	1	2	2	9	2	5	4	23
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin6095;	5	0	0	0	0	1	0	0	1	35	7	0	4	23	6	10	4	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Betaproteobacteria bacterium GR16-43;	0	2	4	1	3	0	0	4	13	6	2	1	1	6	2	3	0	12
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;beta proteobacterium Schreyahn_AOB_SSU_Aster_1;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;beta proteobacterium Schreyahn_AOB_SSU_Aster_10;	2	0	0	0	0	0	0	1	0	6	0	1	0	1	2	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;beta proteobacterium Schreyahn_AOB_SSU_Aster_2;	0	0	0	2	1	1	9	4	1	6	3	0	1	5	3	2	8	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;beta proteobacterium Schreyahn_AOB_SSU_Aster_4;	0	0	0	0	0	0	9	0	0	0	0	0	0	0	0	0	0	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;unidentified beta proteobacterium OPB37;	0	1	17	0	3	9	24	7	92	15	17	3	1	14	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;unidentified beta proteobacterium ps.6;	5	0	3	0	0	0	0	0	0	14	8	15	0	26	2	8	5	8
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Neisseriales;Chromobacteriaceae;NA;;	1	0	1	1	0	0	0	0	6	0	0	2	0	0	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Gallionellaceae;Candidatus Nitrotoga;;	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Gallionellaceae;Candidatus Nitrotoga;Candidatus Nitrotoga arctica;	0	110	94	0	24	6	7	15	75	0	0	0	5	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Gallionellaceae;NA;;	0	1	1	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Methylophilaceae;Methylophilus;;	0	52	181	7	29	7	7	35	74	0	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Methylophilaceae;NA;;	0	0	0	0	3	0	0	0	0	0	0	0	2	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;NA;;;	2	0	0	0	0	0	2	0	1	30	16	4	2	44	7	10	19	3
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Nitrosomonadaceae;NA;;	0	65	247	65	126	91	193	206	256	7	0	0	4	7	1	3	1	4
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Nitrosomonadaceae;Nitrosomonas;;	0	4	19	0	4	1	3	7	6	5	0	1	2	5	2	1	5	1
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Nitrosomonadaceae;Nitrosospira;;	1	4	11	1	15	5	5	12	10	11	10	1	19	11	6	5	8	17
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Nitrosomonadales;Nitrosomonadaceae;Nitrosospira;Nitrosospira sp. 17SS;	0	0	9	0	3	0	4	3	12	5	0	0	0	6	0	0	3	3
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Rhodocyclales;NA;;;	0	0	2	0	0	0	0	0	1	0	0	0	0	0	0	0	0	2
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Rhodocyclales;Zoogloeaceae;NA;;	0	0	1	3	0	0	3	2	0	3	1	0	0	2	0	2	0	2
+Prokaryota;Bacteria;Proteobacteria;Betaproteobacteria;Rhodocyclales;Zoogloeaceae;Uliginosibacterium;Uliginosibacterium sp. M1-21;	0	1	13	1	6	0	1	3	1	0	0	15	3	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfobacterales;Desulfobacteraceae;Desulfonatronobacter;;	0	0	0	0	0	0	0	0	1	3	8	1	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfobacterales;Desulfobacteraceae;Desulfonema;Desulfonema sp. enrichment culture clone CIBANICRA-SRB43;	0	0	2	1	1	2	7	0	0	0	2	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfobacterales;Desulfobacteraceae;Desulfosarcina;Desulfosarcina sp. enrichment culture clone CIBANICRA-SRB44;	0	11	47	2	24	1	9	15	7	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfobacterales;Desulfobacteraceae;NA;;	3	0	0	0	0	0	0	0	0	47	62	3	0	3	1	29	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfobacterales;Desulfobulbaceae;Candidatus Electrothrix;;	2	0	0	0	0	0	0	0	3	6	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfovibrionales;Desulfovibrionaceae;Desulfovibrio;Desulfovibrio sp. enrichment culture clone Jdgsrb011;	0	0	0	0	0	0	0	0	6	2	0	0	0	0	1	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfuromonadales;Desulfuromonadaceae;Pelobacter;Pelobacter carbinolicus;	0	0	0	0	0	0	0	0	3	6	5	0	2	7	4	2	2	3
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Desulfuromonadales;NA;;;	0	0	0	0	0	0	0	0	21	3	0	1	0	2	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Anaeromyxobacteraceae;Anaeromyxobacter;;	0	1	4	0	0	0	0	0	6	5	1	0	0	1	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Anaeromyxobacteraceae;Anaeromyxobacter;Anaeromyxobacter dehalogenans;	5	2	63	7	20	4	17	23	7	13	1	6	0	3	1	1	4	1
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Archangiaceae;Cystobacter;;	0	1	10	0	0	0	1	1	6	0	0	0	0	0	1	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Archangiaceae;NA;;	0	0	2	2	0	1	0	1	9	3	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Kofleriaceae;Haliangium;;	0	4	62	1	29	0	0	7	28	0	1	0	1	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Kofleriaceae;Haliangium;Haliangium ochraceum;	2	1	0	1	1	0	0	1	0	4	1	1	0	0	1	1	2	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Kofleriaceae;Kofleria;Kofleria flava;	0	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Kofleriaceae;NA;;	3	1	8	0	1	0	1	1	2	28	4	5	0	6	4	1	1	1
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Myxococcaceae;Aggregicoccus;Aggregicoccus edonensis;	0	0	1	0	0	0	2	1	0	5	1	1	0	4	3	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Myxococcaceae;Aggregicoccus;Aggregicoccus sp.;	2	0	2	0	0	0	0	0	0	1	1	2	0	3	0	1	0	5
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Myxococcaceae;Corallococcus;;	0	0	0	2	1	0	4	46	0	5	2	0	3	2	3	1	3	1
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Myxococcaceae;Myxococcus;;	0	0	0	0	2	0	0	0	0	2	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Myxococcaceae;NA;;	0	0	0	1	0	0	1	47	0	1	1	0	22	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;;;	5	0	0	1	0	0	1	1	0	104	19	14	17	25	26	15	9	4
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;Minicystis;Minicystis rosea;	1	0	0	0	0	1	0	1	0	1	4	0	0	0	1	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;NA;myxobacterium AT1-01;	0	0	17	1	4	0	7	0	2	2	1	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;NA;myxobacterium AT3-01;	0	1	1	0	0	0	0	0	0	0	0	0	0	3	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;NA;myxobacterium AT3-03;	10	1	0	0	1	3	0	0	0	89	10	11	3	26	7	6	8	5
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;NA;myxobacterium SIBN-17;	2	0	1	1	0	11	8	7	3	7	7	1	2	2	6	2	2	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;NA;Sorangiineae bacterium 706;	0	0	0	0	0	0	0	0	1	7	3	1	2	4	4	0	1	2
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;NA;NA;Sorangiineae bacterium HB-1;	0	0	0	0	0	0	0	1	0	3	2	0	0	1	0	0	1	2
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Phaselicystidaceae;Phaselicystis;Phaselicystis flava;	0	1	0	1	0	0	0	3	0	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Aetherobacter;;	0	0	10	0	1	1	1	3	12	7	1	0	2	1	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Aetherobacter;Aetherobacter rufus;	0	0	0	0	0	0	2	0	0	3	1	1	0	1	3	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Aetherobacter;Aetherobacter sp. SBSr008;	0	1	0	7	1	7	6	2	11	2	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Chondromyces;;	0	0	1	1	2	0	5	4	2	0	0	0	1	0	2	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;NA;;	6	0	0	0	0	1	2	3	1	50	15	15	5	18	24	11	4	3
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Polyangium;;	0	1	39	1	52	0	0	0	17	0	1	0	0	0	0	0	1	2
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Polyangium;Polyangium sp. 10-7;	0	0	3	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Racemicystis;Racemicystis crocea;	0	1	13	2	2	3	1	2	5	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Polyangiaceae;Sorangium;Sorangium cellulosum;	0	6	62	13	24	36	67	30	54	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Myxococcales;Sandaracinaceae;Sandaracinus;Sandaracinus amylolyticus;	0	0	4	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Candidatus Babela;Candidatus Babela massiliensis;	0	0	3	0	4	0	7	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	2	0	0	0	0	0	0	0	0	41	20	2	9	9	5	7	13	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;delta proteobacterium pACH72;	0	12	17	6	3	16	37	33	16	0	0	0	0	0	1	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;delta proteobacterium SCGC AAA240-E03;	0	0	10	0	1	17	23	11	4	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;delta proteobacterium SCGC AAA300-E06;	0	2	0	0	0	4	1	4	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;delta proteobacterium WX152;	0	0	2	1	0	0	4	6	14	1	6	0	0	0	0	3	1	0
+Prokaryota;Bacteria;Proteobacteria;Deltaproteobacteria;Syntrophobacterales;Syntrophaceae;NA;;	0	0	24	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Epsilonproteobacteria;Campylobacterales;Campylobacteraceae;Sulfurospirillum;Thermobaculum sp. enrichment culture clone VanCtr100;	0	1	0	2	1	0	1	2	3	0	0	0	1	1	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Alteromonadales;Alteromonadaceae;Alteromonas;Alteromonas sp. Gp-3-7.1;	2	0	1	0	0	0	2	1	8	38	15	0	0	11	3	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Alteromonadales;Colwelliaceae;NA;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Cellvibrionales;Cellvibrionaceae;Cellvibrio;;	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	4
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Cellvibrionales;Halieaceae;NA;;	0	1	16	9	7	35	51	14	17	0	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;Escherichia;;	0	0	3	0	0	0	1	0	2	1	1	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;Escherichia;Escherichia coli;	0	0	0	0	0	0	0	0	3	0	0	0	0	1	0	0	1	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;Escherichia;Escherichia fergusonii;	0	0	0	0	0	1	0	1	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;NA;;	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;Shigella;;	0	0	3	0	0	0	0	0	3	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Enterobacteriaceae;Shigella;Shigella sp. 4109;	0	0	4	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;NA;;;	0	10	41	7	15	4	16	15	23	1	2	0	0	2	1	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Yersiniaceae;NA;;	0	0	0	0	0	1	0	0	0	0	0	19	0	1	1	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Enterobacterales;Yersiniaceae;Serratia;Serratia sp. mixed culture J1-1F;	0	0	0	0	8	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Legionellales;Coxiellaceae;Aquicella;Aquicella siphonis;	0	0	1	0	0	0	1	1	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Legionellales;Coxiellaceae;Coxiella;;	0	0	3	0	3	0	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Legionellales;Coxiellaceae;NA;;	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Legionellales;Legionellaceae;Legionella;;	0	0	14	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Methylococcales;Methylococcaceae;Methyloparacoccus;Methyloparacoccus murrellii;	0	0	9	3	37	0	0	0	0	1	0	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	40	0	0	3	0	0	0	0	0	190	64	98	17	67	68	25	25	23
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;endosymbiont of Ridgeia piscesae;	14	0	0	0	1	0	0	5	6	64	54	17	8	27	25	51	7	4
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Gammaproteobacteria bacterium SJR-13A;	2	0	1	0	0	0	0	0	1	8	2	6	0	1	3	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;gamma proteobacterium CN40;	1	1	3	0	0	0	0	0	2	3	0	2	0	0	1	0	2	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;gamma proteobacterium DFTK16;	0	0	0	0	0	0	0	3	0	2	0	0	1	0	0	0	0	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;gamma proteobacterium SCGC AAA007-P21;	0	0	0	0	1	0	0	2	0	8	1	0	7	7	3	2	2	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;gamma proteobacterium SCGC AAA044-G09;	0	0	0	0	0	0	0	0	7	1	0	0	0	1	0	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;gamma proteobacterium SCGC AAA278-F08;	0	0	2	0	0	0	0	0	1	1	1	1	2	0	1	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;gamma proteobacterium UMB6E;	0	1	0	0	0	0	0	0	0	0	3	0	0	0	0	6	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Olavius algarvensis Gamma 3 endosymbiont;	2	0	282	22	15	12	5	22	24	8	0	2	0	2	0	1	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;sulfur-oxidizing bacterium OAII2;	0	0	0	0	1	1	1	3	0	2	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Nevskiales;Sinobacteraceae;NA;;	3	0	0	1	1	1	1	0	0	24	1	2	4	7	8	1	2	1
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Nevskiales;Sinobacteraceae;Nevskia;Nevskia soli;	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Nevskiales;Sinobacteraceae;Panacagrimonas;Panacagrimonas perspica;	0	0	0	0	0	0	1	1	0	2	0	0	0	0	0	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Nevskiales;Sinobacteraceae;Povalibacter;;	0	0	0	0	0	1	1	0	1	9	0	3	0	4	3	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Nevskiales;Sinobacteraceae;Povalibacter;Povalibacter uvarum;	0	1	2	0	1	0	0	0	0	19	5	0	0	2	1	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Nevskiales;Sinobacteraceae;Steroidobacter;;	0	0	0	1	0	1	8	3	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Nevskiales;Sinobacteraceae;Steroidobacter;Steroidobacter flavus;	0	0	0	0	0	0	0	0	0	0	0	0	4	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Pseudomonadales;Pseudomonadaceae;NA;gamma proteobacterium Y-134;	0	1	21	6	1	2	22	10	19	2	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Pseudomonadales;Pseudomonadaceae;Pseudomonas;;	11	0	0	0	0	0	3	0	0	36	39	183	22	13	18	13	18	38
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Thiotrichales;NA;;;	0	1	1	0	0	0	0	0	3	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Thiotrichales;Thiotrichaceae;Beggiatoa;Beggiatoa sp. CSO1;	0	0	0	1	0	1	33	0	0	0	1	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;NA;;;	0	0	0	0	0	0	10	2	3	39	7	14	1	7	0	1	0	4
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Aquimonas;Aquimonas sp. enrichment culture clone 03SUJ1;	0	0	3	0	0	0	0	0	0	0	0	0	2	0	0	0	0	4
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Dokdonella;;	0	0	1	0	0	0	2	2	1	6	0	1	0	0	2	2	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Dokdonella;Dokdonella fugitiva;	0	0	0	1	0	0	0	0	0	0	1	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Dyella;Dyella sp. CHNCT13;	1	0	3	0	0	0	0	0	0	0	0	1	0	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Luteibacter;;	0	0	0	0	2	0	0	0	0	3	0	1	0	1	1	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Luteibacter;Luteibacter rhizovicinus;	1	0	0	1	0	2	16	4	4	8	0	7	0	7	1	0	2	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Luteibacter;Luteibacter sp. K20-81;	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;NA;;	0	0	0	0	0	4	1	1	0	2	0	1	0	1	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Rhodanobacteraceae;Rudaea;Rudaea sp. URHD0100;	0	0	0	1	0	0	1	3	0	5	0	8	0	0	5	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Arenimonas;;	6	0	0	0	0	0	0	0	0	6	0	1	2	2	6	1	1	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Luteimonas;Luteimonas aestuarii;	0	0	0	0	0	5	0	2	0	1	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Lysobacter;Lysobacter sp. BF-GEL-BP12;	0	0	0	1	0	10	1	3	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Lysobacter;Lysobacter sp. RA15;	0	0	0	0	0	0	8	0	0	0	0	0	0	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;NA;;	1	0	0	0	0	3	3	1	0	0	4	19	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Pseudoxanthomonas;;	0	0	0	1	0	2	0	3	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Stenotrophomonas;;	0	2	1	0	2	0	0	5	3	0	0	0	0	5	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Thermomonas;;	1	0	0	0	0	0	0	0	1	1	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Gammaproteobacteria;Xanthomonadales;Xanthomonadaceae;Xylella;Xylella fastidiosa;	0	0	0	0	0	0	0	0	4	0	0	0	1	1	0	0	0	0
+NA;NA;NA;NA;;NA;;;	8	0	0	0	2	0	0	0	0	76	46	9	2	38	17	18	17	10
+Prokaryota;Bacteria;Proteobacteria;Oligoflexia;Bacteriovoracales;Bacteriovoracaceae;NA;Bacteriovoracaceae bacterium enrichment culture clone MRBiofilm-S-10H;	0	0	0	0	0	0	0	1	1	1	0	1	2	0	0	0	0	0
+Prokaryota;Bacteria;Proteobacteria;Oligoflexia;Bdellovibrionales;Bdellovibrionaceae;Bdellovibrio;;	0	0	0	0	0	0	0	0	0	1	0	1	0	0	0	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	1
+Prokaryota;Bacteria;Proteobacteria;Oligoflexia;Oligoflexales;NA;;;	0	2	26	9	57	10	36	15	13	0	1	0	1	0	0	1	0	0
+Prokaryota;Bacteria;Proteobacteria;Oligoflexia;Oligoflexales;Oligoflexaceae;Oligoflexus;Oligoflexus tunisiensis;	0	0	1	0	1	0	1	1	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;NA;;	0	0	2	0	1	0	0	0	0	0	0	0	0	1	0	1	0	0
+Prokaryota;Bacteria;Synergistetes;Synergistia;Synergistales;Synergistaceae;NA;Synergistaceae bacterium enrichment culture clone LB1_2;	0	0	0	0	0	0	0	1	0	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Tenericutes;Mollicutes;Acholeplasmatales;Acholeplasmataceae;Candidatus Phytoplasma;Phytoplasma sp. RYL-GD;	0	1	1	0	0	0	0	0	0	0	2	1	3	0	0	3	0	0
+Prokaryota;Archaea;Thaumarchaeota;Thermodesulfobacteria;Thermodesulfobacteriales;Thermodesulfobacteriaceae;Thermosulfuriphilus;Thermosulfuriphilus ammonigenes;	0	0	4	0	0	0	0	0	4	0	0	0	0	2	0	0	0	1
+NA;NA;NA;NA;;NA;;;	5	0	1	0	3	0	1	0	0	48	5	6	11	14	7	10	5	11
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Lacunisphaera;;	10	0	0	0	4	0	0	0	0	27	16	16	3	13	26	11	15	8
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Lacunisphaera;Lacunisphaera limnophila;	0	0	0	0	0	0	0	0	5	3	3	1	0	5	2	4	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Lacunisphaera;Lacunisphaera parvula;	5	0	0	0	0	0	31	0	0	39	1	6	1	12	10	3	7	0
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;NA;;	2	2	14	5	3	20	15	22	26	15	5	7	3	4	2	12	8	9
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Opitutus;;	5	13	19	11	3	17	28	34	52	26	14	7	6	22	9	21	6	21
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Opitutus;Opitutus sp.;	0	2	3	1	0	1	4	4	4	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Opitutus;Opitutus sp. enrichment culture clone Ac-D3;	0	1	0	10	3	9	7	30	7	0	0	0	1	8	0	3	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Opitutus;Opitutus sp. enrichment culture clone Lt-B7;	1	23	21	5	3	5	8	14	20	3	1	0	0	1	1	1	1	1
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Opitutales;Opitutaceae;Opitutus;Opitutus sp. VeSm13;	5	18	45	5	20	6	22	16	35	30	4	17	0	6	7	16	11	13
+Prokaryota;Bacteria;Verrucomicrobia;Opitutae;Puniceicoccales;Puniceicoccaceae;Cerasicoccus;;	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Spartobacteria;Chthoniobacterales;Chthoniobacteraceae;Candidatus Udaeobacter;Candidatus Udaeobacter copiosus;	0	0	0	0	5	0	1	0	1	14	10	6	0	6	0	2	9	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;Candidatus Xiphinematobacter;;	1	0	0	1	0	0	4	2	1	9	0	1	3	9	2	1	3	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	166	5	8	8	4	14	22	13	20	977	400	176	86	289	146	320	266	127
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin506;	25	0	0	0	0	0	0	0	13	108	41	16	15	22	13	60	30	30
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin507;	38	0	0	6	120	0	16	2	1	223	73	41	85	171	53	139	141	123
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;bacterium Ellin511;	11	0	0	0	0	1	3	6	12	71	33	16	19	46	22	28	18	35
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Spartobacteria bacterium URHD0058;	0	79	213	197	1027	151	263	250	212	7	5	0	0	1	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;uncultivated soil bacterium clone C019;	24	86	100	26	32	26	33	29	89	61	21	14	0	16	15	43	16	18
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;unidentified eubacterium EA25;	7	14	37	15	7	9	25	48	33	16	2	8	0	12	4	0	8	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;unidentified eubacterium RB35;	2	0	0	1	51	0	0	5	0	4	2	1	0	4	1	4	2	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Terrimicrobium;Terrimicrobium sacchariphilum;	0	1	6	6	31	25	12	19	3	2	0	0	0	1	0	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;NA;;;	1	0	0	8	56	11	20	3	0	2	2	0	4	1	2	1	0	4
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Rubritaleaceae;Rubritalea;;	0	0	0	2	85	0	1	0	0	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Luteolibacter;;	0	0	0	0	0	0	0	1	0	0	0	0	0	0	1	2	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Luteolibacter;Luteolibacter luojiensis;	0	0	15	0	0	0	0	2	6	2	0	2	0	0	2	1	0	2
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;NA;;	2	0	0	0	0	0	0	0	3	37	3	4	8	11	4	10	1	14
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;NA;Verrucomicrobiaceae bacterium GAS474;	2	2	0	1	0	1	0	1	4	10	1	28	0	2	5	0	3	2
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;NA;Verrucomicrobiaceae bacterium ONA9;	0	10	3	2	0	0	0	0	14	0	1	0	0	0	0	1	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Persicirhabdus;Persicirhabdus sediminis;	0	4	35	7	11	13	5	15	35	2	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Prosthecobacter;;	0	0	1	1	0	15	6	14	3	15	0	1	2	1	0	0	1	2
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Prosthecobacter;Prosthecobacter debontii;	0	0	4	0	0	1	1	0	3	1	0	0	0	0	2	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Prosthecobacter;Prosthecobacter fluviatilis;	1	0	0	0	0	0	1	1	0	6	0	0	2	0	1	1	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Roseimicrobium;Roseimicrobium gellanilyticum;	1	0	2	1	0	1	4	2	6	16	5	0	0	10	4	3	5	5
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Verrucomicrobium;Verrucomicrobium sp. IMCC25901;	0	2	0	5	0	0	0	0	0	0	0	3	0	0	0	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Verrucomicrobium;Verrucomicrobium sp. IMCC25902;	0	0	2	0	0	0	1	2	2	0	0	0	0	0	1	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobiaceae;Verrucomicrobium;Verrucomicrobium spinosum;	0	2	11	3	1	2	13	16	17	0	0	0	0	0	0	0	0	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobia subdivision 3;NA;;	43	0	0	0	0	0	0	0	0	202	44	36	7	75	40	52	51	31
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobia subdivision 3;NA;bacterium Ellin5102;	1	0	0	0	0	0	0	0	2	10	7	2	0	2	1	4	4	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobia subdivision 3;NA;bacterium Ellin516;	19	0	0	0	0	0	0	0	3	68	17	57	2	25	53	13	19	15
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobia subdivision 3;NA;bacterium Ellin517;	2	1	5	3	6	1	8	5	2	19	5	0	2	5	2	2	5	0
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobia subdivision 3;NA;unidentified eubacterium RB01;	3	0	10	13	8	44	44	88	34	14	2	0	0	5	0	8	4	2
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobia subdivision 3;NA;unidentified eubacterium RB24;	0	4	9	3	3	0	0	4	11	0	0	0	0	1	0	0	2	4
+Prokaryota;Bacteria;Verrucomicrobia;Verrucomicrobiae;Verrucomicrobiales;Verrucomicrobia subdivision 3;Pedosphaera;Pedosphaera parvula;	8	37	6	11	9	0	2	4	5	40	1	19	0	18	12	7	14	10
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Mytilinidiales;Mytilinidiaceae;Lophium;Lophium mytilinum;	0	0	0	0	1	0	1	1	5	1	0	0	0	1	0	4	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Gloniaceae;Cenococcum;Cenococcum geophilum;	0	15	11	10	16	3	10	27	17	0	1	53	0	0	2	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	1	0	0	0	0	11	0	0	0	0	0	0	0	1	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Tyrannosorus;Tyrannosorus pinicola;	0	0	0	0	0	5	258	3	0	0	4	0	0	0	0	1	0	0
+Eukaryota;Fungi;Ascomycota;Dothideomycetes;Pleosporales;Delitschiaceae;Delitschia;Delitschia didyma;	0	0	0	0	0	0	0	3	6	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Chaetothyriales;NA;;;	0	0	0	0	0	0	1	4	5	4	1	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Aspergillaceae;Penicillium;;	0	0	11	0	0	0	0	0	0	0	5	4	0	1	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Aspergillaceae;Penicillium;Penicillium citrinum;	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Aspergillaceae;Penicillium;Penicillium restrictum;	0	0	0	0	1	0	0	3	4	6	18	0	0	0	3	2	4	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;NA;;;	0	0	0	0	0	0	4	1	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Trichocomaceae;Talaromyces;;	0	0	0	1	1	0	1	122	45	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Eurotiomycetes;Eurotiales;Trichocomaceae;Talaromyces;Talaromyces luteus;	0	0	0	0	0	0	3	0	7	1	0	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	0	0	0	0	0	2	11	7	0	1	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Dactylospora;Dactylospora parasitica;	0	0	0	0	0	0	0	10	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	2	0	0	0	0	0	0	2	0	8	3	1	0	0	0	1	2	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Hyaloscyphaceae;Hamatocanthoscypha;Hamatocanthoscypha laricionis;	0	0	0	0	0	0	0	1	2	0	0	0	3	0	1	0	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Hyaloscyphaceae;Hyalopeziza;;	0	0	0	1	2	0	2	0	0	0	2	0	0	0	0	1	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Hyaloscyphaceae;Hyaloscypha;;	0	0	0	1	0	0	0	18	2	0	0	4	0	0	0	0	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;Hyaloscyphaceae;NA;;	0	0	0	0	0	0	0	0	0	1	65	2	0	0	0	9	0	0
+Eukaryota;Fungi;Ascomycota;Leotiomycetes;Helotiales;NA;;;	0	0	0	0	0	5	0	0	0	1	0	4	0	0	1	2	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	3	0	0	0	0	1	4	6	0	0	0	0	0	1	2	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;NA;Leotiomycetes sp. A935;	0	0	0	1	0	3	4	3	14	3	0	0	1	0	0	0	0	0
+NA;NA;NA;NA;;NA;;;	0	8	3	0	1	2	0	2	20	0	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Bacillariophyceae;Bacillariales;Bacillariaceae;Bacillaria;Bacillaria paxillifer;	0	1	0	0	2	0	0	0	0	0	0	0	0	1	0	0	0	0
+Eukaryota;Chromista;Miozoa;Bacillariophyceae;Cymbellales;Cymbellaceae;Cymbella;Cymbella subturgidula;	0	2	0	2	0	0	0	3	2	3	1	0	0	0	0	0	0	0
+Eukaryota;Chromista;Miozoa;Bacillariophyceae;Naviculales;NA;;;	0	2	1	0	0	0	0	0	2	0	0	0	0	0	0	5	0	0
+NA;NA;NA;NA;;NA;;;	0	0	1	0	0	0	1	0	0	0	0	0	19	0	0	3	2	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Inocybaceae;Inocybe;;	0	26	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Fungi;Basidiomycota;Agaricomycetes;Agaricales;Inocybaceae;Inocybe;Inocybe geophylla;	3	18	17	0	0	0	0	2	0	3	0	0	0	1	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;Haematococcaceae;Haematococcus;Haematococcus lacustris;	0	0	0	3	0	0	0	0	0	2	1	0	5	0	0	0	0	1
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Chlamydomonadales;NA;Ettlia;Ettlia pseudoalveolaris;	0	0	0	0	0	0	0	0	0	0	1	0	1	0	0	2	0	3
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Pleurastrum;Pleurastrum terricola;	0	0	4	2	0	0	3	1	4	0	0	0	0	0	0	0	0	1
+Eukaryota;Plantae;Chlorophyta;Chlorophyceae;Sphaeropleales;Pseudomuriellaceae;Pseudomuriella;Pseudomuriella schumacherensis;	0	14	7	0	0	0	0	0	3	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Chlorellales;Chlorellaceae;Lobosphaera;Lobosphaera incisa;	0	1	1	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Microthamniales;NA;Elliptochloris;Elliptochloris bilobata;	0	0	3	0	0	0	0	0	0	1	1	0	0	0	0	1	0	0
+Eukaryota;Plantae;Chlorophyta;Trebouxiophyceae;Microthamniales;NA;Stichococcus;Stichococcus bacillaris;	0	2	0	0	0	0	0	0	0	0	1	0	2	0	0	4	0	1
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;Coccomyxaceae;Coccomyxa;;	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	5	4	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Neocystis;Neocystis brevis;	0	2	3	0	0	0	0	0	0	0	2	0	1	1	0	1	0	2
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;NA;Planctonema;Planctonema lauterbornii;	0	2	3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Chlorophyta;Ulvophyceae;Bryopsidales;Bryopsidaceae;Lambia;Lambia antarctica;	0	10	4	0	0	0	0	0	6	2	0	0	0	0	0	1	0	0
+Eukaryota;Fungi;Chytridiomycota;Chytridiomycetes;Spizellomycetales;Spizellomycetaceae;Spizellomyces;Spizellomyces punctatus;	0	1	7	0	0	0	0	0	0	0	3	0	0	0	0	1	0	0
+Eukaryota;Protozoa;Euglenozoa;NA;Euglenales;Euglenaceae;Trachelomonas;Trachelomonas volvocinopsis;	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	1	1	2
+Eukaryota;Fungi;Zygomycota;NA;Mucorales;Rhizopodaceae;Rhizopus;;	0	0	3	0	0	0	0	0	4	0	0	9	0	0	0	0	0	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;Chromulinales;Chromulinaceae;Ochromonas;Ochromonas distigma;	0	0	0	0	0	0	0	1	3	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Rhodophyta;Cryptophyta;Pyrenomonadales;Geminigeraceae;Guillardia;Guillardia theta;	0	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0	1
+Eukaryota;Chromista;Pseudofungi;Oomycetes;Pythiales;Pythiaceae;Pythium;Pythium ultimum;	1	5	1	0	0	0	0	0	0	0	1	0	4	0	0	0	0	1
+Eukaryota;Animalia;Nematoda;Chromadorea;Rhabditida;Haemonchidae;Haemonchus;Haemonchus placei;	0	3	0	0	0	0	1	1	5	1	0	0	0	0	1	0	0	0
+Eukaryota;Plantae;Streptophyta;Bryopsida;Hypnales;NA;;;	0	0	0	1	0	0	1	0	0	2	0	0	0	0	0	0	1	0
+Eukaryota;Chromista;Ochrophyta;Chrysophyceae;NA;;NA;;	0	0	0	4	0	0	0	0	0	0	13	1	8	0	1	1	17	1
+Eukaryota;Plantae;Streptophyta;Jungermanniopsida;Jungermanniales;NA;;;	0	87	177	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0
+Eukaryota;Plantae;Streptophyta;NA;Asterales;Asteraceae;NA;;	0	15	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
