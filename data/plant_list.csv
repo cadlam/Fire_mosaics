@@ -29,7 +29,7 @@ MARA,Maianthemum,racemosum,Maianthemum racemosum,native,,herb
 LYLA,Lysimachia,latiolia,Trientalis latiolia,native,previously Trientalis,herb
 PYAP,Pyrolla,aphylla,Pyrolla aphylla,native,,herb
 HYPE,Hypericum,perfoliatum,Hypericum perfoliatum,non_native,,herb
-SI,Sidalcea,sp.,Sidalcea sp.,native,check,herb
+SIDX,Sidalcea,sp.,Sidalcea sp.,native,check,herb
 COHE,Collomia,heterophylla,Collomia heterophylla,native,,herb
 HOCR,Hossackia,crassicaulis,Hossackia crassicaulis,native,,herb
 ANMAD,Anisocarpus,madioides,Anisocarpus madioides,native,recorded as Madia elegans check,herb
@@ -43,7 +43,6 @@ FRVE,Fragaria,vesca,Fragaria vesca,native,,herb
 ASPR,Asyneuma,prenanthoides,Asyneuma prenanthoides,native,Previously ID as Campanula scouleri,herb
 CLRH,Clarkia,rhomboidea,Clarkia rhomboidea,native,,herb
 AGGR,Agoseris,grandiflora,Agoseris grandiflora,native,,herb
-CAAP,Castilleja,applegatei,Castilleja applegatei,native,,herb
 MAGR,Madia,gracilis,Madia gracilis,native,,herb
 VIAM,Vicia,americana,Vicia americana,native,ID uncertain,herb
 DAISYSP,XXXX,,XXXX,native,CHECK SPECIMEN WITH NO FL,herb
@@ -86,7 +85,7 @@ DRAR,Dryopteris,arguta,Dryopteris arguta,native,,herb
 STME,Stachys,mexicana,Stachys mexicana,native,,herb
 NEPA,Nemophila,parviflora,Nemophila parviflora,native,some perhaps actually N. pedunculata?,herb
 CHPO,Chlorogallum,pomeridianum,Chlorogallum pomeridianum,native,,herb
-SIXX,Silene,sp,Silene sp,native,SPECIES ID UNKNOWN; 2019 SPEC LIKE S. VERECUNDA,herb
+SILX,Silene,sp,Silene sp,native,SPECIES ID UNKNOWN; 2019 SPEC LIKE S. VERECUNDA,herb
 MAOR,Marah,oregana,Marah oregana,native,,herb
 SICA,Siilene,campanulata,Siilene campanulata,native,check specimen COMPARE S. VULGARIS,herb
 SABI,Sanicula,bipinnatifida,Sanicula bipinnatifida,native,,herb
@@ -113,7 +112,6 @@ CEIN,Ceanothus,integerrimus,Ceanothus integerrimus,native,,shrub
 RIRO,Ribes,roezlii,Ribes roezlii,native,,shrub
 MANE,Mahonia,nervosa,Mahonia nervosa,native,,shrub
 ARVI,Arctostaphyllos,viscida,Arctostaphyllos viscida,native,,shrub
-VICA,Vitis,californica,Vitis californica,native,,shrub
 CLVI,Clematis,ligusticifolia,Clematis ligusticifolia,native,,shrub
 SASC,Salix,scouleriana,Salix scouleriana,native,,shrub
 ERCA,Eriodictyon,californicum,Eriodictyon californicum,native,,shrub
@@ -164,7 +162,6 @@ STLE,Stipa,lemmonii,Stipa lemmonii,native,,grass
 TRCA,Trisetum,canescens,Trisetum canescens,native,,grass
 POSE,Poa,secunda,Poa secunda,native,,grass
 ELTR,Elymus,trachycaulis,Elymus trachycaulis,native,,grass
-CICY,Cirsium,cymosum,Cirsium cymosum,native,,herb
 SACE,Sambucus,cerulea,Sambucus cerulea,native,,shrub
 PREM,Prunus,emarginata,Prunus emarginata,native,,shrub
 ARGL,Arctostaphyllos,glandulosa,Arctostaphyllos glandulosa,native,,shrub
@@ -179,7 +176,6 @@ ACCI,Acer,circinatum,Acer circinatum,native,,shrub
 CHLA,Chamaecyparis,lawsoniana,Chamaecyparis lawsoniana,native,,tree
 TABR,Taxus,brevifolia,Taxus brevifolia,native,,tree
 VICA,Vitis,californica,Vitis californica,native,,shrub
-COPA,Collomia,heterophylla,Collomia heterophylla,native,,herb
 CRRI,Cryptantha,rigida,Cryptantha rigida,native,,herb
 TRDU,Tragopogon,dubius,Tragopogon dubius,non_native,,herb
 PORE,Potentilla,recta,Potentilla recta,non_native,,herb
@@ -202,7 +198,6 @@ ERXX,Ericameria,sp.,Ericameria sp.,native,,shrub
 RAXX,Ranunculus,sp.,Ranunculus sp.,native,,herb
 TRTO,Trifolium,tomentosum,Trifolium tomentosum,,check specimen from 201,herb
 DIKE,Diplacus,kelloggii,Diplacus kelloggii,native,,herb
-ERCA,Eriodiction,californicum,Eriodiction californicum,native,,shrub
 CICY,Cirsium,cymosum,Cirsium cymosum,native,,herb
 SOXX,Solidago,sp.,Solidago sp.,native,uncertain,herb
 CEAR,Cerastium,arvense,Cerastium arvense,non_native,,herb

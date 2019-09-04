@@ -75,21 +75,19 @@ source("scripts/splist2presabs.R")
 ```
 
 # Plant data selection
-```{r echo = F}
+```{r eval = F, include = F}
+# ALt data selections
 # Select data (pick one)
 # CHECK FOR TYPOS - ALL GOOD
 # missing <- anti_join(plant_data, plant_names, by = "species")
 # Join file with data and file with plant info, then dplyr::select required information; dplyr::select and run the right one:
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native") %>%
-  dplyr::select(site_id, species, cover)
+  dplyr::select(site_id, species, cover, obs_id)
 
 #plant_dat <- left_join(plant_dat, site_data, by = "site_id") %>% 
 #  filter(sev=="l")
 
-```
-
-```{r eval = F, include = F}
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native" & form == "tree") %>%
   dplyr::select(site_id, species, cover)
@@ -115,26 +113,27 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
 ```{r include=F}
 # To get p/a:
 plant_dat_pa_l <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2) %>% 
-  gather(key = species, value = pa, ABCO:WOFI)
+  gather(key = species, value = pa, ABCO:YAMI) #ABCO:YAMI for all native herbs in all sites
 
 # The following is to remove species detected too few times
 # convert to wide format for following analysis
 plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
 
-# optional:remove plants with few sightings; not sure this makes much difference
+# optional/incomplete:remove plants with few sightings; not sure this makes much difference
 ## Here I'm making a row for the frequency of detection
 plant_dat$cover[plant_dat$cover > 0] <- 1 
 plant_matrix2 <- spread(data = plant_dat, key = species, value = cover, fill = 0) %>% 
   bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
 
+# adding dummy species (eg. Webster 2010)
 plant_matrix <- plant_matrix1 %>%
-  bind_rows(., plant_matrix2[49,]) %>%
-  mutate("DUMB" = "0.5") # adding dummy species (eg. Webster 2010)
+  bind_rows(., plant_matrix2[111,]) %>% #for only 2018 data, use change 111 to 49
+  mutate("DUMB" = "0.5") 
 
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
 plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 10]
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
-plant_matrix <- plant_matrix[-49, ] %>%
+plant_matrix <- plant_matrix[-111, ] %>% #for only 2018 data, use change 111 to 49
   mutate_if(is.character, as.numeric)
 
 # Make Bray-Curtis (?) dissimilarity matrix
@@ -260,79 +259,6 @@ plant_dat_sum2 <- plant_dat_sum %>%
 
 ```
 
-```{r}
-#plot for productivity
-tree_ht <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/sublayer_data.csv")
-tree_ht$site_id <- as.factor(tree_ht$site_id)
-
-site_data_HS <- site_data %>% 
-  left_join(tree_ht, by = "site_id") %>% 
-  filter(sev == "h")
-
-# use aggregate to create new data frame with the maxima
-# regr_ht is the tallest tree that grew/regrew after fire
-tree_ht_HS <- aggregate(regr_ht ~ site_id, site_data_HS, max) %>% 
-  left_join(site_data, by= "site_id")
-# then simply merge with the original
-#site_data_HS <- merge(df.agg, site_data_HS1)
-
-
-ggplot(tree_ht_HS, aes(x=tsf, y = regr_ht)) +
-  geom_point() +
-  geom_smooth(method="lm")
-
-```
-
-
-### Rarefaction curves (maybe div index better though)
-```{r}
-# rarefy only works with counts
-data(BCI)
-BCI <- plant_glm_pa %>% 
-#  filter(sev == "u") %>% 
-  dplyr::select(ABCO:WOFI) %>% 
-  mutate(sev_tsf2 = paste("sev", "tsf_cat2"))
-
-#Shannon
-diversity(BCI, index = "shannon", MARGIN = 1, base = exp(1))
-
-H <- diversity(BCI)
-
-plant_dat_pa_h <- plant_glm_pa %>% 
-  mutate(H = H) %>% 
-  mutate(sev_tsf2 = paste(sev, tsf_cat2))
-
-ggplot(plant_dat_pa_h, aes(x= sev_tsf2, y = H)) +
-  geom_boxplot()
-
-
-simp <- diversity(BCI, "simpson")
-invsimp <- diversity(BCI, "inv")
-r.2 <- rarefy(BCI, 2)
-alpha <- fisher.alpha(BCI)
-pairs(cbind(H, simp, invsimp, r.2, alpha), pch="+", col="blue")
-
-#specaccum
-sp1 <- specaccum(BCI)
-sp2 <- specaccum(BCI, "random")
-sp2
-summary(sp2)
-plot(sp1, ci.type="poly", col="blue", lwd=2, ci.lty=0, ci.col="lightblue")
-boxplot(sp2, col="yellow", add=TRUE, pch="+")
-## Fit Lomolino model to the exact accumulation
-mod1 <- fitspecaccum(sp1, "lomolino")
-coef(mod1)
-fitted(mod1)
-plot(sp1)
-## Add Lomolino model using argument 'add'
-plot(mod1, add = TRUE, col=2, lwd=2)
-## Fit Arrhenius models to all random accumulations
-mods <- fitspecaccum(sp2, "arrh")
-plot(mods, col="hotpink")
-boxplot(sp2, col = "yellow", border = "blue", lty=1, cex=0.3, add= TRUE)
-## Use nls() methods to the list of models
-sapply(mods$models, AIC)
-```
 
 
 ### NMDS
@@ -344,19 +270,24 @@ Non-metric multidimensional scaling (NMDS) is a way to graphically represent the
 ```{r, echo=FALSE,results='hide',fig.keep='all'}
 #test NMDS method https://stackoverflow.com/questions/14711470/plotting-envfit-vectors-vegan-package-in-ggplot2
 
-library(grid)
+#library(grid)
 
+#sub <- c("6", "25","27","28","51","32","47","49","37","41","40","52","53","1","30","33","34","38")
+
+#plant_matrixx <- plant_matrix %>%
+#  filter(site_id %in% sub) %>% 
+#  mutate(group = ifelse(site_id %in% c("6", "25","27","28","51","32","47","49","37","41","40"), #1, 2))
+  
 # calculate distance for NMDS
-NMDS.log<- log1p(plant_matrix[,-1])
+NMDS.log<- (plant_dat_pa_w[,(2:203)]) #previously tried log1p transformation for 2018, but with both years the stress is too high
 
 #NMDS
-sol <- metaMDS(NMDS.log)
+sol <- metaMDS(NMDS.log, k = 3)
 
-str(sol)
 # scrs is the base for the plot
 scrs <- as.data.frame(scores(sol, display = "sites"))
 scrs <- cbind(scrs, site_id = plant_matrix$site_id)
-scrs <- merge(scrs, site_data, by = "site_id")
+scrs <- merge(scrs, site_data[,-(111:114)], by = "site_id")
 
 # To only show statistically significant species with arrows:
 ef<-envfit(sol, NMDS.log, perm=9999)
@@ -416,27 +347,73 @@ C1 <- cbind(C1, Env_factors = rownames(C1))
 Cred1<-subset(C1,pvals1<0.05)
 Cred1 <- cbind(Cred1, Env_factors = rownames(Cred1))
 
-
-#library(ggrepel)
-
-
-p <- ggplot(scrs) +
+#Axis 1 and 2
+p1 <- ggplot(scrs) +
   geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  scale_color_manual(values=c("#FF0000", "#3399FF", "#FFFF00", "#FF9933", "#993300", "#33FF00")) +
   coord_fixed() + ## need aspect ratio of 1!  
-  geom_segment(data = Cred,
-               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
-               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_segment(data = Cred, #arrows for species
+#               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
 #  geom_segment(data = C1,
 #               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
 #               arrow = arrow(length = unit(0.25, "cm")), colour = "red") +
-  geom_text(data = Cred, aes(x = NMDS1, y = NMDS2, label = species),
-            size = 3) +
+#  geom_text(data = Cred, aes(x = NMDS1, y = NMDS2, label = species),
+#            size = 3) + #species names at end of arrows
 #  geom_text_repel(data = C1, aes(x = NMDS1, y = NMDS2, label = Env_factors),
 #            size = 3, colour = "red") +
-  labs(title = "Figure 1: NMDS for all native plants")
+  labs(title = "Figure 1: NMDS for all native plants (1&2)")
+
+p1
+
+#Axis 2 and 3
+p2 <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS2, y = NMDS3, colour = sev)) +
+    scale_color_manual(values=c("#FF0000", "#3399FF", "#FFFF00", "#FF9933", "#993300", "#33FF00")) +
+  coord_fixed() + ## need aspect ratio of 1!  
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_segment(data = C1,
+#               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "red") +
+#  geom_text(data = Cred, aes(x = NMDS1, y = NMDS2, label = species),
+#            size = 3) +
+#  geom_text_repel(data = C1, aes(x = NMDS1, y = NMDS2, label = Env_factors),
+#            size = 3, colour = "red") +
+  labs(title = "Figure 2: NMDS for all native plants (2&3)")
+
+p2
+
+
+#Axis 1 and 3
+p3 <- ggplot(scrs) +
+  geom_point(mapping = aes(x = NMDS1, y = NMDS3, colour = sev)) +
+    scale_color_manual(values=c("#FF0000", "#3399FF", "#FFFF00", "#FF9933", "#993300", "#33FF00")) +
+  coord_fixed() + ## need aspect ratio of 1!  
+#  geom_segment(data = Cred,
+#               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
+#  geom_segment(data = C1,
+#               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
+#               arrow = arrow(length = unit(0.25, "cm")), colour = "red") +
+#  geom_text(data = Cred, aes(x = NMDS1, y = NMDS2, label = species),
+#            size = 3) +
+#  geom_text_repel(data = C1, aes(x = NMDS1, y = NMDS2, label = Env_factors),
+#            size = 3, colour = "red") +
+  labs(title = "Figure 3: NMDS for all native plants (1&3)")
+
+p3
+
+p <- plot_grid(p1, p2, p3)
 
 p
 
+p3d <- plot_ly(scrs, x = ~NMDS1, y = ~NMDS2, z = ~NMDS3, color = ~sev, colors = c("#FF0000", "#3399FF", "#FFFF00", "#FF9933", "#993300", "#33FF00")) %>%
+  add_markers() %>%
+  layout(scene = list(xaxis = list(title = 'NMDS1'),
+                     yaxis = list(title = 'NMDS2'),
+                     zaxis = list(title = 'NMDS3')))
 #  stat_contour(data = ordi.plant.na, aes(x, y, z = z)) + #can change the binwidth depending on how many contours you
 #  scale_colour_manual("Post-fire habitats",  values = c("red", "green", "blue")) + #sets the name of the legend for shape, and says which symbols we want (equivalent to the pch command in plot)
 #  labs(colour = "Severity")+ #another way to set the labels, in this case, for the colour legend
@@ -449,17 +426,17 @@ p
 
 # Plant NMDS 3D
 
-sol3 <- metaMDS(NMDS.log, k = 3)
+#sol3 <- metaMDS(NMDS.log, k = 3)
   
-sol3$MDS1
+#sol3$MDS1
 
-str(sol3)
+#str(sol3)
 
 library("plotly")
 
-plot_ly(color = ~sev, showlegend = F) %>%
-  add_markers(data = sol3, x = ~MDS1, y = ~MDS2, z = ~MDS3) %>%
-  add_paths(data = m, x = ~MDS1, y = ~MDS2, z = ~MDS3)
+#plot_ly(color = ~sev, showlegend = F) %>%
+#  add_markers(data = sol3, x = ~MDS1, y = ~MDS2, z = ~MDS3) %>%
+#  add_paths(data = m, x = ~MDS1, y = ~MDS2, z = ~MDS3)
 
 ```
 

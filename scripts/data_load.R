@@ -1,8 +1,13 @@
 # This loads all the data (some additional manipulation required for plants to select native species, spcific growth forms, or to change to p/a)
 ## Site
-site_data_read <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
-site_data_read$tsf <- as.numeric(as.character(site_data_read$tsf))
-site_data_read$fire_yr <- as.numeric(as.character(site_data_read$fire_yr))
+site_data2018 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
+site_data2019 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data2019.csv") 
+site_data2018$site_id <- as.factor(site_data2018$site_id)
+site_data2018$tsf <- as.numeric(as.character(site_data2018$tsf))
+site_data2018$fire_yr <- as.numeric(as.character(site_data2018$fire_yr))
+#site_data2019$tsf <- as.numeric(as.character(site_data2019$tsf))
+#site_data_read$fire_yr <- as.numeric(as.character(site_data2019$fire_yr))
+site_data_read <- full_join(site_data2018, site_data2019)
 
 # here I'm setting the TSF categories; change as necessary (tsf_cat = 3 age categories; tsf_2cat = 2 categories)
 site_data <- site_data_read %>% 
@@ -112,4 +117,5 @@ insect_dat_l <- insect_mat %>% # Long format, with site data, dummmy species
   dplyr::select(-2)
 
 insect_dat_w <- spread(insect_dat_l, key = "taxon", value = "number")
+
 
