@@ -48,7 +48,7 @@ Sampling methods involved: surveys of all native plants and lichens (growing on 
 ```{r include = F}
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart, lattice, rowr)
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly)
 
 #library(lme4)
 #library(lmerTest)
@@ -277,17 +277,20 @@ Non-metric multidimensional scaling (NMDS) is a way to graphically represent the
 #plant_matrixx <- plant_matrix %>%
 #  filter(site_id %in% sub) %>% 
 #  mutate(group = ifelse(site_id %in% c("6", "25","27","28","51","32","47","49","37","41","40"), #1, 2))
-  
+
+nmds_dat <- left_join(plant_mat_pa_w, lichen_mat_genus_pa_w, by = "site_id")
+nmds_dat[is.na(nmds_dat)] <- 0
+
 # calculate distance for NMDS
-NMDS.log<- (plant_dat_pa_w[,(2:203)]) #previously tried log1p transformation for 2018, but with both years the stress is too high
+NMDS.log<- (nmds_dat[,-1]) #previously tried log1p transformation for 2018, but with both years the stress is too high
 
 #NMDS
 sol <- metaMDS(NMDS.log, k = 3)
 
 # scrs is the base for the plot
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = plant_matrix$site_id)
-scrs <- merge(scrs, site_data[,-(111:114)], by = "site_id")
+scrs <- cbind(scrs, site_id = plant_dat_pa_w$site_id)
+scrs <- merge(scrs, plant_dat_pa_w[,-(111:114)], by = "site_id")
 
 # To only show statistically significant species with arrows:
 ef<-envfit(sol, NMDS.log, perm=9999)
@@ -326,7 +329,7 @@ Cred <- cbind(Cred, species = rownames(Cred))# %>%
 
 # now envfit for env factors
 scrs_filt <- scrs %>% 
-  dplyr::select(site_id, folded_aspect, elev, heat_load, tree_cov, shrub_cov, bare_cov, herb_cov)
+  dplyr::select(site_id, folded_aspect, elev, heat_load, tree_cov, shrub_cov, bare_cov, herb_cov, cov_cat)
 
 sol2 <-metaMDS((scrs_filt[,-1]))
 
@@ -409,11 +412,19 @@ p <- plot_grid(p1, p2, p3)
 
 p
 
-p3d <- plot_ly(scrs, x = ~NMDS1, y = ~NMDS2, z = ~NMDS3, color = ~sev, colors = c("#FF0000", "#3399FF", "#FFFF00", "#FF9933", "#993300", "#33FF00")) %>%
+p3d <- plot_ly(scrs, x = ~NMDS1, y = ~NMDS2, z = ~NMDS3, color = ~cov_cat, symbol = ~sev, symbols = (c("square", "diamond", "circle", "cross", "x")), text = ~paste('cc: ', tree_cov)) %>%
   add_markers() %>%
   layout(scene = list(xaxis = list(title = 'NMDS1'),
                      yaxis = list(title = 'NMDS2'),
                      zaxis = list(title = 'NMDS3')))
+p3d
+
+?paste
+#colors = c("#FF0000", "#3399FF", "#FFFF00", "#FF9933")
+# , "#993300", "#33FF00"
+#text = ~paste('site: ', scrs$site_id)
+
+
 #  stat_contour(data = ordi.plant.na, aes(x, y, z = z)) + #can change the binwidth depending on how many contours you
 #  scale_colour_manual("Post-fire habitats",  values = c("red", "green", "blue")) + #sets the name of the legend for shape, and says which symbols we want (equivalent to the pch command in plot)
 #  labs(colour = "Severity")+ #another way to set the labels, in this case, for the colour legend
@@ -423,20 +434,6 @@ p3d <- plot_ly(scrs, x = ~NMDS1, y = ~NMDS2, z = ~NMDS3, color = ~sev, colors = 
 #        legend.direction = "horizontal",
 #        legend.box = "horizontal",
 #        legend.box.just = "centre")
-
-# Plant NMDS 3D
-
-#sol3 <- metaMDS(NMDS.log, k = 3)
-  
-#sol3$MDS1
-
-#str(sol3)
-
-library("plotly")
-
-#plot_ly(color = ~sev, showlegend = F) %>%
-#  add_markers(data = sol3, x = ~MDS1, y = ~MDS2, z = ~MDS3) %>%
-#  add_paths(data = m, x = ~MDS1, y = ~MDS2, z = ~MDS3)
 
 ```
 

@@ -27,7 +27,7 @@ WHMO,Whipplea,modesta,Whipplea modesta,native,,herb
 CHUM,Chimaphila,umbellata,Chimaphila umbellata,native,,herb
 MARA,Maianthemum,racemosum,Maianthemum racemosum,native,,herb
 LYLA,Lysimachia,latiolia,Trientalis latiolia,native,previously Trientalis,herb
-PYAP,Pyrolla,aphylla,Pyrolla aphylla,native,,herb
+PYAP,Pyrola,aphylla,Pyrolla aphylla,native,,herb
 HYPE,Hypericum,perfoliatum,Hypericum perfoliatum,non_native,,herb
 SIDX,Sidalcea,sp.,Sidalcea sp.,native,check,herb
 COHE,Collomia,heterophylla,Collomia heterophylla,native,,herb
@@ -49,7 +49,6 @@ DAISYSP,XXXX,,XXXX,native,CHECK SPECIMEN WITH NO FL,herb
 GOOB,Goodyera,oblongifolia,Goodyera oblongifolia,native,,herb
 ACTR,Achlys,triphylla,Achlys triphylla,native,,herb
 HEXX,Heuchera,sp.,Heuchera sp.,native,check,herb
-VIXX,Vicia,sp.,Vicia sp. (big),native,big; ie VIAM,herb
 PLEL,Platanthera,elegans,Platanthera elegans,native,,herb
 ADBI,Adenocaulon,bicolor,Adenocaulon bicolor,native,,herb
 COST,Corallorhiza,striata,Corallorhiza striata,native,sp ID uncertain,herb
@@ -111,7 +110,7 @@ SYAL,Symphoricarpos,albus,Symphoricarpos albus,native,,shrub
 CEIN,Ceanothus,integerrimus,Ceanothus integerrimus,native,,shrub
 RIRO,Ribes,roezlii,Ribes roezlii,native,,shrub
 MANE,Mahonia,nervosa,Mahonia nervosa,native,,shrub
-ARVI,Arctostaphyllos,viscida,Arctostaphyllos viscida,native,,shrub
+ARVI,Arctostaphylos,viscida,Arctostaphylos viscida,native,,shrub
 CLVI,Clematis,ligusticifolia,Clematis ligusticifolia,native,,shrub
 SASC,Salix,scouleriana,Salix scouleriana,native,,shrub
 ERCA,Eriodictyon,californicum,Eriodictyon californicum,native,,shrub
@@ -121,11 +120,11 @@ CESA,Ceanothus,sanguineus,Ceanothus sanguineus,native,,shrub
 GAFR,Garrya,fremontii,Garrya fremontii,native,,shrub
 COCO,Corylus,cornuta,Corylus cornuta,native,,shrub
 PHLE,Philadelphus,lewisii,Philadelphus lewisii,native,,shrub
-ARPA,Arctostaphyllos,patula,Arctostaphyllos patula,native,,shrub
+ARPA,Arctostaphylos,patula,Arctostaphylos patula,native,,shrub
 ROGY,Rosa,gymnocarpa,Rosa gymnocarpa,native,,shrub
 CONU,Cornus,nuttallii,Cornus nuttallii,native,,shrub
 OECE,Oemleria,cerasiformis,Oemleria cerasiformis,native,,shrub
-SANIG,Sambucus,nigra,Sambucus nigra,native,,shrub
+SANIG,Sambucus,nigra var. cerulea,Sambucus nigra,native,,shrub
 RISA,Ribes,sanguineum,Ribes sanguineum,native,,shrub
 AMAL,Amelanchier,alnifolia,Amelanchier alnifolia,native,,shrub
 HEAR,Heteromeles,arbutifolia,Heteromeles arbutifolia,native,,shrub
@@ -162,9 +161,8 @@ STLE,Stipa,lemmonii,Stipa lemmonii,native,,grass
 TRCA,Trisetum,canescens,Trisetum canescens,native,,grass
 POSE,Poa,secunda,Poa secunda,native,,grass
 ELTR,Elymus,trachycaulis,Elymus trachycaulis,native,,grass
-SACE,Sambucus,cerulea,Sambucus cerulea,native,,shrub
 PREM,Prunus,emarginata,Prunus emarginata,native,,shrub
-ARGL,Arctostaphyllos,glandulosa,Arctostaphyllos glandulosa,native,,shrub
+ARGL,Arctostaphylos,glandulosa,Arctostaphylos glandulosa,native,,shrub
 QUVA,Quercus,vaccinifolium,Quercus vaccinifolium,native,,shrub
 RILO,Ribes,lobbii,Ribes lobbii,native,,shrub
 MYXX,Myosotis,sp.,Myosotis sp.,,,herb

@@ -46,14 +46,31 @@ plant_names$native_status <- as.factor(plant_names$native_status)
 plant_names$form <- as.factor(plant_names$form)
 
 ### Keep only native spp
+## Also for some ecologically similar and taxonomically related plant species, use genus 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter(native_status == "native") %>%
+  mutate(species = ifelse(genus == "Lupinus", "Lupinus", species)) %>% 
+  mutate(species = ifelse(genus == "Arctostaphylos", "Arctostaphylos", species)) %>% 
+  mutate(species = ifelse(genus == "Penstemon", "Penstemon", species)) %>% 
+  mutate(species = ifelse(genus == "Sidalcea", "Sidalcea", species)) %>% 
+  mutate(species = ifelse(genus == "Iris", "Iris", species)) %>% 
+  mutate(species = ifelse(genus == "Nemophila", "Nemophila", species)) %>% 
+  mutate(species = ifelse(genus == "Agoseris", "Agoseris", species)) %>% 
+  mutate(species = ifelse(genus == "Collinsia", "Collinsia", species)) %>% 
+  mutate(species = ifelse(genus == "Clarkia", "Clarkia", species)) %>% 
+  mutate(species = ifelse(genus == "Pyrola", "Pyrola", species)) %>% 
+  mutate(species = ifelse(genus == "Ribes", "Ribes", species)) %>% 
+  mutate(species = ifelse(genus == "Piperia", "Piperia", species)) %>% 
+  mutate(species = ifelse(genus == "Platanthera", "Piperia", species)) %>% 
+  mutate(species = ifelse(genus == "Madia", "Madia", species)) %>% 
+  mutate(species = ifelse(genus == "Cirsium", "Cirsium", species)) %>% 
   dplyr::select(site_id, species, cover)
 
 plant_mat_pa_w <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2) 
 
 plant_dat_pa_w <- plant_mat_pa_w %>% 
-  left_join(., site_data, by ="site_id")
+  left_join(., site_data, by ="site_id") %>% 
+  mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 30, 2, 1)))
 
 plant_mat_pa_l <- plant_mat_pa_w %>% 
   gather(key = species, value = pa, ABCO:WOFI)
