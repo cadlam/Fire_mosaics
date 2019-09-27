@@ -68,45 +68,10 @@ pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExt
 #library(magrittr)
 #library(knitr)
 #knit2html("Fire_mosaics.html")
-source("scripts/data_load.R")
 source("scripts/splist2presabs.R")
+source("scripts/data_load.R")
 
 
-```
-
-# Plant data selection
-```{r eval = F, include = F}
-# ALt data selections
-# Select data (pick one)
-# CHECK FOR TYPOS - ALL GOOD
-# missing <- anti_join(plant_data, plant_names, by = "species")
-# Join file with data and file with plant info, then dplyr::select required information; dplyr::select and run the right one:
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter(native_status == "native") %>%
-  dplyr::select(site_id, species, cover, obs_id)
-
-#plant_dat <- left_join(plant_dat, site_data, by = "site_id") %>% 
-#  filter(sev=="l")
-
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter(native_status == "native" & form == "tree") %>%
-  dplyr::select(site_id, species, cover)
-
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter(native_status == "native" & form == "shrub") %>%
-  dplyr::select(site_id, species, cover)
-
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter(native_status == "native" & (form == "shrub" | form == "tree")) %>%
-  dplyr::select(site_id, species, cover)
-
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter(native_status == "native" & (form == "herb" | form == "grass")) %>%
-  dplyr::select(site_id, species, cover)
-
-plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter(native_status == "native" & (form == "herb")) %>%
-  dplyr::select(site_id, species, cover)
 ```
 
 
@@ -127,11 +92,11 @@ plant_matrix2 <- spread(data = plant_dat, key = species, value = cover, fill = 0
 
 # adding dummy species (eg. Webster 2010)
 plant_matrix <- plant_matrix1 %>%
-  bind_rows(., plant_matrix2[111,]) %>% #for only 2018 data, use change 111 to 49
+  bind_rows(., plant_matrix2[111,]) %>% #for only 2018 data, change 111 to 49
   mutate("DUMB" = "0.5") 
 
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49) (true)
-plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 10]
+plant_matrix <- plant_matrix[, (plant_matrix[49, ]) > 5]
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
 plant_matrix <- plant_matrix[-111, ] %>% #for only 2018 data, use change 111 to 49
   mutate_if(is.character, as.numeric)
@@ -150,37 +115,175 @@ plant_dat_cov_w$tsf_cat <- as.factor(plant_dat_cov_w$tsf_cat)
 ```{r}
 # This chunk is about comparing the frequency of different species in each habitat (see Wayman 2007)
 
-# Calculating the average cover in each trt
-plant_mat_cov_w <- plant_dat_cov_w %>% 
-  dplyr::select(site_id:WOFI)
-
-#plant_glm_cov1$site_id <- as.numeric(as.character(plant_glm_cov1$site_id))
-
-#plant_glm_cov1 <- rbind(plant_glm_cov1, colSums(plant_glm_cov1[-1,])) %>%
-#  select_if(function(.) last(.) >=5) # keep only species with at least 20% cumulative cover
-
-#plant_glm_cov1$site_id <- as.factor(plant_glm_cov1$site_id)
-
-plant_mat_UNLS <- plant_mat_cov_w %>%
+# Calculating the number of occurrences in each trt
+# First get the data matrices for each habitat type
+plant_mat_UNLS <- plant_mat_pa_w %>%
   left_join(site_data, by = "site_id") %>% 
-  filter(sev!="h") %>% 
-  dplyr::select(ACMA:WHMO)
+  filter(sev == "u" | sev == "l") %>% 
+  dplyr::select(ABCO:YAMI)
 
-plant_mat_HS <- plant_mat_cov_w %>% 
+plant_mat_UN <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "u") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_LS <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "l") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_HS <- plant_mat_pa_w %>% 
   left_join(site_data, by = "site_id") %>% 
   filter(sev=="h") %>% 
-  dplyr::select(ACMA:WHMO)
+  dplyr::select(ACMA:YAMI)
 
+plant_mat_MULT <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "multiple") %>% 
+  dplyr::select(ABCO:YAMI)
 
+plant_mat_Rx <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "Rx") %>% 
+  dplyr::select(ABCO:YAMI)
+
+#Getting the number of detections for each species
 plant_dat_sum_HS <- rbind(plant_mat_HS[,-1], colSums(plant_mat_HS[-1,-1]))
-plant_sum_HS <- data.frame(t(plant_dat_sum_HS[-c(1:23),])) 
-plant_sum_HS <- cbind(rownames(plant_sum_HS), data.frame(plant_sum_HS, row.names=NULL))
+plant_sum_HS <- data.frame(t(tail(plant_dat_sum_HS, n = 1))) # keep only last row (sum) and transpose
+plant_sum_HS <- cbind(rownames(plant_sum_HS), data.frame(plant_sum_HS, row.names=NULL)) # row names to column
 colnames(plant_sum_HS) <- c("species", "sum")
 
 plant_dat_sum_UNLS <- rbind(plant_mat_UNLS[,-1], colSums(plant_mat_UNLS[-1,-1]))
-plant_sum_UNLS <- data.frame(t(plant_dat_sum_UNLS[-c(1:25),])) 
+plant_sum_UNLS <- data.frame(t(tail(plant_dat_sum_UNLS, n= 1))) 
 plant_sum_UNLS <- cbind(rownames(plant_sum_UNLS), data.frame(plant_sum_UNLS, row.names=NULL))
 colnames(plant_sum_UNLS) <- c("species", "sum")
+
+plant_dat_sum_LS <- rbind(plant_mat_LS[,-1], colSums(plant_mat_LS[-1,-1]))
+plant_sum_LS <- data.frame(t(tail(plant_dat_sum_LS, n=1))) 
+plant_sum_LS <- cbind(rownames(plant_sum_LS), data.frame(plant_sum_LS, row.names=NULL))
+colnames(plant_sum_LS) <- c("species", "sum")
+
+plant_dat_sum_UN <- rbind(plant_mat_UN[,-1], colSums(plant_mat_UN[-1,-1]))
+plant_sum_UN <- data.frame(t(tail(plant_dat_sum_UN, n = 1))) 
+plant_sum_UN <- cbind(rownames(plant_sum_UN), data.frame(plant_sum_UN, row.names=NULL))
+colnames(plant_sum_UN) <- c("species", "sum")
+
+plant_dat_sum_MULT <- rbind(plant_mat_MULT[,-1], colSums(plant_mat_MULT[-1,-1]))
+plant_sum_MULT <- data.frame(t(tail(plant_dat_sum_MULT, n = 1))) 
+plant_sum_MULT <- cbind(rownames(plant_sum_MULT), data.frame(plant_sum_MULT, row.names=NULL))
+colnames(plant_sum_MULT) <- c("species", "sum")
+
+plant_dat_sum_Rx <- rbind(plant_mat_Rx[,-1], colSums(plant_mat_Rx[-1,-1]))
+plant_sum_Rx <- data.frame(t(tail(plant_dat_sum_Rx, n = 1))) 
+plant_sum_Rx <- cbind(rownames(plant_sum_Rx), data.frame(plant_sum_Rx, row.names=NULL))
+colnames(plant_sum_Rx) <- c("species", "sum")
+
+plant_dat_sum <- plant_sum_UNLS %>% 
+  left_join(plant_sum_HS, by = "species") %>% 
+  left_join(plant_sum_UN, by = "species") %>% 
+  left_join(plant_sum_LS, by = "species") %>% 
+  left_join(plant_sum_MULT, by = "species") %>% 
+  left_join(plant_sum_Rx, by = "species")
+
+colnames(plant_dat_sum) <- c("species", "det_UNLS", "det_HS", "det_UN", "det_LS", "det_MULT", "det_Rx")
+plant_dat_sum[is.na(plant_dat_sum)] <- 0
+
+# Now dividing number of detections by number of sites and turning into %
+plant_dat_percent <- plant_dat_sum %>% 
+  mutate(., UNLS_occ = (det_UNLS/(nrow(plant_dat_sum_UNLS) -1)*100)) %>% 
+  mutate(., HS_occ = (det_HS/(nrow(plant_dat_sum_HS) -1)*100)) %>% 
+  mutate(., UN_occ = (det_UN/(nrow(plant_dat_sum_UN) -1)*100)) %>% 
+  mutate(., LS_occ = (det_LS/(nrow(plant_dat_sum_LS) -1)*100)) %>% 
+  mutate(., MULT_occ = (det_MULT/(nrow(plant_dat_sum_MULT) -1)*100)) %>% 
+  mutate(., Rx_occ = (det_Rx/(nrow(plant_dat_sum_Rx) -1)*100)) %>% 
+  mutate(., total_occ = (det_UNLS + det_HS + det_MULT + det_Rx)) %>% 
+  filter(total_occ >5)  # keep only species detected more than 5 times
+
+print_occ_table <- plant_dat_percent[, -c(2:7)]
+
+write.csv(print_occ_table, file = "output/print_occ_table.csv")
+
+# do this again with %cov!
+
+# First get the data matrices for each cover cat
+plant_mat_1 <- plant_mat_pa_w %>%
+  left_join(plant_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
+  filter(cov_cat == "1") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_2 <- plant_mat_pa_w %>%
+  left_join(plant_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
+  filter(cov_cat == "2") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_3 <- plant_mat_pa_w %>%
+  left_join(plant_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
+  filter(cov_cat == "3") %>% 
+  dplyr::select(ABCO:YAMI)
+
+#Getting the number of detections for each species
+plant_dat_sum_1 <- rbind(plant_mat_1[,-1], colSums(plant_mat_1[-1,-1]))
+plant_sum_1 <- data.frame(t(tail(plant_dat_sum_1, n = 1))) # keep only last row (sum) and transpose
+plant_sum_1 <- cbind(rownames(plant_sum_1), data.frame(plant_sum_1, row.names=NULL)) # row names to column
+colnames(plant_sum_1) <- c("species", "sum")
+
+plant_dat_sum_2 <- rbind(plant_mat_2[,-1], colSums(plant_mat_2[-1,-1]))
+plant_sum_2 <- data.frame(t(tail(plant_dat_sum_2, n= 1))) 
+plant_sum_2 <- cbind(rownames(plant_sum_2), data.frame(plant_sum_2, row.names=NULL))
+colnames(plant_sum_2) <- c("species", "sum")
+
+plant_dat_sum_3 <- rbind(plant_mat_3[,-1], colSums(plant_mat_3[-1,-1]))
+plant_sum_3 <- data.frame(t(tail(plant_dat_sum_3, n=1))) 
+plant_sum_3 <- cbind(rownames(plant_sum_3), data.frame(plant_sum_3, row.names=NULL))
+colnames(plant_sum_3) <- c("species", "sum")
+
+plant_dat_sum <- plant_sum_1 %>% 
+  left_join(plant_sum_2, by = "species") %>% 
+  left_join(plant_sum_3, by = "species")
+
+colnames(plant_dat_sum) <- c("species", "det_1", "det_2", "det_3")
+plant_dat_sum[is.na(plant_dat_sum)] <- 0
+
+# Now dividing number of detections by number of sites and turning into %
+plant_dat_percent <- plant_dat_sum %>% 
+  mutate(., occ1 = (det_1/(nrow(plant_dat_sum_1) -1)*100)) %>% 
+  mutate(., occ2 = (det_2/(nrow(plant_dat_sum_2) -1)*100)) %>% 
+  mutate(., occ3 = (det_3/(nrow(plant_dat_sum_3) -1)*100)) %>% 
+  mutate(., total_occ = (det_1 + det_2 + det_3)) %>% 
+  filter(total_occ >5)  # keep only species detected more than 5 times
+
+print_occ_table_cov <- plant_dat_percent[, -c(2:4)]
+
+write.csv(print_occ_table_cov, file = "output/print_occ_table_cov.csv")
+
+nrow(plant_dat_sum_1)
+nrow(plant_dat_sum_2)
+nrow(plant_dat_sum_3)
+# species that are found at least 2x more in HS
+plant_dat_cov1 <- plant_dat_sum %>% 
+  mutate(ratio = cov_HS/cov_UNLS)# %>% 
+#  filter(ratio >= 2)
+
+# species that are found at least 2x more in HS
+plant_dat_cov2 <- plant_dat_sum %>% 
+  mutate(ratio = cov_HS/cov_UNLS)# %>% 
+#  filter(ratio <= 0.5)
+
+cov_tbl <- plant_mat_cov_w %>% 
+  rbind(plant_dat_cov2)
+
+pa_tbl <- plant_dat_sum1 %>% 
+  rbind(plant_dat_sum2)
+
+pa_cov_tbl <- plant_dat_cov1 %>% 
+  full_join(plant_dat_sum1, by = "species") %>% 
+  filter(!is.na(sum_HS)) %>% 
+  filter_at(vars(ratio.x, ratio.y), all_vars(.>1.5 | .<0.5))
+
+write.csv(pa_cov_tbl, file = "output/pa_cov_tbl_complete.csv")
+
+
+### cov (the end part)
 
 plant_dat_sum <- plant_sum_UNLS %>% 
   left_join(plant_sum_HS, by = "species")
@@ -1310,13 +1413,13 @@ kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN
 
 ### MRPP (plants)
 ```{r echo = F}
-plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:139)], plant_dat_cov_w$sev_tsf)
+plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:181)], plant_dat_cov_w$sev)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(plant.ord <- metaMDS(plant_dat_cov_w[,c(2:139)]), type="text", display="sites" )
+plot(plant.ord <- metaMDS(plant_dat_cov_w[,c(2:181)]), type="text", display="sites" )
 ordihull(plant.ord, plant_mrpp_d$sev_tsf, label = T)
 
 with(plant.mrpp, {
@@ -1330,10 +1433,11 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:139)]), plant_dat_cov_w$sev_tsf)
+plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:181)]), plant_dat_cov_w$sev) # Need to adjust the columns to only keep species.... should fix this
 plant.md
 summary(plant.md)
 plot(plant.md)
+
 ```
 
 ## MRPP (insects) 

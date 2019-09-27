@@ -76,7 +76,7 @@ VAHE,Vancouveria,hexandra,Vancouveria hexandra,native,,herb
 DAPU,Daucus,pusillus,Daucus pusillus,native,,herb
 GAPA,Galium,parisiense,Galium parisiense,non_native,,herb
 CESO,Centaurea,solstitialis,Centaurea solstitialis,non_native,,herb
-CEBE,Centaurea,benedicta,Centaurea benedicta,non_native,CHECK ID,herb
+CEBE,Centaurea,benedicta,Centaurea benedicta,non_native,"CHECK ID, actually C. melitensis?",herb
 LOXX,Lomatium,sp,Lomatium sp,native,,herb
 SACR,Sanicula,crassicaulis,Sanicula crassicaulis,native,,herb
 DIID,Dichelostemma,ida-maia,Dichelostemma ida-maia,native,,herb
