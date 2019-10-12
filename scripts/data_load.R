@@ -1,4 +1,9 @@
 # This loads all the data (some additional manipulation required for plants to select native species, spcific growth forms, or to change to p/a)
+
+# Load packages
+if(!require('pacman'))install.packages('pacman')
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly)
+
 ## Site
 site_data2018 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
 site_data2019 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data2019.csv") 
@@ -36,7 +41,11 @@ site_data <- site_data %>%
 site_data$site_id <- as.character(site_data$site_id) 
 
 site_data <- site_data[-(111:114),] %>%# remove the LICH sites 
-mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 35, 2, 1)))  # creating tree cover categories 
+mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 35, 2, 1))) %>% # creating tree cover categories   
+mutate(sev_cov = ifelse(sev == "u", "u", ifelse(sev == "h", "h", paste(sev, cov_cat, sep = "-"))))
+
+#mutate(sev_cov = paste(sev, cov_cat, sep = "-")) %>% 
+
 
 ## Plants
 plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
@@ -54,7 +63,7 @@ plant_names$form <- as.factor(plant_names$form)
 ### Keep only native spp
 ## Also for some ecologically similar and taxonomically related plant species, use genus 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter(native_status == "native") %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
+  filter((native_status == "native") & (form == "tree")) %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
   mutate(species = ifelse(genus == "Lupinus", "Lupinus", species)) %>% 
   mutate(species = ifelse(genus == "Arctostaphylos", "Arctostaphylos", species)) %>% 
   mutate(species = ifelse(genus == "Penstemon", "Penstemon", species)) %>% 
@@ -81,7 +90,7 @@ plant_dat_pa_w <- plant_mat_pa_w %>%
   mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 35, 2, 1))) # creating tree cover categories
 
 plant_dat_pa_l <- plant_mat_pa_w %>% 
-  gather(key = species, value = pa, ABCO:YAMI)
+  gather(key = species, value = pa, ABCO:UMCA) # ABCO:YAMI for all spp; ACAM:YAMI for herbs; ABCO:UMCA for only trees
 
 # Cover
 plant_dat_long <-ddply(plant_dat, .(site_id, species), summarize,
@@ -91,7 +100,7 @@ plant_mat_cov_w <- spread(data = plant_dat_long, key = species, value = cover, f
 
 # The following is to remove species detected too few times
 # convert to wide format for following analysis
-plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
+#plant_matrix1 <- spread(data = plant_dat, key = species, value = cover, fill = 0)
 
 # optional/incomplete:remove plants with few sightings; not sure this makes much difference
 ## Here I'm making a row for the frequency of detection
@@ -110,13 +119,14 @@ plant_matrix <- plant_matrix %>%
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49)
 plant_matrix <- plant_matrix[, (plant_matrix[111, ]) > 0]
 
-## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
+## adding back in the site id and removing true/false row 
+#(and making sure it's all read in as numeric)
 plant_mat_cov_w <- plant_matrix[-111, ]  #for only 2018 data, use change 111 to 49; this used to be plant_dat_cov, same as plant_mrpp_d;  %>% mutate_if(is.character, as.numeric)
 
 plant_dat_cov_w <- left_join(plant_mat_cov_w, site_data, by = "site_id") #this used to be plant_dat_cov, same as plant_mrpp_d
 
 plant_dat_cov_l <- plant_mat_cov_w %>% 
-  gather(key = species, value = pa, ABCO:YAMI) # change spp depending on which were removed when subsetting
+  gather(key = species, value = pa, ABCO:UMCA) # change spp depending on which were removed when subsetting
 
 
 
@@ -220,11 +230,15 @@ bird_matrix1 <- spread(data = bird_dat, key = species, value = pa, fill = 0)
 # optional:remove birds with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
 #bird_matrix <- rbind(bird_matrix1[,-c(1:20)], c("colsum", colSums(bird_matrix1[,-c(1:20)]) == 1))
-bird_matrix <- bird_matrix1[,-c(1:27)] %>%
-  bind_rows(summarise_all(., funs(sum(.)))) # note: if wanting to make a row named total, could have used: funs(if(is.numeric(.)) sum(.) else "Total"
+
+#bird_matrix <- bird_matrix1[,-c(1:27)] %>%
+#  bind_rows(summarise_all(., funs(sum(.)))) # note: if wanting to make a row named total, could have used: funs(if(is.numeric(.)) sum(.) else "Total"
 
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49)
-bird_matrix <- bird_matrix[, (bird_matrix[49, ]) > 1]
+
+#bird_matrix <- bird_matrix[, (bird_matrix[49, ]) > 1]
+
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
-bird_matrix <- cbind(site_id = bird_matrix1[, 1], bird_matrix[-49, ]) %>%
-  mutate_if(is.character, as.numeric)
+
+#bird_matrix <- cbind(site_id = bird_matrix1[, 1], bird_matrix[-49, ]) %>%
+#  mutate_if(is.character, as.numeric)

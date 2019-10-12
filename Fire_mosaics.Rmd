@@ -46,10 +46,6 @@ Surveys were conducted at 48 sites divided into long-unburnt (hereafter UN), low
 Sampling methods involved: surveys of all native plants and lichens (growing on trees) within an 11.3m radius circle; two 10-minute bird point counts; one flight-intercept trap left for 2 days to passively collect flying insects. Preliminary data for plants and birds are presented here. Lichen and insect specimens are still being identified (completion expected by December 2018).
 
 ```{r include = F}
-# Load packages
-if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly)
-
 #library(lme4)
 #library(lmerTest)
 #library(pbkrtest)
@@ -76,6 +72,7 @@ source("scripts/data_load.R")
 
 
 ```{r include=F}
+#obsolete?
 # To get p/a:
 plant_dat_pa_l <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2) %>% 
   gather(key = species, value = pa, ABCO:YAMI) #ABCO:YAMI for all native herbs in all sites
@@ -381,22 +378,24 @@ Non-metric multidimensional scaling (NMDS) is a way to graphically represent the
 #  filter(site_id %in% sub) %>% 
 #  mutate(group = ifelse(site_id %in% c("6", "25","27","28","51","32","47","49","37","41","40"), #1, 2))
 
-nmds_dat <- left_join(plant_mat_pa_w, lichen_mat_genus_pa_w, by = "site_id")
+#nmds_dat <- left_join(plant_mat_pa_w, lichen_mat_genus_pa_w, by = "site_id")
+
+nmds_dat <- plant_mat_cov_w
 nmds_dat[is.na(nmds_dat)] <- 0
 
 # calculate distance for NMDS
-NMDS.log<- (nmds_dat[,-1]) #previously tried log1p transformation for 2018, but with both years the stress is too high
+NMDS.log<- log1p(nmds_dat[,-c(1,20)]) #previously tried log1p transformation for 2018, but with both years the stress is too high
 
 #NMDS
 sol <- metaMDS(NMDS.log, k = 3)
 
 # scrs is the base for the plot
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = plant_dat_pa_w$site_id)
+scrs <- cbind(scrs, site_id = plant_dat_cov_w$site_id)
 scrs <- merge(scrs, plant_dat_pa_w[,-(111:114)], by = "site_id")
 
 # To only show statistically significant species with arrows:
-ef<-envfit(sol, NMDS.log, perm=9999)
+ef<-envfit(sol, NMDS.log, perm=999)
 ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
 ef.df$species<-rownames(ef.df)
 
@@ -434,9 +433,9 @@ Cred <- cbind(Cred, species = rownames(Cred))# %>%
 scrs_filt <- scrs %>% 
   dplyr::select(site_id, folded_aspect, elev, heat_load, tree_cov, shrub_cov, bare_cov, herb_cov, cov_cat)
 
-sol2 <-metaMDS((scrs_filt[,-1]))
+sol2 <-metaMDS((scrs_filt[,-(1:4)]))
 
-fit <- envfit(sol2, scrs_filt[,-1], na.rm = T, perm = 999)
+fit <- envfit(sol2, scrs_filt[,-(1:4)], na.rm = T, perm = 999)
 ef.df1<-as.data.frame(fit$vectors$arrows*sqrt(fit$vectors$r))
 ef.df1$species<-rownames(ef.df1)
 
@@ -454,10 +453,11 @@ Cred1<-subset(C1,pvals1<0.05)
 Cred1 <- cbind(Cred1, Env_factors = rownames(Cred1))
 
 #Axis 1 and 2
-p1 <- ggplot(scrs) +
-  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+p1 <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  geom_point() +
   scale_color_manual(values=c("#FF0000", "#3399FF", "#FFFF00", "#FF9933", "#993300", "#33FF00")) +
   coord_fixed() + ## need aspect ratio of 1!  
+  stat_ellipse() +
 #  geom_segment(data = Cred, #arrows for species
 #               aes(x = 0, xend = NMDS1, y = 0, yend = NMDS2),
 #               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
@@ -468,7 +468,7 @@ p1 <- ggplot(scrs) +
 #            size = 3) + #species names at end of arrows
 #  geom_text_repel(data = C1, aes(x = NMDS1, y = NMDS2, label = Env_factors),
 #            size = 3, colour = "red") +
-  labs(title = "Figure 1: NMDS for all native plants (1&2)")
+  labs(title = "Figure 1: NMDS for tree cov")
 
 p1
 
@@ -522,7 +522,6 @@ p3d <- plot_ly(scrs, x = ~NMDS1, y = ~NMDS2, z = ~NMDS3, color = ~cov_cat, symbo
                      zaxis = list(title = 'NMDS3')))
 p3d
 
-?paste
 #colors = c("#FF0000", "#3399FF", "#FFFF00", "#FF9933")
 # , "#993300", "#33FF00"
 #text = ~paste('site: ', scrs$site_id)
@@ -1413,14 +1412,14 @@ kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN
 
 ### MRPP (plants)
 ```{r echo = F}
-plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:181)], plant_dat_cov_w$sev)
+plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:181)], plant_dat_cov_w$sev_cov)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
 plot(plant.ord <- metaMDS(plant_dat_cov_w[,c(2:181)]), type="text", display="sites" )
-ordihull(plant.ord, plant_mrpp_d$sev_tsf, label = T)
+ordihull(plant.ord, plant_mrpp_d$sev_cov, label = T)
 
 with(plant.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1433,7 +1432,7 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:181)]), plant_dat_cov_w$sev) # Need to adjust the columns to only keep species.... should fix this
+plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:181)]), plant_dat_cov_w$sev_cov) # Need to adjust the columns to only keep species.... should fix this
 plant.md
 summary(plant.md)
 plot(plant.md)

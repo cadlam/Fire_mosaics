@@ -24,3 +24,4 @@ splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
   rownames(presabs) <- NULL
   return(presabs)
 }  # end splist2presabs function
+
