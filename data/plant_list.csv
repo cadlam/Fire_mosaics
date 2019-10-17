@@ -45,7 +45,7 @@ CLRH,Clarkia,rhomboidea,Clarkia rhomboidea,native,,herb
 AGGR,Agoseris,grandiflora,Agoseris grandiflora,native,,herb
 MAGR,Madia,gracilis,Madia gracilis,native,,herb
 VIAM,Vicia,americana,Vicia americana,native,ID uncertain,herb
-DAISYSP,XXXX,,XXXX,native,CHECK SPECIMEN WITH NO FL,herb
+EURA,Eurybia,radulina,Eurybia radulina,native,possible some are mis'ID'ed goldenrods; previouslt id'd as DAISY SP,herb
 GOOB,Goodyera,oblongifolia,Goodyera oblongifolia,native,,herb
 ACTR,Achlys,triphylla,Achlys triphylla,native,,herb
 HEXX,Heuchera,sp.,Heuchera sp.,native,check,herb
@@ -68,7 +68,7 @@ ARCAL,Aralia,californica,Aralia californica,native,,herb
 WOFI,Woodwardia,fimbriata,Woodwardia fimbriata,native,,herb
 LIBO,Linnaea,borealis,Linnaea borealis,native,,herb
 CYGR,Cynoglossum,grande,Cynoglossum grande,native,,herb
-PHHA,Phacelia,hastata,Phacelia hastata,native,,herb
+PHHA,Phacelia,hastata,Phacelia hastata,native,CHECK,herb
 LICA,Ligusticum,californicum,Ligusticum californicum,native,,herb
 LOTR,Lomatium,triernatum,Lomatium triernatum,native,,herb
 OSBE,Osmorrhiza,berteroi,Osmorrhiza berteroi,native,,herb
@@ -231,7 +231,7 @@ CAAP,Castilleja,applegatei,Castilleja applegatei,native,var. pinetorum,herb
 ISTI,Isatis,tinctoria,Isatis tinctoria,non_native,,herb
 VITE,Vicia,tetrasperma,Vicia tetrasperma,non_native,,herb
 AGEX,Agrostis,exerata,Agrostis exerata,native,,grass
-,,, ,,,
+PHBO,Phacelia,hastata,Agrostis exerata,native,,herb
 ,,, ,,,
 ,,, ,,,
 ,,, ,,,

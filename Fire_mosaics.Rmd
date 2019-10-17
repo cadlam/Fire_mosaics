@@ -807,13 +807,13 @@ bird_matrix1 <- spread(data = bird_dat, key = species, value = pa, fill = 0)
 # optional:remove birds with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
 #bird_matrix <- rbind(bird_matrix1[,-c(1:20)], c("colsum", colSums(bird_matrix1[,-c(1:20)]) == 1))
-bird_matrix <- bird_matrix1[,-c(1:27)] %>%
+bird_matrix <- bird_mat_w[,-c(1:37)] %>%
   bind_rows(summarise_all(., funs(sum(.)))) # note: if wanting to make a row named total, could have used: funs(if(is.numeric(.)) sum(.) else "Total"
   
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49)
-bird_matrix <- bird_matrix[, (bird_matrix[49, ]) > 1]
+bird_matrix <- bird_matrix[, (bird_matrix[111, ]) > 9]
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
-bird_matrix <- cbind(site_id = bird_matrix1[, 1], bird_matrix[-49, ]) %>%
+bird_matrix <- cbind(site_id = bird_mat_w[, 1], bird_matrix[-111, ]) %>%
   mutate_if(is.character, as.numeric)
 
 # Make Bray-Curtis (?) dissimilarity matrix
@@ -850,16 +850,19 @@ Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
 # maye subset only species detected at least 5 times?
-p <- ggplot(scrs) +
-  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+p1 <- ggplot(scrs, aes(x = NMDS1, y = NMDS2)) +
+  geom_point(aes(colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!
+  stat_ellipse(aes(colour = sev)) +
   geom_segment(data = Cred,
                aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
                arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
-  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
+  geom_text(data = Cred, 
+            aes(x = MDS1, y = MDS2, label = Species),
             size = 3) +
   labs(title = "Figure 2: NMDS for birds")
-p
+p1
+
 ```
 
 #### Lichens
@@ -1412,13 +1415,13 @@ kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN
 
 ### MRPP (plants)
 ```{r echo = F}
-plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:181)], plant_dat_cov_w$sev_cov)
+plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:57)], plant_dat_cov_w$sev_cov) # 2:181 for all plants; 2:57 for trees/shrubs
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(plant.ord <- metaMDS(plant_dat_cov_w[,c(2:181)]), type="text", display="sites" )
+plot(plant.ord <- metaMDS(plant_dat_cov_w[,c(2:57)]), type="text", display="sites" )
 ordihull(plant.ord, plant_mrpp_d$sev_cov, label = T)
 
 with(plant.mrpp, {
@@ -1432,7 +1435,7 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:181)]), plant_dat_cov_w$sev_cov) # Need to adjust the columns to only keep species.... should fix this
+plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:57)]), plant_dat_cov_w$sev_cov) # Need to adjust the columns to only keep species.... should fix this
 plant.md
 summary(plant.md)
 plot(plant.md)

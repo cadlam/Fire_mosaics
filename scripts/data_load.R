@@ -63,7 +63,7 @@ plant_names$form <- as.factor(plant_names$form)
 ### Keep only native spp
 ## Also for some ecologically similar and taxonomically related plant species, use genus 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter((native_status == "native") & (form == "tree")) %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
+  filter((native_status == "native") & (form == "herb" | form == "grass")) %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
   mutate(species = ifelse(genus == "Lupinus", "Lupinus", species)) %>% 
   mutate(species = ifelse(genus == "Arctostaphylos", "Arctostaphylos", species)) %>% 
   mutate(species = ifelse(genus == "Penstemon", "Penstemon", species)) %>% 
@@ -90,7 +90,7 @@ plant_dat_pa_w <- plant_mat_pa_w %>%
   mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 35, 2, 1))) # creating tree cover categories
 
 plant_dat_pa_l <- plant_mat_pa_w %>% 
-  gather(key = species, value = pa, ABCO:UMCA) # ABCO:YAMI for all spp; ACAM:YAMI for herbs; ABCO:UMCA for only trees
+  gather(key = species, value = pa, ACAM:YAMI) # ABCO:YAMI for all spp; ACAM:YAMI for herbs; ABCO:UMCA for only trees; ABCO:VICA for shrubs and trees
 
 # Cover
 plant_dat_long <-ddply(plant_dat, .(site_id, species), summarize,
@@ -201,31 +201,38 @@ insect_dat_w <- spread(insect_dat_l, key = "taxon", value = "number")
 
 ### Birds
 bird_dat_suppl <- read.csv("data/bird_data_suppl.csv")
+bird_dat2019 <- read.csv("data/bird_data2019.csv") %>% 
+  filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
+  dplyr::select(Point, Count, Spp, DistanceBin)
+
 bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>% 
   filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
-  dplyr::select(Point, Count, Spp, DistanceBin) # keeping only relevant columns
-
+  dplyr::select(Point, Count, Spp, DistanceBin) %>%  # keeping only relevant columns
+  full_join(bird_dat2019)
+  
 # remove duplicate rows (same species detected multiple times in a single plot)
 bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>% 
   mutate(pa = 1) %>% 
   dplyr::rename(site_id = Point) %>% 
   dplyr::rename(species = Spp) %>% 
   mutate(species = recode(species, ANHU='XXHU')) %>% 
-  mutate(species = recode(species, RUHU='XXHU')) #changing all RUHU and ANHU to XXHU
+  mutate(species = recode(species, RUHU='XXHU')) %>% #changing all RUHU and ANHU to XXHU
+  mutate(species = recode(species, HEWA='BTYW/HEWA')) %>% #changing all HEWA and BTYW 
+  mutate(species = recode(species, BTYW='BTYW/HEWA')) #changing all HEWA and BTYW
 
 # Adding additional species detections (outside count)
 bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
 
 # executing function and going from wide to long:
 bird_dat_pa <- splist2presabs(bird_dat_long, sites.col = 1, sp.col = 2) %>% 
-  gather(key = species, value = pa, ACWO:YEWA)
+  gather(key = species, value = pa, ACWO:YRWA)
 
 #Add in site data
 site_data$site_id <- as.factor(site_data$site_id)
 bird_dat <- left_join(bird_dat_pa, site_data, by = "site_id") 
 
 # convert to wide format for following analysis
-bird_matrix1 <- spread(data = bird_dat, key = species, value = pa, fill = 0)
+bird_mat_w <- spread(data = bird_dat, key = species, value = pa, fill = 0) #previously bird_matrix1
 
 # optional:remove birds with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
