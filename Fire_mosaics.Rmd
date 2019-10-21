@@ -41,7 +41,7 @@ knitr::knit_hooks$set(
 *   Make management recommendations for forest restoration treatments that will be most likely to maximize biodiversity.  
   
 **Methods:**    
-Surveys were conducted at 48 sites divided into long-unburnt (hereafter UN), low severity (hereafter LS) and high severity (hereafter HS) fire, ranging from 4 to 31 years since last fire. No repeat burns were studied.  
+Surveys were conducted at 48 sites divided into long-unburnt (hereafter UN), low severity (hereafter LS) and high severity (hereafter HS) fire, ranging from 4 to 31 years since the last fire. No repeat burns were studied.  
   
 Sampling methods involved: surveys of all native plants and lichens (growing on trees) within an 11.3m radius circle; two 10-minute bird point counts; one flight-intercept trap left for 2 days to passively collect flying insects. Preliminary data for plants and birds are presented here. Lichen and insect specimens are still being identified (completion expected by December 2018).
 
@@ -587,7 +587,7 @@ mite.ordisurf.ggplot
 
 ```{r}
 meta.nmds.mite <- metaMDS(mite) #no transformation of species data is made here prior to bray curtis dissimilarities being calculated. (Bray Curtis is the default in R).
-meta.nmds.mite #prints very basic dsecription
+meta.nmds.mite #prints very basic description
 stressplot(meta.nmds.mite) # To gain the stress plot for stress values for your MDS
  
 #ordisurf:
@@ -849,7 +849,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 p1 <- ggplot(scrs, aes(x = NMDS1, y = NMDS2)) +
   geom_point(aes(colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!
@@ -1104,7 +1104,7 @@ meandist <- function(x) mean(vegdist(x, "bray"))
 mbc1 <- oecosimu(dune, meandist, "r2dtable")
 mbc1
 ## Define a custom function that shuffles
-## cells in each rows
+## cells in each row
 f <- function(x) {
     apply(x, 2, function(z) sample(z, length(z)))
 }
@@ -2927,7 +2927,7 @@ hist
 
 My data show that high severity areas are important for biodiversity compared to fire-suppressed stands, even those that have burnt once at low severity. HS burns provide habitat to numerous species not found in fire-suppressed stands, and the GSO reflects this by suggesting a vast proportion of the landscape should be burnt at high severity to achieve the highest biodiversity levels.  
 
-But although this result can be interpreted to mean that high severity fire is a normal and positive element in the fire regime of the Klamath Mountains and that a hands-off fire manegement approach is best, an alternative explanation is worth considering. Instead of highlighting the value of high severity burns, my data might be showing the **dramatic cost to biodiversity of fire suppression**. Historically, numerous species that occur today in high severity areas would likely have used open-canopied forests maintained by a more frequent fire regime. In such habitats, these species would have coexisted with those that require mature stands and partial canopy cover. Conversion to closed-canopy forests may have made vast areas unsuitable for open canopy species which now find themselves pushed into the only remain habitat they can use, high severity burns.  
+But although this result can be interpreted to mean that high severity fire is a normal and positive element in the fire regime of the Klamath Mountains and that a hands-off fire management approach is best, an alternative explanation is worth considering. Instead of highlighting the value of high severity burns, my data might be showing the **dramatic cost to biodiversity of fire suppression**. Historically, numerous species that occur today in high severity areas would likely have used open-canopied forests maintained by a more frequent fire regime. In such habitats, these species would have coexisted with those that require mature stands and partial canopy cover. Conversion to closed-canopy forests may have made vast areas unsuitable for open canopy species which now find themselves pushed into the only remaining habitat they can use, high severity burns.  
 
 The resulting dichotomy between HS burns and closed-canopy stands may be a novel condition on the landscape. While calls for forest restoration are often concerned with reducing the risk of catastrophic fire, my data suggest that **the real catastrophe from a biodiversity perspective is the widespread canopy closure caused by fire suppression**. Therefore, rather than celebrating HS fire and vindicating advocates of hands-off approaches to fire management, my data might be pointing to the urgent need to restore closed canopy, fire-suppressed forests to their historical condition.  
 
@@ -2940,7 +2940,7 @@ Additional research is needed to answer some questions that are prompted by thes
 
 The first question can be answered by studying areas that have burnt multiple times, probably using prescribed fire. Though few such areas exist, using sites further afield (eg. the Rogue-Siskiyou National Forest) might be sufficient for such a study. Since my data suggest little benefit to biodiversity from a single burn, it would be interesting to see how management using multiple prescribed burns can achieve biodiversity enhancement goals.  
 
-The second question can be answered using phytolith analyses, which has not been done in the Klamath Mountains to my knowledge. However, I have no experience with this method, and it might be unwise to start down a new path (if I want to finish my degree in a timely manner), but the results might be worth the effort. I will investigate collaborating with experienced phytolith researchers at UC Berkeley.  
+The second question can be answered using phytolith analysis, which has not been done in the Klamath Mountains to my knowledge. However, I have no experience with this method, and it might be unwise to start down a new path (if I want to finish my degree in a timely manner), but the results might be worth the effort. I will investigate collaborating with experienced phytolith researchers at UC Berkeley.  
   
     
       
