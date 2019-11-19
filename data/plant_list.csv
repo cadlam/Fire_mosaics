@@ -157,7 +157,7 @@ ACBR,Acmispon,brachycarpus,Acmispon brachycarpus,native,see specimen,herb
 AVBA,Avena,barbata,Avena barbata,non_native,,grass
 ELMU,Elymus,multisetus,Elymus multisetus,native,,grass
 ELEL,Elymus,elymoides,Elymus elymoides,native,,grass
-STLE,Stipa,lemmonii,Stipa lemmonii,native,,grass
+STLE,Achnatherum,lemmonii,Achnatherum lemmonii,native,,grass
 TRCA,Trisetum,canescens,Trisetum canescens,native,,grass
 POSE,Poa,secunda,Poa secunda,native,,grass
 ELTR,Elymus,trachycaulis,Elymus trachycaulis,native,,grass
@@ -232,7 +232,7 @@ ISTI,Isatis,tinctoria,Isatis tinctoria,non_native,,herb
 VITE,Vicia,tetrasperma,Vicia tetrasperma,non_native,,herb
 AGEX,Agrostis,exerata,Agrostis exerata,native,,grass
 PHBO,Phacelia,hastata,Agrostis exerata,native,,herb
-,,, ,,,
+LIGULIFLOROUS,Stephanomeria,, ,,prob S elata or S virgata,
 ,,, ,,,
 ,,, ,,,
 ,,, ,,,

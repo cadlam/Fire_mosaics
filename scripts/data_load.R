@@ -2,7 +2,7 @@
 
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly)
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom)
 
 ## Site
 site_data2018 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
@@ -41,8 +41,8 @@ site_data <- site_data %>%
 site_data$site_id <- as.character(site_data$site_id) 
 
 site_data <- site_data[-(111:114),] %>%# remove the LICH sites 
-mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 35, 2, 1))) %>% # creating tree cover categories   
-mutate(sev_cov = ifelse(sev == "u", "u", ifelse(sev == "h", "h", paste(sev, cov_cat, sep = "-"))))
+mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 30, 2, 1))) %>% # creating tree cover categories   
+mutate(sev_cov = ifelse(sev == "u", "u", ifelse(sev == "h", "h", ifelse(sev =="Rx", paste("RX/mult", cov_cat, sep = "-"), ifelse(sev == "multiple", paste("RX/mult", cov_cat, sep = "-"),  ifelse(sev == "multiple/RX", paste("RX/mult", cov_cat, sep = "-"), paste(sev, cov_cat, sep = "-")))))))
 
 #mutate(sev_cov = paste(sev, cov_cat, sep = "-")) %>% 
 
@@ -63,7 +63,7 @@ plant_names$form <- as.factor(plant_names$form)
 ### Keep only native spp
 ## Also for some ecologically similar and taxonomically related plant species, use genus 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
-  filter((native_status == "native") & (form == "herb" | form == "grass")) %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
+  filter((native_status == "native")) %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
   mutate(species = ifelse(genus == "Lupinus", "Lupinus", species)) %>% 
   mutate(species = ifelse(genus == "Arctostaphylos", "Arctostaphylos", species)) %>% 
   mutate(species = ifelse(genus == "Penstemon", "Penstemon", species)) %>% 
@@ -83,14 +83,20 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
 
 # "mat" is only species data; "dat" also includes site data if in wide format (w), or not if in long format (l)
 #Presence/abs
-plant_mat_pa_w <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2) # same as plant_matrix2
+plant_mat_pa_w1 <- splist2presabs(plant_dat, sites.col = 1, sp.col = 2)  # same as plant_matrix2
+  
+plant_mat_pa_w <- plant_mat_pa_w1[,-1] %>% 
+  select(which(colSums(.[,-1]) > 9)) %>%  # choose threshold for number of detections
+  cbind(plant_mat_pa_w1[,"site_id"], .)
+
+names(plant_mat_pa_w)[1] <- "site_id" # having to rename first column because the code somehow changed it
 
 plant_dat_pa_w <- plant_mat_pa_w %>% 
   left_join(., site_data, by ="site_id") %>% 
-  mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 35, 2, 1))) # creating tree cover categories
+  mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 35, 2, 1)))  # creating tree cover categories
 
 plant_dat_pa_l <- plant_mat_pa_w %>% 
-  gather(key = species, value = pa, ACAM:YAMI) # ABCO:YAMI for all spp; ACAM:YAMI for herbs; ABCO:UMCA for only trees; ABCO:VICA for shrubs and trees
+  pivot_longer(names_to = "species", values_to = "pa", cols = -site_id) 
 
 # Cover
 plant_dat_long <-ddply(plant_dat, .(site_id, species), summarize,
@@ -117,7 +123,7 @@ plant_matrix <- plant_matrix %>%
   mutate("DUMB" = "0.5") 
 
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49)
-plant_matrix <- plant_matrix[, (plant_matrix[111, ]) > 0]
+plant_matrix <- plant_matrix[, (plant_matrix[111, ]) > 4]
 
 ## adding back in the site id and removing true/false row 
 #(and making sure it's all read in as numeric)
@@ -126,7 +132,7 @@ plant_mat_cov_w <- plant_matrix[-111, ]  #for only 2018 data, use change 111 to 
 plant_dat_cov_w <- left_join(plant_mat_cov_w, site_data, by = "site_id") #this used to be plant_dat_cov, same as plant_mrpp_d
 
 plant_dat_cov_l <- plant_mat_cov_w %>% 
-  gather(key = species, value = pa, ABCO:UMCA) # change spp depending on which were removed when subsetting
+  gather(key = species, value = cover, ABCO:YAMI) # change spp depending on which were removed when subsetting and eliminating based on detection frequency
 
 
 
@@ -143,27 +149,33 @@ lichen_mat_species_w <- read.csv("data/lichen_data.csv", header = T) %>%
   mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
 
 # for genus level analysis (presence/absence)
-lichen_mat_genus_l <- lichen_mat_species_w %>% 
+lichen_dat_genus_l <- lichen_mat_species_w %>% 
   gather(key=species, value=abund, AHPA:DUMB) %>% 
   left_join(., lichen_names, by = "species") %>% 
   dplyr::select(site_id,genus,abund) 
 
 # remove duplicate rows (same species detected multiple times in a single plot)
-lichen_mat_genus_pa1 <- lichen_mat_genus_l %>% 
+lichen_dat_genus_pa1 <- lichen_dat_genus_l %>% 
   mutate(pa = ifelse(abund == 0, 0, 1)) %>% 
   dplyr::select(site_id, genus, pa)
 
 #spread not working.
-lichen_mat_genus_pa_l <- unique(lichen_mat_genus_pa1[ , c(1:3)]) %>%
-  filter(pa==1)
+lichen_dat_genus_pa_l <- unique(lichen_dat_genus_pa1[ , c(1:3)]) %>%
+  filter(pa==1) %>% 
+  setnames(., old="genus", new="species")
 
-lichen_mat_genus_pa_w <- lichen_mat_genus_pa_l %>% 
-  spread(key = genus, value = pa, fill = 0) %>% 
+
+lichen_mat_genus_pa_w <- lichen_dat_genus_pa_l %>% 
+  spread(key = species, value = pa, fill = 0) %>% 
   dplyr::select(c(site_id:Xanthomendoza)) #%>% 
   #mutate("DUMB" = 1) # need dummy sp?
 
 lichen_dat_genus_pa_w <- lichen_mat_genus_pa_w %>% 
   left_join(., site_data, by ="site_id")
+
+
+
+
 
 ## Insects
 insect_dat1 <- read.csv("data/insect_data.csv", header = T) %>% 
@@ -207,21 +219,22 @@ bird_dat2019 <- read.csv("data/bird_data2019.csv") %>%
 
 bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>% 
   filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
-  dplyr::select(Point, Count, Spp, DistanceBin) %>%  # keeping only relevant columns
-  full_join(bird_dat2019)
-  
-# remove duplicate rows (same species detected multiple times in a single plot)
-bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>% 
-  mutate(pa = 1) %>% 
-  dplyr::rename(site_id = Point) %>% 
+  filter(DistanceBin < 101)  %>%
+  full_join(bird_dat2019) %>% 
+  dplyr::select(Point, Spp) %>%  # keeping only relevant columns
   dplyr::rename(species = Spp) %>% 
-  mutate(species = recode(species, ANHU='XXHU')) %>% 
-  mutate(species = recode(species, RUHU='XXHU')) %>% #changing all RUHU and ANHU to XXHU
-  mutate(species = recode(species, HEWA='BTYW/HEWA')) %>% #changing all HEWA and BTYW 
-  mutate(species = recode(species, BTYW='BTYW/HEWA')) #changing all HEWA and BTYW
-
+  dplyr::rename(site_id = Point)
+  
 # Adding additional species detections (outside count)
-bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
+bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_count) 
+
+# remove duplicate rows (same species detected multiple times in a single plot)
+bird_dat_long <- unique(bird_dat_count[ , c(1,2) ]) %>% 
+  mutate(pa = 1) %>% 
+#  dplyr::rename(site_id = Point) %>% 
+#  dplyr::rename(species = Spp) %>% 
+  mutate(species = recode(species, BTYW='BTYW/HEWA', RUHU='XXHU', HEWA='BTYW/HEWA')) %>%  #changing all RUHU and ANHU to XXHU; BTYW and HEWA to BTYW/HEWA
+  filter(!is.na(site_id))
 
 # executing function and going from wide to long:
 bird_dat_pa <- splist2presabs(bird_dat_long, sites.col = 1, sp.col = 2) %>% 
@@ -232,7 +245,7 @@ site_data$site_id <- as.factor(site_data$site_id)
 bird_dat <- left_join(bird_dat_pa, site_data, by = "site_id") 
 
 # convert to wide format for following analysis
-bird_mat_w <- spread(data = bird_dat, key = species, value = pa, fill = 0) #previously bird_matrix1
+bird_dat_w <- spread(data = bird_dat, key = species, value = pa, fill = 0) #previously bird_matrix1
 
 # optional:remove birds with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
@@ -249,3 +262,26 @@ bird_mat_w <- spread(data = bird_dat, key = species, value = pa, fill = 0) #prev
 
 #bird_matrix <- cbind(site_id = bird_matrix1[, 1], bird_matrix[-49, ]) %>%
 #  mutate_if(is.character, as.numeric)
+
+
+
+
+
+# All spp
+all_spp <- rbind(plant_dat_pa_l, bird_dat_pa) %>% 
+  rbind(., lichen_dat_genus_pa_l) %>% 
+#  rbind(., insect_dat_long_filt)
+  filter(species != "Dummy") %>% 
+  filter(species != "DUMB") 
+
+
+# convert to wide matrix
+all_spp_w_pa <- unique(all_spp[ , c(1:3)]) %>%
+  filter(pa==1) %>% 
+  spread(key = species, value = pa, fill = 0)
+
+all_spp_dat_w <- merge(all_spp_w_pa, site_data, by = "site_id")
+
+all_spp_dat_l <- gather(all_spp_dat_w, key = species, value = pa, ABCO:YRWA)
+
+all_spp_dat_l <- gather(all_spp_dat_w, key = species, value = pa, ABCO:YRWA)

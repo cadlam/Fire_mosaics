@@ -66,6 +66,7 @@ Sampling methods involved: surveys of all native plants and lichens (growing on 
 #knit2html("Fire_mosaics.html")
 source("scripts/splist2presabs.R")
 source("scripts/data_load.R")
+source("scripts/pairwise_permanova.R")
 
 
 ```
@@ -203,20 +204,20 @@ write.csv(print_occ_table, file = "output/print_occ_table.csv")
 # do this again with %cov!
 
 # First get the data matrices for each cover cat
-plant_mat_1 <- plant_mat_pa_w %>%
-  left_join(plant_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
+plant_mat_1 <- plant_dat_pa_w %>%
+#  left_join(subset(plant_dat_pa_w, select = site_id:YAMI), by = "site_id") %>% 
   filter(cov_cat == "1") %>% 
-  dplyr::select(ABCO:YAMI)
+  dplyr::select(ACAM:YAMI)
 
-plant_mat_2 <- plant_mat_pa_w %>%
-  left_join(plant_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
+plant_mat_2 <- plant_dat_pa_w %>%
+#  left_join(subset(plant_dat_pa_w, select = site_id:YAMI), by = "site_id") %>% 
   filter(cov_cat == "2") %>% 
-  dplyr::select(ABCO:YAMI)
+  dplyr::select(ACAM:YAMI)
 
-plant_mat_3 <- plant_mat_pa_w %>%
-  left_join(plant_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
+plant_mat_3 <- plant_dat_pa_w %>%
+#  left_join(plant_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
   filter(cov_cat == "3") %>% 
-  dplyr::select(ABCO:YAMI)
+  dplyr::select(ACAM:YAMI)
 
 #Getting the number of detections for each species
 plant_dat_sum_1 <- rbind(plant_mat_1[,-1], colSums(plant_mat_1[-1,-1]))
@@ -253,9 +254,6 @@ print_occ_table_cov <- plant_dat_percent[, -c(2:4)]
 
 write.csv(print_occ_table_cov, file = "output/print_occ_table_cov.csv")
 
-nrow(plant_dat_sum_1)
-nrow(plant_dat_sum_2)
-nrow(plant_dat_sum_3)
 # species that are found at least 2x more in HS
 plant_dat_cov1 <- plant_dat_sum %>% 
   mutate(ratio = cov_HS/cov_UNLS)# %>% 
@@ -312,6 +310,92 @@ write.csv(pa_cov_tbl, file = "output/pa_cov_tbl_complete.csv")
 ```
 
 ```{r}
+# Birds
+# tree cover categories
+
+# First get the data matrices for each cover cat
+bird_mat_1 <- bird_dat_w %>%
+#  left_join(subset(bird_dat_pa_w, select = site_id:YAMI), by = "site_id") %>% 
+  filter(cov_cat == "1") %>% 
+  dplyr::select(ACWO:YRWA)
+
+bird_mat_2 <- bird_dat_w %>%
+#  left_join(subset(bird_dat_pa_w, select = site_id:YAMI), by = "site_id") %>% 
+  filter(cov_cat == "2") %>% 
+  dplyr::select(ACWO:YRWA)
+
+bird_mat_3 <- bird_dat_w %>%
+#  left_join(bird_dat_pa_w[,-c(2:213)], by = "site_id") %>% 
+  filter(cov_cat == "3") %>% 
+  dplyr::select(ACWO:YRWA)
+
+#Getting the number of detections for each species
+bird_dat_sum_1 <- rbind(bird_mat_1[,-1], colSums(bird_mat_1[-1,-1]))
+bird_sum_1 <- data.frame(t(tail(bird_dat_sum_1, n = 1))) # keep only last row (sum) and transpose
+bird_sum_1 <- cbind(rownames(bird_sum_1), data.frame(bird_sum_1, row.names=NULL)) # row names to column
+colnames(bird_sum_1) <- c("species", "sum")
+
+bird_dat_sum_2 <- rbind(bird_mat_2[,-1], colSums(bird_mat_2[-1,-1]))
+bird_sum_2 <- data.frame(t(tail(bird_dat_sum_2, n= 1))) 
+bird_sum_2 <- cbind(rownames(bird_sum_2), data.frame(bird_sum_2, row.names=NULL))
+colnames(bird_sum_2) <- c("species", "sum")
+
+bird_dat_sum_3 <- rbind(bird_mat_3[,-1], colSums(bird_mat_3[-1,-1]))
+bird_sum_3 <- data.frame(t(tail(bird_dat_sum_3, n=1))) 
+bird_sum_3 <- cbind(rownames(bird_sum_3), data.frame(bird_sum_3, row.names=NULL))
+colnames(bird_sum_3) <- c("species", "sum")
+
+bird_dat_sum <- bird_sum_1 %>% 
+  left_join(bird_sum_2, by = "species") %>% 
+  left_join(bird_sum_3, by = "species")
+
+colnames(bird_dat_sum) <- c("species", "det_1", "det_2", "det_3")
+bird_dat_sum[is.na(bird_dat_sum)] <- 0
+
+# Now dividing number of detections by number of sites and turning into %
+bird_dat_percent <- bird_dat_sum %>% 
+  mutate(., occ1 = (det_1/(nrow(bird_dat_sum_1) -1)*100)) %>% 
+  mutate(., occ2 = (det_2/(nrow(bird_dat_sum_2) -1)*100)) %>% 
+  mutate(., occ3 = (det_3/(nrow(bird_dat_sum_3) -1)*100)) %>% 
+  mutate(., total_occ = (det_1 + det_2 + det_3)) %>% 
+  filter(total_occ >5)  # keep only species detected more than 5 times
+
+print_occ_table_cov <- bird_dat_percent[, -c(2:4)]
+
+write.csv(print_occ_table_cov, file = "output/print_occ_table_BIRDS_cov.csv")
+
+
+
+#site_data %>% group_by(sev) %>% summarise(mean = mean(tree_cov), SD = sd(tree_cov), freq = n())
+
+
+# species that are found at least 2x more in HS
+bird_dat_cov1 <- bird_dat_sum %>% 
+  mutate(ratio = cov_HS/cov_UNLS)# %>% 
+#  filter(ratio >= 2)
+
+# species that are found at least 2x more in HS
+bird_dat_cov2 <- bird_dat_sum %>% 
+  mutate(ratio = cov_HS/cov_UNLS)# %>% 
+#  filter(ratio <= 0.5)
+
+cov_tbl <- bird_mat_cov_w %>% 
+  rbind(bird_dat_cov2)
+
+pa_tbl <- bird_dat_sum1 %>% 
+  rbind(bird_dat_sum2)
+
+pa_cov_tbl <- bird_dat_cov1 %>% 
+  full_join(bird_dat_sum1, by = "species") %>% 
+  filter(!is.na(sum_HS)) %>% 
+  filter_at(vars(ratio.x, ratio.y), all_vars(.>1.5 | .<0.5))
+
+write.csv(pa_cov_tbl, file = "output/BIRDS_cov_tbl_complete.csv")
+```
+
+
+```{r}
+#Obsolete?
 # Calculating the frequency in each trt
 plant_glm_pa1 <- plant_glm_pa %>% 
   dplyr::select(site_id:WOFI)
@@ -359,6 +443,51 @@ plant_dat_sum2 <- plant_dat_sum %>%
 
 ```
 
+```{r}
+#Calculatign average and SD of tree cover for each sp
+
+species_cov1 <- plant_dat_pa_w %>% 
+  mutate_at(vars(ABCO:YAMI),
+            function(x) ifelse(x == "1", .$tree_cov, x))
+
+species_cov2 <- as.data.frame(t(species_cov1[,c(2:182)]))
+species_cov2[species_cov2 == 0] <- NA
+
+#install.packages("matrixStats")
+#library(matrixStats)
+#RowSD <- function(x) {
+#  sqrt(rowSums((x - rowMeans(x))^2)/(dim(x)[2] - 1))
+#}
+
+species_cov <- species_cov2 %>% 
+#  rowwise() %>%
+  mutate(mean_cov = rowMeans(.[, c(1:110)], na.rm=TRUE), sd_cov = apply(.[(1:110)], na.rm=TRUE ,1,sd))
+
+species_cov <- cbind(species_cov, species = rownames(species_cov2)) %>% 
+  select(., species, mean_cov, sd_cov) %>% 
+  filter(., !is.na(sd_cov))
+
+
+#
+plant_dat_cov_l_tr_cov <- plant_dat_cov_l %>% 
+  left_join(site_data, by = "site_id") %>% 
+  filter(cover != 0) %>% 
+  select(site_id, species, tree_cov, sev)
+
+unique(plant_dat_cov_l_tr_cov$sev)
+
+library(cowplot)
+p <- ggplot(plant_dat_cov_l_tr_cov, aes(x = reorder(species, tree_cov, FUN = median), y = tree_cov)) +
+  geom_boxplot() +
+  geom_jitter(aes(color = sev)) + 
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  scale_y_continuous(breaks = scales::pretty_breaks(n = 10))
+
+p
+
+#write.csv(species_cov, file = "output/mean_sd_COV_perSP.csv")
+  
+```
 
 
 ### NMDS
@@ -750,60 +879,6 @@ kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN
 The NMDS for birds shows a very similar picture to the NMDS for plants (figure 2). The HS sites are clearly different from the LS and UN sites. There is a clear differentiation between species that favor one habitat or the other.
 
 ```{r, echo=FALSE,results='hide',fig.keep='all'}
-# read in data
-bird_dat_suppl <- read.csv("data/bird_data_suppl.csv")
-bird_dat_count <- read.csv("data/bird_data.csv", header = T) %>% 
-  filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
-  dplyr::select(Point, Count, Spp, DistanceBin) # keeping only relevant columns
-
-# remove duplicate rows (same species detected multiple times in a single plot)
-bird_dat_long <- unique(bird_dat_count[ , c(1,3) ]) %>% 
-  mutate(pa = 1) %>% 
-  dplyr::rename(site_id = Point) %>% 
-  dplyr::rename(species = Spp) %>% 
-  mutate(species = recode(species, ANHU='XXHU')) %>% 
-  mutate(species = recode(species, RUHU='XXHU')) #changing all RUHU and ANHU to XXHU
-
-# Adding additional species detections (outside count)
-bird_dat_long <- bind_rows(bird_dat_suppl, bird_dat_long)
-
-# function to turn presence only data to presence-absence:
-splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
-  # version 1.1 (7 May 2013)
-  # data: a matrix or data frame with your localities and species (each in a different column)
-  # sites.col: the name or index number of the column containing the localities
-  # sp.col: the name or index number of the column containing the species names or codes
-  # keep.n: logical, whether to get in the resulting table the number of times each species appears in each locality; if false (the default), only the presence (1) or absence (0) are recorded
-
-  stopifnot(
-    length(sites.col) == 1,
-    length(sp.col) == 1,
-    sites.col != sp.col,
-    sites.col %in% 1 : ncol(data) | sites.col %in% names(data),
-    sp.col %in% 1 : ncol(data) | sp.col %in% names(data),
-    is.logical(keep.n)
-  )
-
-  presabs <- table(data[ , c(sites.col, sp.col)])
-  presabs <- as.data.frame(unclass(presabs))
-  if (!keep.n)  presabs[presabs > 1] <- 1
-  presabs <- data.frame(row.names(presabs), presabs)
-  names(presabs)[1] <- names(subset(data, select = sites.col))
-  rownames(presabs) <- NULL
-  return(presabs)
-}  # end splist2presabs function
-
-# executing function and going from wide to long:
-bird_dat_pa <- splist2presabs(bird_dat_long, sites.col = 1, sp.col = 2) %>% 
-  gather(key = species, value = pa, ACWO:YEWA)
-
-#Add in site data
-site_data$site_id <- as.factor(site_data$site_id)
-bird_dat <- left_join(bird_dat_pa, site_data, by = "site_id") 
-
-# convert to wide format for following analysis
-bird_matrix1 <- spread(data = bird_dat, key = species, value = pa, fill = 0)
-
 # optional:remove birds with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
 #bird_matrix <- rbind(bird_matrix1[,-c(1:20)], c("colsum", colSums(bird_matrix1[,-c(1:20)]) == 1))
@@ -867,30 +942,6 @@ p1
 
 #### Lichens
 ```{r, echo=FALSE,results='hide',fig.keep='all'}
-# read in data
-lichen_dat_wide <- read.csv("data/lichen_data.csv", header = T) %>% 
-  mutate(site_id = as.factor(site_id)) %>% 
-  dplyr::select(site_id, species, abund) %>% 
-  spread(key = species, value = abund, fill = 0) %>% 
-  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
-
-#for genus level analysis (presence/absence)
-lichen_dat_genus <- lichen_dat_wide %>% 
-  gather(key=species, value=abund, AHPA:DUMB) %>% 
-  left_join(., lichen_names, by = "species") %>% 
-  dplyr::select(site_id,genus,abund) 
-
-# remove duplicate rows (same species detected multiple times in a single plot)
-lichen_dat_genus_pa1 <- lichen_dat_genus %>% 
-  mutate(pa = ifelse(abund == 0, 0, 1)) %>% 
-  dplyr::select(site_id, genus, pa)
-
-#spread not working.
-lichen_dat_genus_pa_l <- unique(lichen_dat_genus_pa1[ , c(1:3)]) %>%
-  filter(pa==1)
-
-lichen_dat_genus_pa <- lichen_dat_genus_pa_l %>% 
-  spread(key = genus, value = pa, fill = 0)
 
 # calculate distance for NMDS.
 # for species: 
@@ -970,8 +1021,8 @@ Cred<-subset(C,pvals<0.05)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-p <- ggplot(scrs) +
-  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+p <- ggplot(scrs, mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+  geom_point() +
   coord_fixed() + ## need aspect ratio of 1!
   geom_segment(data = Cred,
                aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
@@ -985,39 +1036,31 @@ p
 #### All taxa
 ```{r, echo=FALSE,results='hide',fig.keep='all'}
 # read in data
-plant_dat_long <- plant_dat %>% 
-  mutate(pa = cover) %>% 
-  dplyr::select(site_id, species, pa)
+#plant_dat_long <- plant_dat %>% 
+#  mutate(pa = cover) %>% 
+#  dplyr::select(site_id, species, pa)
 
-lichen_dat_genus_pa_l <- lichen_dat_genus_pa_l %>% 
-  mutate(species = genus) %>% 
-  dplyr::select(site_id, species, pa)
+#lichen_dat_genus_pa_l <- lichen_dat_genus_pa_l %>% 
+#  mutate(species = genus) %>% 
+#  dplyr::select(site_id, species, pa)
 
-insect_dat_long_filt1 <- insect_dat_l %>% 
-  dplyr::select(-c(2:28)) %>% 
-  filter(number != 0)
+#insect_dat_long_filt1 <- insect_dat_l %>% 
+#  dplyr::select(-c(2:28)) %>% 
+#  filter(number != 0)
 
-insect_dat_long_filt <- splist2presabs(insect_dat_long_filt1, sites.col = 1, sp.col = 2)  %>% 
-  gather(key = species, value = pa, Aculeata:Thysanoptera)
+#insect_dat_long_filt <- splist2presabs(insect_dat_long_filt1, sites.col = 1, sp.col = 2)  %>% 
+#  gather(key = species, value = pa, Aculeata:Thysanoptera)
 
-all_spp <- rbind(lichen_dat_genus_pa_l, bird_dat_pa) %>% 
-  rbind(., plant_dat_long) %>% 
-  rbind(., insect_dat_long_filt)
-
-# convert to wide matrix
-all_spp_w_pa <- unique(all_spp[ , c(1:3)]) %>%
-  filter(pa==1) %>% 
-  spread(key = species, value = pa, fill = 0)
 
 # calculate distance for NMDS.
 # for species: 
 #NMDS.log<-log1p(lichen_dat_wide[,-1])#[,-c(1:20)])
 #for genus:
 NMDS.log<-log1p(all_spp_w_pa[,-1])#[,-c(1:20)])
-sol <- metaMDS(NMDS.log)
+sol <- metaMDS(NMDS.log, k = 2)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = lichen_mat_species_w$site_id)
+scrs <- cbind(scrs, site_id = all_spp_w_pa$site_id)
 scrs <- merge(scrs, site_data, by = "site_id")
 
 vf <- envfit(sol, NMDS.log, perm = 9)
@@ -1028,6 +1071,9 @@ spp.scrs <- cbind(spp.scrs, Species = rownames(spp.scrs))
 # To only show statistically significant species:
 ef<-envfit(sol$points, NMDS.log, perm=1000)
 ef.df<-as.data.frame(ef$vectors$arrows*sqrt(ef$vectors$r))
+
+ef.df<-data.frame(ef$vectors$arrows,R = ef$vectors$r, P = ef$vectors$pvals)
+
 ef.df$species<-rownames(ef.df)
 
 #only significant pvalues
@@ -1041,10 +1087,12 @@ C<-cbind(arrows, pvals)
 Cred<-subset(C,pvals<0.001)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
+scrs$cov_cat <- as.factor(scrs$cov_cat)
 #only stat. signif. spp
-p <- ggplot(scrs) +
-  geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
+p <- ggplot(scrs, mapping = aes(x = NMDS1, y = NMDS2)) +
+  geom_point(aes(colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!
+  stat_ellipse(level = 0.9, aes(colour = sev)) +
   geom_segment(data = Cred,
                aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
                arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
@@ -1052,10 +1100,142 @@ p <- ggplot(scrs) +
             size = 3) +
   labs(title = "Figure 4: NMDS for all spp")
 p
+
+ggplotly(p, tooltip = "site_id")
+
+?ggplotly
+?count
+
+all_spp %>% count(species, sort = TRUE)
+
+species
+species %>% count(species, sort = TRUE)
+
+p3d <- plot_ly(scrs, x = ~NMDS1, y = ~NMDS2, z = ~NMDS3, color = ~sev, symbol = ~sev, symbols = (c("square", "diamond", "circle", "cross", "x")), text = ~paste('cc: ', tree_cov)) %>%
+  add_markers() %>%
+  layout(scene = list(xaxis = list(title = 'NMDS1'),
+                     yaxis = list(title = 'NMDS2'),
+                     zaxis = list(title = 'NMDS3')))
+p3d
+
+
 ```
 
-### Beta diversity (plants)
+### Richness and diversity
+
 ```{r}
+# Number of occurrences of all species
+all_spp_dat_l %>% 
+  group_by(species) %>% 
+  summarise(sums=sum(pa))
+
+#same thing, per sev type
+all_spp_dat_l %>%
+  filter(pa != 0) %>% 
+  dplyr::count(species, sev, sort = TRUE)
+
+df <- all_spp_dat_l %>%
+#  filter(pa != 0) %>% 
+  add_count(species)
+
+
+# species richness at each plot
+# from http://www.flutterbys.com.au/stats/tut/tut13.2.html
+df <- apply(all_spp_w_pa[,-1]>0,1,sum)
+
+#Same but in data frame format
+all_spp_richness <- ddply(all_spp_w_pa,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+# Shannon diversity
+diversity(all_spp_w_pa[-1], index="shannon")
+
+#OR
+all_spp_shannon <- ddply(all_spp_w_pa,~site_id,function(x) {
+        data.frame(shannon=diversity(x[-1], index="shannon"))
+})
+
+#Simpson diversity
+diversity(all_spp_w_pa[-1], index="simpson")
+
+#OR
+all_spp_simpson <- ddply(all_spp_w_pa,~site_id,function(x) {
+        data.frame(simpson=diversity(x[-1], index="simpson"))
+})
+
+#put it together
+all_spp_div <- merge(all_spp_richness, all_spp_shannon, by = "site_id") %>%
+  merge(., all_spp_simpson, by = "site_id") %>% 
+  merge(., site_data, by = "site_id")
+
+#all_spp_div  %>%
+#  group_by(sev) %>%
+#  summarise_all(mean, na.rm=TRUE)
+
+all_spp_div$cov_cat <- as.factor(all_spp_div$cov_cat)
+
+ggplot(all_spp_div, aes(x = cov_cat, y = richness)) +
+  geom_boxplot()
+
+ggplot(all_spp_div, aes(x = cov_cat, y = shannon)) +
+  geom_boxplot()
+
+ggplot(all_spp_div, aes(x = cov_cat, y = simpson)) +
+  geom_boxplot()
+
+# do anovas to test differences?
+```
+
+
+### Beta diversity (plants)
+
+```{r}
+# Code from Jonah
+
+comptable <- all_spp_w_pa %>% full_join(site_data[, c("site_id", "sev")], by = "site_id") %>% select(-site_id) #puttig together the plot id and sev and joinign wide format data then dropping site id
+
+betajaccard <- function(df){
+  
+  tempdf = df %>% select(-sev)
+  
+  dis = c(vegdist(tempdf, method = "jaccard", binary = "true"))
+  
+  result = data.frame(sev = rep(unique(df$sev), length = length(dis)),
+#                      year = rep(unique(df$year), length = length(dis)),
+                      dis = dis)
+  
+}
+
+bj_output = comptable %>% group_by(sev) %>% do(betajaccard(.))
+
+bj_output %>% ggplot(aes(x = sev,
+                         y = dis,
+                         fill = sev,
+                         group = sev)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("Fire Severity") +
+  ylab("1 - Jaccard") +
+  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Pairwise Jaccard Beta Diversity")
+
+
+
+#???
+sampdat = comp.matrix %>% filter(Regen_ID %in% c("ANG001", "ANG005") & year == 2008)
+t(sampdat)
+vegdist(sampdat[,-c(1,2)],
+        method = "jaccard", binary = "true")
+```
+
+10/19: Using the canopy cover categories, there is a significant impact of groups on plants (using %cov). It looks like the highest cover has the lowest diversity. But using all spp, beta div (distance to centroid) is higher! Totally flat for birds. BUT what is this calculating???
+
+
+```{r}
+all_spp_dat_l <- gather(all_spp_dat_w, key = site_id, value = pa, Ahtiana:YAMI)
+
 # plot from https://www.fromthebottomoftheheap.net/2016/04/17/new-plot-default-for-betadisper/
 #install.packages("devtools")
 #devtools::install_github("vegandevs/vegan")
@@ -1069,8 +1249,19 @@ plant_glm_cov2 <- plant_glm_cov %>%
 # for abundance data, use dist <- bray.part(plant_matrix1[,-1])
 # In both cases use dist[[3]] instead of dis in betadisper
 
-dis <- vegdist(plant_matrix1[,-1])
-groups <- factor(plant_glm_cov2$sev_tsf2)
+
+#all spp
+dis <- vegdist(all_spp_w_pa[,-c(1)], method = "jaccard", binary = T)
+groups <- factor(all_spp_dat_w$sev)
+
+#plants
+dis <- vegdist(plant_mat_cov_w[,-c(1,183)], method = "jaccard", binary = T) 
+groups <- factor(plant_dat_pa_w$cov_cat)
+
+#birds
+#dis <- vegdist(bird_mat_w[,(38:104)]) 
+dis <- vegdist(bird_mat_w[,(38:104)], method = "jaccard", binary = T) 
+groups <- factor(bird_dat_w$cov_cat)
 
 mod <- betadisper(dis, groups)  # Calculate multivariate dispersions
 
@@ -1079,6 +1270,141 @@ scores(mod)
 plot(mod)
 boxplot(mod)
 anova(mod)
+
+
+
+
+
+
+
+
+
+mod1 <-melt(mod)
+
+df <- distance(all_spp_w_pa[,-1], method = "jaccard")
+
+spe.dis <- vegdist(log1p(spe), method='bray')
+
+# do land use categories differ in community composition? clustering of sites using dissimilarity matrix & UPGMA clustering
+
+library(RCurl)
+library(vegan)
+library(gclus)
+library(RColorBrewer)
+library(ade4)
+library(adespatial)
+
+all_sppp <-all_spp_w_pa[,-c(1)]
+
+
+kib <-read.csv(text=getURL("https://raw.githubusercontent.com/VFugere/QCBS_betadiv/master/kibale_inverts.csv"), header=T)
+colnames(kib)[1] <- 'site.code' #corrects excel generated junk
+kib$land.use <- relevel(kib$land.use, 'park') #more intuitive to have park/forest as reference level
+#have a look at the data
+head(kib)
+str(kib)
+#some useful matrices
+spe <- kib[,-c(1:3)]
+row.names(spe) <- kib$site.code
+site <- kib[,2:3]
+rownames(site) <- kib[,1]
+
+
+spe.dis.UPGMA <- hclust(dis, method="average")
+spe.dis.o <- reorder.hclust(spe.dis.UPGMA, dis)
+
+dend <- as.dendrogram(spe.dis.o)
+com.tx <- apply(t(all_spp_w_pa[,-c(1)]),1,sum) #common taxa for heat map plot
+spe.com <- all_sppp[,which(com.tx > 20)]
+or <- vegemite(spe.com, spe.dis.o,scale='log')
+heatmap(t(spe.com[or$species]), Rowv=NA, Colv=dend, cexRow=0.5, cexCol=0.5, col=c('white', brewer.pal(5,"Greens")), scale="column", revC = T, margin=c(4.5,8))
+
+#beta diversity, at last
+beta.BC <- betadisper(dis, groups, type = 'centroid')
+plot(beta.BC) #ugly
+
+mybetadivplot <- function (x, cex=1){
+  g <- scores(x, choices = 1:2)
+  plot(g$sites, type = "n", ylab='Dimension 2', xlab='Dimension 1')
+  points(g$sites, pch = c(21,22,21)[all_spp_dat_w$cov_cat], bg=c('white','white','black')[all_spp_dat_w$cov_cat])
+  points(g$centroids, pch = 16, cex = 1.5, col = "red")
+  for (i in levels(x$group)) {
+    ch <- chull(g$sites[x$group == i, ])
+    ch <- c(ch, ch[1])
+    lines(x$vectors[x$group == i, 1:2][ch, ], col = "black", lty = "dashed")
+  }
+#  legend('topright',cex=1, pt.cex=1, inset = c(0.2,0),legend=c("Kab (farm)","Kam (farm)",'For (park)'),pch=c(21,22,21),pt.bg=c('white','white','black'),bty='n')
+}
+mybetadivplot(beta.BC)
+legend('bottomright',bty='n',inset=c(0.2,0),legend = expression(italic(Bray-Curtis)))
+
+
+
+
+
+
+
+
+
+
+  # remove self-comparisons
+  df = df %>%
+    filter(as.character(Var1) != as.character(Var2)) %>%
+    mutate_if(is.factor,as.character)
+  
+  # get sample data (S4 error OK and expected)
+  sd = sample_data(p) %>%
+    select(s, d) %>%
+    mutate_if(is.factor,as.character)
+  
+  # combined distances with sample data
+  colnames(sd) = c("Var1", "Type1")
+  wu.sd = left_join(wu.m, sd, by = "Var1")
+  
+  colnames(sd) = c("Var2", "Type2")
+  wu.sd = left_join(wu.sd, sd, by = "Var2")
+  
+  # plot
+  ggplot(wu.sd, aes(x = Type2, y = value)) +
+    theme_bw() +
+    geom_point() +
+    geom_boxplot(aes(color = ifelse(Type1 == Type2, "red", "black"))) +
+    scale_color_identity() +
+    facet_wrap(~ Type1, scales = "free_x") +
+    theme(axis.text.x=element_text(angle = 90, hjust = 1, vjust = 0.5)) + 
+    ggtitle(paste0("Distance Metric = ", m))
+}
+
+
+# set binary: TRUE if presence/absence data
+#             FALSE if abundance data
+binary <- TRUE
+
+m <- 500
+n <- m
+set.seed(12345)
+if(binary == TRUE){
+  # Create matrix with random 0/1 values
+  x <- sample.int (2, m*n, TRUE)-1L
+  dim(x) <- c(m,n)  
+} else {
+  # Or create matrix with values in the range 0-10
+  x <- matrix(round(runif(n*m, 0, 10)), nrow = m, ncol = n)  
+}
+
+#### Test the standardization 
+jaccard <- vegdist(x, method = "jaccard", binary = FALSE)
+jaccard.stand <- vegdist(x, method = "jaccard", binary = TRUE)
+### Are they equal?
+all(jaccard == jaccard.stand)
+
+### Plot for safety
+jacc.df <- melt(cbind(jaccard, jaccard.stand))
+ggplot(jacc.df, aes(x = value, fill = Var2, colour = Var2)) + 
+  geom_histogram(alpha = 0.2, position = "identity", binwidth = 0.01)
+
+str(jaccard)
+
 ```
 
 ```{r}
@@ -1415,14 +1741,22 @@ kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN
 
 ### MRPP (plants)
 ```{r echo = F}
-plant.mrpp <- mrpp(plant_dat_cov_w[,c(2:57)], plant_dat_cov_w$sev_cov) # 2:181 for all plants; 2:57 for trees/shrubs
+mrpp_data <- plant_dat_pa_w %>% # [,c(2:82)]
+  filter(sev %in% c("l","h", "u")) %>% 
+  select(ACAM:WHMO)
+
+mrpp_cat <- plant_dat_pa_w %>% 
+  filter(sev %in% c("l","h", "u")) %>% 
+  select(sev)
+  
+plant.mrpp <- mrpp(mrpp_data, mrpp_cat) # 2:181 for all plants; 2:57 for trees/shrubs
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(plant.ord <- metaMDS(plant_dat_cov_w[,c(2:57)]), type="text", display="sites" )
-ordihull(plant.ord, plant_mrpp_d$sev_cov, label = T)
+plot(plant.ord <- metaMDS(mrpp_data, type="text", display="sites"))
+ordihull(plant.ord, mrpp_cat, label = T)
 
 with(plant.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1435,7 +1769,7 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-plant.md <- meandist(vegdist(plant_dat_cov_w[,c(2:57)]), plant_dat_cov_w$sev_cov) # Need to adjust the columns to only keep species.... should fix this
+plant.md <- meandist(vegdist(mrpp_data, mrpp_cat)) # Need to adjust the columns to only keep species.... should fix this
 plant.md
 summary(plant.md)
 plot(plant.md)
@@ -1532,9 +1866,12 @@ plant_matrix$site_id <- as.character(plant_matrix$site_id)
 ## Using all tsf_cat and sev, we see a strong effect of sev, and a marginal effect of tsf_cat
 
 comp.data <- left_join(plant_matrix, site_data, by = "site_id")
-comp.sub <- subset(comp.data, select = ACMA:WHMO)
-comp.env <- subset(comp.data, select = c(fire:tsf_cat))
+
+comp.data <- plant_dat_cov_w
+comp.sub <- subset(comp.data, select = ACAM:WHMO)
+comp.env <- subset(comp.data, select = c(sev:tsf_cat))
 attach(comp.env)
+
 kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 2: PERMANOVA results", digits = 2) %>%
   kable_styling()
 
@@ -1552,30 +1889,6 @@ kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "
 #comp.env <- subset(comp.data, (tsf < 13 | sev != "h"), select = c(fire:tsf_cat))
 #attach(comp.env)
 #adonis2(comp.sub ~ sev * tsf_cat)
-
-```
-
-```{r include=F}
-### Pairwise PERMANOVA (code from https://www.researchgate.net/post/How_can_I_do_PerMANOVA_pairwise_contrasts_in_R)
-pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonferroni") {
-  library(vegan)
-  co <- combn(unique(factors), 2)
-  pairs <- c()
-  F.Model <- c()
-  R2 <- c()
-  p.value <- c()
-
-  for (elem in 1:ncol(co)) {
-    ad <- adonis(x[factors %in% c(co[1, elem], co[2, elem]), ] ~ factors[factors %in% c(co[1, elem], co[2, elem])], method = sim.method)
-    pairs <- c(pairs, paste(co[1, elem], "vs", co[2, elem]))
-    F.Model <- c(F.Model, ad$aov.tab[1, 4])
-    R2 <- c(R2, ad$aov.tab[1, 5])
-    p.value <- c(p.value, ad$aov.tab[1, 6])
-  }
-  p.adjusted <- p.adjust(p.value, method = p.adjust.m)
-  pairw.res <- data.frame(pairs, F.Model, R2, p.value, p.adjusted)
-  return(pairw.res)
-}
 
 ```
 
@@ -1640,7 +1953,7 @@ plant_matrix <- spread(data = plant_dat, key = species, value = cover, fill = 0)
 
 comp.data <- left_join(plant_matrix, site_data, by = "site_id") %>% 
   mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3"))) #%>%  %>% filter(sev == "h")
-comp.sub <- subset(comp.data, select = ADBI:WOFI)
+comp.sub <- subset(comp.data, select = ACAM:YAMI) #ADBI:WOFI)
 
 kable(pairwise.adonis(comp.sub, comp.data$sev2))
 
@@ -1769,8 +2082,17 @@ plant_matrix1 <- plant_matrix1[-49, ]
 
 ### Vector for site classification
 ### severity
-data <- plant_matrix1[,-c(1:4)]
-groups1 <- as.vector(plant_matrix1$sev2)
+
+bla <- plant_mat_cov_w %>% 
+  bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
+
+bla <- bla[, (bla[111, ]) > 0]
+bla <- bla[-111, ]
+
+
+
+data <- bla[,c(2:178)]
+groups1 <- as.vector(plant_dat_pa_w$sev)
 
 #groups1 = as.vector(plant_dat$tsf_cat2)
 #groups1 = as.vector(plant_dat$sev_tsf)
@@ -1803,11 +2125,16 @@ indval_ls <- indval %>%
   filter(group =="2")%>% 
   dplyr::select(full_name, "Indicator value")
 
+indval_3 <- indval %>% 
+  filter(group =="3")%>% 
+  dplyr::select(full_name, "Indicator value")
+
 names(indval_hs)[1]<-"Indicators of HS"
 names(indval_ls)[1]<-"Indicators of LS/UN"
+names(indval_3)[1]<-"Indicators of 3"
 
 #names(spp_diff2)[1]<-"Species found only in LS/UN"
-indval_table <- list(indval_hs, indval_ls)
+indval_table <- list(indval_hs, indval_ls, indval_3)
 
 kable(indval_table, caption = "Table 3: Indicator species for different habitats", digits = 0) %>%
   kable_styling()

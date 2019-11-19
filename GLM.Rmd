@@ -75,18 +75,54 @@ plant_glm <- merge(plant_dat_pa, site_data, by= 'site_id') %>%
 
 # GLM and LRT for selected species (more than 10 detections?)
 ```{r}
-# now just for MAGR
-MAGR_glm <- plant_glm %>% filter(species == "MAGR")
+# now just for Madia
+Madia_glm <- plant_dat_pa_l %>% 
+  merge(., site_data, by= 'site_id') %>% 
+  filter(species == "Madia")
 
 # Now the GLM
-bin.glm1 <- glm(pa~sev+tsf_cat,data=MAGR_glm,family=binomial)
+bin.glm1 <- glm(pa~sev+tsf_cat, data=Madia_glm, family=binomial)
 
 summary(bin.glm1)
 #step(bin.glm1) 
 
 #likelihood ratio test
-results.reduced <- glm(data=MAGR_glm, pa ~ 1, family=binomial)
+results.reduced <- glm(data=Madia_glm, pa ~ 1, family=binomial)
 anova(results.reduced,bin.glm1, test="Chisq")
+
+
+# now just for ANMAD
+ANMAD_glm <- plant_dat_pa_l %>% 
+  merge(., site_data, by= 'site_id') %>% 
+  mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "2", ifelse(sev == 'multiple', "3", "4"))))) %>% 
+  filter(species == "ANMAD")
+
+# Now the GLM
+bin.glm1 <- glm(pa~sev2+tsf_2cat, data=ANMAD_glm, family=binomial) #fix tsf!
+
+summary(bin.glm1)
+step(bin.glm1) 
+
+#likelihood ratio test
+results.reduced <- glm(data=ANMAD_glm, pa ~ 1, family=binomial)
+anova(results.reduced,bin.glm1, test="Chisq")
+
+
+
+
+source("scripts/occ_plot.R")
+source("scripts/lmt.R")
+
+sp_dat <- plant_dat_cov_w %>% 
+  dplyr::select(site_id, Madia, sev, tsf, sev_tsf)
+
+lmt(sp_dat)
+
+sp_mod1 <- glm(Madia/100 ~ sev, sp_dat, family = gaussian) # use gaussian for cov, binomial for pa?
+sp_mod2 <- glm(Madia/100 ~ sev_tsf, sp_dat, family = gaussian)
+occ_plot_sev(sp_mod1)
+occ_plot_full(sp_mod2)
+
 
 ```
 

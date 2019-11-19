@@ -1,6 +1,6 @@
 # Moran's I
 
-dists <- as.matrix(dist(cbind(plant_glm_cov$lon, plant_glm_cov$lat)))
+dists <- as.matrix(dist(cbind(plant_dat_pa_w$lon, plant_dat_pa_w$lat))) # used to use plant_glm_cov
 #dists.inv <- 1/dists
 #diag(dists.inv) <- 0
 #Moran.I(plant_mrpp_d$PSME, dists.inv, na.rm = T)

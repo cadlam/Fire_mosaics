@@ -1,0 +1,267 @@
+---
+title: "WKRP_fire"
+author: "Chris Adlam"
+date: "11/15/2019"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# Load scripts
+```{r include = F}
+source("scripts/data_load.R") #contains packages to load
+source("scripts/splist2presabs.R") #function for going from species list to presence/absence
+source("scripts/pairwise_permanova.R")
+```
+
+# Habitat clustering
+## PERMANOVA
+### Main Permanova (plants)
+* Just using LS/UN/HS to show that LS and UN can be lumped together.
+* Main PERMANOVA shows that there is an effect of sev and of tsf (in categories).
+
+```{r echo = F}
+### Is there an effect of sev and time since fire (using categories)? Yes for sev, no for tsf
+
+
+#### Worth checking: there was an effect of tsf and an interaction using all plots incl. mult and Rx
+
+comp.data <- plant_dat_pa_w #%>% filter(sev %in% c("l", "h", "u"))
+comp.sub <- subset(comp.data, select = ABCO:YAMI)
+comp.env <- subset(comp.data, select = c(sev:tsf_cat))
+attach(comp.env)
+
+kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
+  kable_styling() # note: without log1p transformation, there is no significant interaction
+
+```
+
+### Pairwise PERMANOVA
+* There is not a statistically significant difference between LS and UN sites, but all other categories are different.
+```{r eval = F, include = F}
+## Pairwise PERMANOVA function (run)
+# 1 = High severity; 2 = Low severity; 3 = Unburnt.
+#comp.data <- comp.data %>% 
+#    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
+
+comp.data <- comp.data %>% 
+    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "3", ifelse(sev == 'multiple', "4", "5")))))
+
+pair <- pairwise.adonis(log1p(comp.sub), comp.data$sev2) %>% 
+  dplyr::select(pairs, F.Model, p.adjusted)
+
+kable(pair, caption = "Table 2: pairwise PERMANOVA results", digits = 4) %>%
+  kable_styling()
+
+```
+
+## MRPP
+* MRPP instead of PERMANOVA?
+
+# Alpha, Beta, Gamma div.
+
+# Indicator species analysis for plants (HS vs LS/UN)
+* Doesn't turn up many species and fails when Mult and Rx are included
+
+```{r echo = F}
+### Community data matrix
+plant_data_filtered <- plant_dat_pa_l %>% 
+#  select(-DUMB) %>% 
+  left_join(., site_data, by = "site_id") %>% 
+  filter(sev %in% c("l", "h", "u")) 
+
+plant_dat <- left_join(plant_data_filtered, plant_names, by = "species") %>%
+  mutate(sev2 = ifelse(sev == 'h' , "h", "lu")) 
+
+plant_dat_select  <- plant_dat %>%
+  dplyr::select(site_id, species, pa, sev, sev_tsf, sev2)
+
+plant_matrix1 <- spread(data = plant_dat_select, key = species, value = pa, fill = 0)
+
+# getting rid of species detected in 0 plots (for some reason there appears to be no cover recorded for ALRH and CESA, but they were both found at only one plot so no big deal)
+plant_matrix1 <- plant_matrix1 %>% 
+  bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
+
+plant_matrix1 <- plant_matrix1[, (plant_matrix1[57, ]) > 0]
+plant_matrix1 <- plant_matrix1[-57, ]
+
+
+### Vector for site classification
+### severity
+data <- plant_matrix1[,-c(1:4)]
+groups1 <- as.vector(plant_matrix1$sev2)
+
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.05]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.05]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.05]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.05]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+#kable(indvalsummary1)
+
+indvalsummary1 <- cbind(rownames(indvalsummary1), data.frame(indvalsummary1, row.names=NULL))
+
+names(indvalsummary1)[1]<-"species"
+
+indval <- left_join(indvalsummary1, plant_names, by = "species") %>% 
+  mutate(HS_ind = ifelse(is.na(full_name), species, full_name)) %>% 
+  dplyr::select(HS_ind, group, indval, pvalue) %>% 
+  mutate("Indicator value" = indval * 100) %>% 
+  filter(indval >= 0.25) %>% 
+  filter(pvalue < 0.05)
+
+indval_hs <- indval %>% 
+  filter(group =="1") %>% 
+  dplyr::select(HS_ind, "Indicator value")
+
+indval_ls <- indval %>% 
+  filter(group =="2")%>% 
+  dplyr::select(HS_ind, "Indicator value")
+
+names(indval_hs)[1]<-"Indicators of HS"
+names(indval_ls)[1]<-"Indicators of LS/UN"
+
+
+#names(spp_diff2)[1]<-"Species found only in LS/UN"
+indval_table <- list(indval_hs, indval_ls)
+
+kable(indval_table, caption = "Table 3: Indicator species for different habitats", digits = 0) %>%
+  kable_styling()
+
+#write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
+# Species frequency of occurrence in each habitat
+* Looking at the fequency of occurrence of all plants detected at least 5 times (114 species), it appears that most species that have a preference for UN/LS or HS are also found in MANAG sites: 20/27 species found at least 2x more frequently in UNLS as in HS are also found at least 2x more frequently in mult or Rx than HS. Conversely, 38/42 species that are at least 2x as frequent in HS as in UNLS are also 2x as frequent in either mult or Rx as in UN/LS.
+*Kruskall-Wallis rank test?
+```{r}
+# This chunk is about comparing the frequency of different species in each habitat (see Wayman 2007)
+## Let's look at UN/LS vs HS vs mult/Rx
+
+# Calculating the number of occurrences in each trt
+# First get the data matrices for each habitat type
+plant_mat_UNLS <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "u" | sev == "l") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_HS <- plant_mat_pa_w %>% 
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev=="h") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_MANAG <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "multiple" | sev == "Rx") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_MULT <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "multiple") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_Rx <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "Rx") %>% 
+  dplyr::select(ABCO:YAMI)
+
+#Getting the number of detections for each species
+plant_dat_sum_HS <- rbind(plant_mat_HS[,-1], colSums(plant_mat_HS[-1,-1]))
+plant_sum_HS <- data.frame(t(tail(plant_dat_sum_HS, n = 1))) # keep only last row (sum) and transpose
+plant_sum_HS <- cbind(rownames(plant_sum_HS), data.frame(plant_sum_HS, row.names=NULL)) # row names to column
+colnames(plant_sum_HS) <- c("species", "sum")
+
+plant_dat_sum_UNLS <- rbind(plant_mat_UNLS[,-1], colSums(plant_mat_UNLS[-1,-1]))
+plant_sum_UNLS <- data.frame(t(tail(plant_dat_sum_UNLS, n= 1))) 
+plant_sum_UNLS <- cbind(rownames(plant_sum_UNLS), data.frame(plant_sum_UNLS, row.names=NULL))
+colnames(plant_sum_UNLS) <- c("species", "sum")
+
+plant_dat_sum_MANAG <- rbind(plant_mat_MANAG[,-1], colSums(plant_mat_MANAG[-1,-1]))
+plant_sum_MANAG <- data.frame(t(tail(plant_dat_sum_MANAG, n = 1))) 
+plant_sum_MANAG <- cbind(rownames(plant_sum_MANAG), data.frame(plant_sum_MANAG, row.names=NULL))
+colnames(plant_sum_MANAG) <- c("species", "sum")
+
+plant_dat_sum_MULT <- rbind(plant_mat_MULT[,-1], colSums(plant_mat_MULT[-1,-1]))
+plant_sum_MULT <- data.frame(t(tail(plant_dat_sum_MULT, n = 1))) 
+plant_sum_MULT <- cbind(rownames(plant_sum_MULT), data.frame(plant_sum_MULT, row.names=NULL))
+colnames(plant_sum_MULT) <- c("species", "sum")
+
+plant_dat_sum_Rx <- rbind(plant_mat_Rx[,-1], colSums(plant_mat_Rx[-1,-1]))
+plant_sum_Rx <- data.frame(t(tail(plant_dat_sum_Rx, n = 1))) 
+plant_sum_Rx <- cbind(rownames(plant_sum_Rx), data.frame(plant_sum_Rx, row.names=NULL))
+colnames(plant_sum_Rx) <- c("species", "sum")
+
+plant_dat_sum <- plant_sum_UNLS %>% 
+  left_join(plant_sum_HS, by = "species") %>% 
+  left_join(plant_sum_MANAG, by = "species") %>% 
+  left_join(plant_sum_MULT, by = "species") %>% 
+  left_join(plant_sum_Rx, by = "species")
+
+colnames(plant_dat_sum) <- c("species", "det_UNLS", "det_HS", "det_MANAG", "det_MULT", "det_Rx")
+plant_dat_sum[is.na(plant_dat_sum)] <- 0
+
+# Now dividing number of detections by number of sites and turning into %
+plant_dat_percent <- plant_dat_sum %>% 
+  mutate(., UNLS_occ = (det_UNLS/(nrow(plant_dat_sum_UNLS) -1)*100)) %>% 
+  mutate(., HS_occ = (det_HS/(nrow(plant_dat_sum_HS) -1)*100)) %>% 
+  mutate(., MANAG_occ = (det_MANAG/(nrow(plant_dat_sum_MANAG) -1)*100)) %>% 
+  mutate(., MULT_occ = (det_MULT/(nrow(plant_dat_sum_MULT) -1)*100)) %>% 
+  mutate(., Rx_occ = (det_Rx/(nrow(plant_dat_sum_Rx) -1)*100))%>% 
+  mutate(., total_occ = (det_UNLS + det_HS + det_MANAG + det_MULT + det_Rx)) %>% 
+  filter(total_occ >5)  # keep only species detected more than 5 times
+
+print_occ_table <- plant_dat_percent[, -c(2:6)]
+
+write.csv(print_occ_table, file = "output/print_occ_table_all.csv")
+
+```
+
+```{r}
+# This chunk is about comparing the frequency of different species in each habitat (see Wayman 2007)
+## Let's look at UN/LS vs HS vs mult/Rx
+
+# Calculating the number of occurrences in each trt
+# First get the data matrices for each habitat type
+plant_mat_Rx <- plant_mat_pa_w %>%
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev == "Rx") %>% 
+  dplyr::select(ABCO:YAMI)
+
+plant_mat_MULT <- plant_mat_pa_w %>% 
+  left_join(site_data, by = "site_id") %>% 
+  filter(sev=="multiple") %>% 
+  dplyr::select(ABCO:YAMI)
+
+#Getting the number of detections for each species
+plant_dat_sum_MULT <- rbind(plant_mat_MULT[,-1], colSums(plant_mat_MULT[-1,-1]))
+plant_sum_MULT <- data.frame(t(tail(plant_dat_sum_MULT, n = 1))) 
+plant_sum_MULT <- cbind(rownames(plant_sum_MULT), data.frame(plant_sum_MULT, row.names=NULL))
+colnames(plant_sum_MULT) <- c("species", "sum")
+
+plant_dat_sum_Rx <- rbind(plant_mat_Rx[,-1], colSums(plant_mat_Rx[-1,-1]))
+plant_sum_Rx <- data.frame(t(tail(plant_dat_sum_Rx, n = 1))) 
+plant_sum_Rx <- cbind(rownames(plant_sum_Rx), data.frame(plant_sum_Rx, row.names=NULL))
+colnames(plant_sum_Rx) <- c("species", "sum")
+
+plant_dat_sum <- plant_sum_MULT %>% 
+  left_join(plant_sum_Rx, by = "species")
+
+colnames(plant_dat_sum) <- c("species", "det_MULT", "det_Rx")
+plant_dat_sum[is.na(plant_dat_sum)] <- 0
+
+# Now dividing number of detections by number of sites and turning into %
+plant_dat_percent <- plant_dat_sum %>% 
+  mutate(., MULT_occ = (det_MULT/(nrow(plant_dat_sum_MULT) -1)*100)) %>% 
+  mutate(., Rx_occ = (det_Rx/(nrow(plant_dat_sum_Rx) -1)*100))
+
+print_occ_table <- plant_dat_percent[, -c(2:3)]
+
+write.csv(print_occ_table, file = "output/print_occ_tab.csv")
+
+```
