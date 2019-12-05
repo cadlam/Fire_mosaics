@@ -3,6 +3,8 @@ title: "GLM"
 author: "Chris Adlam"
 date: "9/18/2018"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -91,21 +93,116 @@ results.reduced <- glm(data=Madia_glm, pa ~ 1, family=binomial)
 anova(results.reduced,bin.glm1, test="Chisq")
 
 
+
+install.packages("multcompView")
+library(multcompView)
+library(mvabund)
+
+
+
 # now just for ANMAD
 ANMAD_glm <- plant_dat_pa_l %>% 
   merge(., site_data, by= 'site_id') %>% 
+  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
   mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "2", ifelse(sev == 'multiple', "3", "4"))))) %>% 
-  filter(species == "ANMAD")
+  mutate(tsf2 = ifelse(fire == "unburnt", "5",ifelse(tsf < 9 , "1", ifelse(tsf < 15 & tsf > 8 , "2", ifelse(tsf > 13, "3", "6"))))) %>% 
+  filter(species == "CHUM") %>% 
+  mutate(sev2 = as.factor(sev2))
+
+
+
+mod <- ANMAD_glm %>%
+  mutate(sev2 = as.factor(sev2)) %>% 
+#  mutate(num_sites = dplyr::count(site_id)) %>% 
+  group_by(sev2) %>% 
+  mutate(num_occ = sum(pa)) %>% 
+  add_tally() %>% 
+  mutate(freq = num_occ/n) %>% 
+  dplyr::select(sev2, freq)
+
+mod<-unique(mod)
+
+ggplot(mod, aes(x=sev2, y=freq)) +
+  geom_point()
+
+
+#relevel(warpbreaks$tension, ref = "M")
+
+
+# GLM using manyglm
+bin.glm2 <- manyglm(pa ~ sev2, family="binomial", data=ANMAD_glm)
+
+anova(bin.glm2, nBoot=199, test="wald")
+summary(bin.glm2, resamp="montecarlo")
+step(bin.glm2) 
+
+abund <- mvabund(ANMAD_glm$pa)
+treatment <- as.character(ANMAD_glm$sev2)
+## pairwise comparison 
+msolglm <- manyglm(abund ~ treatment)
+anova(msolglm, pairwise.comp = treatment, nBoot = 199)
+
+
+
+
+
+
+mod <- ANMAD_glm %>%
+#  mutate(num_sites = dplyr::count(site_id)) %>% 
+  group_by(sev2, tsf2) %>% 
+  mutate(num_occ = sum(pa)) %>% 
+  add_tally() %>% 
+  mutate(freq = num_occ/n) %>% 
+  dplyr::select(sev2, tsf2, freq)
+
+
+  
+
+ggplot(mod, aes(x=tsf2, y=freq)) +
+#  geom_point(aes(colour=sev2)) +
+  geom_smooth(aes(colour=sev2), method = "lm") +
+  geom_jitter(aes(colour=sev2))
+
+
+
 
 # Now the GLM
-bin.glm1 <- glm(pa~sev2+tsf_2cat, data=ANMAD_glm, family=binomial) #fix tsf!
+bin.glm1 <- glm(pa~sev2, data=ANMAD_glm, family=binomial(link=logit))
+
+plot(bin.glm1)
 
 summary(bin.glm1)
-step(bin.glm1) 
+anova(bin.glm1,test="Chisq") # doesn't work with manyglm
+
+
+g<-glht(bin.glm1, linfct = mcp(sev2 = "Tukey"))
+cld(g)
+
+?manyglm
 
 #likelihood ratio test
 results.reduced <- glm(data=ANMAD_glm, pa ~ 1, family=binomial)
 anova(results.reduced,bin.glm1, test="Chisq")
+
+
+# Estimated means between groups within each year
+means = emmeans(bin.glm1, specs = "sev2", by = "tsf_2cat", adjust = "tukey")
+
+# All pairwise comparisons
+paircomp = pairs(means)
+
+# Assigning labels to each groups
+cld(means)
+
+#create dataframe to use for labeling richness boxplots
+alpha_rich_stats <- as.data.frame(CLD(means))
+
+
+
+
+
+
+
 
 
 

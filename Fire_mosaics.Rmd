@@ -509,19 +509,23 @@ Non-metric multidimensional scaling (NMDS) is a way to graphically represent the
 
 #nmds_dat <- left_join(plant_mat_pa_w, lichen_mat_genus_pa_w, by = "site_id")
 
-nmds_dat <- plant_mat_cov_w
+
+plant_dat_filt <- plant_dat_cov_w %>% filter((tsf < 25 & tsf > 4) | sev=="u")
+nmds_dat <- plant_dat_filt %>% select(ABCO:YAMI)
 nmds_dat[is.na(nmds_dat)] <- 0
 
 # calculate distance for NMDS
-NMDS.log<- log1p(nmds_dat[,-c(1,20)]) #previously tried log1p transformation for 2018, but with both years the stress is too high
+NMDS.log<- log1p(nmds_dat)
+                
+#                [,-c(1,20)]) #previously tried log1p transformation for 2018, but with both years the stress is too high
 
 #NMDS
 sol <- metaMDS(NMDS.log, k = 3)
 
 # scrs is the base for the plot
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = plant_dat_cov_w$site_id)
-scrs <- merge(scrs, plant_dat_pa_w[,-(111:114)], by = "site_id")
+scrs <- cbind(scrs, site_id = plant_dat_filt$site_id)
+scrs <- merge(scrs, plant_dat_filt, by = "site_id")
 
 # To only show statistically significant species with arrows:
 ef<-envfit(sol, NMDS.log, perm=999)
@@ -1741,22 +1745,31 @@ kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN
 
 ### MRPP (plants)
 ```{r echo = F}
-mrpp_data <- plant_dat_pa_w %>% # [,c(2:82)]
-  filter(sev %in% c("l","h", "u")) %>% 
-  select(ACAM:WHMO)
-
-mrpp_cat <- plant_dat_pa_w %>% 
-  filter(sev %in% c("l","h", "u")) %>% 
-  select(sev)
+mrpp_data <- plant_mat_cov_w[,-1]
   
-plant.mrpp <- mrpp(mrpp_data, mrpp_cat) # 2:181 for all plants; 2:57 for trees/shrubs
+  
+  plant_dat_cov_w %>% # [,c(2:82)]
+  filter(sev %in% c("l","h", "u")) %>% 
+  select(ABPR:YAMI) %>% 
+  select(which(colSums(.) > 0)) 
+
+mrpp_cat <- plant_dat_cov_w
+  
+  
+  
+  plant_dat_cov_w %>% 
+  filter(sev %in% c("l","h", "u"))
+  
+plant.mrpp <- mrpp(mrpp_data, mrpp_cat$sev) # 2:181 for all plants; 2:57 for trees/shrubs
+
+plant.mrpp <- mrpp(plant_mat_cov_w[,-1], plant_dat_cov_w$sev)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
 plot(plant.ord <- metaMDS(mrpp_data, type="text", display="sites"))
-ordihull(plant.ord, mrpp_cat, label = T)
+ordihull(plant.ord, mrpp_cat$sev, label = T)
 
 with(plant.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1769,26 +1782,30 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-plant.md <- meandist(vegdist(mrpp_data, mrpp_cat)) # Need to adjust the columns to only keep species.... should fix this
+plant.md <- meandist(vegdist(mrpp_data), mrpp_cat$sev, method = "bray") # Need to adjust the columns to only keep species.... should fix this
 plant.md
 summary(plant.md)
 plot(plant.md)
 
+#test to see if any columns are not numeric
+#plant_mat_cov_w[,-1] %>% select_if(negate(is.numeric))
 ```
 
 ## MRPP (insects) 
 We see from the MRPP that the first 2 age categories for HS stand out, but the older HS burns cluster with the LS and UN.
 ```{r echo = F}
-#meandist not working now for some reason, same with plants above
+insect_dat_w <- insect_dat_w %>% 
+  mutate(sev = ifelse(sev == "multiple", "h", sev))
 
-insect.mrpp <- mrpp(insect_dat_w[,c(29:45)], insect_dat_w$sev_tsf)
+
+insect.mrpp <- mrpp(insect_dat_w[,c(37:53)], insect_dat_w$sev, distance = "bray")
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(insect.ord <- metaMDS(insect_dat_w[,c(29:45)]), type="text", display="sites" )
-ordihull(insect.ord, insect_dat_w$sev_tsf, label = T)
+plot(insect.ord <- metaMDS(sqrt(insect_dat_w[,c(37:53)])), type="text", display="sites" )
+ordihull(insect.ord, insect_dat_w$sev, label = T)
 
 with(insect.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1801,11 +1818,46 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-insect.md <- meandist(vegdist(insect_dat_w[,c(29:45)]), insect_dat_w[["sev_tsf"]])
+insect.md <- meandist(vegdist(insect_dat_w[,c(37:53)]), insect_dat_w[["sev"]])
 insect.md
 summary(insect.md)
 plot(insect.md)
+```
 
+## MRPP (birds) 
+
+```{r echo = F}
+bird_dat_w1 <- bird_dat_w %>% 
+  filter(yr == 2018) %>% 
+  mutate(sev = ifelse(sev == "multiple", "h", sev))
+
+mrpp_data <- bird_dat_w1 %>% 
+  dplyr::select(ACWO:YRWA)
+
+bird.mrpp <- mrpp(mrpp_data, bird_dat_w1$sev, distance = "binomial")
+
+# Save and change plotting parameters
+def.par <- par(no.readonly = TRUE)
+layout(matrix(1:2,nr=1))
+
+plot(bird.ord <- metaMDS(mrpp_data, type="text", display="sites" ))
+ordihull(bird.ord, bird_dat_w1$sev, label = T)
+
+with(bird.mrpp, {
+  fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
+                 main="Test of Differences Among Groups")
+  abline(v=delta); 
+  text(delta, 2*mean(fig.dist$counts), adj = -0.5,
+     expression(bold(delta)), cex=1.5 )  }
+)
+par(def.par)
+
+## meandist 
+# calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
+bird.md <- meandist(vegdist(mrpp_data), bird_dat_w1$sev, method = "binomial")
+bird.md
+summary(bird.md)
+plot(bird.md)
 ```
 
 ## MRPP (lichens) 
@@ -1813,14 +1865,18 @@ plot(insect.md)
 ```{r echo = F}
 #meandist not working now for some reason, same with plants above
 
-lichen.mrpp <- mrpp(lichen_mat_species_w[,c(2:60)], insect_dat_w$sev_tsf)
+mrpp_data <- lichen_dat_genus_pa_w %>% select(Ahtiana:Xanthomendoza)
+
+mrpp_cat <- lichen_dat_genus_pa_w
+
+lichen.mrpp <- mrpp(mrpp_data, mrpp_cat$sev)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(lichen.ord <- metaMDS(lichen_mat_species_w[,c(2:60)]), type="text", display="sites" )
-ordihull(lichen.ord, insect_dat_w$sev_tsf, label = T)
+plot(lichen.ord <- metaMDS(mrpp_data), type="text", display="sites" )
+ordihull(lichen.ord, mrpp_cat$sev, label = T)
 
 with(lichen.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1833,10 +1889,93 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-lichen.md <- meandist(vegdist(lichen_mat_species_w[,c(2:60)]), insect_dat_w[["sev_tsf"]])
+lichen.md <- meandist(vegdist(mrpp_data), mrpp_cat$sev)
 lichen.md
 summary(lichen.md)
 plot(lichen.md)
+
+
+
+
+
+
+
+d <- dist(as.matrix(plant_mat_pa_w))   # find distance matrix 
+hc <- hclust(d)                # apply hirarchical clustering 
+plot(hc)  
+
+
+hc <- agnes(d)
+pltree(hc, cex = 0.6, hang = -1, main = "Dendrogram of agnes")
+
+hc <- diana(d)
+pltree(hc, cex = 0.6, hang = -1, main = "Dendrogram of agnes")
+
+library(cluster)
+install.packages("factoextra", "dendextend")
+library(factoextra) # clustering visualization
+library(dendextend)
+
+
+df <- scale(all_spp_w_pa %>% remove_rownames %>% column_to_rownames(var="site_id") %>% dplyr::select(-c(CHLA, ABPR, ALRH, SALU)))
+
+df <- scale(bird_mat_w %>% remove_rownames %>% column_to_rownames(var="site_id")) #%>% select(-c(CHLA, ABPR, ALRH, SALU)))
+
+# Dissimilarity matrix
+d <- dist(df, method = "euclidean")
+
+# Hierarchical clustering using Complete Linkage
+hc1 <- hclust(d, method = "complete" )
+
+# Plot the obtained dendrogram
+plot(hc1, cex = 0.6, hang = -1)
+
+# Compute with agnes
+hc2 <- agnes(df, method = "complete")
+
+# Agglomerative coefficient
+hc2$ac
+
+# methods to assess
+m <- c( "average", "single", "complete", "ward")
+names(m) <- c( "average", "single", "complete", "ward")
+
+# function to compute coefficient
+ac <- function(x) {
+  agnes(df, method = x)$ac
+}
+
+map_dbl(m, ac)
+
+hc3 <- agnes(df, method = "ward")
+pltree(hc3, cex = 0.6, hang = -1, main = "Dendrogram of agnes")
+
+# compute divisive hierarchical clustering
+hc4 <- diana(df)
+
+# Divise coefficient; amount of clustering structure found
+hc4$dc
+
+# plot dendrogram
+pltree(hc4, cex = 0.6, hang = -1, main = "Dendrogram of diana")
+
+# Ward's method
+hc5 <- hclust(d, method = "ward.D2" )
+
+# Cut tree into 4 groups
+sub_grp <- cutree(hc5, k = 3)
+
+# Number of members in each cluster
+table(sub_grp)
+
+dfff<-bird_dat_w %>%
+  mutate(cluster = sub_grp) %>%
+  select(c(1, sev, tree_cov, tsf_2cat:sev_cov, cluster))
+
+plot(hc5, cex = 0.6)
+rect.hclust(hc5, k = 9, border = 2:5)
+
+fviz_cluster(list(data = df, cluster = sub_grp))
 
 ```
 

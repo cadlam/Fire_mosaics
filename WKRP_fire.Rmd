@@ -26,18 +26,34 @@ source("scripts/pairwise_permanova.R")
 
 #### Worth checking: there was an effect of tsf and an interaction using all plots incl. mult and Rx
 
-comp.data <- plant_dat_pa_w #%>% filter(sev %in% c("l", "h", "u"))
-comp.sub <- subset(comp.data, select = ABCO:YAMI)
+# using on sites between 5 and 20 years old (and UN)
+
+comp.data <- plant_dat_pa_w %>%  #filter(sev %in% c("l", "h", "u"))
+    filter((tsf < 25 & tsf > 4) | sev == "u")
+
+comp.sub <- subset(comp.data, select = ACMA:WHMO)
 comp.env <- subset(comp.data, select = c(sev:tsf_cat))
 attach(comp.env)
 
 kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
   kable_styling() # note: without log1p transformation, there is no significant interaction
 
+
+
+#all spp
+comp.data <- all_spp_dat_w %>%  #filter(sev %in% c("l", "h", "u"))
+    filter((tsf < 25 & tsf > 4) | sev == "u")
+
+comp.sub <- subset(comp.data, select = ACMA:YRWA)
+comp.env <- subset(comp.data, select = c(sev:tsf_cat))
+attach(comp.env)
+
+kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
+  kable_styling() 
 ```
 
 ### Pairwise PERMANOVA
-* There is not a statistically significant difference between LS and UN sites, but all other categories are different.
+* There is not a statistically significant difference between LS and UN sites, but all other categories are different. UDATE: actually now (a few small changes), HS and MULT are not different.
 ```{r eval = F, include = F}
 ## Pairwise PERMANOVA function (run)
 # 1 = High severity; 2 = Low severity; 3 = Unburnt.
@@ -57,11 +73,584 @@ kable(pair, caption = "Table 2: pairwise PERMANOVA results", digits = 4) %>%
 
 ## MRPP
 * MRPP instead of PERMANOVA?
+```{r echo = F}
+library(devtools)
+install_github("nsahr/gMRPP")
+library(gMRPP)
+
+gmrpp(mrpp_data, mrpp_cat)
+
+str(mrpp_cat)
+str(mrpp_data)
+
+names(mrpp_data)[1] <- "ID"
+names(mrpp_cat)[1] <- "ID"
+names(mrpp_cat)[2] <- "grp"
+
+
+
+
+#plants
+# seems to work better with cov than pa (no convergence)
+mrpp_data <- plant_dat_pa_w %>% # [,c(2:82)]
+#  filter(sev %in% c("l","h", "u")) %>% 
+  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
+  select(ACMA:WHMO) %>% 
+  select(which(colSums(.) > 0)) 
+
+mrpp_cat <- plant_dat_pa_w %>% 
+#  filter(sev %in% c("l","h", "u")) %>% 
+  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
+#  select(site_id, sev)
+  select(cov_cat)
+  
+mrpp_cat$sev <- as.factor(mrpp_cat$sev)
+  
+plant.mrpp <- mrpp(mrpp_data, mrpp_cat)
+summary(plant.mrpp)
+
+
+# Save and change plotting parameters
+def.par <- par(no.readonly = TRUE)
+layout(matrix(1:2,nr=1))
+
+plot(plant.ord <- metaMDS(sqrt(mrpp_data), type="text", display="sites"))
+ordihull(plant.ord, mrpp_cat, label = T)
+
+with(plant.mrpp, {
+  fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
+                 main="Test of Differences Among Groups")
+  abline(v=delta); 
+  text(delta, 2*mean(fig.dist$counts), adj = -0.5,
+     expression(bold(delta)), cex=1.5 )  }
+)
+par(def.par)
+
+
+## meandist 
+# calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
+plant.md <- meandist(vegdist(mrpp_data, mrpp_cat, method = "raup")) # Need to adjust the columns to only keep species.... should fix this
+plant.md
+summary(plant.md)
+plot(plant.md)
+
+str(mrpp_cat)
+
+
+
+
+
+
+
+
+
+
+
+#plants
+# seems to work better with cov than pa (no convergence)
+mrpp_data <- all_spp_dat_w %>% # [,c(2:82)]
+#  filter(sev %in% c("l","h", "u")) %>% 
+  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
+  select(ABPR:YRWA) %>% 
+  select(which(colSums(.) > 0)) 
+
+mrpp_cat <- all_spp_dat_w %>% 
+#  filter(sev %in% c("l","h", "u")) %>% 
+  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
+#  select(site_id, sev)
+  select(sev)
+  
+mrpp_cat$sev <- as.factor(mrpp_cat$sev)
+  
+plant.mrpp <- mrpp(mrpp_data, mrpp_cat)
+summary(plant.mrpp)
+
+
+# Save and change plotting parameters
+def.par <- par(no.readonly = TRUE)
+layout(matrix(1:2,nr=1))
+
+plot(plant.ord <- metaMDS(sqrt(mrpp_data), type="text", display="sites"))
+ordihull(plant.ord, mrpp_cat, label = T)
+
+with(plant.mrpp, {
+  fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
+                 main="Test of Differences Among Groups")
+  abline(v=delta); 
+  text(delta, 2*mean(fig.dist$counts), adj = -0.5,
+     expression(bold(delta)), cex=1.5 )  }
+)
+par(def.par)
+
+
+## meandist 
+# calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
+plant.md <- meandist(vegdist(mrpp_data, mrpp_cat, binary = T, method ="raup")) # Need to adjust the columns to only keep species.... should fix this
+plant.md
+summary(plant.md)
+plot(plant.md)
+
+
+
+str(mrpp_data)
+```
 
 # Alpha, Beta, Gamma div.
 
+#### Species number vs TSF plots
+```{r}
+
+plant_div2 <- plant_div %>%  # see below
+  filter(tsf < 25 & tsf > 4)
+
+ggplot(plant_div2, aes(x=tsf, y=simpson)) +
+  geom_point(aes(colour=sev)) +
+  geom_smooth(aes(colour=sev), method = "lm")
+
+all_spp_div2 <-all_spp_div %>% 
+  filter(tsf < 25 & tsf > 4)
+
+ggplot(all_spp_div2, aes(x=tsf, y=simpson)) +
+  geom_point(aes(colour=sev)) +
+  geom_smooth(aes(colour=sev), method = "lm")
+
+bird_div2 <-bird_div %>% 
+  filter(tsf < 25)
+
+ggplot(bird_div2, aes(x=tsf, y=simpson)) +
+  geom_point(aes(colour=sev)) +
+  geom_smooth(aes(colour=sev), method = "lm")
+
+```
+
+
+#### All species
+* Diversity is highest in RX (?), lowest in UN. HS is lower than mult/LS.
+* Combining LS/UN and Rx/MULT, managed sites have higher diversity; HS and LS/UN are lower and about equal.
+
+```{r}
+# Number of occurrences of all species
+all_spp_dat_l %>% 
+  group_by(species) %>% 
+  summarise(sums=sum(pa))
+
+#same thing, per sev type
+all_spp_dat_l %>%
+  filter(pa != 0) %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::count(species, sev3, sort = TRUE)
+
+df <- all_spp_dat_l %>%
+#  filter(pa != 0) %>% 
+  add_count(species)
+
+
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+richA <- ddply(all_spp_w_pa,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+# Shannon diversity
+shanA <- ddply(all_spp_w_pa,~site_id,function(x) {
+        data.frame(shannon=diversity(x[-1], index="shannon"))
+})
+
+#Simpson diversity
+simpA <- ddply(all_spp_w_pa,~site_id,function(x) {
+        data.frame(simpson=diversity(x[-1], index="simpson"))
+})
+
+#put it together (note names changed!)
+all_spp_div <- merge(all_spp_richness, all_spp_shannon, by = "site_id") %>%
+  merge(., all_spp_simpson, by = "site_id") %>% 
+  merge(., site_data, by = "site_id")
+
+#all_spp_div  %>%
+#  group_by(sev) %>%
+#  summarise_all(mean, na.rm=TRUE)
+
+all_spp_div$cov_cat <- as.factor(all_spp_div$cov_cat) 
+
+all_spp_div1 <- all_spp_div %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+
+ggplot(all_spp_div1, aes(x = sev3, y = richness)) +
+  geom_boxplot()
+
+ggplot(all_spp_div1, aes(x = sev3, y = shannon)) +
+  geom_boxplot()
+
+ggplot(all_spp_div1, aes(x = sev3, y = simpson)) +
+  geom_boxplot()
+
+# do anovas to test differences?
+```
+
+#### Plants only
+*Div highest, in mnanag; lowest in LS/UN, intermediate in HS.
+* Similar to all_spp analysis, LS is acutally comparable to HS in diversity when separated from UN.
+
+```{r}
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+plant_richness <- ddply(plant_mat_pa_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+# Shannon diversity
+plant_shannon <- ddply(plant_mat_pa_w,~site_id,function(x) {
+        data.frame(shannon=diversity(x[-1], index="shannon"))
+})
+
+plant_simpson <- ddply(plant_mat_pa_w,~site_id,function(x) {
+        data.frame(simpson=diversity(x[-1], index="simpson"))
+})
+
+#put it together
+plant_div <- merge(plant_richness, plant_shannon, by = "site_id") %>%
+  merge(., plant_simpson, by = "site_id") %>% 
+  merge(., site_data, by = "site_id")
+
+#all_spp_div  %>%
+#  group_by(sev) %>%
+#  summarise_all(mean, na.rm=TRUE)
+
+plant_div$cov_cat <- as.factor(plant_div$cov_cat) 
+
+plant_div1 <- plant_div %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+
+ggplot(plant_div1, aes(x = sev3, y = richness)) +
+  geom_boxplot()
+
+ggplot(plant_div1, aes(x = sev3, y = shannon)) +
+  geom_boxplot()
+
+ggplot(plant_div1, aes(x = sev3, y = simpson)) +
+  geom_boxplot()
+
+# do anovas to test differences?
+```
+
+#### Birds only
+* div about equal in HS and UN/LS, but higher in manag.
+* Interstingly, Rx is still highest when separating all categories, similar to plants.
+
+```{r}
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+bird_richness <- ddply(bird_mat_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+# Shannon diversity
+bird_shannon <- ddply(bird_mat_w,~site_id,function(x) {
+        data.frame(shannon=diversity(x[-1], index="shannon"))
+})
+
+bird_simpson <- ddply(bird_mat_w,~site_id,function(x) {
+        data.frame(simpson=diversity(x[-1], index="simpson"))
+})
+
+#put it together
+bird_div <- merge(bird_richness, bird_shannon, by = "site_id") %>%
+  merge(., bird_simpson, by = "site_id") %>% 
+  merge(., site_data, by = "site_id")
+
+#all_spp_div  %>%
+#  group_by(sev) %>%
+#  summarise_all(mean, na.rm=TRUE)
+
+bird_div$cov_cat <- as.factor(bird_div$cov_cat) 
+
+bird_div1 <- bird_div %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+
+ggplot(bird_div1, aes(x = sev, y = richness)) +
+  geom_boxplot()
+
+ggplot(bird_div1, aes(x = sev, y = shannon)) +
+  geom_boxplot()
+
+ggplot(bird_div1, aes(x = sev, y = simpson)) +
+  geom_boxplot()
+
+# do anovas to test differences?
+```
+
+#### Lichens only
+*Predictably, lichens are less diverse in HS stands and most in UN/LS, but manag is pretty close.
+
+```{r}
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+lichen_richness <- ddply(lichen_mat_genus_pa_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+# Shannon diversity
+lichen_shannon <- ddply(lichen_mat_genus_pa_w,~site_id,function(x) {
+        data.frame(shannon=diversity(x[-1], index="shannon"))
+})
+
+lichen_simpson <- ddply(lichen_mat_genus_pa_w,~site_id,function(x) {
+        data.frame(simpson=diversity(x[-1], index="simpson"))
+})
+
+#put it together
+lichen_div <- merge(lichen_richness, lichen_shannon, by = "site_id") %>%
+  merge(., lichen_simpson, by = "site_id") %>% 
+  merge(., site_data, by = "site_id")
+
+#all_spp_div  %>%
+#  group_by(sev) %>%
+#  summarise_all(mean, na.rm=TRUE)
+
+lichen_div$cov_cat <- as.factor(lichen_div$cov_cat) 
+
+lichen_div1 <- lichen_div %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+
+ggplot(lichen_div1, aes(x = sev, y = richness)) +
+  geom_boxplot()
+
+ggplot(lichen_div1, aes(x = sev3, y = shannon)) +
+  geom_boxplot()
+
+ggplot(lichen_div1, aes(x = sev3, y = simpson)) +
+  geom_boxplot()
+
+# do anovas to test differences?
+```
+
+## Gamma level diversity
+```{r}
+fsattr = fsTable %>% select(Regen_Plot_Master, OBS_FIRE_SEV) %>% rename("Regen_ID" = "Regen_Plot_Master")
+
+gamma.matrix = all_spp_dat_l %>%
+#  select(-site_id) %>%
+  group_by(site_id) %>%
+  summarise(sums=sum(pa))
+
+# Number of occurrences of all species
+gamma.matrix <- all_spp_dat_w %>% 
+  select(c(sev, ABCO:YRWA)) %>% 
+  group_by(sev) %>% 
+  summarise_all(sum)
+
+#same thing, per sev type
+all_spp_dat_l %>%
+  filter(pa != 0) %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::count(species, sev3, sort = TRUE)
+
+df <- all_spp_dat_l %>%
+#  filter(pa != 0) %>% 
+  add_count(species)
+
+gamma.attr = gamma.matrix %>% select(sev)
+gamma.abund = gamma.matrix %>% select(-sev) 
+
+richG = specnumber(gamma.abund)
+shanG = exp(diversity(gamma.abund, index = "shannon"))
+simpG = diversity(gamma.abund, index = "invsimpson")
+
+gamma.stats = data.frame(gamma.attr, richG, shanG, simpG)
+
+
+
+
+
+
+comp.attr = all_spp_dat_w %>% select(site_id)
+comp.abund = all_spp_dat_w %>% select(c(ABCO:YRWA)) 
+
+richA = specnumber(comp.abund)
+shanA = exp(diversity(comp.abund, index = "shannon"))
+simpA = diversity(comp.abund, index = "invsimpson")
+
+alpha.stats = data.frame(comp.attr, richA[,2], shanA[,2], simpA[,2])
+
+
+
+names(alpha.stats)[2] <- "richA"
+names(alpha.stats)[3] <- "shanA"
+names(alpha.stats)[4] <- "simpA"
+
+alldiv = left_join(alpha.stats, site_data, by = "site_id") %>% left_join(gamma.stats) %>% 
+  mutate(richB = richG / richA,
+         shanB = shanG / shanA,
+         simpB = simpG / simpA)
+
+```
+
+#Gamma diversity figures
+```{r, "Gamma Diversity"}
+p1 <- alldiv %>% ggplot(aes(x = sev,
+                      y = richG,
+                      fill = factor(sev),
+                      group = sev)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+#  facet_wrap(~year) +
+  ggtitle("Gamma-Level Richness")+
+  ylab("Species Richness")
+
+p2 <- alldiv %>% ggplot(aes(x = sev,
+                      y = shanG,
+                      fill = factor(sev),
+                      group = sev)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+#  facet_wrap(~tsf_cat) +
+  ggtitle("Gamma-Level Exp. Shannon")+
+  ylab("Exp. Shannon Diversity Index")
+
+p3 <- alldiv %>% ggplot(aes(x = sev,
+                      y = simpG,
+                      fill = factor(sev),
+                      group = sev)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+#  facet_wrap(~year) + 
+  ggtitle("Gamma-Level Inv. Simpson") +
+  ylab("Inv. Simpson Diversity Index")
+
+p1
+p2
+p3
+```
+
+# Beta diversity figures
+```{r, "Beta Diversity"}
+alldiv %>% ggplot(aes(x = sev,
+                      y = richB,
+                      fill = factor(sev),
+                      group = sev)) +
+  geom_boxplot() +
+#  facet_wrap(~year) +
+  ggtitle("Beta-Level Richness")+
+  ylab("Species Richness")
+
+alldiv %>% ggplot(aes(x = sev,
+                      y = shanB,
+                      fill = factor(sev),
+                      group = sev)) +
+  geom_boxplot() +
+#  facet_wrap(~year) +
+  ggtitle("Beta-Level Exp. Shannon")+
+  ylab("Exp. Shannon Diversity Index")
+
+alldiv %>% ggplot(aes(x = sev,
+                      y = simpB,
+                      fill = factor(sev),
+                      group = sev)) +
+  geom_boxplot() +
+#  facet_wrap(~year) + 
+  ggtitle("Beta-Level Inv. Simpson") +
+  ylab("Inv. Simpson Diversity Index")
+```
+
+# Calculating Statistical Differences Between Groups:
+
+## Alpha Diversity
+```{r}
+# Writing a simple model
+
+# Calling packages
+library(lme4); library(lmerTest); library(emmeans)
+
+# Setting our predictors to factors
+alldiv$sev <- as.factor(alldiv$sev)
+#alldiv$year <- as.factor(alldiv$year)
+
+# Fitting an interactive model and an additive model
+mod_int = lmer(richA ~ sev + (1|site_id), data = alldiv)
+#mod_add = lmer(richA ~ sev + (1|Regen_ID), data = alldiv)
+
+# Are these two models significantly different from one another? Look for a p < .05
+# (Likelihood ratio test)
+anova(mod_add, mod_int)
+
+# What's the model ANOVA table
+anova(mod_add)
+
+# capture.output(anova(mod_add),file="alpha_rich_anova")
+
+# Estimated means between groups within each year
+means = emmeans(mod_add, specs = "OBS_FIRE_SEV", by = "year", adjust = "tukey")
+
+# All pairwise comparisons
+paircomp = pairs(means)
+
+# Assigning labels to each groups
+CLD(means)
+
+#create dataframe to use for labeling richness boxplots
+alpha_rich_stats <- as.data.frame(CLD(means))
+```
+
+##Shannon
+
+```{r}
+#shannon
+
+# Fitting an interactive model and an additive model
+mod_int_shan = lmer(shanA ~ OBS_FIRE_SEV + year + OBS_FIRE_SEV:year + (1|Regen_ID), data = alldiv)
+mod_add_shan = lmer(shanA ~ OBS_FIRE_SEV + year + (1|Regen_ID), data = alldiv)
+
+# Are these two models significantly different from one another? Look for a p < .05
+# (Likelihood ratio test)
+anova(mod_add_shan, mod_int_shan)
+
+# What's the model ANOVA table - interaction one has lower AIC
+anova(mod_int_shan)
+summary(mod_int_shan)
+# capture.output(anova(mod_int_shan),file="alpha_shan_anova")
+
+# Estimated means between groups within each year
+means_shan = emmeans(mod_int_shan, specs = "OBS_FIRE_SEV", by = "year", adjust = "tukey")
+
+# All pairwise comparisons
+paircomp_shan = pairs(means_shan)
+
+# Assigning labels to each groups
+CLD(means_shan)
+
+#create dataframe to use for labeling shannon boxplots
+alpha_shan_stats <- as.data.frame(CLD(means_shan))
+
+```
+
+##Simpsons
+
+```{r}
+#simpsons
+
+# Fitting an interactive model and an additive model
+mod_int_simp = lmer(simpA ~ OBS_FIRE_SEV + year + OBS_FIRE_SEV:year + (1|Regen_ID), data = alldiv)
+mod_add_simp = lmer(simpA ~ OBS_FIRE_SEV + year + (1|Regen_ID), data = alldiv)
+
+# Are these two models significantly different from one another? Look for a p < .05
+# (Likelihood ratio test)
+anova(mod_add_simp, mod_int_simp)
+
+# What's the model ANOVA table - interaction one has lower AIC
+anova(mod_int_simp)
+
+# capture.output(anova(mod_int_simp),file="alpha_simp_anova")
+
+# Estimated means between groups within each year
+means_simp = emmeans(mod_int_simp, specs = "OBS_FIRE_SEV", by = "year", adjust = "tukey")
+
+# All pairwise comparisons
+paircomp_simp = pairs(means_simp)
+
+# Assigning labels to each groups
+CLD(means_simp)
+
+#create dataframe to use for labeling shannon boxplots
+alpha_simp_stats <- as.data.frame(CLD(means_simp))
+
+```
+
+
 # Indicator species analysis for plants (HS vs LS/UN)
-* Doesn't turn up many species and fails when Mult and Rx are included
+* Doesn't turn up many species and fails to return anything when Mult and Rx are included
 
 ```{r echo = F}
 ### Community data matrix
@@ -130,7 +719,7 @@ names(indval_ls)[1]<-"Indicators of LS/UN"
 #names(spp_diff2)[1]<-"Species found only in LS/UN"
 indval_table <- list(indval_hs, indval_ls)
 
-kable(indval_table, caption = "Table 3: Indicator species for different habitats", digits = 0) %>%
+kable(indval_table, caption = "Table 3: Indicator species for different habitats (HS vs LS/UN)", digits = 0) %>%
   kable_styling()
 
 #write.csv(indvalsummary1, file = "indvalsummary1.csv")
