@@ -42,8 +42,9 @@ kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "
 
 #all spp
 comp.data <- all_spp_dat_w %>%  #filter(sev %in% c("l", "h", "u"))
-    filter((tsf < 25 & tsf > 4) | sev == "u")
-
+  filter((tsf < 25 & tsf > 4) | sev == "u")# %>%
+#  filter((sev == "multiple" & tree_cov > 45) | sev != "multiple")
+  
 comp.sub <- subset(comp.data, select = ACMA:YRWA)
 comp.env <- subset(comp.data, select = c(sev:tsf_cat))
 attach(comp.env)
@@ -95,19 +96,19 @@ names(mrpp_cat)[2] <- "grp"
 mrpp_data <- plant_dat_pa_w %>% # [,c(2:82)]
 #  filter(sev %in% c("l","h", "u")) %>% 
   filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
-  select(ACMA:WHMO) %>% 
-  select(which(colSums(.) > 0)) 
+  dplyr::select(ACMA:WHMO) %>% 
+  dplyr::select(which(colSums(.) > 0)) 
 
 mrpp_cat <- plant_dat_pa_w %>% 
 #  filter(sev %in% c("l","h", "u")) %>% 
   filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
 #  select(site_id, sev)
-  select(cov_cat)
+  dplyr::select(sev)
   
 mrpp_cat$sev <- as.factor(mrpp_cat$sev)
   
 plant.mrpp <- mrpp(mrpp_data, mrpp_cat)
-summary(plant.mrpp)
+str(plant.mrpp)
 
 
 # Save and change plotting parameters
@@ -151,14 +152,14 @@ str(mrpp_cat)
 mrpp_data <- all_spp_dat_w %>% # [,c(2:82)]
 #  filter(sev %in% c("l","h", "u")) %>% 
   filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
-  select(ABPR:YRWA) %>% 
-  select(which(colSums(.) > 0)) 
+  dplyr::select(ABPR:YRWA) %>% 
+  dplyr::select(which(colSums(.) > 0)) 
 
 mrpp_cat <- all_spp_dat_w %>% 
 #  filter(sev %in% c("l","h", "u")) %>% 
   filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
 #  select(site_id, sev)
-  select(sev)
+  dplyr::select(sev)
   
 mrpp_cat$sev <- as.factor(mrpp_cat$sev)
   
@@ -191,8 +192,6 @@ summary(plant.md)
 plot(plant.md)
 
 
-
-str(mrpp_data)
 ```
 
 # Alpha, Beta, Gamma div.
@@ -272,16 +271,27 @@ all_spp_div <- merge(all_spp_richness, all_spp_shannon, by = "site_id") %>%
 all_spp_div$cov_cat <- as.factor(all_spp_div$cov_cat) 
 
 all_spp_div1 <- all_spp_div %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+    mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
 
-ggplot(all_spp_div1, aes(x = sev3, y = richness)) +
-  geom_boxplot()
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
 
-ggplot(all_spp_div1, aes(x = sev3, y = shannon)) +
-  geom_boxplot()
+p7 <- ggplot(all_spp_div1, aes(x = sev3, y = richness)) +
+  geom_boxplot() +
+  ggtitle("All species richness") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
-ggplot(all_spp_div1, aes(x = sev3, y = simpson)) +
-  geom_boxplot()
+p8 <- ggplot(all_spp_div1, aes(x = sev3, y = shannon)) +
+  geom_boxplot()  +
+  ggtitle("All species Shannon") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
+
+p9 <- ggplot(all_spp_div1, aes(x = sev3, y = simpson)) +
+  geom_boxplot()  +
+  ggtitle("All species Simpson") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 # do anovas to test differences?
 ```
@@ -317,16 +327,27 @@ plant_div <- merge(plant_richness, plant_shannon, by = "site_id") %>%
 plant_div$cov_cat <- as.factor(plant_div$cov_cat) 
 
 plant_div1 <- plant_div %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+    mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+  
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
 
 ggplot(plant_div1, aes(x = sev3, y = richness)) +
-  geom_boxplot()
+  geom_boxplot()  +
+  ggtitle("Plant richness") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 ggplot(plant_div1, aes(x = sev3, y = shannon)) +
-  geom_boxplot()
+  geom_boxplot() +
+  ggtitle("Plant Shannon") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 ggplot(plant_div1, aes(x = sev3, y = simpson)) +
-  geom_boxplot()
+  geom_boxplot()  +
+  ggtitle("Plant Simpson") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 # do anovas to test differences?
 ```
@@ -362,16 +383,27 @@ bird_div <- merge(bird_richness, bird_shannon, by = "site_id") %>%
 bird_div$cov_cat <- as.factor(bird_div$cov_cat) 
 
 bird_div1 <- bird_div %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
 
-ggplot(bird_div1, aes(x = sev, y = richness)) +
-  geom_boxplot()
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
 
-ggplot(bird_div1, aes(x = sev, y = shannon)) +
-  geom_boxplot()
+ggplot(bird_div1, aes(x = sev3, y = richness)) +
+  geom_boxplot() +
+  ggtitle("Bird richness") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
-ggplot(bird_div1, aes(x = sev, y = simpson)) +
-  geom_boxplot()
+ggplot(bird_div1, aes(x = sev3, y = shannon)) +
+  geom_boxplot() +
+  ggtitle("Bird Shannon") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
+
+ggplot(bird_div1, aes(x = sev3, y = simpson)) +
+  geom_boxplot() +
+  ggtitle("Bird Simpson") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 # do anovas to test differences?
 ```
@@ -406,47 +438,62 @@ lichen_div <- merge(lichen_richness, lichen_shannon, by = "site_id") %>%
 lichen_div$cov_cat <- as.factor(lichen_div$cov_cat) 
 
 lichen_div1 <- lichen_div %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
 
-ggplot(lichen_div1, aes(x = sev, y = richness)) +
-  geom_boxplot()
+
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+
+ggplot(lichen_div1, aes(x = sev3, y = richness)) +
+  geom_boxplot() +
+  ggtitle("Lichen richness") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 ggplot(lichen_div1, aes(x = sev3, y = shannon)) +
-  geom_boxplot()
+  geom_boxplot() +
+  ggtitle("Lichen Shannon") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 ggplot(lichen_div1, aes(x = sev3, y = simpson)) +
-  geom_boxplot()
+  geom_boxplot()  +
+  ggtitle("Lichen Simpson") +
+  xlab("Habitat")  +
+  theme_cowplot(12)
 
 # do anovas to test differences?
 ```
 
-## Gamma level diversity
+## Alpha, Beta,Gamma diversity calculation
 ```{r}
-fsattr = fsTable %>% select(Regen_Plot_Master, OBS_FIRE_SEV) %>% rename("Regen_ID" = "Regen_Plot_Master")
-
-gamma.matrix = all_spp_dat_l %>%
-#  select(-site_id) %>%
-  group_by(site_id) %>%
-  summarise(sums=sum(pa))
 
 # Number of occurrences of all species
+#Plants
+#gamma.matrix <- all_spp_dat_w %>% 
+#  dplyr::select(c(sev, ABCO:YRWA)) %>% 
+  
+#birds
+gamma.matrix <- bird_dat_w %>%   
+  dplyr::select(c(sev, ACWO:YRWA)) %>% 
+  
+#ALL SPP
+  
+  
 gamma.matrix <- all_spp_dat_w %>% 
-  select(c(sev, ABCO:YRWA)) %>% 
+  dplyr::select(c(sev, ABCO:YRWA)) %>% 
+  
+
+#Plants
+gamma.matrix <- plant_dat_pa_w %>% 
+  dplyr::select(c(sev, ABCO:YAMI)) %>% 
   group_by(sev) %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  group_by(sev3) %>% 
+  dplyr::select(-sev) %>% 
   summarise_all(sum)
 
-#same thing, per sev type
-all_spp_dat_l %>%
-  filter(pa != 0) %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
-  dplyr::count(species, sev3, sort = TRUE)
-
-df <- all_spp_dat_l %>%
-#  filter(pa != 0) %>% 
-  add_count(species)
-
-gamma.attr = gamma.matrix %>% select(sev)
-gamma.abund = gamma.matrix %>% select(-sev) 
+gamma.attr = gamma.matrix %>% dplyr::select(sev3)
+gamma.abund = gamma.matrix %>% dplyr::select(-sev3) 
 
 richG = specnumber(gamma.abund)
 shanG = exp(diversity(gamma.abund, index = "shannon"))
@@ -457,92 +504,310 @@ gamma.stats = data.frame(gamma.attr, richG, shanG, simpG)
 
 
 
+gamma.matrix <- plant_dat_pa_w %>% 
+  dplyr::select(c(sev, ABCO:YAMI)) %>% 
+  group_by(sev) %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  group_by(sev3) %>% 
+  dplyr::select(-sev)
+
+str(comp.abund)
 
 
-comp.attr = all_spp_dat_w %>% select(site_id)
-comp.abund = all_spp_dat_w %>% select(c(ABCO:YRWA)) 
+
+
+#All SPP
+comp.attr = all_spp_dat_w %>% dplyr::select(site_id)
+comp.abund = all_spp_dat_w %>% dplyr::select(c(ABCO:YRWA)) 
+
+#Birds
+comp.attr = bird_dat_w %>% dplyr::select(site_id)
+comp.abund <- bird_dat_w %>% dplyr::select(c(ACWO:YRWA))
+
+
+#Plants
+#need to use gamma.matrix and add site id back in and get rid of sev3
+gamma.matrix <- plant_dat_pa_w %>% 
+  dplyr::select(c(site_id, ABCO:YAMI)) %>% 
+  group_by(site_id)
+
+comp.attr = plant_dat_pa_w %>% dplyr::select(site_id)
+comp.abund <- gamma.matrix %>% ungroup() %>% dplyr::select(c(ABCO:YAMI))
+
+comp.abund = plant_dat_cov_w %>% dplyr::select(c(ABCO:YAMI)) 
+
+
+richA = specnumber(comp.abund)
+#shanA = exp(diversity(comp.abund, index = "shannon")) # not working
+shanA <- diversityresult(x = comp.abund, y= NULL, index="Shannon", method = "each site", sortit = FALSE)
+#simpA = diversity(comp.abund, index = "invsimpson")
+simpA = -(1/(diversityresult(x = comp.abund, y= NULL, index="Simpson", method = "each site", sortit = FALSE) - 1)) # for some reason I coudn't get the direct calculation of inverse Simpson to work, but this seems to do the trick
+# Actually not a mistake....... WHY is inverse simpson the same as richness? 
+
+
+
+
+
 
 richA = specnumber(comp.abund)
 shanA = exp(diversity(comp.abund, index = "shannon"))
 simpA = diversity(comp.abund, index = "invsimpson")
 
-alpha.stats = data.frame(comp.attr, richA[,2], shanA[,2], simpA[,2])
-
-
+alpha.stats = data.frame(comp.attr, richA, shanA, simpA)
 
 names(alpha.stats)[2] <- "richA"
 names(alpha.stats)[3] <- "shanA"
 names(alpha.stats)[4] <- "simpA"
 
-alldiv = left_join(alpha.stats, site_data, by = "site_id") %>% left_join(gamma.stats) %>% 
+alldiv = left_join(alpha.stats, site_data, by = "site_id") %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  left_join(gamma.stats) %>% 
   mutate(richB = richG / richA,
          shanB = shanG / shanA,
-         simpB = simpG / simpA)
+         simpB = simpG / simpA) 
+
+```
+
+
+## Beta Diversity (binomial)
+```{r}
+# Code from Jonah
+
+beta <- function(df){
+  
+  tempdf = df %>% dplyr::select(-sev3)
+  
+  dis = c(vegdist(tempdf, method = "binomial", binary = "true", na.rm = TRUE))
+  
+  result = data.frame(sev3 = rep(unique(df$sev3), length = length(dis)),
+#                      year = rep(unique(df$year), length = length(dis)),
+                      dis = dis)
+  
+}
+
+
+#all spp
+comptable <-  all_spp_w_pa %>% full_join(site_data[, c("site_id", "sev")], by = "site_id") %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(-c(site_id, sev))
+
+bj_output_all = comptable %>% group_by(sev3) %>% do(beta(.))
+
+beta_all <- bj_output_all %>% ggplot(aes(x = sev3,
+                         y = dis,
+                         fill = sev3,
+                         group = sev3)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("Fire Severity") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("All spp Pairwise Beta Div. (binomial)")   +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+#birds
+comptable <-  bird_dat_w %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(sev3, ACWO:YRWA)) %>% 
+  dplyr::select(-V1) #puttig together the plot id and sev and joinign wide format data then dropping site id
+
+bj_output_birds = comptable %>% group_by(sev3) %>% do(beta(.))
+
+beta_birds <- bj_output_birds %>% ggplot(aes(x = sev3,
+                         y = dis,
+                         fill = sev3,
+                         group = sev3)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("Fire Severity") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Bird Pairwise Beta Div. (binomial)")   +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+#plants (cov)
+#remember to alter above function to use jaccard instead of binomial (and binary = false)
+comptable <-  plant_dat_cov_w %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(sev3, ABCO:YAMI)) 
+
+bj_output_plants_cov = comptable %>% group_by(sev3) %>% do(beta(.))
+
+beta_plants_cov <- bj_output_plants_cov %>% ggplot(aes(x = sev3,
+                         y = dis,
+                         fill = sev3,
+                         group = sev3)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("Fire Severity") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Plant Pairwise Beta Div. (jaccard)")   +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+#plants (pa)
+comptable <-  plant_dat_pa_w %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(sev3, ABCO:YAMI)) 
+
+bj_output_plants_pa = comptable %>% group_by(sev3) %>% do(beta(.))
+
+beta_plants_pa <- bj_output_plants_pa %>% ggplot(aes(x = sev3,
+                         y = dis,
+                         fill = sev3,
+                         group = sev3)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("Fire Severity") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Plant Pairwise Beta Div. (binomial)")   +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+#lichens (pa)
+comptable <-  lichen_dat_genus_pa_w %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(sev3, Ahtiana:Xanthomendoza)) %>% 
+  dplyr::select(-Dummy)
+
+bj_output_lichens = comptable %>% group_by(sev3) %>% do(beta(.))
+
+beta_lichen_pa <- bj_output_lichens %>% ggplot(aes(x = sev3,
+                         y = dis,
+                         fill = sev3,
+                         group = sev3)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("Fire Severity") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Lichen Pairwise Beta Div. (binomial)")   +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# Putting plots together
+grid.arrange(beta_all, beta_birds, beta_plants_pa, beta_lichen_pa, nrow = 2)
+```
+
+#Alpha diversity figures
+```{r, "alpha Diversity"}
+p7 <- alldiv %>% 
+  ggplot(aes(x = sev3, y = richA,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~year) +
+  ggtitle("Alpha-Level Richness")+
+  ylab("Species Richness")  +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none") + theme(aspect.ratio=1)
+
+p8 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = shanA,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~tsf_cat) +
+  ggtitle("Alpha-Level Exp. Shannon")+
+  ylab("Exp. Shannon Diversity Index")  +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+p9 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = simpA,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~year) + 
+  ggtitle("Alpha-Level Inv. Simpson") +
+  ylab("Inv. Simpson Diversity Index") +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+grid.arrange(p7, p8, p9, nrow = 1)
+
 
 ```
 
 #Gamma diversity figures
 ```{r, "Gamma Diversity"}
-p1 <- alldiv %>% ggplot(aes(x = sev,
-                      y = richG,
-                      fill = factor(sev),
-                      group = sev)) +
+p1 <- alldiv %>% 
+  ggplot(aes(x = sev3, y = richG,
+                      fill = factor(sev3),
+                      group = sev3)) +
   geom_point(shape = 21, color = "black", size = 3) +
 #  facet_wrap(~year) +
   ggtitle("Gamma-Level Richness")+
-  ylab("Species Richness")
+  ylab("Species Richness")  +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none") + theme(aspect.ratio=1)
 
-p2 <- alldiv %>% ggplot(aes(x = sev,
+p2 <- alldiv %>% ggplot(aes(x = sev3,
                       y = shanG,
-                      fill = factor(sev),
-                      group = sev)) +
+                      fill = factor(sev3),
+                      group = sev3)) +
   geom_point(shape = 21, color = "black", size = 3) +
 #  facet_wrap(~tsf_cat) +
   ggtitle("Gamma-Level Exp. Shannon")+
-  ylab("Exp. Shannon Diversity Index")
+  ylab("Exp. Shannon Diversity Index")  +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-p3 <- alldiv %>% ggplot(aes(x = sev,
+p3 <- alldiv %>% ggplot(aes(x = sev3,
                       y = simpG,
-                      fill = factor(sev),
-                      group = sev)) +
+                      fill = factor(sev3),
+                      group = sev3)) +
   geom_point(shape = 21, color = "black", size = 3) +
 #  facet_wrap(~year) + 
   ggtitle("Gamma-Level Inv. Simpson") +
-  ylab("Inv. Simpson Diversity Index")
+  ylab("Inv. Simpson Diversity Index") +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-p1
-p2
-p3
+grid.arrange(p1, p2, p3, nrow = 1)
 ```
 
 # Beta diversity figures
 ```{r, "Beta Diversity"}
-alldiv %>% ggplot(aes(x = sev,
+p4 <- alldiv %>% ggplot(aes(x = sev3,
                       y = richB,
-                      fill = factor(sev),
-                      group = sev)) +
+                      fill = factor(sev3),
+                      group = sev3)) +
   geom_boxplot() +
 #  facet_wrap(~year) +
   ggtitle("Beta-Level Richness")+
-  ylab("Species Richness")
+  ylab("Species Richness")  +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-alldiv %>% ggplot(aes(x = sev,
+p5 <- alldiv %>% ggplot(aes(x = sev3,
                       y = shanB,
-                      fill = factor(sev),
-                      group = sev)) +
+                      fill = factor(sev3),
+                      group = sev3)) +
   geom_boxplot() +
 #  facet_wrap(~year) +
   ggtitle("Beta-Level Exp. Shannon")+
-  ylab("Exp. Shannon Diversity Index")
+  ylab("Exp. Shannon Diversity Index")  +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-alldiv %>% ggplot(aes(x = sev,
+p6 <- alldiv %>% ggplot(aes(x = sev3,
                       y = simpB,
-                      fill = factor(sev),
-                      group = sev)) +
+                      fill = factor(sev3),
+                      group = sev3)) +
   geom_boxplot() +
 #  facet_wrap(~year) + 
   ggtitle("Beta-Level Inv. Simpson") +
-  ylab("Inv. Simpson Diversity Index")
+  ylab("Inv. Simpson Diversity Index")  +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+grid.arrange(p4, p5, p6, nrow = 1)
 ```
 
 # Calculating Statistical Differences Between Groups:
