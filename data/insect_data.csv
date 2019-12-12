@@ -113,16 +113,16 @@ site_id,trap,order,suborder,family,number,notes
 7,c,Hemiptera,Homoptera,,1,
 7,c,Thysanoptera,,,2,
 8,p,Lepidoptera,,,2,"large brown moth, small brown moth"
-8,p,Lepidoptera,,Hesperiidae ,1,skipper 
+8,p,Lepidoptera,,Hesperiidae,1,skipper 
 8,p,Hemiptera,Homoptera,,21,10 are aphids
 8,p,Hymenoptera,Aculeata,,3,Unknown Vespodiea_1; needs ID 
 8,p,Diptera,Nematocera,,15,
 8,p,Arachnida,Acari,,1,
 8,p,Coleoptera,,Scarabaeidae,1,
-8,p,Hymenoptera,,Formicidae ,11,
+8,p,Hymenoptera,,Formicidae,11,
 8,p,Diptera,Brachycera,,1,
 8,p,Coleoptera,,Curculionidae,2,Bark beetle
-8,p,Coleoptera,,Lampyridae ,1,
+8,p,Coleoptera,,Lampyridae,1,
 8,p,Hymenoptera,Parasitica,,3,
 8,c,Lepidoptera,,,1,small brown moth
 8,c,Hemiptera,Homoptera,Aphidae,2,
@@ -302,12 +302,12 @@ site_id,trap,order,suborder,family,number,notes
 25,p,Arachnida,Araneae,,1,
 25,p,Hymenoptera,Parasitica,Ichneumonidae,1,
 25,p,Hymenoptera,Parasitica,,1,
-25,p,Hymenoptera,,Formicidae ,1,
+25,p,Hymenoptera,,Formicidae,1,
 25,p,Diptera,Nematocera,,9,
 25,p,Arachnida,Opiliones,,1,
 25,p,Coleoptera,,Lampyridae,1,
 25,p,Apterygota,,,1,
-25,p,Hemiptera,Homoptera,Aphidae ,1,
+25,p,Hemiptera,Homoptera,Aphidae,1,
 25,p,Hemiptera,Homoptera,,7,
 25,c,Lepidoptera,,,5,small brown moths
 25,c,Diptera,Nematocera,,44,
@@ -377,9 +377,9 @@ site_id,trap,order,suborder,family,number,notes
 33,p,Orthoptera,,,1,
 33,p,Apterygota,,,1,
 33,p,Diptera,Brachycera,,1,
-33,p,Hymenoptera,Aculeata,Formicidae ,1,
+33,p,Hymenoptera,Aculeata,Formicidae,1,
 33,p,Hymenoptera,Parasitica,Ichneumonidae,2,
-33,p,Coleoptera,,Curculionidae ,3,
+33,p,Coleoptera,,Curculionidae,3,
 33,p,Coleoptera,,,3,
 33,p,Hymenoptera,Parasitica,,1,
 32,c,Psocoptera,,,1,
@@ -419,9 +419,9 @@ site_id,trap,order,suborder,family,number,notes
 36,c,Diptera,Nematocera,,1,
 36,c,Coleoptera,,Curculionidae,2,Bark beetle
 37,p,Arachnida,,,1,
-37,p,Hymenoptera,Aculeata,Vespidae ,1,Yellow Jacket
-37,p,Hymenoptera,Aculeata,Formicidae ,3,ants 
-37,p,Diptera,Nematocera,Culicidae ,3,mosquito 
+37,p,Hymenoptera,Aculeata,Vespidae,1,Yellow Jacket
+37,p,Hymenoptera,Aculeata,Formicidae,3,ants 
+37,p,Diptera,Nematocera,Culicidae,3,mosquito 
 37,p,Hemiptera,Homoptera,,3,aphids
 37,p,Psocoptera,,,3,
 37,p,Diptera,Nematocera,,3,
@@ -448,7 +448,7 @@ site_id,trap,order,suborder,family,number,notes
 38,c,Coleoptera,,Curculionidae,1,bark beetle
 38,c,Coleoptera,,,1,common one that looks like a bark beetle but has long slender antenae 
 38,c,Coleoptera,,Cerambycidae,1,longhorn beetle 
-40,p,Hymenoptera,Aculeata,Formicidae ,3,
+40,p,Hymenoptera,Aculeata,Formicidae,3,
 40,p,Orthoptera,,,1,camel cricket
 40,p,Diptera,Nematocera,,8,
 40,p,Arachnida,Araneae,,1,
@@ -532,7 +532,7 @@ site_id,trap,order,suborder,family,number,notes
 47,p,Hymenoptera,Aculeata,,1,
 47,p,Psocoptera,,,1,
 47,p,Coleoptera,,,2,1 lampyridae 
-47,p,Coleoptera,,Curculionidae ,2,bark beetle
+47,p,Coleoptera,,Curculionidae,2,bark beetle
 47,p,Diptera,Brachycera,Drosophilidae,3,
 47,p,Lepidoptera,,,1,
 47,c,Lepidoptera,,,1,large brown moth
@@ -549,7 +549,7 @@ site_id,trap,order,suborder,family,number,notes
 49,c,Diptera,Nematocera,,3,had 2 diptera with no suborder_added here
 49,c,Coleoptera,,,1,
 49,c,Diptera,Brachycera,,1,had a parasitic mite clinging to its head
-49,c,Diptera,Brachycera,Drosophilidae ,7,"6 large, 1 very tiny fruit fly"
+49,c,Diptera,Brachycera,Drosophilidae,7,"6 large, 1 very tiny fruit fly"
 51,p,Orthoptera,,Acrididae,1,
 51,p,Hymenoptera,Aculeata,Vespidae,1,
 51,p,Hymenoptera,Aculeata,,17,
@@ -604,24 +604,24 @@ site_id,trap,order,suborder,family,number,notes
 54,c,Coleoptera,,Curculionidae,10,bark beetles
 54,c,Psocoptera,,,1,
 54,c,Hymenoptera,,Formicidae,1,
-54,c,Diptera,Brachycera,Drosophilidae ,1,
+54,c,Diptera,Brachycera,Drosophilidae,1,
 54,c,Coleoptera,,,1,
 54,c,Lepidoptera,,,1,
 55,p,Diptera,Nematocera,,3,midge
 55,p,Hemiptera,Homoptera,,4,
 55,p,Coleoptera,,Carabidae,1,
 55,p,Arachnida,Araneae,,1,
-55,p,Coleoptera,,Curculionidae ,1,bark beetle
-55,p,Hymenoptera,Parasitica,Chalcididae ,1,
+55,p,Coleoptera,,Curculionidae,1,bark beetle
+55,p,Hymenoptera,Parasitica,Chalcididae,1,
 55,p,Diptera,Brachycera,Drosophilidae,6,fruit fly 
-55,p,Hymenoptera,Parasitica,Torymidae ,1,"metallic, wings are covered in small hairs, very few veins on wings, long ovipositter "
+55,p,Hymenoptera,Parasitica,Torymidae,1,"metallic, wings are covered in small hairs, very few veins on wings, long ovipositter "
 55,c,,,,0,
 56,p,Diptera,Nematocera,,11,
-56,p,Diptera,Brachycera,Drosophilidae ,12,
+56,p,Diptera,Brachycera,Drosophilidae,12,
 56,p,Hemiptera,Homoptera,,20,includes aphids (2)
 56,p,Orthoptera,,,1,
 56,p,Apterygota,,,1,silverfish
-56,p,Coleoptera,,Cleridae ,1,
+56,p,Coleoptera,,Cleridae,1,
 56,p,Hymenoptera,Aculeata,,17,Unknown Vespodiea ; needs ID
 56,p,Hymenoptera,Aculeata,,1,Unknown Vespodiea #2 ; needs ID
 56,p,Coleoptera,,Lampyridae,1,Firefly and one larva
@@ -645,10 +645,10 @@ site_id,trap,order,suborder,family,number,notes
 56,c,Hymenoptera,Aculeata,,1,
 57,p,Arachnida,Opiliones,,3,
 57,p,Diptera,Nematocera,,19,mosquitos + midges 
-57,p,Hymenoptera,Aculeata,Formicidae ,3,1 small + 1 big ant + 1 fat abdomen ant
+57,p,Hymenoptera,Aculeata,Formicidae,3,1 small + 1 big ant + 1 fat abdomen ant
 57,p,Arachnida,Araneae,,1,spider
 57,p,Orthoptera,,,1,camel crickets
-57,p,Coleoptera,,Curculionidae ,1,bark beetle
+57,p,Coleoptera,,Curculionidae,1,bark beetle
 57,p,Hemiptera,Homoptera,,10,2 are aphids
 57,p,Hymenoptera,Parasitica,Ichneumonidae,4,
 57,p,Hymenoptera,Parasitica,Cynipidae,1,unknown wasp; has 1 set of symmetrical wings that are lightly veined (~5 veins); long ovipositor; big abdomen; mouth ripped off; dots on wings
@@ -656,7 +656,7 @@ site_id,trap,order,suborder,family,number,notes
 57,p,Coleoptera,,Mordellidae,1,
 57,p,Coleoptera,,Staphylinidae,1,
 57,c,,,,0,
-58,p,Diptera,Nematocera,Tipulidae ,1,
+58,p,Diptera,Nematocera,Tipulidae,1,
 58,p,Diptera,Nematocera,,16,
 58,p,Diptera,Brachycera,,3,
 58,p,Arachnida,Araneae,,1,

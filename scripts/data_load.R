@@ -137,6 +137,8 @@ lichen_mat_species_w <- read.csv("data/lichen_data.csv", header = T) %>%
   spread(key = species, value = abund, fill = 0) %>% 
   mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
 
+lichen_dat_species_w <- merge(lichen_mat_species_w, site_data, by = "site_id")
+
 # for genus level analysis (presence/absence)
 lichen_dat_genus_l <- lichen_mat_species_w %>% 
   gather(key=species, value=abund, AHPA:DUMB) %>% 
@@ -174,29 +176,28 @@ insect_dat1 <- read.csv("data/insect_data.csv", header = T) %>%
 insect_dat2 <- insect_dat1 %>% 
   mutate(site_id = as.factor(site_id)) %>% 
   #  gsub(" ", "", order) %>% #get rid of spaces in some cells
-  filter(family != "Curculionidae", family != "Formicidae", order != "Arachnida", order != "Apterygota", order != "Collembola", order!= "Myriapoda") %>% # here, can decide to look at only pan, or only cones
+#  filter(family != "Curculionidae" & family != "Formicidae" & order != "Arachnida", order != "Apterygota" & order != "Collembola" & order != "Myriapoda") %>% # here, can decide to look at only pan, or only cones
+  filter(!family %in% c("Curculionidae", "Formicidae") & !order %in% c("Arachnida", "Apterygota", "Collembola", "Myriapoda")) %>%
   mutate(trap_id = paste(site_id, trap)) %>% 
   mutate(taxon = ifelse(suborder %in% "", order, suborder)) # use suborder when available
+
+
 
 insect_dat3 <- as.data.table(insect_dat2)[, sum(number), by = .(site_id, taxon)]# Adding rows when duplicate; could have done this using aggragate instead, but wasn't working
 
 insect_mat <- insect_dat3 %>% 
   dplyr::select(site_id, taxon, V1) %>% 
-  spread(key = taxon, value = V1, fill = 0) %>%
-  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
+  spread(key = taxon, value = V1, fill = 0) %>% 
+  dplyr::select(-V1)# %>%
+#  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
 
 insect_mat$site_id <- as.character(insect_mat$site_id) # wide format, dummy species, column 2 is garbage
 
-insect_dat_l <- insect_mat %>% # Long format, with site data, dummmy species
+insect_dat_l <- insect_mat %>% # Long format, with site data, (dummmy species)
   left_join(site_data, by = "site_id") %>% 
-  gather(key = "taxon", value = "number", 3:19) %>% 
-  dplyr::select(-2)
+  gather(key = "taxon", value = "number", Aculeata:Thysanoptera)
 
 insect_dat_w <- spread(insect_dat_l, key = "taxon", value = "number")
-
-
-
-
 
 
 

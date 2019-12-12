@@ -222,96 +222,297 @@ ggplot(bird_div2, aes(x=tsf, y=simpson)) +
 
 ```
 
-
-#### All species
-* Diversity is highest in RX (?), lowest in UN. HS is lower than mult/LS.
-* Combining LS/UN and Rx/MULT, managed sites have higher diversity; HS and LS/UN are lower and about equal.
-
+## Alpha
+### All_spp
 ```{r}
-# Number of occurrences of all species
-all_spp_dat_l %>% 
-  group_by(species) %>% 
-  summarise(sums=sum(pa))
-
-#same thing, per sev type
-all_spp_dat_l %>%
-  filter(pa != 0) %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
-  dplyr::count(species, sev3, sort = TRUE)
-
-df <- all_spp_dat_l %>%
-#  filter(pa != 0) %>% 
-  add_count(species)
-
-
 # species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
-richA <- ddply(all_spp_w_pa,~site_id,function(x) {
+all_richness <- ddply(all_spp_w_pa,~site_id,function(x) {
    data.frame(richness=sum(x[-1]>0))
  })
 
-# Shannon diversity
-shanA <- ddply(all_spp_w_pa,~site_id,function(x) {
-        data.frame(shannon=diversity(x[-1], index="shannon"))
-})
+all_div1 <- merge(all_richness, site_data, by = "site_id") %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
 
-#Simpson diversity
-simpA <- ddply(all_spp_w_pa,~site_id,function(x) {
-        data.frame(simpson=diversity(x[-1], index="simpson"))
-})
-
-#put it together (note names changed!)
-all_spp_div <- merge(all_spp_richness, all_spp_shannon, by = "site_id") %>%
-  merge(., all_spp_simpson, by = "site_id") %>% 
-  merge(., site_data, by = "site_id")
-
-#all_spp_div  %>%
-#  group_by(sev) %>%
-#  summarise_all(mean, na.rm=TRUE)
-
-all_spp_div$cov_cat <- as.factor(all_spp_div$cov_cat) 
-
-all_spp_div1 <- all_spp_div %>%   
-    mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
-
-#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
-
-p7 <- ggplot(all_spp_div1, aes(x = sev3, y = richness)) +
+all_alpha <- ggplot(all_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
-  ggtitle("All species richness") +
+  ggtitle("All spp richness") +
   xlab("Habitat")  +
-  theme_cowplot(12)
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-p8 <- ggplot(all_spp_div1, aes(x = sev3, y = shannon)) +
-  geom_boxplot()  +
-  ggtitle("All species Shannon") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
-
-p9 <- ggplot(all_spp_div1, aes(x = sev3, y = simpson)) +
-  geom_boxplot()  +
-  ggtitle("All species Simpson") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
-
-# do anovas to test differences?
 ```
 
-#### Plants only
+
+### Birds
+```{r}
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+bird_richness <- ddply(bird_mat_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+bird_div1 <- merge(bird_richness, site_data, by = "site_id") %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+
+bird_alpha <- ggplot(bird_div1, aes(x = sev3, y = richness, fill = sev3)) +
+  geom_boxplot() +
+  ggtitle("Bird richness") +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+```
+
+### Plants (pa)
+```{r}
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+plant <- ddply(plant_mat_pa_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+plant_div1 <- merge(plant_richness, site_data, by = "site_id") %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+
+plant_alpha <- ggplot(plant_div1, aes(x = sev3, y = richness, fill = sev3)) +
+  geom_boxplot() +
+  ggtitle("Plant richness") +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+```
+
+### lichens (pa)
+```{r}
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+lichen <- ddply(lichen_mat_species_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+lichen_div1 <- merge(lichen_richness, site_data, by = "site_id") %>%   
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+
+lich_alpha <- ggplot(lichen_div1, aes(x = sev3, y = richness, fill = sev3)) +
+  geom_boxplot() +
+  ggtitle("lichen richness") +
+  xlab("Habitat")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+```
+
+### Insects (Alpha, beta, gamma)
+12/11/19
+
+Diversity patterns between HS and LS/UN are not striking. Slightly lower in UN/LS but barely. Might try using another method like indicator species analysis. Because the abundance difference is huge for many spp.
+```{r}
+# Insect alpha
+
+gamma.matrix <- insect_mat %>% 
+  dplyr::select(c(site_id, Aculeata:Thysanoptera)) %>% 
+  group_by(site_id)
+
+comp.attr = insect_dat_w %>% dplyr::select(site_id)
+comp.abund <- gamma.matrix %>% ungroup() %>% dplyr::select(c(Aculeata:Thysanoptera))
+
+
+richA = specnumber(comp.abund)
+#shanA = exp(diversity(comp.abund, index = "shannon")) # not working
+shanA <- diversityresult(x = comp.abund, y= NULL, index="Shannon", method = "each site", sortit = FALSE)
+#simpA = diversity(comp.abund, index = "invsimpson")
+simpA = -(1/(diversityresult(x = comp.abund, y= NULL, index="Simpson", method = "each site", sortit = FALSE) - 1)) # for some reason I coudn't get the direct calculation of inverse Simpson to work, but this seems to do the trick
+# Actually not a mistake....... WHY is inverse simpson the same as richness? 
+
+
+richA = specnumber(comp.abund)
+shanA = exp(diversity(comp.abund, index = "shannon"))
+simpA = diversity(comp.abund, index = "invsimpson")
+
+alpha.stats = data.frame(comp.attr, richA, shanA, simpA)
+
+names(alpha.stats)[2] <- "richA"
+names(alpha.stats)[3] <- "shanA"
+names(alpha.stats)[4] <- "simpA"
+
+
+# Insect gamma
+gamma.matrix <- insect_dat_w %>%   
+  dplyr::select(c(sev, Aculeata:Thysanoptera)) %>% 
+  group_by(sev) %>% 
+  #mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev =="multiple", "h", sev))) %>%
+  mutate(sev3 = ifelse(sev =="multiple", "h", sev)) %>%
+  group_by(sev3) %>% 
+  dplyr::select(-sev) %>% 
+  summarise_all(sum)
+
+gamma.attr = gamma.matrix %>% dplyr::select(sev3)
+gamma.abund = gamma.matrix %>% dplyr::select(-sev3) 
+  
+richG = specnumber(gamma.abund)
+shanG = exp(diversity(gamma.abund, index = "shannon"))
+simpG = diversity(gamma.abund, index = "invsimpson")
+
+gamma.stats = data.frame(gamma.attr, richG, shanG, simpG)
+
+
+#gamma.stats_i = data.frame(gamma.attr_i, richG_insects)
+
+#richGinsect <- ggplot(gamma.stats_i, aes(x = sev3, y = richG_insects, fill = sev3)) +
+#  geom_point(shape = 21, color = "black", size = 3) +  ggtitle("All gamma") +
+#  xlab("Habitat")  +
+#  ylab("gamma")  +
+#  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+
+
+
+
+alldiv = left_join(alpha.stats, site_data, by = "site_id") %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev =="multiple", "h", sev))) %>%
+  mutate(sev3 = ifelse(sev =="multiple", "h", sev)) %>%
+  left_join(gamma.stats) %>% 
+  mutate(richB = richG / richA,
+         shanB = shanG / shanA,
+         simpB = simpG / simpA) 
+
+
+
+# Figures
+# Alpha figures
+p7 <- alldiv %>% 
+  ggplot(aes(x = sev3, y = richA,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~year) +
+  ggtitle("Alpha-Level Richness")+
+  ylab("Species Richness")  +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none") + theme(aspect.ratio=1)
+
+p8 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = shanA,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~tsf_cat) +
+  ggtitle("Alpha-Level Exp. Shannon")+
+  ylab("Exp. Shannon Diversity Index")  +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+p9 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = simpA,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~year) + 
+  ggtitle("Alpha-Level Inv. Simpson") +
+  ylab("Inv. Simpson Diversity Index") +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+#gammma figures
+p1 <- alldiv %>% 
+  ggplot(aes(x = sev3, y = richG,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+#  facet_wrap(~year) +
+  ggtitle("Gamma-Level Richness")+
+  ylab("Species Richness")  +
+  xlab("Habitat") +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none") + theme(aspect.ratio=1)
+
+p2 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = shanG,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+#  facet_wrap(~tsf_cat) +
+  ggtitle("Gamma-Level Exp. Shannon")+
+  ylab("Exp. Shannon Diversity Index")  +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+p3 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = simpG,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+#  facet_wrap(~year) + 
+  ggtitle("Gamma-Level Inv. Simpson") +
+  ylab("Inv. Simpson Diversity Index") +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+#beta figures
+p4 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = richB,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~year) +
+  ggtitle("Beta-Level Richness")+
+  ylab("Species Richness")  +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+p5 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = shanB,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~year) +
+  ggtitle("Beta-Level Exp. Shannon")+
+  ylab("Exp. Shannon Diversity Index")  +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+p6 <- alldiv %>% ggplot(aes(x = sev3,
+                      y = simpB,
+                      fill = factor(sev3),
+                      group = sev3)) +
+  geom_boxplot() +
+#  facet_wrap(~year) + 
+  ggtitle("Beta-Level Inv. Simpson") +
+  ylab("Inv. Simpson Diversity Index")  +
+  xlab("Habitat")  +
+  expand_limits(y = 0) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+grid.arrange(p7, p8, p9, p4, p5, p6, p1, p2, p3, nrow =3)
+```
+
+### All alpha plots
+(except insects)
+```{r}
+grid.arrange(all_alpha, bird_alpha, plant_alpha, lich_alpha, nrow = 2)
+
+```
+
+#### Plants only (cov; plus shannon/simpson)
 *Div highest, in mnanag; lowest in LS/UN, intermediate in HS.
 * Similar to all_spp analysis, LS is acutally comparable to HS in diversity when separated from UN.
 
 ```{r}
 # species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
-plant_richness <- ddply(plant_mat_pa_w,~site_id,function(x) {
+plant_richness <- ddply(plant_mat_cov_w,~site_id,function(x) {
    data.frame(richness=sum(x[-1]>0))
  })
 
 # Shannon diversity
-plant_shannon <- ddply(plant_mat_pa_w,~site_id,function(x) {
+plant_shannon <- ddply(plant_mat_cov_w,~site_id,function(x) {
         data.frame(shannon=diversity(x[-1], index="shannon"))
 })
 
-plant_simpson <- ddply(plant_mat_pa_w,~site_id,function(x) {
+plant_simpson <- ddply(plant_mat_cov_w,~site_id,function(x) {
         data.frame(simpson=diversity(x[-1], index="simpson"))
 })
 
@@ -331,160 +532,106 @@ plant_div1 <- plant_div %>%
   
 #  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
 
-ggplot(plant_div1, aes(x = sev3, y = richness)) +
+plant1 <- ggplot(plant_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot()  +
   ggtitle("Plant richness") +
   xlab("Habitat")  +
-  theme_cowplot(12)
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-ggplot(plant_div1, aes(x = sev3, y = shannon)) +
+plant2 <- ggplot(plant_div1, aes(x = sev3, y = shannon, fill = sev3)) +
   geom_boxplot() +
   ggtitle("Plant Shannon") +
   xlab("Habitat")  +
-  theme_cowplot(12)
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-ggplot(plant_div1, aes(x = sev3, y = simpson)) +
+plant3 <- ggplot(plant_div1, aes(x = sev3, y = simpson, fill = sev3)) +
   geom_boxplot()  +
   ggtitle("Plant Simpson") +
   xlab("Habitat")  +
-  theme_cowplot(12)
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
+plant_all_plots <- grid.arrange(plant1, plant2, plant3, nrow=1) 
 # do anovas to test differences?
 ```
 
-#### Birds only
-* div about equal in HS and UN/LS, but higher in manag.
-* Interstingly, Rx is still highest when separating all categories, similar to plants.
-
+## Alpha, Beta, Gamma diversity calculation
 ```{r}
-# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
-bird_richness <- ddply(bird_mat_w,~site_id,function(x) {
-   data.frame(richness=sum(x[-1]>0))
- })
+# Species accumulation curves
 
-# Shannon diversity
-bird_shannon <- ddply(bird_mat_w,~site_id,function(x) {
-        data.frame(shannon=diversity(x[-1], index="shannon"))
-})
+#curve_all = specaccum(all_spp_w_pa[,-1], method = "random", 
+ #                 permutations = 100)
 
-bird_simpson <- ddply(bird_mat_w,~site_id,function(x) {
-        data.frame(simpson=diversity(x[-1], index="simpson"))
-})
-
-#put it together
-bird_div <- merge(bird_richness, bird_shannon, by = "site_id") %>%
-  merge(., bird_simpson, by = "site_id") %>% 
-  merge(., site_data, by = "site_id")
-
-#all_spp_div  %>%
-#  group_by(sev) %>%
-#  summarise_all(mean, na.rm=TRUE)
-
-bird_div$cov_cat <- as.factor(bird_div$cov_cat) 
-
-bird_div1 <- bird_div %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
-
-#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
-
-ggplot(bird_div1, aes(x = sev3, y = richness)) +
-  geom_boxplot() +
-  ggtitle("Bird richness") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
-
-ggplot(bird_div1, aes(x = sev3, y = shannon)) +
-  geom_boxplot() +
-  ggtitle("Bird Shannon") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
-
-ggplot(bird_div1, aes(x = sev3, y = simpson)) +
-  geom_boxplot() +
-  ggtitle("Bird Simpson") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
-
-# do anovas to test differences?
-```
-
-#### Lichens only
-*Predictably, lichens are less diverse in HS stands and most in UN/LS, but manag is pretty close.
-
-```{r}
-# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
-lichen_richness <- ddply(lichen_mat_genus_pa_w,~site_id,function(x) {
-   data.frame(richness=sum(x[-1]>0))
- })
-
-# Shannon diversity
-lichen_shannon <- ddply(lichen_mat_genus_pa_w,~site_id,function(x) {
-        data.frame(shannon=diversity(x[-1], index="shannon"))
-})
-
-lichen_simpson <- ddply(lichen_mat_genus_pa_w,~site_id,function(x) {
-        data.frame(simpson=diversity(x[-1], index="simpson"))
-})
-
-#put it together
-lichen_div <- merge(lichen_richness, lichen_shannon, by = "site_id") %>%
-  merge(., lichen_simpson, by = "site_id") %>% 
-  merge(., site_data, by = "site_id")
-
-#all_spp_div  %>%
-#  group_by(sev) %>%
-#  summarise_all(mean, na.rm=TRUE)
-
-lichen_div$cov_cat <- as.factor(lichen_div$cov_cat) 
-
-lichen_div1 <- lichen_div %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+all_spp_matrix <- merge(all_spp_w_pa, site_data, by = "site_id") %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ABCO:YRWA)
 
 
-#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
+#plants
+#curve_all = specaccum(plant_mat_pa_w[,-1], method = "random", 
+#                  permutations = 100)
+all_spp_matrix <- plant_dat_pa_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ABCO:YAMI)
 
-ggplot(lichen_div1, aes(x = sev3, y = richness)) +
-  geom_boxplot() +
-  ggtitle("Lichen richness") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
 
-ggplot(lichen_div1, aes(x = sev3, y = shannon)) +
-  geom_boxplot() +
-  ggtitle("Lichen Shannon") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
-
-ggplot(lichen_div1, aes(x = sev3, y = simpson)) +
-  geom_boxplot()  +
-  ggtitle("Lichen Simpson") +
-  xlab("Habitat")  +
-  theme_cowplot(12)
-
-# do anovas to test differences?
-```
-
-## Alpha, Beta,Gamma diversity calculation
-```{r}
-
-# Number of occurrences of all species
-#Plants
-#gamma.matrix <- all_spp_dat_w %>% 
-#  dplyr::select(c(sev, ABCO:YRWA)) %>% 
-  
 #birds
-gamma.matrix <- bird_dat_w %>%   
-  dplyr::select(c(sev, ACWO:YRWA)) %>% 
+#curve_all = specaccum(bird_mat_w[,-1], method = "random", 
+#                  permutations = 100)
+all_spp_matrix <- bird_dat_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ACWO:YRWA)
+
+#subset each habitat into its own df
+all_spp_matrix %>% filter(sev3 == "h") -> h
+all_spp_matrix %>% filter(sev3 == "lu") -> lu
+all_spp_matrix %>% filter(sev3 == "multiple") -> multiple
+all_spp_matrix %>% filter(sev3 == "Rx") -> Rx
+
+#calc species accumulation curve for each habitat
+curve_h = specaccum(h[, -1], method = "random")
+curve_lu = specaccum(lu[, -1], method = "random")
+curve_multiple = specaccum(multiple[, -1], method = "random")
+curve_Rx = specaccum(Rx[, -1], method = "random")
+
+#plot curve_all first
+
+#plot(curve_all, col = "grey")
+#then plot the rest
+plot(curve_lu, col = "chartreuse4", ylim=c(0,70), ylab="species")
+plot(curve_h, add = TRUE, col = "coral1") #col is COLOUR setting, so change it to something else if you want
+plot(curve_multiple, add = TRUE, col = "cyan3")
+plot(curve_Rx, add = TRUE, col = "darkorchid3")
+
+legend("bottomright",
+c("all","h", "lu", "multiple", "Rx"),
+fill=c("grey","coral1", "chartreuse4", "cyan3", "darkorchid3")
+)
+
+
+
+
+
   
+  
+#Gamma
 #ALL SPP
-  
-  
-gamma.matrix <- all_spp_dat_w %>% 
+gamma.matrix_all <- all_spp_dat_w %>% 
   dplyr::select(c(sev, ABCO:YRWA)) %>% 
-  
+  group_by(sev) %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  group_by(sev3) %>% 
+  dplyr::select(-sev) %>% 
+  summarise_all(sum)
+
+gamma.abund_all = gamma.matrix_all %>% dplyr::select(-sev3) 
+
+#birds
+gamma.matrix_birds <- bird_dat_w %>%   
+  dplyr::select(c(sev, ACWO:YRWA)) %>% 
+  group_by(sev) %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  group_by(sev3) %>% 
+  dplyr::select(-sev) %>% 
+  summarise_all(sum)
+
+gamma.abund_birds = gamma.matrix_birds %>% dplyr::select(-sev3) 
 
 #Plants
-gamma.matrix <- plant_dat_pa_w %>% 
+gamma.matrix_plants <- plant_dat_pa_w %>% 
   dplyr::select(c(sev, ABCO:YAMI)) %>% 
   group_by(sev) %>% 
   mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
@@ -493,78 +640,56 @@ gamma.matrix <- plant_dat_pa_w %>%
   summarise_all(sum)
 
 gamma.attr = gamma.matrix %>% dplyr::select(sev3)
-gamma.abund = gamma.matrix %>% dplyr::select(-sev3) 
+gamma.abund_plants = gamma.matrix_plants %>% dplyr::select(-sev3) 
 
-richG = specnumber(gamma.abund)
-shanG = exp(diversity(gamma.abund, index = "shannon"))
-simpG = diversity(gamma.abund, index = "invsimpson")
-
-gamma.stats = data.frame(gamma.attr, richG, shanG, simpG)
-
-
-
-
-gamma.matrix <- plant_dat_pa_w %>% 
-  dplyr::select(c(sev, ABCO:YAMI)) %>% 
+#PLichens (use species instead of genus)
+gamma.matrix_lichens <- lichen_dat_species_w %>% 
+  dplyr::select(c(sev, AHPA:XAHA)) %>% 
   group_by(sev) %>% 
   mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
   group_by(sev3) %>% 
-  dplyr::select(-sev)
+  dplyr::select(-sev) %>% 
+  summarise_all(sum)
 
-str(comp.abund)
-
-
-
-
-#All SPP
-comp.attr = all_spp_dat_w %>% dplyr::select(site_id)
-comp.abund = all_spp_dat_w %>% dplyr::select(c(ABCO:YRWA)) 
-
-#Birds
-comp.attr = bird_dat_w %>% dplyr::select(site_id)
-comp.abund <- bird_dat_w %>% dplyr::select(c(ACWO:YRWA))
+gamma.abund_lichens = gamma.matrix_lichens %>% dplyr::select(-sev3) 
 
 
-#Plants
-#need to use gamma.matrix and add site id back in and get rid of sev3
-gamma.matrix <- plant_dat_pa_w %>% 
-  dplyr::select(c(site_id, ABCO:YAMI)) %>% 
-  group_by(site_id)
+richG_all = specnumber(gamma.abund_all)
+richG_birds = specnumber(gamma.abund_birds)
+richG_plants = specnumber(gamma.abund_plants)
+richG_lichens = specnumber(gamma.abund_lichens)
 
-comp.attr = plant_dat_pa_w %>% dplyr::select(site_id)
-comp.abund <- gamma.matrix %>% ungroup() %>% dplyr::select(c(ABCO:YAMI))
+gamma.stats = data.frame(gamma.attr, richG_all, richG_birds, richG_plants, richG_lichens)
 
-comp.abund = plant_dat_cov_w %>% dplyr::select(c(ABCO:YAMI)) 
+richGall <- ggplot(gamma.stats, aes(x = sev3, y = richG_all, fill = sev3)) +
+  geom_point(shape = 21, color = "black", size = 3) +  ggtitle("All gamma") +
+  xlab("Habitat")  +
+  ylab("gamma")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
+richGbirds <- ggplot(gamma.stats, aes(x = sev3, y = richG_birds, fill = sev3)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+  ggtitle("Bird gamma") +
+  xlab("Habitat")  +
+  ylab("gamma")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
-richA = specnumber(comp.abund)
-#shanA = exp(diversity(comp.abund, index = "shannon")) # not working
-shanA <- diversityresult(x = comp.abund, y= NULL, index="Shannon", method = "each site", sortit = FALSE)
-#simpA = diversity(comp.abund, index = "invsimpson")
-simpA = -(1/(diversityresult(x = comp.abund, y= NULL, index="Simpson", method = "each site", sortit = FALSE) - 1)) # for some reason I coudn't get the direct calculation of inverse Simpson to work, but this seems to do the trick
-# Actually not a mistake....... WHY is inverse simpson the same as richness? 
+richGplant <- ggplot(gamma.stats, aes(x = sev3, y = richG_plants, fill = sev3)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+  ggtitle("Plant gamma") +
+  xlab("Habitat")  +
+  ylab("gamma")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
+richGlich <- ggplot(gamma.stats, aes(x = sev3, y = richG_lichens, fill = sev3)) +
+  geom_point(shape = 21, color = "black", size = 3) +
+  ggtitle("Lichen gamma") +
+  xlab("Habitat")  +
+  ylab("gamma")  +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
+grid.arrange(richGall, richGbirds, richGplant, richGlich, nrow = 2)
 
-
-
-
-richA = specnumber(comp.abund)
-shanA = exp(diversity(comp.abund, index = "shannon"))
-simpA = diversity(comp.abund, index = "invsimpson")
-
-alpha.stats = data.frame(comp.attr, richA, shanA, simpA)
-
-names(alpha.stats)[2] <- "richA"
-names(alpha.stats)[3] <- "shanA"
-names(alpha.stats)[4] <- "simpA"
-
-alldiv = left_join(alpha.stats, site_data, by = "site_id") %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
-  left_join(gamma.stats) %>% 
-  mutate(richB = richG / richA,
-         shanB = shanG / shanA,
-         simpB = simpG / simpA) 
 
 ```
 
@@ -991,6 +1116,75 @@ kable(indval_table, caption = "Table 3: Indicator species for different habitats
 #write.csv(prob.corrected1, file = "prob.corrected1.csv")
 ```
 
+#Insect Ind. Analysis
+12/11/19
+```{r echo = F}
+
+insect_matrix <- insect_dat_w %>%   
+  dplyr::select(c(site_id, sev, Aculeata:Thysanoptera)) %>% 
+#  group_by(sev) %>% 
+  #mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev =="multiple", "h", sev))) %>%
+  mutate(sev3 = ifelse(sev =="multiple", "h", ifelse(sev == "u" | sev == "l", "lu", sev)))
+
+# getting rid of species detected in 0 plots (for some reason there appears to be no cover recorded for ALRH and CESA, but they were both found at only one plot so no big deal)
+plant_matrix1 <- insect_matrix %>% 
+  bind_rows(summarise_all(., funs(if(is.numeric(.)) sum(.) else "Total")))
+
+plant_matrix1 <- insect_matrix[, (plant_matrix1[57, ]) > 0]
+plant_matrix1 <- insect_matrix[-57, ]
+
+
+### Vector for site classification
+### severity
+data <- insect_matrix %>% dplyr::select(c(Aculeata:Thysanoptera))
+groups1 <- as.vector(insect_matrix$sev3)
+
+#groups1 = as.vector(plant_dat$tsf_cat2)
+#groups1 = as.vector(plant_dat$sev_tsf)
+
+Indval_out1 <- indval(data, groups1, numitr=10000)
+gr <- Indval_out1$maxcls[Indval_out1$pval<=0.1]
+iv <- Indval_out1$indcls[Indval_out1$pval<=0.1]
+pv <- Indval_out1$pval[Indval_out1$pval<=0.1]
+fr <- apply(data>0, 2, sum)[Indval_out1$pval<=0.1]
+indvalsummary <- data.frame(group=gr, indval=iv, pvalue=pv, freq=fr)
+indvalsummary1 <- indvalsummary[order(indvalsummary$group, -indvalsummary$indval),]
+prob.corrected1 = p.adjust(Indval_out1$pval, "BH") # correct p.value for multiple testing
+#kable(indvalsummary1)
+
+indvalsummary1 <- cbind(rownames(indvalsummary1), data.frame(indvalsummary1, row.names=NULL))
+
+names(indvalsummary1)[1]<-"species"
+
+indval <- left_join(indvalsummary1, plant_names, by = "species") %>% 
+  mutate(HS_ind = ifelse(is.na(full_name), species, full_name)) %>% 
+  dplyr::select(HS_ind, group, indval, pvalue) %>% 
+  mutate("Indicator value" = indval * 100) %>% 
+  filter(indval >= 0.25) %>% 
+  filter(pvalue < 0.1)
+
+indval_hs <- indval %>% 
+  filter(group =="1") %>% 
+  dplyr::select(HS_ind, "Indicator value")
+
+indval_ls <- indval %>% 
+  filter(group =="2")%>% 
+  dplyr::select(HS_ind, "Indicator value")
+
+names(indval_hs)[1]<-"Indicators of HS"
+names(indval_ls)[1]<-"Indicators of LS/UN"
+
+
+#names(spp_diff2)[1]<-"Species found only in LS/UN"
+indval_table <- list(indval_hs, indval_ls)
+
+kable(indval_table, caption = "Table 3: Indicator species for different habitats (HS vs LS/UN)", digits = 0) %>%
+  kable_styling()
+
+#write.csv(indvalsummary1, file = "indvalsummary1.csv")
+#write.csv(prob.corrected1, file = "prob.corrected1.csv")
+```
+
 # Species frequency of occurrence in each habitat
 * Looking at the fequency of occurrence of all plants detected at least 5 times (114 species), it appears that most species that have a preference for UN/LS or HS are also found in MANAG sites: 20/27 species found at least 2x more frequently in UNLS as in HS are also found at least 2x more frequently in mult or Rx than HS. Conversely, 38/42 species that are at least 2x as frequent in HS as in UNLS are also 2x as frequent in either mult or Rx as in UN/LS.
 *Kruskall-Wallis rank test?
@@ -1073,6 +1267,115 @@ plant_dat_percent <- plant_dat_sum %>%
 print_occ_table <- plant_dat_percent[, -c(2:6)]
 
 write.csv(print_occ_table, file = "output/print_occ_table_all.csv")
+
+```
+
+```{r}
+# This chunk is about comparing the frequency of different species in each habitat (see Wayman 2007)
+## Let's look at UN/LS vs HS vs mult/Rx
+
+# Calculating the number of occurrences in each trt
+# First get the data matrices for each habitat type
+mat_UNLS <- all_spp_dat_w %>%
+  filter(sev == "u" | sev == "l") %>% 
+  dplyr::select(ABCO:YRWA)
+
+mat_HS <- all_spp_dat_w %>% 
+  filter(sev=="h") %>% 
+  dplyr::select(ABCO:YRWA)
+
+mat_MANAG <- all_spp_dat_w %>%
+  filter(sev == "multiple" | sev == "Rx") %>% 
+  dplyr::select(ABCO:YRWA)
+
+mat_MULT <- all_spp_dat_w %>%
+  filter(sev == "multiple") %>% 
+  dplyr::select(ABCO:YRWA)
+
+mat_Rx <- all_spp_dat_w %>%
+  filter(sev == "Rx") %>% 
+  dplyr::select(ABCO:YRWA)
+
+#Getting the number of detections for each species
+dat_sum_HS <- rbind(mat_HS[,-1], colSums(mat_HS[-1,-1]))
+sum_HS <- data.frame(t(tail(dat_sum_HS, n = 1))) # keep only last row (sum) and transpose
+sum_HS <- cbind(rownames(sum_HS), data.frame(sum_HS, row.names=NULL)) # row names to column
+colnames(sum_HS) <- c("species", "sum")
+
+dat_sum_UNLS <- rbind(mat_UNLS[,-1], colSums(mat_UNLS[-1,-1]))
+sum_UNLS <- data.frame(t(tail(dat_sum_UNLS, n= 1))) 
+sum_UNLS <- cbind(rownames(sum_UNLS), data.frame(sum_UNLS, row.names=NULL))
+colnames(sum_UNLS) <- c("species", "sum")
+
+dat_sum_MANAG <- rbind(mat_MANAG[,-1], colSums(mat_MANAG[-1,-1]))
+sum_MANAG <- data.frame(t(tail(dat_sum_MANAG, n = 1))) 
+sum_MANAG <- cbind(rownames(sum_MANAG), data.frame(sum_MANAG, row.names=NULL))
+colnames(sum_MANAG) <- c("species", "sum")
+
+dat_sum_MULT <- rbind(mat_MULT[,-1], colSums(mat_MULT[-1,-1]))
+sum_MULT <- data.frame(t(tail(dat_sum_MULT, n = 1))) 
+sum_MULT <- cbind(rownames(sum_MULT), data.frame(sum_MULT, row.names=NULL))
+colnames(sum_MULT) <- c("species", "sum")
+
+dat_sum_Rx <- rbind(mat_Rx[,-1], colSums(mat_Rx[-1,-1]))
+sum_Rx <- data.frame(t(tail(dat_sum_Rx, n = 1))) 
+sum_Rx <- cbind(rownames(sum_Rx), data.frame(sum_Rx, row.names=NULL))
+colnames(sum_Rx) <- c("species", "sum")
+
+dat_sum <- sum_UNLS %>% 
+  left_join(sum_HS, by = "species") %>% 
+  left_join(sum_MANAG, by = "species") %>% 
+  left_join(sum_MULT, by = "species") %>% 
+  left_join(sum_Rx, by = "species")
+
+colnames(dat_sum) <- c("species", "det_UNLS", "det_HS", "det_MANAG", "det_MULT", "det_Rx")
+dat_sum[is.na(dat_sum)] <- 0
+
+# Now dividing number of detections by number of sites and turning into %
+dat_percent <- dat_sum %>% 
+  mutate(., UNLS_occ = (det_UNLS/(nrow(dat_sum_UNLS) -1)*100)) %>% 
+  mutate(., HS_occ = (det_HS/(nrow(dat_sum_HS) -1)*100)) %>% 
+  mutate(., MANAG_occ = (det_MANAG/(nrow(dat_sum_MANAG) -1)*100)) %>% 
+  mutate(., MULT_occ = (det_MULT/(nrow(dat_sum_MULT) -1)*100)) %>% 
+  mutate(., Rx_occ = (det_Rx/(nrow(dat_sum_Rx) -1)*100))%>% 
+  mutate(., total_occ = (det_UNLS + det_HS + det_MULT + det_Rx)) %>% 
+  filter(total_occ >5)  # keep only species detected more than 5 times
+
+print_occ_table <- dat_percent[, -c(2:6)]
+
+write.csv(print_occ_table, file = "output/print_occ_table_allspp2.csv")
+
+
+sev <- c("H", "H", "H", "H", "LU", "LU", "LU", "LU")
+hab <- c("total", "manag", "multiple", "Rx")
+num <- c(51,46,46, 30, 42,31,22,28)
+position <- c(1, 2, 3, 4, 1, 2, 4, 3)
+
+prefs <- data.frame(sev, hab, num)
+
+ggplot(prefs, aes(sev, num)) +
+  geom_bar(aes(fill = hab, group = position), stat='identity', position="dodge") +  theme_cowplot(12)  + theme(aspect.ratio=1)  + 
+scale_fill_manual("legend", values = c("total" = "midnightblue", "manag" = "sienna3", "Rx" = "darkorchid3", "multiple" = "cyan3"))+   xlab("preferred sev")  +
+  ylab("number of species")
+
+plot(curve_lu, col = "chartreuse4", ylim=c(0,90), ylab="species")
+plot(curve_h, add = TRUE, col = "coral1") #col is COLOUR setting, so change it to something else if you want
+plot(curve_multiple, add = TRUE, col = "cyan3")
+plot(curve_Rx, add = TRUE, col = "darkorchid3")
+
+
+  geom_col(position = )
+
+?geom_col
+  
+  geom_bar(aes(weight = num)) +
+  geom_bar(aes(fill=hab))
+
+
+g <- ggplot(mpg, aes(class))
+g + geom_bar()
+g + geom_bar(aes(weight = displ))
+
 
 ```
 
