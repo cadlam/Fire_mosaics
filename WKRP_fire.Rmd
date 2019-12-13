@@ -237,6 +237,10 @@ all_alpha <- ggplot(all_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
   ggtitle("All spp richness") +
   xlab("Habitat")  +
+    geom_text(aes(x = sev3, 
+                y = emmean + 25),
+            label = alpha_rich_stats_all$.group, 
+            data = alpha_rich_stats_all) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
 ```
@@ -256,6 +260,10 @@ bird_alpha <- ggplot(bird_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
   ggtitle("Bird richness") +
   xlab("Habitat")  +
+    geom_text(aes(x = sev3, 
+                y = emmean + 10),
+            label = alpha_rich_stats_bird$.group, 
+            data = alpha_rich_stats_bird) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
 ```
@@ -274,6 +282,10 @@ plant_alpha <- ggplot(plant_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
   ggtitle("Plant richness") +
   xlab("Habitat")  +
+    geom_text(aes(x = sev3, 
+                y = emmean + 25),
+            label = alpha_rich_stats_plant$.group, 
+            data = alpha_rich_stats_plant) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
 ```
@@ -281,7 +293,7 @@ plant_alpha <- ggplot(plant_div1, aes(x = sev3, y = richness, fill = sev3)) +
 ### lichens (pa)
 ```{r}
 # species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
-lichen <- ddply(lichen_mat_species_w,~site_id,function(x) {
+lichen_richness <- ddply(lichen_mat_species_w,~site_id,function(x) {
    data.frame(richness=sum(x[-1]>0))
  })
 
@@ -292,6 +304,10 @@ lich_alpha <- ggplot(lichen_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
   ggtitle("lichen richness") +
   xlab("Habitat")  +
+  geom_text(aes(x = sev3, 
+                y = emmean + 20),
+            label = alpha_rich_stats_lichen$.group, 
+            data = alpha_rich_stats_lichen) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
 ```
@@ -554,7 +570,7 @@ plant_all_plots <- grid.arrange(plant1, plant2, plant3, nrow=1)
 # do anovas to test differences?
 ```
 
-## Alpha, Beta, Gamma diversity calculation
+## Gamma diversity calculation and rarefaction curves
 ```{r}
 # Species accumulation curves
 
@@ -608,6 +624,14 @@ fill=c("grey","coral1", "chartreuse4", "cyan3", "darkorchid3")
   
   
 #Gamma
+gamma.matrix <- all_spp_dat_w %>%   
+  dplyr::select(c(sev, ABCO:YRWA)) %>% 
+  group_by(sev) %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  group_by(sev3) %>% 
+  dplyr::select(-sev) %>% 
+  summarise_all(sum)
+
 #ALL SPP
 gamma.matrix_all <- all_spp_dat_w %>% 
   dplyr::select(c(sev, ABCO:YRWA)) %>% 
@@ -692,7 +716,6 @@ grid.arrange(richGall, richGbirds, richGplant, richGlich, nrow = 2)
 
 
 ```
-
 
 ## Beta Diversity (binomial)
 ```{r}
@@ -948,35 +971,113 @@ library(lme4); library(lmerTest); library(emmeans)
 alldiv$sev <- as.factor(alldiv$sev)
 #alldiv$year <- as.factor(alldiv$year)
 
+plant_div2 <- plant_div1 %>% filter(sev3!="u")
+
 # Fitting an interactive model and an additive model
-mod_int = lmer(richA ~ sev + (1|site_id), data = alldiv)
-#mod_add = lmer(richA ~ sev + (1|Regen_ID), data = alldiv)
+#mod_int = lm(shannon ~ sev3, data = alldiv)
+mod_add = lm(simpA ~ sev3, data = alldiv)
 
 # Are these two models significantly different from one another? Look for a p < .05
 # (Likelihood ratio test)
 anova(mod_add, mod_int)
 
 # What's the model ANOVA table
+anova(mod_int)
 anova(mod_add)
+
+means = emmeans(mod_add, pairwise~sev3)
 
 # capture.output(anova(mod_add),file="alpha_rich_anova")
 
 # Estimated means between groups within each year
-means = emmeans(mod_add, specs = "OBS_FIRE_SEV", by = "year", adjust = "tukey")
+#means = emmeans(mod_add, specs = "tsf", by = "sev3", adjust = "tukey")
 
 # All pairwise comparisons
-paircomp = pairs(means)
+#paircomp = pairs(means)
 
 # Assigning labels to each groups
-CLD(means)
-
+#cld(means)
+cld(means$emmeans, Letters = letters)
 #create dataframe to use for labeling richness boxplots
-alpha_rich_stats <- as.data.frame(CLD(means))
+alpha_rich_stats <- as.data.frame(cld(means))
+
+
+# richness tests
+div <- all_div1 %>% dplyr::mutate(., rich_all = richness) %>% 
+  dplyr::select(-richness) %>% 
+  merge(., bird_div1[, c(1:2)], by = "site_id") %>% mutate(., rich_bird = richness) %>%
+  dplyr::select(-richness) %>% 
+  merge(., plant_div1[, c(1:2)], by = "site_id") %>% mutate(., rich_plant = richness) %>%
+  dplyr::select(-richness) %>% 
+  merge(., lichen_div1[, c(1:2)], by = "site_id") %>% mutate(., rich_lichen = richness) %>%
+  dplyr::select(-richness)
+
+#12/12/19
+#  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h but separate from Rx (lu:a; h:ab; mult:b; Rx:c)
+mod_add_all = lm(rich_all ~ sev3, data = div)
+anova(mod_add_all)
+means = emmeans(mod_add_all, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+alpha_rich_stats_all <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+#  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx (a; ab; bc; c)
+mod_add_bird = lm(rich_bird ~ sev3, data = div)
+anova(mod_add_bird)
+means = emmeans(mod_add_bird, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+alpha_rich_stats_bird <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+#similar to bird pattern (lu: a, h: ab, mult:bc, Rx:c)
+mod_add_plant = lm(rich_plant ~ sev3, data = div)
+anova(mod_add_plant)
+means = emmeans(mod_add_plant, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+alpha_rich_stats_plant <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# LU is statistically different (higher), yet not different from Rx; h and mult are higher, though not diff from Rx. (h: a, mult: a, Rx: ab, lu:b)
+mod_add_lichen = lm(rich_lichen ~ sev3, data = div)
+anova(mod_add_lichen)
+means = emmeans(mod_add_lichen, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+alpha_rich_stats_lichen <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+#alpha_rich_stats <- as.data.frame(cld(means))
+
 ```
 
-##Shannon
+##Gamma
 
 ```{r}
+#12/12/19
+#  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx
+div1 <-
+
+mod_add_all = lm(rich_all ~ sev3, data = div)
+anova(mod_add_all)
+means = emmeans(mod_add_all, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+
+# Rx higher, others not different
+mod_add_bird = lm(rich_bird ~ sev3, data = div)
+anova(mod_add_bird)
+means = emmeans(mod_add_bird, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+
+#similar to all div pattern
+mod_add_plant = lm(rich_plant ~ sev3, data = div)
+anova(mod_add_plant)
+means = emmeans(mod_add_plant, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+
+# LU is statistically different (higher), but others are not
+mod_add_lichen = lm(rich_lichen ~ sev3, data = div)
+anova(mod_add_lichen)
+means = emmeans(mod_add_lichen, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+
+
+
+
 #shannon
 
 # Fitting an interactive model and an additive model

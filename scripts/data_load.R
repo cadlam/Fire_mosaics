@@ -135,6 +135,8 @@ lichen_mat_species_w <- read.csv("data/lichen_data.csv", header = T) %>%
   mutate(site_id = as.factor(site_id)) %>% 
   dplyr::select(site_id, species, abund) %>% 
   spread(key = species, value = abund, fill = 0) %>% 
+  full_join(., site_data %>% dplyr::select(site_id), by = "site_id") %>% 
+  replace(is.na(.), 0) %>% 
   mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
 
 lichen_dat_species_w <- merge(lichen_mat_species_w, site_data, by = "site_id")
@@ -177,7 +179,7 @@ insect_dat2 <- insect_dat1 %>%
   mutate(site_id = as.factor(site_id)) %>% 
   #  gsub(" ", "", order) %>% #get rid of spaces in some cells
 #  filter(family != "Curculionidae" & family != "Formicidae" & order != "Arachnida", order != "Apterygota" & order != "Collembola" & order != "Myriapoda") %>% # here, can decide to look at only pan, or only cones
-  filter(!family %in% c("Curculionidae", "Formicidae") & !order %in% c("Arachnida", "Apterygota", "Collembola", "Myriapoda")) %>%
+  filter(!family %in% c("Curculionidae", "Formicidae") & !order %in% c("Arachnida", "Apterygota", "Collembola", "Myriapoda", "Ephemeroptera", "Odonata")) %>% #Removing non-arthropods, low catch spp, and bark beetles/ants
   mutate(trap_id = paste(site_id, trap)) %>% 
   mutate(taxon = ifelse(suborder %in% "", order, suborder)) # use suborder when available
 
