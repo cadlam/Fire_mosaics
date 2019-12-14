@@ -312,6 +312,14 @@ lich_alpha <- ggplot(lichen_div1, aes(x = sev3, y = richness, fill = sev3)) +
 
 ```
 
+### All alpha plots
+(except insects)
+```{r}
+grid.arrange(all_alpha, bird_alpha, plant_alpha, lich_alpha, nrow = 2)
+
+```
+
+
 ### Insects (Alpha, beta, gamma)
 12/11/19
 
@@ -506,12 +514,6 @@ p6 <- alldiv %>% ggplot(aes(x = sev3,
 grid.arrange(p7, p8, p9, p4, p5, p6, p1, p2, p3, nrow =3)
 ```
 
-### All alpha plots
-(except insects)
-```{r}
-grid.arrange(all_alpha, bird_alpha, plant_alpha, lich_alpha, nrow = 2)
-
-```
 
 #### Plants only (cov; plus shannon/simpson)
 *Div highest, in mnanag; lowest in LS/UN, intermediate in HS.
@@ -570,26 +572,13 @@ plant_all_plots <- grid.arrange(plant1, plant2, plant3, nrow=1)
 # do anovas to test differences?
 ```
 
+
 ## Gamma diversity calculation and rarefaction curves
 ```{r}
 # Species accumulation curves
-
-#curve_all = specaccum(all_spp_w_pa[,-1], method = "random", 
- #                 permutations = 100)
-
+# All SPP
 all_spp_matrix <- merge(all_spp_w_pa, site_data, by = "site_id") %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ABCO:YRWA)
 
-
-#plants
-#curve_all = specaccum(plant_mat_pa_w[,-1], method = "random", 
-#                  permutations = 100)
-all_spp_matrix <- plant_dat_pa_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ABCO:YAMI)
-
-
-#birds
-#curve_all = specaccum(bird_mat_w[,-1], method = "random", 
-#                  permutations = 100)
-all_spp_matrix <- bird_dat_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ACWO:YRWA)
 
 #subset each habitat into its own df
 all_spp_matrix %>% filter(sev3 == "h") -> h
@@ -603,20 +592,160 @@ curve_lu = specaccum(lu[, -1], method = "random")
 curve_multiple = specaccum(multiple[, -1], method = "random")
 curve_Rx = specaccum(Rx[, -1], method = "random")
 
-#plot curve_all first
+#creating dataframes for ggplot2
+data_h <- data.frame(Sites_h=curve_h$sites, Richness_h=curve_h$richness, SD_h=curve_h$sd) %>% mutate(sev = "HS")
+data_lu <- data.frame(Sites_lu=curve_lu$sites, Richness_lu=curve_lu$richness, SD_lu=curve_lu$sd) %>% mutate(sev = "LS/UN")
+data_mult <- data.frame(Sites_mult=curve_multiple$sites, Richness_mult=curve_multiple$richness, SD_mult=curve_multiple$sd) %>% mutate(sev = "Multiple")
+data_Rx <- data.frame(Sites_Rx=curve_Rx$sites, Richness_Rx=curve_Rx$richness, SD_Rx=curve_Rx$sd) %>% mutate(sev = "Rx")
 
-#plot(curve_all, col = "grey")
-#then plot the rest
-plot(curve_lu, col = "chartreuse4", ylim=c(0,70), ylab="species")
-plot(curve_h, add = TRUE, col = "coral1") #col is COLOUR setting, so change it to something else if you want
-plot(curve_multiple, add = TRUE, col = "cyan3")
-plot(curve_Rx, add = TRUE, col = "darkorchid3")
 
-legend("bottomright",
-c("all","h", "lu", "multiple", "Rx"),
-fill=c("grey","coral1", "chartreuse4", "cyan3", "darkorchid3")
-)
+# ggplot species accummulation curves
+all_acc <- ggplot() +
+  geom_point(data = data_h, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h, aes(x=Sites_h, y=Richness_h , colour = sev)) +
+  geom_ribbon(data = data_h ,aes(x=Sites_h, ymin=(Richness_h-2*SD_h),ymax=(Richness_h+2*SD_h)),alpha=0.2, fill = "coral1") +
+  geom_point(data = data_lu, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu, aes(x=Sites_lu, y=Richness_lu , colour = sev)) +
+  geom_ribbon(data  = data_lu, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = "chartreuse4") +
+  geom_point(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data  = data_mult, aes(x=Sites_mult, ymin=(Richness_mult-2*SD_mult),ymax=(Richness_mult+2*SD_mult)),alpha=0.2, fill = "cyan3") +
+  geom_point(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx),ymax=(Richness_Rx+2*SD_Rx)),alpha=0.2, fill = "darkorchid3") +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("All Species Accumulation Curves") +
+  xlab("# sites")  +
+  ylab("# species") 
 
+
+# Birds
+bird_matrix <- bird_dat_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ACWO:YRWA)
+
+#subset each habitat into its own df
+bird_matrix %>% filter(sev3 == "h") -> h
+bird_matrix %>% filter(sev3 == "lu") -> lu
+bird_matrix %>% filter(sev3 == "multiple") -> multiple
+bird_matrix %>% filter(sev3 == "Rx") -> Rx
+
+#calc species accumulation curve for each habitat
+curve_h = specaccum(h[, -1], method = "random")
+curve_lu = specaccum(lu[, -1], method = "random")
+curve_multiple = specaccum(multiple[, -1], method = "random")
+curve_Rx = specaccum(Rx[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_h <- data.frame(Sites_h=curve_h$sites, Richness_h=curve_h$richness, SD_h=curve_h$sd) %>% mutate(sev = "HS")
+data_lu <- data.frame(Sites_lu=curve_lu$sites, Richness_lu=curve_lu$richness, SD_lu=curve_lu$sd) %>% mutate(sev = "LS/UN")
+data_mult <- data.frame(Sites_mult=curve_multiple$sites, Richness_mult=curve_multiple$richness, SD_mult=curve_multiple$sd) %>% mutate(sev = "Multiple")
+data_Rx <- data.frame(Sites_Rx=curve_Rx$sites, Richness_Rx=curve_Rx$richness, SD_Rx=curve_Rx$sd) %>% mutate(sev = "Rx")
+
+birds_acc <- ggplot() +
+  geom_point(data = data_h, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h, aes(x=Sites_h, y=Richness_h , colour = sev)) +
+  geom_ribbon(data = data_h ,aes(x=Sites_h, ymin=(Richness_h-2*SD_h),ymax=(Richness_h+2*SD_h)),alpha=0.2, fill = "coral1") +
+  geom_point(data = data_lu, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu, aes(x=Sites_lu, y=Richness_lu , colour = sev)) +
+  geom_ribbon(data  = data_lu, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = "chartreuse4") +
+  geom_point(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data  = data_mult, aes(x=Sites_mult, ymin=(Richness_mult-2*SD_mult),ymax=(Richness_mult+2*SD_mult)),alpha=0.2, fill = "cyan3") +
+  geom_point(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx),ymax=(Richness_Rx+2*SD_Rx)),alpha=0.2, fill = "darkorchid3") +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Bird Species Accumulation Curves") +
+  xlab("# sites")  +
+  ylab("# species") 
+  
+# Plants
+plant_matrix <- plant_dat_pa_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ABCO:YAMI)
+
+#subset each habitat into its own df
+plant_matrix %>% filter(sev3 == "h") -> h
+plant_matrix %>% filter(sev3 == "lu") -> lu
+plant_matrix %>% filter(sev3 == "multiple") -> multiple
+plant_matrix %>% filter(sev3 == "Rx") -> Rx
+
+#calc species accumulation curve for each habitat
+curve_h = specaccum(h[, -1], method = "random")
+curve_lu = specaccum(lu[, -1], method = "random")
+curve_multiple = specaccum(multiple[, -1], method = "random")
+curve_Rx = specaccum(Rx[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_h <- data.frame(Sites_h=curve_h$sites, Richness_h=curve_h$richness, SD_h=curve_h$sd) %>% mutate(sev = "HS")
+data_lu <- data.frame(Sites_lu=curve_lu$sites, Richness_lu=curve_lu$richness, SD_lu=curve_lu$sd) %>% mutate(sev = "LS/UN")
+data_mult <- data.frame(Sites_mult=curve_multiple$sites, Richness_mult=curve_multiple$richness, SD_mult=curve_multiple$sd) %>% mutate(sev = "Multiple")
+data_Rx <- data.frame(Sites_Rx=curve_Rx$sites, Richness_Rx=curve_Rx$richness, SD_Rx=curve_Rx$sd) %>% mutate(sev = "Rx")
+
+plants_acc <- ggplot() +
+  geom_point(data = data_h, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h, aes(x=Sites_h, y=Richness_h , colour = sev)) +
+  geom_ribbon(data = data_h ,aes(x=Sites_h, ymin=(Richness_h-2*SD_h),ymax=(Richness_h+2*SD_h)),alpha=0.2, fill = "coral1") +
+  geom_point(data = data_lu, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu, aes(x=Sites_lu, y=Richness_lu , colour = sev)) +
+  geom_ribbon(data  = data_lu, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = "chartreuse4") +
+  geom_point(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data  = data_mult, aes(x=Sites_mult, ymin=(Richness_mult-2*SD_mult),ymax=(Richness_mult+2*SD_mult)),alpha=0.2, fill = "cyan3") +
+  geom_point(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx),ymax=(Richness_Rx+2*SD_Rx)),alpha=0.2, fill = "darkorchid3") +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Plant Species Accumulation Curves") +
+  xlab("# sites")  +
+  ylab("# species") 
+  
+# Lichens
+lichen_matrix <- lichen_dat_species_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,AHPA:XAHA)
+
+#subset each habitat into its own df
+lichen_matrix %>% filter(sev3 == "h") -> h
+lichen_matrix %>% filter(sev3 == "lu") -> lu
+lichen_matrix %>% filter(sev3 == "multiple") -> multiple
+lichen_matrix %>% filter(sev3 == "Rx") -> Rx
+
+#calc species accumulation curve for each habitat
+curve_h = specaccum(h[, -1], method = "random")
+curve_lu = specaccum(lu[, -1], method = "random")
+curve_multiple = specaccum(multiple[, -1], method = "random")
+curve_Rx = specaccum(Rx[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_h <- data.frame(Sites_h=curve_h$sites, Richness_h=curve_h$richness, SD_h=curve_h$sd) %>% mutate(sev = "HS")
+data_lu <- data.frame(Sites_lu=curve_lu$sites, Richness_lu=curve_lu$richness, SD_lu=curve_lu$sd) %>% mutate(sev = "LS/UN")
+data_mult <- data.frame(Sites_mult=curve_multiple$sites, Richness_mult=curve_multiple$richness, SD_mult=curve_multiple$sd) %>% mutate(sev = "Multiple")
+data_Rx <- data.frame(Sites_Rx=curve_Rx$sites, Richness_Rx=curve_Rx$richness, SD_Rx=curve_Rx$sd) %>% mutate(sev = "Rx")
+
+lichen_acc <- ggplot() +
+  geom_point(data = data_h, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h, aes(x=Sites_h, y=Richness_h , colour = sev)) +
+  geom_ribbon(data = data_h ,aes(x=Sites_h, ymin=(Richness_h-2*SD_h),ymax=(Richness_h+2*SD_h)),alpha=0.2, fill = "coral1") +
+  geom_point(data = data_lu, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu, aes(x=Sites_lu, y=Richness_lu , colour = sev)) +
+  geom_ribbon(data  = data_lu, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = "chartreuse4") +
+  geom_point(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data  = data_mult, aes(x=Sites_mult, ymin=(Richness_mult-2*SD_mult),ymax=(Richness_mult+2*SD_mult)),alpha=0.2, fill = "cyan3") +
+  geom_point(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx),ymax=(Richness_Rx+2*SD_Rx)),alpha=0.2, fill = "darkorchid3") +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Lichen Species Accumulation Curves") +
+  xlab("# sites")  +
+  ylab("# species")  
+
+install.packages("lemon")
+library(gtable)
+
+legend <- gtable_filter(ggplot_gtable(ggplot_build(lichen_acc + theme(legend.position="right")+ theme(legend.title = element_blank()))), "guide-box")
+
+  
+sp_acc_plots <- grid.arrange(all_acc, birds_acc, legend, plants_acc, lichen_acc,
+            # heights=c(1.1, 1.1, 0.1),
+            widths = c(2.5, 2.5, 0.5),
+             ncol = 3, nrow = 2)
 
 
 
@@ -624,14 +753,6 @@ fill=c("grey","coral1", "chartreuse4", "cyan3", "darkorchid3")
   
   
 #Gamma
-gamma.matrix <- all_spp_dat_w %>%   
-  dplyr::select(c(sev, ABCO:YRWA)) %>% 
-  group_by(sev) %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
-  group_by(sev3) %>% 
-  dplyr::select(-sev) %>% 
-  summarise_all(sum)
-
 #ALL SPP
 gamma.matrix_all <- all_spp_dat_w %>% 
   dplyr::select(c(sev, ABCO:YRWA)) %>% 
@@ -641,6 +762,7 @@ gamma.matrix_all <- all_spp_dat_w %>%
   dplyr::select(-sev) %>% 
   summarise_all(sum)
 
+gamma.attr = gamma.matrix_all %>% dplyr::select(sev3)
 gamma.abund_all = gamma.matrix_all %>% dplyr::select(-sev3) 
 
 #birds
@@ -663,7 +785,6 @@ gamma.matrix_plants <- plant_dat_pa_w %>%
   dplyr::select(-sev) %>% 
   summarise_all(sum)
 
-gamma.attr = gamma.matrix %>% dplyr::select(sev3)
 gamma.abund_plants = gamma.matrix_plants %>% dplyr::select(-sev3) 
 
 #PLichens (use species instead of genus)
@@ -677,7 +798,7 @@ gamma.matrix_lichens <- lichen_dat_species_w %>%
 
 gamma.abund_lichens = gamma.matrix_lichens %>% dplyr::select(-sev3) 
 
-
+#Putting it all together
 richG_all = specnumber(gamma.abund_all)
 richG_birds = specnumber(gamma.abund_birds)
 richG_plants = specnumber(gamma.abund_plants)
@@ -685,6 +806,7 @@ richG_lichens = specnumber(gamma.abund_lichens)
 
 gamma.stats = data.frame(gamma.attr, richG_all, richG_birds, richG_plants, richG_lichens)
 
+# Plots
 richGall <- ggplot(gamma.stats, aes(x = sev3, y = richG_all, fill = sev3)) +
   geom_point(shape = 21, color = "black", size = 3) +  ggtitle("All gamma") +
   xlab("Habitat")  +
@@ -718,6 +840,7 @@ grid.arrange(richGall, richGbirds, richGplant, richGlich, nrow = 2)
 ```
 
 ## Beta Diversity (binomial)
+Note: for cld letters, need to run code in chunk below
 ```{r}
 # Code from Jonah
 
@@ -751,6 +874,10 @@ beta_all <- bj_output_all %>% ggplot(aes(x = sev3,
 #  ylim(0, 1) +
   #scale_fill_viridis_c(option = "magma") +
   ggtitle("All spp Pairwise Beta Div. (binomial)")   +
+   geom_text(aes(x = sev3, 
+                y = 60),
+            label = all_beta_cld$.group, 
+            data = all_beta_cld) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
 
@@ -773,6 +900,10 @@ beta_birds <- bj_output_birds %>% ggplot(aes(x = sev3,
 #  ylim(0, 1) +
   #scale_fill_viridis_c(option = "magma") +
   ggtitle("Bird Pairwise Beta Div. (binomial)")   +
+    geom_text(aes(x = sev3, 
+                y = 20),
+            label = bird_beta_cld$.group, 
+            data = bird_beta_cld) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
 
@@ -815,6 +946,10 @@ beta_plants_pa <- bj_output_plants_pa %>% ggplot(aes(x = sev3,
 #  ylim(0, 1) +
   #scale_fill_viridis_c(option = "magma") +
   ggtitle("Plant Pairwise Beta Div. (binomial)")   +
+    geom_text(aes(x = sev3, 
+                y = 45),
+            label = plant_beta_cld$.group, 
+            data = plant_beta_cld) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
 
 #lichens (pa)
@@ -836,126 +971,17 @@ beta_lichen_pa <- bj_output_lichens %>% ggplot(aes(x = sev3,
 #  ylim(0, 1) +
   #scale_fill_viridis_c(option = "magma") +
   ggtitle("Lichen Pairwise Beta Div. (binomial)")   +
+    geom_text(aes(x = sev3, 
+                y = 13),
+            label = lichen_beta_cld$.group, 
+            data = lichen_beta_cld) +
   theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
 
 # Putting plots together
 grid.arrange(beta_all, beta_birds, beta_plants_pa, beta_lichen_pa, nrow = 2)
-```
-
-#Alpha diversity figures
-```{r, "alpha Diversity"}
-p7 <- alldiv %>% 
-  ggplot(aes(x = sev3, y = richA,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_boxplot() +
-#  facet_wrap(~year) +
-  ggtitle("Alpha-Level Richness")+
-  ylab("Species Richness")  +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none") + theme(aspect.ratio=1)
-
-p8 <- alldiv %>% ggplot(aes(x = sev3,
-                      y = shanA,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_boxplot() +
-#  facet_wrap(~tsf_cat) +
-  ggtitle("Alpha-Level Exp. Shannon")+
-  ylab("Exp. Shannon Diversity Index")  +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
-
-p9 <- alldiv %>% ggplot(aes(x = sev3,
-                      y = simpA,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_boxplot() +
-#  facet_wrap(~year) + 
-  ggtitle("Alpha-Level Inv. Simpson") +
-  ylab("Inv. Simpson Diversity Index") +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
-
-grid.arrange(p7, p8, p9, nrow = 1)
-
-
-```
-
-#Gamma diversity figures
-```{r, "Gamma Diversity"}
-p1 <- alldiv %>% 
-  ggplot(aes(x = sev3, y = richG,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_point(shape = 21, color = "black", size = 3) +
-#  facet_wrap(~year) +
-  ggtitle("Gamma-Level Richness")+
-  ylab("Species Richness")  +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none") + theme(aspect.ratio=1)
-
-p2 <- alldiv %>% ggplot(aes(x = sev3,
-                      y = shanG,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_point(shape = 21, color = "black", size = 3) +
-#  facet_wrap(~tsf_cat) +
-  ggtitle("Gamma-Level Exp. Shannon")+
-  ylab("Exp. Shannon Diversity Index")  +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
-
-p3 <- alldiv %>% ggplot(aes(x = sev3,
-                      y = simpG,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_point(shape = 21, color = "black", size = 3) +
-#  facet_wrap(~year) + 
-  ggtitle("Gamma-Level Inv. Simpson") +
-  ylab("Inv. Simpson Diversity Index") +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
-
-grid.arrange(p1, p2, p3, nrow = 1)
-```
-
-# Beta diversity figures
-```{r, "Beta Diversity"}
-p4 <- alldiv %>% ggplot(aes(x = sev3,
-                      y = richB,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_boxplot() +
-#  facet_wrap(~year) +
-  ggtitle("Beta-Level Richness")+
-  ylab("Species Richness")  +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
-
-p5 <- alldiv %>% ggplot(aes(x = sev3,
-                      y = shanB,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_boxplot() +
-#  facet_wrap(~year) +
-  ggtitle("Beta-Level Exp. Shannon")+
-  ylab("Exp. Shannon Diversity Index")  +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
-
-p6 <- alldiv %>% ggplot(aes(x = sev3,
-                      y = simpB,
-                      fill = factor(sev3),
-                      group = sev3)) +
-  geom_boxplot() +
-#  facet_wrap(~year) + 
-  ggtitle("Beta-Level Inv. Simpson") +
-  ylab("Inv. Simpson Diversity Index")  +
-  xlab("Habitat")  +
-  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
-
-grid.arrange(p4, p5, p6, nrow = 1)
 ```
 
 # Calculating Statistical Differences Between Groups:
@@ -963,45 +989,6 @@ grid.arrange(p4, p5, p6, nrow = 1)
 ## Alpha Diversity
 ```{r}
 # Writing a simple model
-
-# Calling packages
-library(lme4); library(lmerTest); library(emmeans)
-
-# Setting our predictors to factors
-alldiv$sev <- as.factor(alldiv$sev)
-#alldiv$year <- as.factor(alldiv$year)
-
-plant_div2 <- plant_div1 %>% filter(sev3!="u")
-
-# Fitting an interactive model and an additive model
-#mod_int = lm(shannon ~ sev3, data = alldiv)
-mod_add = lm(simpA ~ sev3, data = alldiv)
-
-# Are these two models significantly different from one another? Look for a p < .05
-# (Likelihood ratio test)
-anova(mod_add, mod_int)
-
-# What's the model ANOVA table
-anova(mod_int)
-anova(mod_add)
-
-means = emmeans(mod_add, pairwise~sev3)
-
-# capture.output(anova(mod_add),file="alpha_rich_anova")
-
-# Estimated means between groups within each year
-#means = emmeans(mod_add, specs = "tsf", by = "sev3", adjust = "tukey")
-
-# All pairwise comparisons
-#paircomp = pairs(means)
-
-# Assigning labels to each groups
-#cld(means)
-cld(means$emmeans, Letters = letters)
-#create dataframe to use for labeling richness boxplots
-alpha_rich_stats <- as.data.frame(cld(means))
-
-
 # richness tests
 div <- all_div1 %>% dplyr::mutate(., rich_all = richness) %>% 
   dplyr::select(-richness) %>% 
@@ -1041,39 +1028,38 @@ means = emmeans(mod_add_lichen, pairwise~sev3)
 cld(means$emmeans, Letters = letters)
 alpha_rich_stats_lichen <- as.data.frame(cld(means$emmeans, Letters = letters))
 
-#alpha_rich_stats <- as.data.frame(cld(means))
-
 ```
 
-##Gamma
+##beta
 
 ```{r}
 #12/12/19
 #  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx
-div1 <-
 
-mod_add_all = lm(rich_all ~ sev3, data = div)
+
+#lu is stat lower; mult stat higher; h and Rx in between not diff
+mod_add_all = lm(dis~ sev3, data = bj_output_all)
 anova(mod_add_all)
 means = emmeans(mod_add_all, pairwise~sev3)
-cld(means$emmeans, Letters = letters)
+all_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
 
-# Rx higher, others not different
-mod_add_bird = lm(rich_bird ~ sev3, data = div)
+# mult and h are higher, not diff, then Rx, then lu
+mod_add_bird = lm(dis~ sev3, data = bj_output_birds)
 anova(mod_add_bird)
 means = emmeans(mod_add_bird, pairwise~sev3)
-cld(means$emmeans, Letters = letters)
+bird_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
 
-#similar to all div pattern
-mod_add_plant = lm(rich_plant ~ sev3, data = div)
+# lu lowest, Rx highest (lu: a, h: ab, mult: bc, Rx: c)
+mod_add_plant = lm(dis~ sev3, data = bj_output_plant)
 anova(mod_add_plant)
 means = emmeans(mod_add_plant, pairwise~sev3)
-cld(means$emmeans, Letters = letters)
+plant_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
 
 # LU is statistically different (higher), but others are not
-mod_add_lichen = lm(rich_lichen ~ sev3, data = div)
+mod_add_lichen = lm(dis~ sev3, data = bj_output_lichens)
 anova(mod_add_lichen)
 means = emmeans(mod_add_lichen, pairwise~sev3)
-cld(means$emmeans, Letters = letters)
+lichen_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
 
 
 
