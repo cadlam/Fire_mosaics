@@ -7,20 +7,40 @@ editor_options:
   chunk_output_type: console
 ---
 
-# Load scripts
-```{r include = F}
-source("scripts/data_load.R") #contains packages to load
-source("scripts/splist2presabs.R") #function for going from species list to presence/absence
-source("scripts/pairwise_permanova.R")
+```{r scripts, include = F}
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/data_load.R") #contains packages to load
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/splist2presabs.R") #function for going from species list to presence/absence
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/pairwise_permanova.R")
 ```
 
+# Abstract
+
+The Klamath Mountains mixed evergreen forest is adapted to frequent, low to moderate severity fires. Today, the Karuk Tribe, US Forest Service, and local community organizations have formed the Western Klamath Restoration Partnership to restore this fire regime, altered by a century of fire suppression. Part of the WKRP’s mission is to address concerns about the impacts on biodiversity of both high severity fire and the exclusion of fire and resulting changes to forest structure. I investigate patterns of plant, bird, lichen and insect diversity and community composition after low and high severity burns and in long-unburnt stands. Then I evaluate the response of diversity to two management options that can reduce canopy cover to within its historical range: multiple burns (a proxy for wildland fire use) and thinning and burning. I sampled plant, bird, lichen and insect communities in 110 plots across the WKRP project area. Low severity burns and unburnt areas did not differ in species composition. Plant, bird and insect diversity (alpha, beta and gamma) were as high or higher in high severity burns as in low severity/unburnt stands. Lichens were negatively impacted by high severity fire, beginning to recover only after 16 years. Multiple burns and thinned/burnt stands were the highest in diversity, because they provided habitat for both species preferring high severity burns and those preferring low severity /unburnt stands. This suggests that management, whether passive (allowing fires to burn and overlap) or active (thinning and burning) can help maintain biodiversity in this fire-dependent landscape.
+
+
+# Introduction
+
+## Sampling strategy
+In June/July 2018 and 2019, I sampled 110 plots from high severity burns (HS), low severity burns (LS), long-unburnt areas (UN), multiple burns (MULT), and prescribed burns (Rx). HS sites were defined as having >75 % canopy reduction, and LS sites as <25% canopy reduction. Based on personal observation, a reduction in canopy cover of 25-75% is uncommon in the Klamath Mountains, because canopy continuity is such that fires tend to be either surface or canopy fires. MULT and Rx sites were not randomly distributed; rather I targeted stands where the canopy had been reduced to 30-75%, which I am assuming to be closer to the historic range of variation pre-fire-suppression.
+
+
 # Habitat clustering
+
+First, I take a look at which habitats have similar or different species composition, using PERMANOVA and MRPP.
+
 ## PERMANOVA
+For all taxa, there is an effect of habitat (main PERMANOVA, p < 0.001; not shown). 
+
+### Pairwise comparisons
+Using pairwise PERMANOVAs to compare the habitats, there is no detectable difference between plant, bird or lichen communities of LS and UN habitat (plants: p = 0.22; birds: p = 0.09 lichens: p = 1). For this reason, I will from here on lump UN and LS together.
+
+In addition, bird communities of HS and MULT are not detectably different (p = 0.76). For lichens, the only habitat that stands out is the HS habitat (p < 0.01), although it is not statistically different from the MULT habitat (p = 1).
+
 ### Main Permanova (plants)
 * Just using LS/UN/HS to show that LS and UN can be lumped together.
 * Main PERMANOVA shows that there is an effect of sev and of tsf (in categories).
 
-```{r echo = F}
+```{r PERMANOVA_plants, echo = F}
 ### Is there an effect of sev and time since fire (using categories)? Yes for sev, no for tsf
 
 
@@ -28,87 +48,182 @@ source("scripts/pairwise_permanova.R")
 
 # using on sites between 5 and 20 years old (and UN)
 
-comp.data <- plant_dat_pa_w %>%  #filter(sev %in% c("l", "h", "u"))
-    filter((tsf < 25 & tsf > 4) | sev == "u")
+comp.data <- plant_dat_cov_w #%>%  #filter(sev %in% c("l", "h", "u"))
+#    filter(sev == "multiple")
 
-comp.sub <- subset(comp.data, select = ACMA:WHMO)
-comp.env <- subset(comp.data, select = c(sev:tsf_cat))
-attach(comp.env)
+comp.sub <- subset(comp.data, select = ABCO:YAMI)
+comp.env <- subset(comp.data, select = c(sev3, tsf_cat))
 
-kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
-  kable_styling() # note: without log1p transformation, there is no significant interaction
+sev <- comp.env$sev
+#tsf <- comp.env$tsf_cat
 
+PERMANOVA_sev_plants <- kable(adonis2(log1p(comp.sub) ~ sev, permutations = 999), caption = "Table 1: PERMANOVA results (plants, cover)", digits = 5) %>%
+  kable_styling()
+PERMANOVA_sev_plants
 
+## Pairwise PERMANOVA
+# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
+#comp.data <- comp.data %>% 
+#    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
 
+# sev only, plant cover
+comp.data1 <- comp.data %>% 
+    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "3", ifelse(sev == 'multiple', "4", "5")))))
+
+pair_plants <- pairwise.adonis(log1p(comp.sub), comp.data1$sev2) %>% 
+  dplyr::select(pairs, F.Model, p.adjusted)
+
+pairwise_sev_plants <- kable(pair_plants, caption = "Table 2: pairwise PERMANOVA results", digits = 5) %>%
+  kable_styling()
+pairwise_sev_plants
+
+```
+
+```{r PERMANOVA_all, echo = F}
 #all spp
-comp.data <- all_spp_dat_w %>%  #filter(sev %in% c("l", "h", "u"))
-  filter((tsf < 25 & tsf > 4) | sev == "u")# %>%
+comp.data <- all_spp_dat_w #%>%  #filter(sev %in% c("l", "h", "u"))
+#  filter((tsf < 25 & tsf > 4) | sev == "u")# %>%
 #  filter((sev == "multiple" & tree_cov > 45) | sev != "multiple")
   
 comp.sub <- subset(comp.data, select = ACMA:YRWA)
 comp.env <- subset(comp.data, select = c(sev:tsf_cat))
-attach(comp.env)
 
-kable(adonis2(log1p(comp.sub) ~ sev * tsf_cat, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
+sev <- comp.env$sev
+#tsf <- comp.env$tsf_cat
+
+PERMANOVA_sev_all <-kable(adonis2(comp.sub ~ sev, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
   kable_styling() 
-```
+PERMANOVA_sev_all
 
-### Pairwise PERMANOVA
-* There is not a statistically significant difference between LS and UN sites, but all other categories are different. UDATE: actually now (a few small changes), HS and MULT are not different.
-```{r eval = F, include = F}
 ## Pairwise PERMANOVA function (run)
-# 1 = High severity; 2 = Low severity; 3 = Unburnt.
+# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
 #comp.data <- comp.data %>% 
 #    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
 
-comp.data <- comp.data %>% 
+# sev only, plant cover
+comp.data1 <- comp.data %>% 
     mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "3", ifelse(sev == 'multiple', "4", "5")))))
 
-pair <- pairwise.adonis(log1p(comp.sub), comp.data$sev2) %>% 
+pair <- pairwise.adonis((comp.sub), comp.data1$sev2) %>% 
   dplyr::select(pairs, F.Model, p.adjusted)
 
-kable(pair, caption = "Table 2: pairwise PERMANOVA results", digits = 4) %>%
+pairwise_sev_all <- kable(pair, caption = "Table 2: pairwise PERMANOVA results", digits = 4) %>%
   kable_styling()
+pairwise_sev_all
 
 ```
+
+```{r PERMANOVA_birds, echo = F}
+#birds
+comp.data <- bird_dat_w #%>%  #filter(sev %in% c("l", "h", "u"))
+#  filter((tsf < 25 & tsf > 4) | sev == "u")# %>%
+#  filter((sev == "multiple" & tree_cov > 45) | sev != "multiple")
+  
+comp.sub <- subset(comp.data, select = ACWO:YRWA)
+comp.env <- subset(comp.data, select = c(sev:tsf_cat))
+
+sev <- comp.env$sev
+#tsf <- comp.env$tsf_cat
+
+PERMANOVA_sev_birds <- kable(adonis2(comp.sub ~ sev, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
+  kable_styling() 
+PERMANOVA_sev_birds 
+
+## Pairwise PERMANOVA function (run)
+# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
+#comp.data <- comp.data %>% 
+#    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
+
+# sev only, plant cover
+comp.data1 <- comp.data %>% 
+    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "3", ifelse(sev == 'multiple', "4", "5")))))
+
+pair_birds <- pairwise.adonis((comp.sub), comp.data1$sev2) %>% 
+  dplyr::select(pairs, F.Model, p.adjusted)
+
+pairwise_sev_birds <- kable(pair_birds, caption = "Table 2: pairwise PERMANOVA results", digits = 4) %>%
+  kable_styling()
+pairwise_sev_birds
+
+```
+
+```{r PERMANOVA_lichens, echo = F}
+#lichens
+comp.data <- lichen_dat_genus_pa_w #%>%  #filter(sev %in% c("l", "h", "u"))
+#  filter((tsf < 25 & tsf > 4) | sev == "u")# %>%
+#  filter((sev == "multiple" & tree_cov > 45) | sev != "multiple")
+  
+comp.sub <- subset(comp.data, select = Ahtiana:Xanthomendoza)
+comp.env <- subset(comp.data, select = c(sev:tsf_cat))
+
+sev <- comp.env$sev
+#tsf <- comp.env$tsf_cat
+
+PERMANOVA_sev_lichens <- kable(adonis2(comp.sub ~ sev, permutations = 9999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
+  kable_styling() 
+PERMANOVA_sev_lichens
+
+## Pairwise PERMANOVA function (run)
+# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
+#comp.data <- comp.data %>% 
+#    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
+
+# sev only, plant cover
+comp.data1 <- comp.data %>% 
+    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "3", ifelse(sev == 'multiple', "4", "5")))))
+
+pair_lichens <- pairwise.adonis((comp.sub), comp.data1$sev2) %>% 
+  dplyr::select(pairs, F.Model, p.adjusted)
+
+pairwise_sev_lichens <- kable(pair_lichens, caption = "Table 2: pairwise PERMANOVA results", digits = 4) %>%
+  kable_styling()
+pairwise_sev_lichens
+```
+
+```{r all_pairwise_table, echo = F}
+# Making a table of all pairwise comparisons
+pairs <- c("HS vs LS", "LS vs MULT", "LS vs UN", "LS vs Rx", "HS vs MULT", "LS vs UN", "HS vs Rx", "MULT vs UN", "MULT vs Rx", "UN vs RX")
+plants_F <-pair_plants$F.Model
+plants_P <-pair_plants$p.adjusted
+birds_F <-pair_birds$F.Model
+birds_P <-pair_birds$p.adjusted
+lichens_F <- pair_lichens$F.Model
+lichens_P <-pair_lichens$p.adjusted
+
+all_pairwise_table <- data.frame(pairs, plants_F, plants_P, birds_F, birds_P, lichens_F,lichens_P)
+
+names(all_pairwise_table) <- c("Pair", "F_model", "p_adj", "F_model", "p_adj", "F_model", "p_adj")
+
+all_pairwise_table <- all_pairwise_table[order(all_pairwise_table$Pair),]
+rownames(all_pairwise_table) <- c()
+
+kable(all_pairwise_table) %>% 
+  kable_styling("hover", full_width = F) %>%
+  add_header_above(c(" ", "plants" = 2, "birds" = 2, "lichens" = 2))
+
+```
+
 
 ## MRPP
 * MRPP instead of PERMANOVA?
 ```{r echo = F}
-library(devtools)
-install_github("nsahr/gMRPP")
-library(gMRPP)
-
-gmrpp(mrpp_data, mrpp_cat)
-
-str(mrpp_cat)
-str(mrpp_data)
-
-names(mrpp_data)[1] <- "ID"
-names(mrpp_cat)[1] <- "ID"
-names(mrpp_cat)[2] <- "grp"
-
-
-
-
 #plants
 # seems to work better with cov than pa (no convergence)
 mrpp_data <- plant_dat_pa_w %>% # [,c(2:82)]
 #  filter(sev %in% c("l","h", "u")) %>% 
-  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
-  dplyr::select(ACMA:WHMO) %>% 
+#  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
+  dplyr::select(ABCO:YAMI) %>% 
   dplyr::select(which(colSums(.) > 0)) 
 
 mrpp_cat <- plant_dat_pa_w %>% 
 #  filter(sev %in% c("l","h", "u")) %>% 
-  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
+#  filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
 #  select(site_id, sev)
   dplyr::select(sev)
   
 mrpp_cat$sev <- as.factor(mrpp_cat$sev)
   
 plant.mrpp <- mrpp(mrpp_data, mrpp_cat)
-str(plant.mrpp)
 
 
 # Save and change plotting parameters
@@ -116,7 +231,7 @@ def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
 plot(plant.ord <- metaMDS(sqrt(mrpp_data), type="text", display="sites"))
-ordihull(plant.ord, mrpp_cat, label = T)
+#ordihull(plant.ord, mrpp_cat, label = T)
 
 with(plant.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -134,8 +249,6 @@ plant.md <- meandist(vegdist(mrpp_data, mrpp_cat, method = "raup")) # Need to ad
 plant.md
 summary(plant.md)
 plot(plant.md)
-
-str(mrpp_cat)
 
 
 
@@ -230,8 +343,7 @@ all_richness <- ddply(all_spp_w_pa,~site_id,function(x) {
    data.frame(richness=sum(x[-1]>0))
  })
 
-all_div1 <- merge(all_richness, site_data, by = "site_id") %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+all_div1 <- merge(all_richness, site_data, by = "site_id") 
 
 all_alpha <- ggplot(all_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
@@ -253,8 +365,7 @@ bird_richness <- ddply(bird_mat_w,~site_id,function(x) {
    data.frame(richness=sum(x[-1]>0))
  })
 
-bird_div1 <- merge(bird_richness, site_data, by = "site_id") %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+bird_div1 <- merge(bird_richness, site_data, by = "site_id")
 
 bird_alpha <- ggplot(bird_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
@@ -275,8 +386,7 @@ plant <- ddply(plant_mat_pa_w,~site_id,function(x) {
    data.frame(richness=sum(x[-1]>0))
  })
 
-plant_div1 <- merge(plant_richness, site_data, by = "site_id") %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+plant_div1 <- merge(plant_richness, site_data, by = "site_id")
 
 plant_alpha <- ggplot(plant_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
@@ -293,12 +403,11 @@ plant_alpha <- ggplot(plant_div1, aes(x = sev3, y = richness, fill = sev3)) +
 ### lichens (pa)
 ```{r}
 # species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
-lichen_richness <- ddply(lichen_mat_species_w,~site_id,function(x) {
+lichen_richness <- ddply(lichen_mat_genus_pa_w,~site_id,function(x) {
    data.frame(richness=sum(x[-1]>0))
  })
 
-lichen_div1 <- merge(lichen_richness, site_data, by = "site_id") %>%   
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+lichen_div1 <- merge(lichen_richness, site_data, by = "site_id")
 
 lich_alpha <- ggplot(lichen_div1, aes(x = sev3, y = richness, fill = sev3)) +
   geom_boxplot() +
@@ -323,7 +432,8 @@ grid.arrange(all_alpha, bird_alpha, plant_alpha, lich_alpha, nrow = 2)
 ### Insects (Alpha, beta, gamma)
 12/11/19
 
-Diversity patterns between HS and LS/UN are not striking. Slightly lower in UN/LS but barely. Might try using another method like indicator species analysis. Because the abundance difference is huge for many spp.
+Diversity patterns between HS and LS/UN are not striking. Slightly lower in UN/LS but barely. But the abundance difference is huge for many spp. The indicator analysis is much more interesting.
+
 ```{r}
 # Insect alpha
 
@@ -516,8 +626,8 @@ grid.arrange(p7, p8, p9, p4, p5, p6, p1, p2, p3, nrow =3)
 
 
 #### Plants only (cov; plus shannon/simpson)
-*Div highest, in mnanag; lowest in LS/UN, intermediate in HS.
-* Similar to all_spp analysis, LS is acutally comparable to HS in diversity when separated from UN.
+*Div highest, in mnanag; lowest in LS/UN, intermediate in HS (looks not so different from mult/Rx). Haven't done tests for cover.
+* (Similar to all_spp analysis, LS is actually comparable to HS in diversity when separated from UN.)
 
 ```{r}
 # species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
@@ -545,8 +655,8 @@ plant_div <- merge(plant_richness, plant_shannon, by = "site_id") %>%
 
 plant_div$cov_cat <- as.factor(plant_div$cov_cat) 
 
-plant_div1 <- plant_div %>%   
-    mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+plant_div1 <- plant_div #%>%   
+  #  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
   
 #  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", ifelse(sev == "Rx" | sev == "multiple", "manag", sev)))
 
@@ -577,7 +687,9 @@ plant_all_plots <- grid.arrange(plant1, plant2, plant3, nrow=1)
 ```{r}
 # Species accumulation curves
 # All SPP
-all_spp_matrix <- merge(all_spp_w_pa, site_data, by = "site_id") %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ABCO:YRWA)
+all_spp_matrix <- merge(all_spp_w_pa, site_data, by = "site_id") %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(sev3,ABCO:YRWA)
 
 
 #subset each habitat into its own df
@@ -620,7 +732,9 @@ all_acc <- ggplot() +
 
 
 # Birds
-bird_matrix <- bird_dat_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ACWO:YRWA)
+bird_matrix <- bird_dat_w %>% 
+  #mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(sev3,ACWO:YRWA)
 
 #subset each habitat into its own df
 bird_matrix %>% filter(sev3 == "h") -> h
@@ -659,7 +773,9 @@ birds_acc <- ggplot() +
   ylab("# species") 
   
 # Plants
-plant_matrix <- plant_dat_pa_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,ABCO:YAMI)
+plant_matrix <- plant_dat_pa_w %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(sev3,ABCO:YAMI)
 
 #subset each habitat into its own df
 plant_matrix %>% filter(sev3 == "h") -> h
@@ -698,7 +814,9 @@ plants_acc <- ggplot() +
   ylab("# species") 
   
 # Lichens
-lichen_matrix <- lichen_dat_species_w %>% mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(sev3,AHPA:XAHA)
+lichen_matrix <- lichen_dat_genus_pa_w %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(sev3,Ahtiana:Xanthomendoza)
 
 #subset each habitat into its own df
 lichen_matrix %>% filter(sev3 == "h") -> h
@@ -736,9 +854,6 @@ lichen_acc <- ggplot() +
   xlab("# sites")  +
   ylab("# species")  
 
-install.packages("lemon")
-library(gtable)
-
 legend <- gtable_filter(ggplot_gtable(ggplot_build(lichen_acc + theme(legend.position="right")+ theme(legend.title = element_blank()))), "guide-box")
 
   
@@ -749,8 +864,10 @@ sp_acc_plots <- grid.arrange(all_acc, birds_acc, legend, plants_acc, lichen_acc,
 
 
 
+```
 
-  
+## Alt Gamma
+```{r}
   
 #Gamma
 #ALL SPP
@@ -858,8 +975,9 @@ beta <- function(df){
 
 
 #all spp
-comptable <-  all_spp_w_pa %>% full_join(site_data[, c("site_id", "sev")], by = "site_id") %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(-c(site_id, sev))
+comptable <-  all_spp_w_pa %>% full_join(site_data[, c("site_id", "sev3")], by = "site_id") %>%
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id))
 
 bj_output_all = comptable %>% group_by(sev3) %>% do(beta(.))
 
@@ -883,9 +1001,8 @@ beta_all <- bj_output_all %>% ggplot(aes(x = sev3,
 
 #birds
 comptable <-  bird_dat_w %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
-  dplyr::select(c(sev3, ACWO:YRWA)) %>% 
-  dplyr::select(-V1) #puttig together the plot id and sev and joinign wide format data then dropping site id
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(sev3, ACWO:YRWA))
 
 bj_output_birds = comptable %>% group_by(sev3) %>% do(beta(.))
 
@@ -910,7 +1027,7 @@ beta_birds <- bj_output_birds %>% ggplot(aes(x = sev3,
 #plants (cov)
 #remember to alter above function to use jaccard instead of binomial (and binary = false)
 comptable <-  plant_dat_cov_w %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
   dplyr::select(c(sev3, ABCO:YAMI)) 
 
 bj_output_plants_cov = comptable %>% group_by(sev3) %>% do(beta(.))
@@ -930,7 +1047,7 @@ beta_plants_cov <- bj_output_plants_cov %>% ggplot(aes(x = sev3,
 
 #plants (pa)
 comptable <-  plant_dat_pa_w %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
   dplyr::select(c(sev3, ABCO:YAMI)) 
 
 bj_output_plants_pa = comptable %>% group_by(sev3) %>% do(beta(.))
@@ -954,7 +1071,7 @@ beta_plants_pa <- bj_output_plants_pa %>% ggplot(aes(x = sev3,
 
 #lichens (pa)
 comptable <-  lichen_dat_genus_pa_w %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
   dplyr::select(c(sev3, Ahtiana:Xanthomendoza)) %>% 
   dplyr::select(-Dummy)
 
@@ -1050,7 +1167,7 @@ means = emmeans(mod_add_bird, pairwise~sev3)
 bird_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
 
 # lu lowest, Rx highest (lu: a, h: ab, mult: bc, Rx: c)
-mod_add_plant = lm(dis~ sev3, data = bj_output_plant)
+mod_add_plant = lm(dis~ sev3, data = bj_output_plants_pa)
 anova(mod_add_plant)
 means = emmeans(mod_add_plant, pairwise~sev3)
 plant_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))

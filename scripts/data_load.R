@@ -1,8 +1,37 @@
+splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
+  # version 1.1 (7 May 2013)
+  # data: a matrix or data frame with your localities and species (each in a different column)
+  # sites.col: the name or index number of the column containing the localities
+  # sp.col: the name or index number of the column containing the species names or codes
+  # keep.n: logical, whether to get in the resulting table the number of times each species appears in each locality; if false (the default), only the presence (1) or absence (0) are recorded
+  
+  stopifnot(
+    length(sites.col) == 1,
+    length(sp.col) == 1,
+    sites.col != sp.col,
+    sites.col %in% 1 : ncol(data) | sites.col %in% names(data),
+    sp.col %in% 1 : ncol(data) | sp.col %in% names(data),
+    is.logical(keep.n)
+  )
+  
+  presabs <- table(data[ , c(sites.col, sp.col)])
+  presabs <- as.data.frame(unclass(presabs))
+  if (!keep.n)  presabs[presabs > 1] <- 1
+  presabs <- data.frame(row.names(presabs), presabs)
+  names(presabs)[1] <- names(subset(data, select = sites.col))
+  rownames(presabs) <- NULL
+  return(presabs)
+}  
+
+
+
+
+
 # This loads all the data (some additional manipulation required for plants to select native species, spcific growth forms, or to change to p/a)
 
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR)
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon) #gtable is from package lemon
 
 ## Site
 site_data2018 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
@@ -42,7 +71,11 @@ site_data$site_id <- as.character(site_data$site_id)
 
 site_data <- site_data[-(111:114),] %>%# remove the LICH sites 
 mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 30, 2, 1))) %>% # creating tree cover categories   
-mutate(sev_cov = ifelse(sev == "u", "u", ifelse(sev == "h", "h", ifelse(sev =="Rx", paste("RX/mult", cov_cat, sep = "-"), ifelse(sev == "multiple", paste("RX/mult", cov_cat, sep = "-"),  ifelse(sev == "multiple/RX", paste("RX/mult", cov_cat, sep = "-"), paste(sev, cov_cat, sep = "-")))))))
+mutate(sev_cov = ifelse(sev == "u", "u", ifelse(sev == "h", "h", ifelse(sev =="Rx", paste("RX/mult", cov_cat, sep = "-"), ifelse(sev == "multiple", paste("RX/mult", cov_cat, sep = "-"),  ifelse(sev == "multiple/RX", paste("RX/mult", cov_cat, sep = "-"), paste(sev, cov_cat, sep = "-"))))))) %>% 
+  mutate(tsf = ifelse(sev == "u", 100, tsf)) %>% 
+  mutate(sev = ifelse(tree_cov <= 25, "h", sev)) %>%  # this moves 36, 261, 260, 213, 258 from mult to HS
+#  dplyr::filter(tree_cov <= 25 & sev == "multiple") %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
 
 #mutate(sev_cov = paste(sev, cov_cat, sep = "-")) %>% 
 
@@ -64,6 +97,8 @@ plant_names$form <- as.factor(plant_names$form)
 ## Also for some ecologically similar and taxonomically related plant species, use genus 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter((native_status == "native")) %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
+  mutate(species = ifelse(species == "CASC", "ASPR", species))  %>% 
+#  mutate(species = full_name)  %>% 
   mutate(species = ifelse(genus == "Lupinus", "Lupinus", species)) %>% 
   mutate(species = ifelse(genus == "Arctostaphylos", "Arctostaphylos", species)) %>% 
   mutate(species = ifelse(genus == "Penstemon", "Penstemon", species)) %>% 
@@ -79,6 +114,10 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   mutate(species = ifelse(genus == "Platanthera", "Piperia", species)) %>% 
   mutate(species = ifelse(genus == "Madia", "Madia", species)) %>% 
   mutate(species = ifelse(genus == "Cirsium", "Cirsium", species))  %>% 
+  mutate(species = ifelse(genus == "Silene", "Silene", species))  %>% 
+  mutate(species = ifelse(genus == "Castilleja", "Castilleja", species))  %>% 
+  mutate(species = ifelse(genus == "Cryptantha", "Cryptantha", species))  %>% 
+  mutate(species = ifelse(genus == "Dichelostemma", "Dichelostemma", species))  %>% 
   dplyr::select(site_id, species, cover)
 
 # "mat" is only species data; "dat" also includes site data if in wide format (w), or not if in long format (l)
@@ -225,7 +264,8 @@ bird_dat_long <- unique(bird_dat_count[ , c(1,2) ]) %>%
   mutate(pa = 1) %>% 
 #  dplyr::rename(site_id = Point) %>% 
 #  dplyr::rename(species = Spp) %>% 
-  mutate(species = recode(species, BTYW='BTYW/HEWA', RUHU='XXHU', HEWA='BTYW/HEWA')) %>%  #changing all RUHU and ANHU to XXHU; BTYW and HEWA to BTYW/HEWA
+#  mutate(species = recode(species, BTYW='BTYW/HEWA', RUHU='XXHU', HEWA='BTYW/HEWA')) %>%  #changing all RUHU and ANHU to XXHU; BTYW and HEWA to BTYW/HEWA
+  mutate(species = ifelse(species %in% c("BTYW", "HEWA"), "BTYW/HEWA", ifelse(species %in% c("RUHU", "ANHU"), "XXHU", species))) %>% 
   filter(!is.na(site_id))
 
 # executing function and going from wide to long:
@@ -240,7 +280,7 @@ bird_dat <- left_join(bird_dat_pa, site_data, by = "site_id")
 bird_dat_w <- spread(data = bird_dat, key = species, value = pa, fill = 0) #previously bird_matrix1
 
 bird_mat_w <- bird_dat_w %>% 
-  dplyr::select(-c(fire:sev_cov))
+  dplyr::select(c(site_id, ACWO:YRWA))
 
 # optional:remove birds with few sightings; not sure this makes much difference
 ## add columns true/false depending on obs count reaching minimum value
@@ -277,4 +317,4 @@ all_spp_w_pa <- unique(all_spp[ , c(1:3)]) %>%
 
 all_spp_dat_w <- merge(all_spp_w_pa, site_data, by = "site_id")
 
-all_spp_dat_l <- gather(all_spp_dat_w, key = species, value = pa, ACMA:YRWA)
+all_spp_dat_l <- gather(all_spp_dat_w, key = species, value = pa, ABCO:YRWA)
