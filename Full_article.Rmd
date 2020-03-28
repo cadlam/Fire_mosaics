@@ -1,0 +1,35 @@
+---
+title: 'Fire and Biodiversity in the WKRP'
+author: "Chris Adlam"
+date: "2/2020"
+output:
+  pdf_document: default
+#    citation_package: natbib
+  word_document: default
+  html_document: default
+bibliography: bibliography3.bib
+csl: ecology-and-society.csl
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+```
+
+```{r scripts, include = F}
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/splist2presabs.R") #function for going from species list to presence/absence
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/pairwise_permanova.R")
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/data_load.R") #contains packages to load
+
+```
+
+```{r child = "Introduction.Rmd"}
+```
+
+```{r child = "Methods.Rmd"}
+```
+
+```{r child = "Results.Rmd"}
+```
+
+```{r child = "Discussion.Rmd"}
+```

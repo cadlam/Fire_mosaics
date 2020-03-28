@@ -1197,33 +1197,51 @@ ggplot(all_spp_div, aes(x = cov_cat, y = simpson)) +
 ```{r}
 # Code from Jonah
 
-comptable <- all_spp_w_pa %>% full_join(site_data[, c("site_id", "sev")], by = "site_id") %>% select(-site_id) #puttig together the plot id and sev and joinign wide format data then dropping site id
+#all spp
+comptable <-  all_spp_w_pa %>% full_join(site_data[, c("site_id", "sev")], by = "site_id") %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% dplyr::select(-c(site_id, sev))
+
+
+#birds
+comptable <-  bird_dat_w %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(sev3, ACWO:YRWA)) %>% 
+  dplyr::select(-V1) #puttig together the plot id and sev and joinign wide format data then dropping site id
+
+#plants
+comptable <-  plant_dat_pa_w %>% 
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(sev3, ABCO:YAMI)) 
+  
 
 betajaccard <- function(df){
   
-  tempdf = df %>% select(-sev)
+  tempdf = df %>% dplyr::select(-sev3)
   
-  dis = c(vegdist(tempdf, method = "jaccard", binary = "true"))
+  dis = c(vegdist(tempdf, method = "binomial", binary = "true", na.rm = TRUE))
   
-  result = data.frame(sev = rep(unique(df$sev), length = length(dis)),
+  result = data.frame(sev3 = rep(unique(df$sev3), length = length(dis)),
 #                      year = rep(unique(df$year), length = length(dis)),
                       dis = dis)
   
 }
 
-bj_output = comptable %>% group_by(sev) %>% do(betajaccard(.))
+bj_output = comptable %>% group_by(sev3) %>% do(betajaccard(.))
 
-bj_output %>% ggplot(aes(x = sev,
+?vegdist
+d <- betadiver(comptable, "w")
+
+bj_output %>% ggplot(aes(x = sev3,
                          y = dis,
-                         fill = sev,
-                         group = sev)) +
+                         fill = sev3,
+                         group = sev3)) +
   geom_boxplot() +
   #facet_wrap(~year) +
   xlab("Fire Severity") +
-  ylab("1 - Jaccard") +
-  ylim(0, 1) +
+  ylab("beta div") +
+#  ylim(0, 1) +
   #scale_fill_viridis_c(option = "magma") +
-  ggtitle("Pairwise Jaccard Beta Diversity")
+  ggtitle("Pairwise Beta Diversity (binomial)")
 
 
 

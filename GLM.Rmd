@@ -106,7 +106,7 @@ ANMAD_glm <- plant_dat_pa_l %>%
   filter((tsf < 25 & tsf >= 4) | sev == "u") %>% 
   mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "2", ifelse(sev == 'multiple', "3", "4"))))) %>% 
   mutate(tsf2 = ifelse(fire == "unburnt", "5",ifelse(tsf < 9 , "1", ifelse(tsf < 15 & tsf > 8 , "2", ifelse(tsf > 13, "3", "6"))))) %>% 
-  filter(species == "CHUM") %>% 
+  filter(species == "ELGL") %>% 
   mutate(sev2 = as.factor(sev2))
 
 
@@ -125,9 +125,15 @@ mod<-unique(mod)
 ggplot(mod, aes(x=sev2, y=freq)) +
   geom_point()
 
-
 #relevel(warpbreaks$tension, ref = "M")
 
+site_data %>% 
+  dplyr::count(sev)
+  
+    group_by(sev) %>% 
+    tally()
+
+mtcars %>% dplyr::count(cyl)
 
 # GLM using manyglm
 bin.glm2 <- manyglm(pa ~ sev2, family="binomial", data=ANMAD_glm)
@@ -142,6 +148,54 @@ treatment <- as.character(ANMAD_glm$sev2)
 msolglm <- manyglm(abund ~ treatment)
 anova(msolglm, pairwise.comp = treatment, nBoot = 199)
 
+
+
+
+# trying glmer
+library(lme4)
+
+fit.bin <- glmer(pa ~ sev2 + (1|site_id), family=binomial, data=ANMAD_glm)
+
+par(mfrow=c(1,2))
+plot(residuals(fit.bin)~fitted(fit.bin),main="residuals v.s. Fitted")
+qqnorm(residuals(fit.bin))
+
+nBoot <- 1000
+lrStat <- rep(NA,nBoot)
+ft.null <- glmer(pa ~ 1 + (1|site_id) ,family=binomial, data=ANMAD_glm) #null model
+ft.alt <- glmer(pa ~ sev2 + (1|site_id) ,family=binomial, data=ANMAD_glm) #alternate model
+
+lrObs <- 2*logLik(ft.alt) - 2*logLik(ft.null) #observed test stat
+
+ for(iBoot in 1:nBoot)
+{
+  ANMAD_glm$paSim <- unlist(simulate(ft.null)) #resampled data
+  tryCatch({#sometimes the glmer code doesn't converge
+    
+    bNull <- glmer(paSim ~ 1 + (1|site_id) ,family=binomial, data=ANMAD_glm)#null model
+    bAlt <- glmer(paSim ~ sev2 + (1|site_id) ,family=binomial, data=ANMAD_glm)#alternate model
+    lrStat[iBoot] <- 2*logLik(bAlt) - 2*logLik(bNull) #resampled test stat
+    },warning=function(war) {lrStat[iBoot]=NA},error=function(err){lrStat[iBoot]=NA}) #if code doesn't converge skip sim
+}
+mean(lrStat>lrObs,na.rm=T) #P-value for test of Estuary effect
+
+# Are these two models significantly different from one another? Look for a p < .05
+# (Likelihood ratio test)
+anova(ft.alt, ft.null)
+
+# What's the model ANOVA table
+anova(ft.alt)
+
+# capture.output(anova(mod_add),file="alpha_rich_anova")
+
+# Estimated means between groups within each year
+means = emmeans(ft.alt, specs = "sev2", adjust = "tukey") # modified
+
+# All pairwise comparisons
+paircomp = pairs(means)
+
+# Assigning labels to each groups
+cld(means)
 
 
 

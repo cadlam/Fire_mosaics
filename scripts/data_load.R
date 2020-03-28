@@ -1,41 +1,17 @@
-splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
-  # version 1.1 (7 May 2013)
-  # data: a matrix or data frame with your localities and species (each in a different column)
-  # sites.col: the name or index number of the column containing the localities
-  # sp.col: the name or index number of the column containing the species names or codes
-  # keep.n: logical, whether to get in the resulting table the number of times each species appears in each locality; if false (the default), only the presence (1) or absence (0) are recorded
-  
-  stopifnot(
-    length(sites.col) == 1,
-    length(sp.col) == 1,
-    sites.col != sp.col,
-    sites.col %in% 1 : ncol(data) | sites.col %in% names(data),
-    sp.col %in% 1 : ncol(data) | sp.col %in% names(data),
-    is.logical(keep.n)
-  )
-  
-  presabs <- table(data[ , c(sites.col, sp.col)])
-  presabs <- as.data.frame(unclass(presabs))
-  if (!keep.n)  presabs[presabs > 1] <- 1
-  presabs <- data.frame(row.names(presabs), presabs)
-  names(presabs)[1] <- names(subset(data, select = sites.col))
-  rownames(presabs) <- NULL
-  return(presabs)
-}  
-
-
-
-
-
 # This loads all the data (some additional manipulation required for plants to select native species, spcific growth forms, or to change to p/a)
+
+# Working directory
+setwd("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics")
 
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon) #gtable is from package lemon
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon, multcomp, gtable, citr, indicspecies) #gtable is from package lemon
+#install.packages('tinytex')
+#tinytex::install_tinytex()
 
 ## Site
-site_data2018 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data.csv") 
-site_data2019 <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/site_data2019.csv") 
+site_data2018 <- read.csv("data/site_data.csv") 
+site_data2019 <- read.csv("data/site_data2019.csv") 
 site_data2018$site_id <- as.factor(site_data2018$site_id)
 site_data2018$tsf <- as.numeric(as.character(site_data2018$tsf))
 site_data2018$fire_yr <- as.numeric(as.character(site_data2018$fire_yr))
@@ -81,8 +57,8 @@ mutate(sev_cov = ifelse(sev == "u", "u", ifelse(sev == "h", "h", ifelse(sev =="R
 
 
 ## Plants
-plant_data <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/plant_data.csv")
-plant_names <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/plant_list.csv")
+plant_data <- read.csv("data/plant_data.csv")
+plant_names <- read.csv("data/plant_list.csv")
 plant_data$species <- as.character(plant_data$species)
 plant_data$site_id <- as.character(plant_data$site_id)
 plant_names$species <- as.character(plant_names$species)
@@ -93,11 +69,14 @@ plant_names$form <- as.factor(plant_names$form)
 # CHECK FOR TYPOS - ALL GOOD
 # missing <- anti_join(plant_data, plant_names, by = "species")
 
+# 288 plant species total / 223 native
 ### Keep only native spp
 ## Also for some ecologically similar and taxonomically related plant species, use genus 
 plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   filter((native_status == "native")) %>% # change if wanting to use subset of species, eg just woody spp, or grass, etc. eg. "& (form == "herb" | form == "grass")""
   mutate(species = ifelse(species == "CASC", "ASPR", species))  %>% 
+  mutate(species = ifelse(species == "DIHO", "PRHO", species))  %>% 
+  mutate(species = ifelse(species == "DIIM", "DIID", species))  %>% #these three are mistakes
 #  mutate(species = full_name)  %>% 
   mutate(species = ifelse(genus == "Lupinus", "Lupinus", species)) %>% 
   mutate(species = ifelse(genus == "Arctostaphylos", "Arctostaphylos", species)) %>% 
@@ -118,6 +97,7 @@ plant_dat <- left_join(plant_data, plant_names, by = "species") %>%
   mutate(species = ifelse(genus == "Castilleja", "Castilleja", species))  %>% 
   mutate(species = ifelse(genus == "Cryptantha", "Cryptantha", species))  %>% 
   mutate(species = ifelse(genus == "Dichelostemma", "Dichelostemma", species))  %>% 
+  mutate(species = ifelse(genus == "Triteleia", "Triteleia", species))  %>% 
   dplyr::select(site_id, species, cover)
 
 # "mat" is only species data; "dat" also includes site data if in wide format (w), or not if in long format (l)
@@ -168,23 +148,30 @@ plant_dat_cov_l <- plant_mat_cov_w %>%
 
 
 ## Lichens
-lichen_names <-read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/Data/lichen_list.csv")
+lichen_names <-read.csv("data/lichen_list.csv")
 
 lichen_mat_species_w <- read.csv("data/lichen_data.csv", header = T) %>% 
   mutate(site_id = as.factor(site_id)) %>% 
   dplyr::select(site_id, species, abund) %>% 
   spread(key = species, value = abund, fill = 0) %>% 
   full_join(., site_data %>% dplyr::select(site_id), by = "site_id") %>% 
-  replace(is.na(.), 0) %>% 
-  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
+  replace(is.na(.), 0)# %>% 
+#  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
 
 lichen_dat_species_w <- merge(lichen_mat_species_w, site_data, by = "site_id")
 
 # for genus level analysis (presence/absence)
 lichen_dat_genus_l <- lichen_mat_species_w %>% 
-  gather(key=species, value=abund, AHPA:DUMB) %>% 
+  dplyr::select(-c(FUME, FUPU, FUXX, NOPU, WACA)) %>%   # REMOVE THE SQUAMMULOSE SPECIES
+  gather(key=species, value=abund, AHPA:XAHA) %>% 
   left_join(., lichen_names, by = "species") %>% 
-  dplyr::select(site_id,genus,abund) 
+  mutate(species = ifelse(species == "MEXX", "MECA", species)) %>% 
+  mutate(species = ifelse(species == "ALXX", "ALSA", species))  %>% 
+  mutate(species = ifelse(species == "USTU", "USXX", species))  %>% 
+  mutate(species = ifelse(species == "USPE", "USXX", species))  %>% 
+  mutate(species = ifelse(species == "POXX", "XAHA", species))  %>% 
+  dplyr::select(site_id,full_name,abund)  
+
 
 # remove duplicate rows (same species detected multiple times in a single plot)
 lichen_dat_genus_pa1 <- lichen_dat_genus_l %>% 
@@ -243,6 +230,9 @@ insect_dat_w <- spread(insect_dat_l, key = "taxon", value = "number")
 
 
 ### Birds
+bird_names <- read.csv("data/bird_spp_list.csv") %>% 
+  mutate(species = Species)
+
 bird_dat_suppl <- read.csv("data/bird_data_suppl.csv")
 bird_dat2019 <- read.csv("data/bird_data2019.csv") %>% 
   filter(DetectionLocationNm != "O") %>% # removing species outside (O) the stand
@@ -303,8 +293,17 @@ bird_mat_w <- bird_dat_w %>%
 
 
 # All spp
-all_spp <- rbind(plant_dat_pa_l, bird_dat_pa) %>% 
-  rbind(., lichen_dat_genus_pa_l) %>% 
+plant_dat_pa_l1 <- plant_dat_pa_l %>% 
+  mutate("taxon" = "plant")
+
+bird_dat_pa1 <- bird_dat_pa %>% 
+  mutate("taxon" = "bird")
+
+lichen_dat_genus_pa_l1 <- lichen_dat_genus_pa_l %>% 
+  mutate("taxon" = "lichen")
+
+all_spp <- rbind(plant_dat_pa_l1, bird_dat_pa1) %>% 
+  rbind(., lichen_dat_genus_pa_l1) %>% 
 #  rbind(., insect_dat_long_filt)
   filter(species != "Dummy") %>% 
   filter(species != "DUMB") 

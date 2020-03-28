@@ -17,3 +17,4 @@ pairwise.adonis <- function(x, factors, sim.method = "bray", p.adjust.m ="bonfer
   pairw.res <- data.frame(pairs, F.Model, R2, p.value, p.adjusted)
   return(pairw.res)
 }
+

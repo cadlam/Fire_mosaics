@@ -1,0 +1,39 @@
+---
+title: "Methods"
+author: "Chris Adlam"
+date: "2/11/2020"
+output:
+  html_document: default
+  pdf_document: default
+bibliography: bibliography3.bib
+csl: ecology.csl
+---
+
+# Methods
+
+## Study area
+Located in the Klamath-Siskiyou mountains of northern California, the Western Klamath Restoration Partnership (WKRP) is a 1.2 million-acre collaborative landscape restoration effort between the Karuk Tribe, US Forest Service and local NGOs [@harlingWesternKlamathRestoration2014]. The area’s main vegetation class is mixed evergreen forest [@steelFireFrequencyseverityRelationship2015]. The prevalence of hardwoods and Douglas-fir (Pseudotsuga menziesii) distinguish the Klamath-Siskiyou mixed evergreen forests from those of the Cascade Mountains and Sierra Nevada [@barbourNorthAmericanTerrestrial2000; @whittakerVEGETATIONHISTORYPACIFIC1961]. These forests were historically managed by the Karuk tribe using frequent (~12.5 year interval), low-intensity prescribed burning [@taylorFireHistoryLandscape1998; @taylorSpatialPatternsControls2003a]. One of the main goals of the WKRP is to restore the fire regimes within the Karuk tribe’s aboriginal territory, to promote the resilience of these ecosystems [@harlingWesternKlamathRestoration2014].
+
+## Data collection
+I conducted surveys at 110 sites varying in time-since-fire and burn severity (48 sites surveyed in 2018 and 62 in 2019). Most sites were in mixed evergreen forest, with some in transition areas into dry or moist mixed conifer. Sites were placed in low severity and high severity burns, defined respectively as <25% canopy mortality and >75% canopy mortality [@millerQuantitativeEvidenceIncreasing2009], in long-unburnt stands (>40 years since last fire), in sites affected by multiple burns, and sites that were thinned and burnt. After decades of fire suppression in the Klamath Mountains, forests tend to develop closed canopies and fires tend to burn at either high or low severity. Based on personal observation and a cursory GIS analysis, a reduction in canopy cover of 25-75% is uncommon in the lower elevations of the Klamath Mountains (usually <10% of the burnt area), and such sites were not targeted for sampling. On the other hand, both multiple burn sites and thinned and burnt sites were intermediate in canopy cover (30-65% cover). Burn severity was evaluated a priori using satellite imagery, and verified in situ by visually estimating the magnitude of canopy cover reduction. Since the habitats differ mostly by the severity of fire's impact, I will henceforth refer to different "severity categories" for simplicity, even though this is an imperfect description of multiple burn and thinned/burnt sites.
+
+At this point it is important to note that plots in multiple and thin/burn sites were not randomly distributed. Instead I used a form of stratified random sampling, targeting stands where the canopy had been reduced to 30-75%, which I am assuming to be closer to the historic range of variation pre-fire-suppression. My findings are therefore meant to investigate biodiversity responses in treatments that achieve this level of canopy reduction; multiple high severity burns removing all canopy cover or prescribed burns that do not reduce the canopy cover signitficantly are intentionally not included in this study. As a result of this sampling approach, the habitats studied follow a gradient of canopy cover (Figure 1).
+
+At each site, I recorded aspect, slope and elevation. Because time-since-fire alone may not always accurately predict vegetation development, I may use these measurements to weight fire ages depending on the productivity of the site [@mccuneEquationsPotentialAnnual2002]. I also took standard forest architecture measurements (modal height, diameter-at-breast-height, and cover for each species, number and DBH of snags). Tree cover and stand architecture was recorded in 50m plots.
+
+For all sites, I surveyed plants, epiphytic lichens, and birds. Flying insects were sampled in high and low severity sites and unburnt sites only for logistical reasons. The abundance of all plant and lichen species was determined in an 11.3m-radius plot following the Common Stand Exam protocol [@usforestserviceCommonStandExam2008]. Plants were identified using the Jepson manual (), and percent cover was estimated for each species. Lichens were identified using Mccune (), and abundance was recorded using an ordinal scale (1: rare, 1-3 thalli; 2: uncommon, 4-10 thalli, 3: common >10 thalli but found on less than half the boles or branches; 4: abundant, >10 thalli and found on more than half the boles or branches). I conducted two 10-minute bird point counts on separate, non-consecutive days (). Lastly, for high severity, low severity and unburnt sites, I set up a custom-built flight-intercept trap for flying insects (left out for 2 days) [@russoCompositeInsectTrap2011]. Plant and lichen specimens were preserved and submitted to the UC Davis herbarium.
+
+## Analysis
+### Differences between communities
+I conducted a PERMANOVA analysis to test the significance of dissimilarity between the different severity categories [@mcardleFittingMultivariateModels2001] using the adonis2() function from the vegan package in R [@oksanenVeganPackage2007], with 999 permutations. Then I conducted PERMANOVA pairwise comparisons between each severity category. To minimize the risk of making a type-1 error from carrying out multiple pairwise tests on a single data set, we adjusted the p-values using the Bonferroni correction method [@riceAnalyzingTablesStatistical1989].
+
+Next, I analyzed patterns of alpha, beta and gamma diversity for plants, birds, and lichens.
+
+Insect data was analyzed separately using an indicator species analysis, because I did not sample insects in
+the MULT and Rx sites. 
+
+Lastly, I compared the occurrence of species with a strong preference for either HS
+or UN/LS habitats in the MULT and Rx habitats, to see if these habitats can be suitable for such species.
+
+
+
