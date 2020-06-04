@@ -5,7 +5,7 @@ setwd("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics")
 
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon, multcomp, gtable, citr, indicspecies) #gtable is from package lemon
+pacman::p_load(tidyverse, emmeans, ggplot2, cowplot, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon, multcomp, gtable, citr, indicspecies, iNEXT, vegetarian) #gtable is from package lemon
 #install.packages('tinytex')
 #tinytex::install_tinytex()
 
@@ -17,9 +17,15 @@ site_data2018$tsf <- as.numeric(as.character(site_data2018$tsf))
 site_data2018$fire_yr <- as.numeric(as.character(site_data2018$fire_yr))
 #site_data2019$tsf <- as.numeric(as.character(site_data2019$tsf))
 #site_data_read$fire_yr <- as.numeric(as.character(site_data2019$fire_yr))
-site_data_read <- full_join(site_data2018, site_data2019)
+site_cwd <- read.csv("data/site_coordinates.csv") %>% dplyr::select(-c(lat, lon))
+site_cwd$site_id <- as.factor(site_cwd$site_id)
+site_data_read1 <- full_join(site_data2018, site_data2019)
+site_data_read <- left_join(site_data_read1, site_cwd, by = "site_id") %>% dplyr::select(-c(X, X.1))
+
 
 # here I'm setting the TSF categories; change as necessary (tsf_cat = 3 age categories; tsf_2cat = 2 categories)
+
+
 site_data <- site_data_read %>% 
   mutate(tsf_cat = ifelse(is.na(tsf), "4", "3")) %>% 
   mutate(tsf_2cat = ifelse(is.na(tsf), "3", "2"))
@@ -34,16 +40,27 @@ site_data <- site_data_read %>%
   mutate(tsf_2cat = ifelse(is.na(tsf), "3", "2"))
 
 site_data$tsf_cat[site_data$tsf < 17] <-3
-site_data$tsf_cat[site_data$tsf < 13] <-2
+site_data$tsf_cat[site_data$tsf < 11] <-2
 site_data$tsf_cat[site_data$tsf < 6] <-1
 
 site_data$tsf_2cat[site_data$tsf < 15] <-1
 
 site_data <- site_data %>% 
   mutate(sev_tsf = paste(sev, tsf_cat, sep = "-"))  %>% 
-  mutate(sev_tsf2 = paste(sev, tsf_2cat, sep = "-"))
+  mutate(sev_tsf2 = paste(sev, tsf_2cat, sep = "-")) %>%
+  mutate(burn = ifelse(sev == "u", 0, 1))
 
-site_data$site_id <- as.character(site_data$site_id) 
+d2rad <- function(deg) {(deg *pi) / 180}
+
+site_data <- site_data %>% 
+  mutate(folded_aspect180 = 180 - abs(aspect - 180)) %>%
+  mutate(folded_aspect = 180 - abs(aspect - 225)) %>%
+  mutate(lat_rad = d2rad(lat)) %>% 
+  mutate(slope_rad = d2rad(slope)) %>% 
+  mutate(fold_asp_rad = d2rad(folded_aspect)) %>% 
+  mutate(heat_load = 0.339 + 0.808 * cos(lat_rad) * cos(slope_rad) - 0.196 * sin(lat_rad) * sin(slope_rad) - 0.482 * cos(fold_asp_rad) * sin(slope_rad))
+
+site_data$site_id <- as.character(site_data$site_id)
 
 site_data <- site_data[-(111:114),] %>%# remove the LICH sites 
 mutate(cov_cat = ifelse(tree_cov > 65, 3, ifelse(tree_cov > 30, 2, 1))) %>% # creating tree cover categories   
@@ -51,7 +68,8 @@ mutate(sev_cov = ifelse(sev == "u", "u", ifelse(sev == "h", "h", ifelse(sev =="R
   mutate(tsf = ifelse(sev == "u", 100, tsf)) %>% 
   mutate(sev = ifelse(tree_cov <= 25, "h", sev)) %>%  # this moves 36, 261, 260, 213, 258 from mult to HS
 #  dplyr::filter(tree_cov <= 25 & sev == "multiple") %>% 
-  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev))
+  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  mutate(tsf_num = ifelse(tsf == "NA", "100", tsf))
 
 #mutate(sev_cov = paste(sev, cov_cat, sep = "-")) %>% 
 
@@ -151,6 +169,7 @@ plant_dat_cov_l <- plant_mat_cov_w %>%
 lichen_names <-read.csv("data/lichen_list.csv")
 
 lichen_mat_species_w <- read.csv("data/lichen_data.csv", header = T) %>% 
+  filter(site_id != 221) %>% 
   mutate(site_id = as.factor(site_id)) %>% 
   dplyr::select(site_id, species, abund) %>% 
   spread(key = species, value = abund, fill = 0) %>% 
@@ -158,9 +177,34 @@ lichen_mat_species_w <- read.csv("data/lichen_data.csv", header = T) %>%
   replace(is.na(.), 0)# %>% 
 #  mutate("DUMB" = 1)  # adding dummy species (eg. Webster 2010) 
 
-lichen_dat_species_w <- merge(lichen_mat_species_w, site_data, by = "site_id")
+#lichen_dat_species_w <- merge(lichen_mat_species_w, site_data, by = "site_id")
+
+#species level analysis
+lichen_dat_species_pa_l <- lichen_mat_species_w %>% 
+  mutate(MECA = ifelse(MECA > 0, MECA, ifelse(MEXX > 0, MEXX, 0))) %>% 
+  mutate(ALSA = ifelse(ALSA > 0, ALSA, ifelse(ALXX > 0, ALXX, 0)))  %>% 
+  mutate(USXX = ifelse(USXX > 0, USXX, ifelse(USTU > 0, USTU, ifelse(USPE > 0, USPE, ifelse(USCA > 0, USCA, ifelse(USSC > 0, USSC, 0)))))) %>% 
+  mutate(XAHA = ifelse(XAHA > 0, XAHA, ifelse(POXX > 0, POXX, 0))) %>% 
+  dplyr::select(-c(FUME, FUPU, FUXX, NOPU, WACA, POXX, USTU, USPE, USCA, USSC, ALXX, MEXX)) %>%   # REMOVE THE SQUAMMULOSE SPECIES and generic entries
+  gather(key=species, value=abund, AHPA:XAHA) %>% 
+  left_join(., lichen_names, by = "species") %>% 
+  mutate(full_name = ifelse(genus == "Usnea", "Usnea sp.", as.character(full_name))) %>% 
+  mutate(full_name = ifelse(species == "NONE", "NONE", as.character(full_name))) %>%   
+  dplyr::select(site_id,full_name,abund) %>% 
+  dplyr::rename(species = full_name) %>% 
+  mutate(pa = ifelse(abund >0, 1, 0)) %>% 
+  dplyr::select(site_id,species,pa) 
+
+lichen_mat_species_pa_w <- lichen_dat_species_pa_l %>% 
+  spread(key = species, value = pa, fill = 0) %>% 
+  mutate(DUMMY = 1) 
+
+lichen_dat_species_pa_w <- lichen_mat_species_pa_w  %>% 
+  left_join(., site_data, by ="site_id")
+
 
 # for genus level analysis (presence/absence)
+##needs troubleshooting
 lichen_dat_genus_l <- lichen_mat_species_w %>% 
   dplyr::select(-c(FUME, FUPU, FUXX, NOPU, WACA)) %>%   # REMOVE THE SQUAMMULOSE SPECIES
   gather(key=species, value=abund, AHPA:XAHA) %>% 
@@ -174,23 +218,23 @@ lichen_dat_genus_l <- lichen_mat_species_w %>%
 
 
 # remove duplicate rows (same species detected multiple times in a single plot)
-lichen_dat_genus_pa1 <- lichen_dat_genus_l %>% 
-  mutate(pa = ifelse(abund == 0, 0, 1)) %>% 
-  dplyr::select(site_id, genus, pa)
+#lichen_dat_genus_pa1 <- lichen_dat_genus_l %>% 
+#  mutate(pa = ifelse(abund == 0, 0, 1)) %>% 
+#  dplyr::select(site_id, genus, pa)
 
 #spread not working.
-lichen_dat_genus_pa_l <- unique(lichen_dat_genus_pa1[ , c(1:3)]) %>%
-  filter(pa==1) %>% 
-  setnames(., old="genus", new="species")
+#lichen_dat_genus_pa_l <- unique(lichen_dat_genus_pa1[ , c(1:3)]) %>%
+#  filter(pa==1) %>% 
+#  setnames(., old="genus", new="species")
 
 
-lichen_mat_genus_pa_w <- lichen_dat_genus_pa_l %>% 
-  spread(key = species, value = pa, fill = 0) %>% 
-  dplyr::select(c(site_id:Xanthomendoza)) #%>% 
+#lichen_mat_genus_pa_w <- lichen_dat_genus_pa_l %>% 
+#  spread(key = species, value = pa, fill = 0) %>% 
+#  dplyr::select(c(site_id:Xanthomendoza)) #%>% 
   #mutate("DUMB" = 1) # need dummy sp?
 
-lichen_dat_genus_pa_w <- lichen_mat_genus_pa_w %>% 
-  left_join(., site_data, by ="site_id")
+#lichen_dat_genus_pa_w <- lichen_mat_genus_pa_w %>% 
+#  left_join(., site_data, by ="site_id")
 
 
 
@@ -299,11 +343,11 @@ plant_dat_pa_l1 <- plant_dat_pa_l %>%
 bird_dat_pa1 <- bird_dat_pa %>% 
   mutate("taxon" = "bird")
 
-lichen_dat_genus_pa_l1 <- lichen_dat_genus_pa_l %>% 
+lichen_dat_species_pa_l1 <- lichen_dat_species_pa_l %>% 
   mutate("taxon" = "lichen")
 
 all_spp <- rbind(plant_dat_pa_l1, bird_dat_pa1) %>% 
-  rbind(., lichen_dat_genus_pa_l1) %>% 
+  rbind(., lichen_dat_species_pa_l1) %>% 
 #  rbind(., insect_dat_long_filt)
   filter(species != "Dummy") %>% 
   filter(species != "DUMB") 

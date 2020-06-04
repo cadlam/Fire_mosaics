@@ -1,7 +1,7 @@
 ---
-title: 'Fire and Biodiversity in the WKRP'
-author: "Chris Adlam"
-date: "2/2020"
+title: 'Can Forest Management Mitigate the risk of High Severity Fire and still Promote Biodiversity in the Klamath Mountains?'
+author: "Chris Adlam [...]"
+date: "6/2020"
 output:
   pdf_document: default
 #    citation_package: natbib

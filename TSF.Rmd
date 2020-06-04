@@ -1,0 +1,1862 @@
+---
+title: "TSF"
+author: "Chris Adlam"
+date: "5/29/2020"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r scripts_methods, include = F}
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/splist2presabs.R") #function for going from species list to presence/absence
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/pairwise_permanova.R")
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/data_load.R")
+source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/GeoDistanceInMetresMatrix.R")#contains packages to load
+```
+
+# Heat Load
+
+```{r heat_load, eval = F, echo = F, include = F}
+#test
+lat_rad1 <- d2rad(40)
+slope_rad1 <- d2rad(40)
+fold_asp_rad1 <- d2rad(80)
+  
+0.339 + 0.808 * cos(lat_rad1) * cos(slope_rad1) - 0.196 * sin(lat_rad1) * sin(slope_rad1) - 0.482 * cos(fold_asp_rad1) * sin(slope_rad1)
+
+ggplot(site_data,aes(x=sev, y = heat_load)) + 
+         geom_boxplot() + 
+         geom_jitter(width = .2)
+
+ggplot(site_data,aes(x=sev, y = slope_rad)) + 
+         geom_boxplot() + 
+         geom_jitter(width = .2)
+
+ggplot(site_data2,aes(x=sev, y = lat_rad)) + 
+         geom_boxplot() + 
+         geom_jitter(width = .2)
+
+ggplot(site_data2,aes(x=sev, y = slope)) + 
+         geom_boxplot() + 
+         geom_jitter(width = .2)
+
+ggplot(site_data2,aes(x=sev, y = folded_aspect)) + 
+         geom_boxplot() + 
+         geom_jitter(width = .2)
+
+
+ggplot(site_data2,aes(x=slope, y = folded_aspect)) + 
+         geom_point(aes(color=sev))
+
+ggplot(site_data2,aes(x=folded_aspect, y = heat_load)) + 
+         geom_point(aes(color=sev))
+
+heat_mod <- lm(heat_load ~ sev, data=site_data3) # or just use two models
+
+par(mfrow=c(1,2))
+plot(heat_mod,which=2:3)
+
+summary.lm(heat_mod, infer = c(F,T))$contrasts
+
+anova(heat_mod)
+
+factor_differences <- emmeans(heat_mod, pairwise~sev)
+summary(factor_differences,infer=c(T, T))$contrasts
+cld(factor_differences$emmeans, Letters = letters)
+
+
+```
+
+# Veg differences
+
+```{r veg_differences, eval = F, echo = F}
+# Confounding variables: 
+## HS sites are steeper on average, more south-facing than UNLS.
+## Rx are higher elevation (and more south facing like HS)
+
+# TSF is not different statistically
+
+# Shrub cover is highest in HS, lowest in UNLS; bare ground higher in UNLS. Herb cover is slightly lower in HS and UNLS than the other two.
+
+cbp1 <- c("#1B9E77","#7570B3", "#E7298A", "#D95F02")
+
+UNLS_col <- "#1B9E77"
+Rx_col <- "#7570B3"
+mult_col <- "#E7298A"
+HS_col <- "#D95F02"
+
+
+# shrub cover tends to be higher in HS, lower in UNLS), whereas bare cover is higher in UNLS than other categories
+cover_mod = lm(shrub_cov ~ sev3, data = site_data)
+anova(cover_mod)
+means = emmeans(cover_mod, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+cov_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+ggplot(site_data, aes(x = sev3, y = shrub_cov)) +
+  geom_boxplot(aes(fill=sev3)) +
+  ggtitle("shrub cover in each habitat") +
+  ylab("shrub cover (%)")  +
+  xlab("Habitat")  +
+  scale_fill_manual(values = cbp1) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx"))  +
+  geom_text(aes(x = sev3, 
+                y = 100),#20),
+            label = cov_cld$.group, 
+            data = cov_cld) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# HS are steeper
+cover_mod = lm(slope ~ sev, data = site_data)
+anova(cover_mod)
+means = emmeans(cover_mod, pairwise~sev)
+cld(means$emmeans, Letters = letters)
+cov_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+ggplot(site_data, aes(x = sev3, y = slope)) +
+  geom_boxplot(aes(fill=sev3)) +
+  ggtitle("slope in each habitat") +
+  ylab("slope (%)")  +
+  xlab("Habitat")  +
+  scale_fill_manual(values = cbp1) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx"))  +
+  geom_jitter() +
+  geom_text(aes(x = sev3, 
+                y = 50),#20),
+            label = cov_cld$.group, 
+            data = cov_cld) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# Rx are higher elev
+cover_mod = lm(elev ~ sev, data = site_data)
+anova(cover_mod)
+means = emmeans(cover_mod, pairwise~sev)
+cld(means$emmeans, Letters = letters)
+cov_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+ggplot(site_data, aes(x = sev3, y = elev)) +
+  geom_boxplot(aes(fill=sev3)) +
+  ggtitle("elevation in each habitat") +
+  ylab("elevation (m)")  +
+  xlab("Habitat")  +
+  scale_fill_manual(values = cbp1) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx"))  +
+  geom_text(aes(x = sev3, 
+                y = 50),#20),
+            label = cov_cld$.group, 
+            data = cov_cld) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# aspect: HS slightly more south facing than UN/LS but MULT is not statistically distinguishable from either. Rx more south facing than unls or mult.
+cover_mod = lm(folded_aspect ~ sev, data = site_data)
+anova(cover_mod)
+means = emmeans(cover_mod, pairwise~sev)
+cld(means$emmeans, Letters = letters)
+cov_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+ggplot(site_data, aes(x = sev3, y = folded_aspect)) +
+  geom_boxplot(aes(fill=sev3)) +
+  ggtitle("aspct (folded) in each habitat") +
+  ylab("aspect (folded, degrees)")  +
+  xlab("Habitat")  +
+  scale_fill_manual(values = cbp1) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx"))  +
+  geom_text(aes(x = sev3, 
+                y = 170),#20),
+            label = cov_cld$.group, 
+            data = cov_cld) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# Very weak relation of tsf and sev3 (unburnt sites excluded)
+site_data_tsf <- site_data %>% filter(sev != "u")
+
+cover_mod = lm(tsf ~ sev3, data = site_data_tsf)
+anova(cover_mod)
+means = emmeans(cover_mod, pairwise~sev3)
+cld(means$emmeans, Letters = letters)
+cov_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+ggplot(site_data_tsf, aes(x = sev3, y = tsf)) +
+  geom_boxplot(aes(fill=sev3)) +
+  ggtitle("tsf in each habitat") +
+  ylab("time since last fire")  +
+  xlab("Habitat")  +
+  scale_fill_manual(values = cbp1) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx"))  +
+  geom_jitter() +
+  geom_text(aes(x = sev3, 
+                y = 30),#20),
+            label = cov_cld$.group, 
+            data = cov_cld) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+```
+
+#spatial autocorrelation
+
+## Spatial autocorrelation
+```{r spatial_autocorrelation, eval = F, echo = F}
+#site_coord <- site_data %>% 
+#  dplyr::select(site_id, lon, lat)
+site_coord_l <- site_data %>% 
+  filter(sev == "l") %>% 
+  dplyr::select(site_id, lon, lat)
+
+site_coord_u <- site_data %>% 
+  filter(sev == "u") %>% 
+  dplyr::select(site_id, lon, lat)
+
+site_coord_lu <- site_data %>% 
+  filter(sev3 == "lu") %>% 
+  dplyr::select(site_id, lon, lat)
+
+site_coord_h <- site_data %>% 
+  filter(sev3 == "h") %>% 
+  dplyr::select(site_id, lon, lat)
+
+site_coord_mult <- site_data %>% 
+  filter(sev3 == "multiple") %>% 
+  dplyr::select(site_id, lon, lat)
+
+site_coord_Rx <- site_data %>% 
+  filter(sev3 == "Rx") %>% 
+  dplyr::select(site_id, lon, lat)
+
+# This function creates a symmetrical distance matrix in meters based on GPS coordinates
+site_dist_mat_l <- round(GeoDistanceInMetresMatrix(site_coord_l))
+site_dist_mat_u <- round(GeoDistanceInMetresMatrix(site_coord_u))
+
+
+site_dist_mat_lu <- round(GeoDistanceInMetresMatrix(site_coord_lu))
+site_dist_mat_h <- round(GeoDistanceInMetresMatrix(site_coord_h))
+site_dist_mat_mult <- round(GeoDistanceInMetresMatrix(site_coord_mult))
+site_dist_mat_Rx <- round(GeoDistanceInMetresMatrix(site_coord_Rx))
+
+# Making a table from the upper triangle of the distance matrix
+dist_vec_l <- tibble(site_dist_mat_l[upper.tri(site_dist_mat_l)]) %>% 
+  rename(., distance = 1) %>% 
+  mutate(sev = ifelse(distance == '0' , "0", "l"))
+
+
+dist_vec_u <- tibble(site_dist_mat_u[upper.tri(site_dist_mat_u)]) %>% 
+  rename(., distance = 1) %>% 
+  mutate(sev = ifelse(distance == '0' , "0", "u"))
+
+
+
+dist_vec_lu <- tibble(site_dist_mat_lu[upper.tri(site_dist_mat_lu)]) %>% 
+  rename(., distance = 1) %>% 
+  mutate(sev = ifelse(distance == '0' , "0", "lu"))
+dist_vec_h <- tibble(site_dist_mat_h[upper.tri(site_dist_mat_h)]) %>% 
+  rename(., distance = 1) %>% 
+  mutate(sev = ifelse(distance == '0' , "0", "h"))
+dist_vec_mult <- tibble(site_dist_mat_mult[upper.tri(site_dist_mat_mult)]) %>% 
+  rename(., distance = 1) %>% 
+  mutate(sev = ifelse(distance == '0' , "0", "mult"))
+dist_vec_Rx <- tibble(site_dist_mat_Rx[upper.tri(site_dist_mat_Rx)]) %>% 
+  rename(., distance = 1) %>% 
+  mutate(sev = ifelse(distance == '0' , "0", "Rx"))
+
+#dist_tbl <- rbind(dist_vec_lu, dist_vec_h, dist_vec_mult, dist_vec_Rx)
+
+dist_tbl <- rbind(dist_vec_l, dist_vec_u, dist_vec_h, dist_vec_mult, dist_vec_Rx)
+
+# ANOVA
+model_1 <- lm(distance ~ sev, data=dist_tbl) 
+par(mfrow=c(1,2))
+plot(model_1,which=2:3)
+
+summary(model_1)
+
+ggplot(dist_tbl,aes(x=sev,y = distance)) + geom_boxplot() + geom_jitter(width = .2)
+
+anova(model_1)
+
+factor_differences <- emmeans(model_1,pairwise~sev)
+summary(factor_differences,infer=c(T, T))$contrasts
+cld(factor_differences$emmeans, Letters = letters)
+
+
+
+fit <- aov(distance ~ sev, data=dist_tbl) 
+plot(fit)
+summary(fit)
+
+
+#Moran I test
+#library(ape)
+#dists <- as.matrix(dist(cbind(plant_dat_pa_w$lon, plant_dat_pa_w$lat))) # used to use plant_glm_cov
+#dists.inv <- 1/dists # but use site_dist_mat instead so that it's actual metric distance? Or does it have to be on a 0-1 scale?
+#diag(dists.inv) <- 0
+#Moran.I(plant_dat_cov_w$NODE, dists.inv, na.rm = T) # how to automate doing this for all species?
+
+
+# convert w to a row standardised general weights object
+
+#library(spdep)
+#lw <- mat2listw(dists)
+#lwW <- nb2listw(lw$neighbours, glist=lw$weights, style="W")
+
+#moran(neighborhoods_sp$n_permits, weights, n=length(weights$neighbours), S0=Szero(weights))
+```
+
+
+# Alpha TSF
+```{r echo = FALSE}
+# First, make data frame with richness for each taxa at each site
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+all_richness <- ddply(all_spp_w_pa,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+all_div1 <- merge(all_richness, site_data, by = "site_id") 
+
+# Birds
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+bird_richness <- ddply(bird_mat_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+bird_div1 <- merge(bird_richness, site_data, by = "site_id")
+
+# Plants
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+plant_richness <- ddply(plant_mat_pa_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+plant_div1 <- merge(plant_richness, site_data, by = "site_id")
+
+# Lichens
+# species richness at each plot (from http://www.flutterbys.com.au/stats/tut/tut13.2.html)
+lichen_richness <- ddply(lichen_mat_species_pa_w,~site_id,function(x) {
+   data.frame(richness=sum(x[-1]>0))
+ })
+
+lichen_div1 <- merge(lichen_richness, site_data, by = "site_id")
+```
+
+```{r echo = FALSE}
+# Put it together
+# richness tests
+div <- all_div1 %>% dplyr::mutate(., rich_all = richness) %>% 
+  dplyr::select(-richness) %>% 
+  merge(., bird_div1[, c(1:2)], by = "site_id") %>% mutate(., rich_bird = richness) %>%
+  dplyr::select(-richness) %>% 
+  merge(., plant_div1[, c(1:2)], by = "site_id") %>% mutate(., ricone_plant = richness) %>%
+  dplyr::select(-richness) %>% 
+  merge(., lichen_div1[, c(1:2)], by = "site_id") %>% mutate(., rich_lichen = richness) %>%
+  dplyr::select(-richness)
+```
+
+
+
+```{r}
+# sev_tsf models for alpha
+div2 <- div %>% 
+  filter(sev == "h" | sev == "l" | sev == "multiple" | sev =="Rx")
+#  filter(tsf< 30)
+
+##plants
+### Weak effect of tsf, no interaction. Partiicularly noticeable by graphing the first 17 years and excluding the older sites
+mod_add_tsf = lm(ricone_plant ~ (sev*tsf)*burn, data = div)
+#mod_add_tsf = lm(ricone_plant ~ sev*tsf_cat, data = div2 %>% filter(tsf< 30))
+anova(mod_add_tsf)
+
+### Graphing it, looks like plant richness declines for h, l and mult until 17 years
+ggplot(div2%>% filter(tsf<30), aes(x = tsf, y = ricone_plant)) +
+  geom_point(aes(color=sev)) +
+  geom_smooth(method="lm", aes(group=sev, color=sev))
+  #stat_summary(fun.y = mean, geom = "line", aes(group= sev, color = sev))
+
+### Including the older burns, L actually goes up
+ggplot(div2 %>% filter(tsf<35), aes(x = tsf, y = ricone_plant)) +
+  geom_point(aes(color=sev)) +
+  geom_smooth(method="lm", aes(group=sev, color=sev)) 
+
+##birds
+# No effect of tsf
+mod_add_tsf = lm(rich_bird ~ (sev*tsf)*burn, data = div)
+#mod_add_tsf = lm(rich_bird ~ sev*tsf, data = div2 %>% filter(tsf< 30))
+anova(mod_add_tsf)
+
+ggplot(div2 %>% filter(tsf<30), aes(x = tsf, y = rich_bird)) +
+  geom_point(aes(color=sev)) +
+  geom_smooth(method="lm", aes(group=sev, color=sev)) 
+  #stat_summary(fun.y = mean, geom = "line", aes(group= sev, color = sev))
+
+ggplot(div2 %>% filter(tsf<35), aes(x = tsf, y = rich_bird)) +
+  geom_point(aes(color=sev)) +
+  geom_smooth(method="lm", aes(group=sev, color=sev)) 
+#  stat_summary(fun.y = mean, geom = "line", aes(group= sev, color = sev))
+
+##lichens
+# strong effect of tsf (# spp increases with tsf)
+mod_add_tsf = lm(rich_lichen ~ (sev*tsf)*burn, data = div)
+#mod_add_tsf = lm(rich_lichen ~ sev*tsf, data = div2)
+anova(mod_add_tsf)
+
+ggplot(div2%>% filter(tsf<30), aes(x = tsf, y = rich_lichen)) +
+  geom_point(aes(color=sev)) +
+  geom_smooth(method="lm", aes(group=sev, color=sev)) 
+  #stat_summary(fun.y = mean, geom = "line", aes(group= sev, color = sev))
+
+ggplot(div2%>% filter(tsf<35), aes(x = tsf, y = rich_lichen)) +
+  geom_point(aes(color=sev)) +
+  geom_smooth(method="lm", aes(group=sev, color=sev)) 
+  #stat_summary(fun.y = mean, geom = "line", aes(group= sev, color = sev))
+
+```
+
+
+# Beta TSF
+```{r beta_tsf, include = FALSE}
+beta <- function(df){
+  
+  tempdf = df %>% dplyr::select(-tsf_cat)
+  
+  dis = c(vegdist(tempdf, method = "binomial", binary = "true", na.rm = TRUE))
+  
+  result = data.frame(tsf_cat = rep(unique(df$tsf_cat), length = length(dis)),
+#                      year = rep(unique(df$year), length = length(dis)),
+                      dis = dis)
+  
+}
+
+#all spp
+comptable <-  all_spp_w_pa %>% full_join(site_data[, c("site_id", "tsf_cat")], by = "site_id") %>%
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id))
+
+bj_output_all = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+
+#birds
+comptable <-  bird_dat_w %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ACWO:YRWA))
+
+bj_output_birds = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+
+#plants (pa)
+comptable <-  plant_dat_pa_w %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ABCO:YAMI)) 
+
+bj_output_plants_pa = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+#bj_output_plants_pa_tsf = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+#lichens (pa)
+comptable <-  lichen_dat_species_pa_w %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id,fire:tsf, tree_cov:tsf_num)) # Ahtiana:Xanthomendoza for genus
+#  dplyr::select(-DUMMY)
+
+bj_output_lichens = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+```
+
+```{r beta_tsf_cld, include = FALSE}
+#12/12/19
+#  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx
+
+
+#lu is stat lower; mult stat higher; h and Rx in between not diff
+mod_add_all = lm(dis~ tsf_cat, data = bj_output_all)
+anova(mod_add_all)
+means = emmeans(mod_add_all, pairwise~tsf_cat)
+all_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# mult and h are higher, not diff, then Rx, then lu
+mod_add_bird = lm(dis~ tsf_cat, data = bj_output_birds)
+anova(mod_add_bird)
+means = emmeans(mod_add_bird, pairwise~tsf_cat)
+bird_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# lu lowest, Rx highest (lu: a, h: ab, mult: bc, Rx: c)
+mod_add_plant = lm(dis~ tsf_cat, data = bj_output_plants_pa)
+anova(mod_add_plant)
+means = emmeans(mod_add_plant, pairwise~tsf_cat)
+plant_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# LU is statistically different (higher), but others are not
+mod_add_lichen = lm(dis~ tsf_cat, data = bj_output_lichens)
+anova(mod_add_lichen)
+means = emmeans(mod_add_lichen, pairwise~tsf_cat)
+lichen_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+```
+
+
+```{r beta_figures_tsf, echo = FALSE, fig.width=8, fig.height=6}
+
+
+beta_all <- bj_output_all %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("All spp Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = 60),
+            label = all_beta_cld$.group, 
+            data = all_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+
+beta_birds <- bj_output_birds %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Bird Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#7),
+            label = bird_beta_cld$.group, 
+            data = bird_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+#plants
+beta_plants_pa <- bj_output_plants_pa %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Plant Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#20),
+            label = plant_beta_cld$.group, 
+            data = plant_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+beta_lichen_pa <- bj_output_lichens %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Lichen Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean+0.1),#13),
+            label = lichen_beta_cld$.group, 
+            data = lichen_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# Putting plots together
+grid.arrange(beta_birds, beta_plants_pa, beta_lichen_pa, nrow = 1, bottom = "Fig.3: Plant and bird beta diversity")
+```
+
+
+#### Beta div TSF by sev
+##### L
+
+```{r, include = FALSE}
+beta <- function(df){
+  
+  tempdf = df %>% dplyr::select(-tsf_cat)
+  
+  dis = c(vegdist(tempdf, method = "binomial", binary = "true", na.rm = TRUE))
+  
+  result = data.frame(tsf_cat = rep(unique(df$tsf_cat), length = length(dis)),
+#                      year = rep(unique(df$year), length = length(dis)),
+                      dis = dis)
+  
+}
+
+#all spp
+comptable <-  all_spp_w_pa %>% full_join(site_data[, c("site_id", "tsf_cat")], by = "site_id") %>%
+  filter(sev == "l") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id))
+
+bj_output_all = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+
+#birds
+comptable <-  bird_dat_w %>% 
+  filter(sev == "l") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ACWO:YRWA))
+
+bj_output_birds = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+
+#plants (pa)
+comptable <-  plant_dat_pa_w %>% 
+    filter(sev == "l") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ABCO:YAMI)) 
+
+bj_output_plants_pa = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+#bj_output_plants_pa_tsf = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+#lichens (pa)
+comptable <-  lichen_dat_species_pa_w %>% 
+    filter(sev == "l") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id,fire:tsf, tree_cov:tsf_num)) # Ahtiana:Xanthomendoza for genus
+#  dplyr::select(-DUMMY)
+
+bj_output_lichens = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+```
+
+
+
+
+```{r beta_tsf_cld, include = FALSE}
+#12/12/19
+#  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx
+
+
+#lu is stat lower; mult stat higher; h and Rx in between not diff
+mod_add_all = lm(dis~ tsf_cat, data = bj_output_all)
+anova(mod_add_all)
+means = emmeans(mod_add_all, pairwise~tsf_cat)
+all_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# mult and h are higher, not diff, then Rx, then lu
+mod_add_bird = lm(dis~ tsf_cat, data = bj_output_birds)
+anova(mod_add_bird)
+means = emmeans(mod_add_bird, pairwise~tsf_cat)
+bird_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# lu lowest, Rx highest (lu: a, h: ab, mult: bc, Rx: c)
+mod_add_plant = lm(dis~ tsf_cat, data = bj_output_plants_pa)
+anova(mod_add_plant)
+means = emmeans(mod_add_plant, pairwise~tsf_cat)
+plant_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# LU is statistically different (higher), but others are not
+mod_add_lichen = lm(dis~ tsf_cat, data = bj_output_lichens)
+anova(mod_add_lichen)
+means = emmeans(mod_add_lichen, pairwise~tsf_cat)
+lichen_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+```
+
+```{r beta_figures_tsf, echo = FALSE, fig.width=8, fig.height=6}
+
+
+beta_all <- bj_output_all %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("All spp Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = 60),
+            label = all_beta_cld$.group, 
+            data = all_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+
+beta_birds <- bj_output_birds %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Bird Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#7),
+            label = bird_beta_cld$.group, 
+            data = bird_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+#plants
+beta_plants_pa <- bj_output_plants_pa %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Plant Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#20),
+            label = plant_beta_cld$.group, 
+            data = plant_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+beta_lichen_pa <- bj_output_lichens %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Lichen Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean+0.1),#13),
+            label = lichen_beta_cld$.group, 
+            data = lichen_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# Putting plots together
+grid.arrange(beta_birds, beta_plants_pa, beta_lichen_pa, nrow = 1, bottom = "Fig.3: Plant and bird beta diversity")
+```
+
+
+##### H
+
+```{r, include = FALSE}
+beta <- function(df){
+  
+  tempdf = df %>% dplyr::select(-tsf_cat)
+  
+  dis = c(vegdist(tempdf, method = "binomial", binary = "true", na.rm = TRUE))
+  
+  result = data.frame(tsf_cat = rep(unique(df$tsf_cat), length = length(dis)),
+#                      year = rep(unique(df$year), length = length(dis)),
+                      dis = dis)
+  
+}
+
+#all spp
+comptable <-  all_spp_w_pa %>% full_join(site_data[, c("site_id", "tsf_cat")], by = "site_id") %>%
+  filter(sev == "h") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id))
+
+bj_output_all = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+
+#birds
+comptable <-  bird_dat_w %>% 
+  filter(sev == "h") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ACWO:YRWA))
+
+bj_output_birds = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+
+#plants (pa)
+comptable <-  plant_dat_pa_w %>% 
+    filter(sev == "h") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ABCO:YAMI)) 
+
+bj_output_plants_pa = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+#bj_output_plants_pa_tsf = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+#lichens (pa)
+comptable <-  lichen_dat_species_pa_w %>% 
+    filter(sev == "h") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id,fire:tsf, tree_cov:tsf_num)) # Ahtiana:Xanthomendoza for genus
+#  dplyr::select(-DUMMY)
+
+bj_output_lichens = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+```
+
+
+
+
+```{r beta_tsf_cld, include = FALSE}
+#12/12/19
+#  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx
+
+
+#lu is stat lower; mult stat higher; h and Rx in between not diff
+mod_add_all = lm(dis~ tsf_cat, data = bj_output_all)
+anova(mod_add_all)
+means = emmeans(mod_add_all, pairwise~tsf_cat)
+all_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# mult and h are higher, not diff, then Rx, then lu
+mod_add_bird = lm(dis~ tsf_cat, data = bj_output_birds)
+anova(mod_add_bird)
+means = emmeans(mod_add_bird, pairwise~tsf_cat)
+bird_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# lu lowest, Rx highest (lu: a, h: ab, mult: bc, Rx: c)
+mod_add_plant = lm(dis~ tsf_cat, data = bj_output_plants_pa)
+anova(mod_add_plant)
+means = emmeans(mod_add_plant, pairwise~tsf_cat)
+plant_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# LU is statistically different (higher), but others are not
+mod_add_lichen = lm(dis~ tsf_cat, data = bj_output_lichens)
+anova(mod_add_lichen)
+means = emmeans(mod_add_lichen, pairwise~tsf_cat)
+lichen_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+```
+
+```{r beta_figures_tsf, echo = FALSE, fig.width=8, fig.height=6}
+
+
+beta_all <- bj_output_all %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("All spp Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = 60),
+            label = all_beta_cld$.group, 
+            data = all_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+
+beta_birds <- bj_output_birds %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Bird Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#7),
+            label = bird_beta_cld$.group, 
+            data = bird_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+#plants
+beta_plants_pa <- bj_output_plants_pa %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Plant Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#20),
+            label = plant_beta_cld$.group, 
+            data = plant_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+beta_lichen_pa <- bj_output_lichens %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Lichen Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean+0.1),#13),
+            label = lichen_beta_cld$.group, 
+            data = lichen_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# Putting plots together
+grid.arrange(beta_birds, beta_plants_pa, beta_lichen_pa, nrow = 1, bottom = "Fig.3: Plant and bird beta diversity")
+```
+
+
+
+##### Mult
+
+```{r, include = FALSE}
+beta <- function(df){
+  
+  tempdf = df %>% dplyr::select(-tsf_cat)
+  
+  dis = c(vegdist(tempdf, method = "binomial", binary = "true", na.rm = TRUE))
+  
+  result = data.frame(tsf_cat = rep(unique(df$tsf_cat), length = length(dis)),
+#                      year = rep(unique(df$year), length = length(dis)),
+                      dis = dis)
+  
+}
+
+#birds
+comptable <-  bird_dat_w %>% 
+  filter(sev == "multiple") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ACWO:YRWA))
+
+bj_output_birds = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+
+#plants (pa)
+comptable <-  plant_dat_pa_w %>% 
+    filter(sev == "multiple") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(c(tsf_cat, ABCO:YAMI)) 
+
+bj_output_plants_pa = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+#bj_output_plants_pa_tsf = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+
+#lichens (pa)
+comptable <-  lichen_dat_species_pa_w %>% 
+    filter(sev == "multiple") %>% 
+#  mutate(tsf_cat = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id,fire:tsf, tree_cov:tsf_num)) # Ahtiana:Xanthomendoza for genus
+#  dplyr::select(-DUMMY)
+
+bj_output_lichens = comptable %>% group_by(tsf_cat) %>% do(beta(.))
+```
+
+
+
+
+```{r beta_tsf_cld, include = FALSE}
+#12/12/19
+#  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx
+
+
+#lu is stat lower; mult stat higher; h and Rx in between not diff
+mod_add_all = lm(dis~ tsf_cat, data = bj_output_all)
+anova(mod_add_all)
+means = emmeans(mod_add_all, pairwise~tsf_cat)
+all_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# mult and h are higher, not diff, then Rx, then lu
+mod_add_bird = lm(dis~ tsf_cat, data = bj_output_birds)
+anova(mod_add_bird)
+means = emmeans(mod_add_bird, pairwise~tsf_cat)
+bird_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# lu lowest, Rx highest (lu: a, h: ab, mult: bc, Rx: c)
+mod_add_plant = lm(dis~ tsf_cat, data = bj_output_plants_pa)
+anova(mod_add_plant)
+means = emmeans(mod_add_plant, pairwise~tsf_cat)
+plant_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+# LU is statistically different (higher), but others are not
+mod_add_lichen = lm(dis~ tsf_cat, data = bj_output_lichens)
+anova(mod_add_lichen)
+means = emmeans(mod_add_lichen, pairwise~tsf_cat)
+lichen_beta_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+```
+
+```{r beta_figures_tsf, echo = FALSE, fig.width=8, fig.height=6}
+
+
+beta_all <- bj_output_all %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("All spp Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = 60),
+            label = all_beta_cld$.group, 
+            data = all_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+
+beta_birds <- bj_output_birds %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Bird Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#7),
+            label = bird_beta_cld$.group, 
+            data = bird_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+#plants
+beta_plants_pa <- bj_output_plants_pa %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Plant Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean + 0.1),#20),
+            label = plant_beta_cld$.group, 
+            data = plant_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+
+
+beta_lichen_pa <- bj_output_lichens %>% ggplot(aes(x = tsf_cat,
+                         y = dis,
+                         fill = tsf_cat,
+                         group = tsf_cat)) +
+  geom_boxplot() +
+  #facet_wrap(~year) +
+  xlab("time-since-fire") +
+  ylab("beta div") +
+#  ylim(0, 1) +
+  #scale_fill_viridis_c(option = "magma") +
+  ggtitle("Lichen Pairwise Beta Diversity")   +
+  geom_text(aes(x = tsf_cat, 
+                y = emmean+0.1),#13),
+            label = lichen_beta_cld$.group, 
+            data = lichen_beta_cld) +
+  scale_x_discrete(breaks=c("h", "lu", "multiple", "Rx"),
+                      labels=c("HS", "UN/LS", "MULT", "Rx")) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1)
+
+# Putting plots together
+grid.arrange(beta_birds, beta_plants_pa, beta_lichen_pa, nrow = 1, bottom = "Fig.3: Plant and bird beta diversity")
+```
+
+# Gamma Div
+```{r sp_acc_curves, echo = FALSE}
+# need to use this to get the right colors, since the habitats are rearranged alphabetically in ggplot
+#cbp2 <- c("#D95F02", "#E7298A", "#7570B3", "#1B9E77")
+
+#UNLS_col <- "#1B9E77"
+#Rx_col <- "#7570B3"
+#mult_col <- "#E7298A"
+#HS_col <- "#D95F02"
+
+# Species accumulation curves
+# All SPP
+all_spp_matrix <- merge(all_spp_w_pa, site_data, by = "site_id") %>% 
+  filter(sev == "h") %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(tsf_cat,ABCO:YRWA)
+
+
+#subset each habitat into its own df
+all_spp_matrix %>% filter(tsf_cat == "1") -> one
+all_spp_matrix %>% filter(tsf_cat == "2") -> two
+all_spp_matrix %>% filter(tsf_cat == "3") -> three
+all_spp_matrix %>% filter(tsf_cat == "4") -> four
+
+#calc species accumulation curve for each habitat
+curve_one = specaccum(one[, -1], method = "random")
+curve_two = specaccum(two[, -1], method = "random")
+curve_three = specaccum(three[, -1], method = "random")
+curve_four = specaccum(four[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_one <- data.frame(Sites_one=curve_one$sites, Richness_one=curve_one$richness, SD_one=curve_one$sd) %>% mutate(sev = "HS")
+data_two <- data.frame(Sites_two=curve_two$sites, Richness_two=curve_two$richness, SD_two=curve_two$sd) %>% mutate(sev = "UN/LS")
+data_three <- data.frame(Sites_three=curve_three$sites, Richness_three=curve_three$richness, SD_three=curve_three$sd) %>% mutate(sev = "three")
+data_four <- data.frame(Sites_four=curve_four$sites, Richness_four=curve_four$richness, SD_four=curve_four$sd) %>% mutate(sev = "four")
+
+HS_col <- "green"
+UNLS_col <- "purple"
+three_col <- "blue"
+four_col <- "red"
+
+# ggplot species accummulation curves
+all_acc <- ggplot() +
+  geom_point(data = data_one, aes(x=Sites_one, y=Richness_one, colour = sev)) +
+  geom_line(data = data_one, aes(x=Sites_one, y=Richness_one , colour = sev)) +
+  geom_ribbon(data = data_one ,aes(x=Sites_one, ymin=(Richness_one-2*SD_one),ymax=(Richness_one+2*SD_one)),alpha=0.2, fill = HS_col) +
+  geom_point(data = data_two, aes(x=Sites_two, y=Richness_two, colour = sev)) +
+  geom_line(data = data_two, aes(x=Sites_two, y=Richness_two , colour = sev)) +
+  geom_ribbon(data  = data_two, aes(x=Sites_two, ymin=(Richness_two-2*SD_two),ymax=(Richness_two+2*SD_two)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_three, aes(x=Sites_three, y=Richness_three, colour = sev)) +
+  geom_line(data = data_three, aes(x=Sites_three, y=Richness_three, colour = sev)) +
+  geom_ribbon(data  = data_three, aes(x=Sites_three, ymin=(Richness_three-2*SD_three),ymax=(Richness_three+2*SD_three)),alpha=0.2, fill = three_col) +
+  geom_point(data = data_four, aes(x=Sites_four, y=Richness_four, colour = sev)) +
+  geom_line(data = data_four, aes(x=Sites_four, y=Richness_four, colour = sev)) +
+  geom_ribbon(data = data_four, aes(x=Sites_four, ymin=(Richness_four-2*SD_four),ymax=(Richness_four+2*SD_four)),alpha=0.2, fill = four_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("All Species Accumulation Curves") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_three$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_three$Richness_three[18], xend = 18, yend = data_three$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_three$Richness_three[18], xend = 18, yend = data_three$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_two$Richness_two[18], xend = 18, yend = data_two$Richness_two[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_four$Richness_four[18], xend = 18, yend = data_four$Richness_four[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_one$Richness_one[18], xend = 18, yend = data_one$Richness_one[18]))
+
+# Birds
+bird_matrix <- bird_dat_w %>% 
+  #mutate(sev3 = ifelse(sev == "u" | sev == "l", "two", sev)) %>% 
+  dplyr::select(tsf_cat,ACWO:YRWA)
+
+#subset each habitat into its own df
+bird_matrix %>% filter(tsf_cat == "1") -> one_b
+bird_matrix %>% filter(tsf_cat == "2") -> two_b
+bird_matrix %>% filter(tsf_cat == "3") -> three_b
+bird_matrix %>% filter(tsf_cat == "4") -> four_b
+
+#calc species accumulation curve for each habitat
+curve_one_b = specaccum(one_b[, -1], method = "random")
+curve_two_b = specaccum(two_b[, -1], method = "random")
+curve_three_b = specaccum(three_b[, -1], method = "random")
+curve_four_b = specaccum(four_b[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_one_b <- data.frame(Sites_one=curve_one_b$sites, Richness_one=curve_one_b$richness, SD_one=curve_one_b$sd) %>% mutate(tsf_cat = "1")
+data_two_b <- data.frame(Sites_two=curve_two_b$sites, Richness_two=curve_two_b$richness, SD_two=curve_two_b$sd) %>% mutate(tsf_cat = "2")
+data_three_b <- data.frame(Sites_three=curve_three_b$sites, Richness_three=curve_three_b$richness, SD_three=curve_three_b$sd) %>% mutate(tsf_cat = "3")
+data_four_b <- data.frame(Sites_four=curve_four_b$sites, Richness_four=curve_four_b$richness, SD_four=curve_four_b$sd) %>% mutate(tsf_cat = "4")
+
+birds_acc <- ggplot() +
+  geom_point(data = data_one_b, aes(x=Sites_one, y=Richness_one, colour = tsf_cat)) +
+  geom_line(data = data_one_b, aes(x=Sites_one, y=Richness_one, colour = tsf_cat)) +
+  geom_ribbon(data = data_one_b, aes(x=Sites_one, ymin=(Richness_one-2*SD_one), ymax=(Richness_one+2*SD_one)), alpha=0.2, fill = HS_col) +
+  geom_point(data = data_two_b, aes(x=Sites_two, y=Richness_two, colour = tsf_cat)) +
+  geom_line(data = data_two_b, aes(x=Sites_two, y=Richness_two, colour = tsf_cat)) +
+  geom_ribbon(data = data_two_b, aes(x=Sites_two, ymin=(Richness_two-2*SD_two),ymax=(Richness_two+2*SD_two)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_three_b, aes(x=Sites_three, y=Richness_three, colour = tsf_cat)) +
+  geom_line(data = data_three_b, aes(x=Sites_three, y=Richness_three, colour = tsf_cat)) +
+  geom_ribbon(data  = data_three_b, aes(x=Sites_three, ymin=(Richness_three-2*SD_three),ymax=(Richness_three+2*SD_three)),alpha=0.2, fill = three_col) +
+  geom_point(data = data_four_b, aes(x=Sites_four, y=Richness_four, colour = tsf_cat)) +
+  geom_line(data = data_four_b, aes(x=Sites_four, y=Richness_four, colour = tsf_cat)) +
+  geom_ribbon(data = data_four_b, aes(x=Sites_four, ymin=(Richness_four-2*SD_four),ymax=(Richness_four+2*SD_four)),alpha=0.2, fill = four_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Birds") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_three_b$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = three_col, aes(x = 0, y = data_three_b$Richness_three[18], xend = 18, yend = data_three_b$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = UNLS_col, aes(x = 0, y = data_two_b$Richness_two[18], xend = 18, yend = data_two_b$Richness_two[18])) +
+  geom_segment(linetype = "dashed", color = four_col, aes(x = 0, y = data_four_b$Richness_four[18], xend = 18, yend = data_four_b$Richness_four[18])) +
+  geom_segment(linetype = "dashed", color = HS_col, aes(x = 0, y = data_one_b$Richness_one[18], xend = 18, yend = data_one_b$Richness_one[18]))  +
+  scale_y_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_three_b$Richness_three))) +
+  scale_x_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_two_b$Sites_two))) 
+
+# Plants
+plant_matrix <- plant_dat_pa_w %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "two", sev)) %>% 
+  dplyr::select(tsf_cat,ABCO:YAMI)
+
+#subset each habitat into its own df
+plant_matrix %>% filter(tsf_cat == "1") -> one_p
+plant_matrix %>% filter(tsf_cat == "2") -> two_p
+plant_matrix %>% filter(tsf_cat == "3") -> three_p
+plant_matrix %>% filter(tsf_cat == "4") -> four_p
+
+#calc species accumulation curve for each habitat
+curve_one_p = specaccum(one_p[, -1], method = "random")
+curve_two_p = specaccum(two_p[, -1], method = "random")
+curve_three_p = specaccum(three_p[, -1], method = "random")
+curve_four_p = specaccum(four_p[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_one_p <- data.frame(Sites_one=curve_one_p$sites, Richness_one=curve_one_p$richness, SD_one=curve_one_p$sd) %>% mutate(tsf_cat = "one")
+data_two_p <- data.frame(Sites_two=curve_two_p$sites, Richness_two=curve_two_p$richness, SD_two=curve_two_p$sd) %>% mutate(tsf_cat = "two")
+data_three_p <- data.frame(Sites_three=curve_three_p$sites, Richness_three=curve_three_p$richness, SD_three=curve_three_p$sd) %>% mutate(tsf_cat = "three")
+data_four_p <- data.frame(Sites_four=curve_four_p$sites, Richness_four=curve_four_p$richness, SD_four=curve_four_p$sd) %>% mutate(tsf_cat = "four")
+
+plants_acc <- ggplot() +
+  geom_point(data = data_one_p, aes(x=Sites_one, y=Richness_one, colour = tsf_cat)) +
+  geom_line(data = data_one_p, aes(x=Sites_one, y=Richness_one , colour = tsf_cat)) +
+  geom_ribbon(data = data_one_p ,aes(x=Sites_one, ymin=(Richness_one-2*SD_one),ymax=(Richness_one+2*SD_one)),alpha=0.2, fill = HS_col) +
+  geom_point(data = data_two_p, aes(x=Sites_two, y=Richness_two, colour = tsf_cat)) +
+  geom_line(data = data_two_p, aes(x=Sites_two, y=Richness_two , colour = tsf_cat)) +
+  geom_ribbon(data  = data_two_p, aes(x=Sites_two, ymin=(Richness_two-2*SD_two),ymax=(Richness_two+2*SD_two)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_three_p, aes(x=Sites_three, y=Richness_three, colour = tsf_cat)) +
+  geom_line(data = data_three_p, aes(x=Sites_three, y=Richness_three, colour = tsf_cat)) +
+  geom_ribbon(data  = data_three_p, aes(x=Sites_three, ymin=(Richness_three-2*SD_three),ymax=(Richness_three+2*SD_three)),alpha=0.2, fill = three_col) +
+  geom_point(data = data_four_p, aes(x=Sites_four, y=Richness_four, colour = tsf_cat)) +
+  geom_line(data = data_four_p, aes(x=Sites_four, y=Richness_four, colour = tsf_cat)) +
+  geom_ribbon(data = data_four_p, aes(x=Sites_four, ymin=(Richness_four-2*SD_four),ymax=(Richness_four+2*SD_four)),alpha=0.2, fill = four_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Plants") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_three_p$Richness_three[18])) + #Making the horizontal and vertical lines at n = 18 samples
+  geom_segment(linetype = "dashed", color = three_col, aes(x = 0, y = data_three_p$Richness_three[18], xend = 18, yend = data_three_p$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = UNLS_col, aes(x = 0, y = data_two_p$Richness_two[18], xend = 18, yend = data_two_p$Richness_two[18])) +
+  geom_segment(linetype = "dashed", color = four_col, aes(x = 0, y = data_four_p$Richness_four[18], xend = 18, yend = data_four_p$Richness_four[18])) +
+  geom_segment(linetype = "dashed", color = HS_col, aes(x = 0, y = data_one_p$Richness_one[18], xend = 18, yend = data_one_p$Richness_one[18])) +
+  scale_y_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_three_p$Richness_three))) + #I want to get the axis to start at zero
+  scale_x_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_two_p$Sites_two))) 
+
+# Lichens
+lichen_matrix <- lichen_dat_species_pa_w %>% 
+  filter(sev=="h") %>% 
+#  mutate(tsf_cat3 = ifelse(tsf_cat == "u" | tsf_cat == "l", "two", tsf_cat)) %>% 
+  dplyr::select(-c(site_id,DUMMY:tsf, tree_cov:tsf_num)) # Ahtiana:Xanthomendoza for genus
+
+#subset each habitat into its own df
+lichen_matrix %>% filter(tsf_cat == "1") -> one
+lichen_matrix %>% filter(tsf_cat == "2") -> two
+lichen_matrix %>% filter(tsf_cat == "3") -> three
+lichen_matrix %>% filter(tsf_cat == "4") -> four
+
+# species accumulation curve for each habitat
+curve_one = specaccum(one %>% dplyr::select(-tsf_cat), method = "random")
+curve_two = specaccum(two%>% dplyr::select(-tsf_cat), method = "random")
+curve_three = specaccum(three%>% dplyr::select(-tsf_cat), method = "random")
+curve_four = specaccum(four%>% dplyr::select(-tsf_cat), method = "random")
+
+#creating dataframes for ggplot2
+data_one <- data.frame(Sites_one=curve_one$sites, Richness_one=curve_one$richness, SD_one=curve_one$sd) %>% mutate(tsf_cat = "one")
+data_two <- data.frame(Sites_two=curve_two$sites, Richness_two=curve_two$richness, SD_two=curve_two$sd) %>% mutate(tsf_cat = "two")
+data_three <- data.frame(Sites_three=curve_three$sites, Richness_three=curve_three$richness, SD_three=curve_three$sd) %>% mutate(tsf_cat = "three")
+data_four <- data.frame(Sites_four=curve_four$sites, Richness_four=curve_four$richness, SD_four=curve_four$sd) %>% mutate(tsf_cat = "four")
+
+lichen_acc <- ggplot() +
+  geom_point(data = data_one, aes(x=Sites_one, y=Richness_one, colour = tsf_cat)) +
+  geom_line(data = data_one, aes(x=Sites_one, y=Richness_one , colour = tsf_cat)) +
+  geom_ribbon(data = data_one ,aes(x=Sites_one, ymin=(Richness_one-2*SD_one),ymax=(Richness_one+2*SD_one)),alpha=0.2, fill = HS_col) +
+  geom_point(data = data_two, aes(x=Sites_two, y=Richness_two, colour = tsf_cat)) +
+  geom_line(data = data_two, aes(x=Sites_two, y=Richness_two , colour = tsf_cat)) +
+  geom_ribbon(data  = data_two, aes(x=Sites_two, ymin=(Richness_two-2*SD_two),ymax=(Richness_two+2*SD_two)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_three, aes(x=Sites_three, y=Richness_three, colour = tsf_cat)) +
+  geom_line(data = data_three, aes(x=Sites_three, y=Richness_three, colour = tsf_cat)) +
+  geom_ribbon(data = data_three, 
+                aes(x = Sites_three,
+                  ymin = (Richness_three-2*SD_three), 
+                  ymax = (Richness_three+2*SD_three)), 
+                alpha = 0.2, 
+                fill = three_col) +
+    geom_ribbon(data = data_one[c(1:3),], 
+                aes(x = Sites_one,
+                  ymin = (0), 
+                  ymax = (Richness_one+2*SD_one)), 
+                alpha = 0.2, 
+                fill = HS_col) +
+  geom_polygon(data = data_three, aes(x=3, y=Richness_three+2*SD_three, fill="red")) + # COULD THIS BE A WAY TO FIX THE ISSUE?
+  geom_point(data = data_four, aes(x=Sites_four, y=Richness_four, colour = tsf_cat)) +
+  geom_line(data = data_four, aes(x=Sites_four, y=Richness_four, colour = tsf_cat)) +
+  geom_ribbon(data = data_four, aes(x=Sites_four, ymin=(Richness_four-2*SD_four), ymax=(Richness_four+2*SD_four)), alpha=0.2, fill = four_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Lichens") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_three$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = three_col, aes(x = 0, y = data_three$Richness_three[18], xend = 18, yend = data_three$Richness_three[18])) +
+  geom_segment(linetype = "dashed", color = UNLS_col, aes(x = 0, y = data_two$Richness_two[18], xend = 18, yend = data_two$Richness_two[18])) +
+  geom_segment(linetype = "dashed", color = four_col, aes(x = 0, y = data_four$Richness_four[18], xend = 18, yend = data_four$Richness_four[18])) +
+  geom_segment(linetype = "dashed", color = HS_col, aes(x = 0, y = data_one$Richness_one[18], xend = 18, yend = data_one$Richness_one[18])) +
+  scale_y_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_two$Richness_two))) + # notice the issue here that setting the y axis to 0 causes the lower values of the geom_ribbon for the HS to cut out... not sure what to do.
+  scale_x_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_two$Sites_two))) 
+
+  
+#  coord_cartesian(ylim = c(0,1.05 * max(data_two$Richness_two)), c(0,1.05 * max(data_two$Sites_two))) +
+
+#  ?geom_polygon
+#  scale_y_continuous(expand = c(0,0)) +
+#  expand_limits(y = c(0,1.05 * max(data_one$Richness_one))) +
+#  scale_x_continuous(expand = c(0,0)) +
+#  expand_limits(x = c(0,1.05 * max(data_two$Sites_two)))
+
+legend <- gtable_filter(ggplot_gtable(ggplot_build(plants_acc + theme(legend.position="right")+ theme(legend.title = element_blank()))), "guide-box")
+
+  
+sp_acc_plots <- grid.arrange(birds_acc, plants_acc, lichen_acc, legend,
+            # heights=c(1.1, 1.1, 0.1),
+#            widths = c(2.5, 2.5, 0.5),
+             widths = c(5, 5, 5, 1),
+             ncol = 4, nrow = 1, bottom = "Fig.4: Bird, plant and lichen species accumulation curves (error = +/- 2 x standard deviation).")
+```
+
+
+#all permanova
+
+```{r PERMANOVA_all, echo = F}
+#all spp
+comp.data <- all_spp_dat_w #%>%  #filter(sev %in% c("l", "h", "u"))
+#  filter((tsf < 25 & tsf > 4) | sev == "u")# %>%
+#  filter((sev == "multiple" & tree_cov > 45) | sev != "multiple")
+  
+comp.sub <- subset(comp.data, select = ACMA:YRWA)
+comp.env <- subset(comp.data, select = c(sev:tsf_num))
+
+sev <- comp.env$sev
+tsf <- comp.env$tsf_num
+
+PERMANOVA_sev_all <-kable(adonis2(comp.sub ~ sev, permutations = 999), caption = "Table 1: PERMANOVA results", digits = 5) %>%
+  kable_styling() 
+
+
+## Pairwise PERMANOVA function (run)
+# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
+#comp.data <- comp.data %>% 
+#    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
+
+# sev only, plant cover
+comp.data1 <- comp.data %>% 
+    mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", ifelse(sev == 'u', "3", ifelse(sev == 'multiple', "4", "5")))))
+
+pair <- format(pairwise.adonis((comp.sub), comp.data1$sev2) %>% 
+  dplyr::select(pairs, F.Model, p.adjusted, sig), digits = 2)
+
+pairwise_sev_all <- kable(pair, caption = "Table 2: pairwise PERMANOVA results", digits = 4) %>%
+  kable_styling()
+
+
+```
+
+
+```{r zeta}
+#install.packages("zetadiv")
+library(zetadiv)
+
+utils::data(bird.spec.coarse)
+xy.bird <- bird.spec.coarse[,1:2]
+data.spec.bird <- bird.spec.coarse[,3:193]
+dev.new()
+zeta.ddecays.bird <- Zeta.ddecays(xy.bird, data.spec.bird, sam = 100, orders = 2:5,
+plot = TRUE, confint.level = 0.95)
+##########
+utils::data(Marion.species)
+xy.marion <- Marion.species[,1:2]
+data.spec.marion <- Marion.species[,3:33]
+dev.new()
+utils::data(Marion.species)
+xy.marion <- Marion.species[,1:2]
+data.spec.marion <- Marion.species[,3:33]
+zeta.ddecays.marion <- Zeta.ddecays(xy.marion, data.spec.marion, sam = 100,
+orders = 2:5, plot = TRUE, confint.level = 0.95)
+
+# decay of zeta diversity over distance. Can this be done for my data?
+utils::data(bird.spec.coarse)
+xy.bird <- bird.spec.coarse[,1:2]
+data.spec.bird <- bird.spec.coarse[,3:193]
+dev.new()
+zeta.ddecay.bird <- Zeta.ddecay(xy.bird, data.spec.bird, sam = 100, order = 3,
+confint.level = 0.95,plot=FALSE)
+Plot.zeta.ddecay(zeta.ddecay.bird)
+##########
+utils::data(Marion.species)
+xy.marion <- Marion.species[,1:2]
+data.spec.marion <- Marion.species[,3:33]
+zeta.ddecay.marion <- Zeta.ddecay(xy.marion, data.spec.marion, sam = 100, order = 3,
+confint.level = 0.95, trsf = "log", normalize = "Jaccard",plot=FALSE)
+dev.new()
+Plot.zeta.ddecay(zeta.ddecay.marion)
+utils::data(Marion.species)
+xy.marion <- Marion.species[1:2]
+data.spec.marion <- Marion.species[3:33]
+utils::data(Marion.env)
+data.env.marion <- Marion.env[3]
+zeta.ispline <- Zeta.msgdm(data.spec.marion, data.env.marion, xy.marion, sam = 100,
+order = 3, normalize = "Jaccard", reg.type = "ispline")
+zeta.ispline
+dev.new()
+Plot.ispline(zeta.ispline, data.env.marion, distance = TRUE)
+
+
+#utils::data(bird.spec.coarse)
+#xy.bird <- bird.spec.coarse[1:2]
+data.spec.plant <- plant_dat_pa_w %>% filter(sev3=="lu") %>% dplyr::select(ABCO:YAMI)
+
+#dev.new(width = 12, height = 4)
+
+zeta.plant <- Zeta.decline.mc(data.spec.plant, orders = 1:10, sam=100, plot = F, sd.plot =T, rescale = F)
+
+Plot.zeta.decline(zeta.plant, arrange.plots = T)
+
+#birds 
+data.spec.bird <- as.data.frame(bird_dat_w %>% filter(sev3=="multiple") %>% dplyr::select(ACWO:YRWA))
+
+#dev.new(width = 12, height = 4)
+
+zeta.bird <- Zeta.decline.mc(data.spec.bird, orders = 1:10, sam=100, plot = F, sd.plot =T, rescale = F)
+
+Plot.zeta.decline(zeta.bird, arrange.plots = FALSE)
+
+```
+
+```{r legendre_LCBD}
+# Legendre stuff to calculate LCBD and SCBD; not sure what to do with SCBD, LCBD didn't seem to correspond to anything obvious
+
+library(adespatial)
+
+div_sub <- div %>% dplyr::select(site_id, rich_all:rich_lichen)
+
+data2<- all_spp_dat_w %>% full_join(., div_sub, by = "site_id")
+  
+data<-data2 %>% #mutate(signif = ifelse(p.LCBD<=0.05, 1, 0)) %>%
+  dplyr::filter(sev=="multiple") 
+
+data1 <- data %>% 
+  dplyr::select(ABCO:YRWA) 
+
+
+#data1 <- plant_dat_cov_w %>% 
+#  dplyr::filter(sev3=="lu") %>% 
+#  dplyr::select(ABCO:YAMI) 
+
+data1 <- lichen_dat_species_pa_w %>% 
+  dplyr::filter(sev3=="lu") %>% 
+  dplyr::select(site_id:DUMMY) %>% 
+  dplyr::select(-site_id)
+
+data1 <- bird_dat_w %>% 
+  dplyr::filter(sev3=="lu") %>% 
+  dplyr::select(ACWO:YRWA)
+
+data1 <- plant_dat_cov_w %>% 
+  dplyr::filter(sev3=="lu") %>% 
+  dplyr::select(ABCO:YAMI)
+
+#res = beta.div(data1, "jaccard", nperm=999)
+
+#how much is the beta div pattern due to replacement/turnover patterns and richness differences?
+res1 <- beta.div.comp(data1, coef="J", quant=T) # Sørensen coeff.
+summary(res1) # Examine the structure of the output file
+res1$part
+
+?beta.div.comp
+
+# LCBD indices computed for the Richness difference matrix
+res2 <- LCBD.comp(res1$rich, sqrt.D=TRUE)
+#?LCBD.comp
+res2$beta
+res2$LCBD
+
+
+
+
+
+## For SCBD:
+#res = beta.div(data1, "hellinger", nperm=999)
+#beta_spp <- as_tibble(res$SCBD)
+#xyz<-t(data.frame(as.list(res$SCBD)))
+
+all_spp_w_pa2 <- cbind(data, res$LCBD) %>% cbind(.,res$p.LCBD)
+names(all_spp_w_pa2)[358] <- "LCBD"
+names(all_spp_w_pa2)[359] <- "p.LCBD"
+all_spp_w_pa2 <- all_spp_w_pa2 %>% mutate(signif=ifelse(p.LCBD<=0.05, 1, 0))
+
+
+
+
+
+
+ggplot(all_spp_w_pa2, aes(x=rich_all, y= LCBD)) +
+  geom_point(aes(color = sev)) +
+  geom_smooth(method="loess") + 
+  #geom_text(aes(label=site_id),hjust=0, vjust=0) +
+  scale_colour_viridis_d()
+
+LCBD_mod <- lm(LCBD ~ sev, data = all_spp_w_pa2)
+anova(LCBD_mod)
+means = emmeans(LCBD_mod, pairwise~sev)
+cld(means$emmeans, Letters = letters)
+cov_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+
+ggplot(data, aes(x=sev, y= LCBD)) +
+  geom_boxplot()
+
+
+
+
+
+
+
+s.value(all_spp_dat_w %>% dplyr::select(lat,lon), res$LCBD, symbol = "circle", col = c("white", "brown"), main="Map of mite LCBD")
+
+?s.value
+# NOT RUN {
+if(require("vegan", quietly = TRUE) & require("adegraphics", quietly = TRUE)){
+data(mite)
+res = beta.div(mite, "hellinger", nperm=999)
+
+
+# Plot a map of the LCBD indices using the Cartesian coordinates
+data(mite.xy)
+
+s.value(mite.xy, res$LCBD, symbol = "circle", col = c("white", "brown"), main="Map of mite LCBD")
+
+all_xy <- all_spp_w_pa2 %>% dplyr::select(lat, lon)
+
+### Example using the mite abundance data and the percentage difference dissimilarity
+res = beta.div(mite, "percentdiff", nperm=999, clock=TRUE)
+
+# Plot a map of the LCBD indices
+signif = which(res$p.LCBD <= 0.05)	# Which are the significant LCBD indices?
+nonsignif = which(res$p.LCBD > 0.05)	# Which are the non-significant LCBD indices?
+g1 <- s.value(mite.xy[signif,], res$LCBD[signif], ppoint.alpha = 0.5, plegend.drawKey = FALSE,
+ symbol = "circle", col = c("white", "red"), main="Map of mite LCBD (red = significant indices)")
+g2 <- s.value(mite.xy[nonsignif,], res$LCBD[nonsignif], ppoint.alpha = 0.5,
+symbol = "circle", col = c("white", "blue"))
+g2+g1
+}
+
+# }
+g1 <- s.value(all_xy[signif,], res$LCBD[signif], ppoint.alpha = 0.5, plegend.drawKey = FALSE,
+ symbol = "circle", col = c("white", "red"), main="Map of mite LCBD (red = significant indices)")
+g2 <- s.value(all_xy[nonsignif,], res$LCBD[nonsignif], ppoint.alpha = 0.5,
+symbol = "circle", col = c("white", "blue"))
+g2+g1
+?s.value
+
+```
+
+```{r betapart, echo = FALSE}
+library(betapart)
+comm <- read.csv("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/data/communities.csv",row.names=1,sep=";")
+str(comm)
+groups <- factor(c(rep(1,3), rep(2,3)), labels = c("undisturbed","disturbed"))
+presabs<-ifelse(comm>0,1,0)
+dist<-beta.pair(presabs, index.family="jaccard")
+bd<-betadisper(dist[[2]],groups)
+plot(bd)
+boxplot(bd)
+anova(bd)
+
+comm <- plant_mat_pa_w[,-1]
+comm <- bird_mat_w[,-1]
+comm <- lichen_mat_species_pa_w[,-1] # no effect of sev/sev3 on overal beta; but turnover and nestedness are both significant individually
+comm <- all_spp_w_pa[,-1]
+groups <- plant_dat_pa_w$sev3
+groups <- bird_dat_w$sev
+groups <- lichen_dat_species_pa_w$sev3
+groups <- all_spp_dat_w$sev3
+presabs<-ifelse(comm>0,1,0)
+dist<-beta.pair(presabs, index.family="jaccard")
+bd<-betadisper(dist[[3]],groups)
+plot(bd)
+boxplot(bd)
+anova(bd)
+```
+
+# Gamma div (old)
+
+
+```{r sp_acc_curves, echo = FALSE}
+# need to use this to get the right colors, since the habitats are rearranged alphabetically in ggplot
+cbp2 <- c("#D95F02", "#E7298A", "#7570B3", "#1B9E77")
+
+#UNLS_col <- "#1B9E77"
+#Rx_col <- "#7570B3"
+#mult_col <- "#E7298A"
+#HS_col <- "#D95F02"
+
+# Species accumulation curves
+# All SPP
+all_spp_matrix <- merge(all_spp_w_pa, site_data, by = "site_id") %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(sev3,ABCO:YRWA)
+
+
+#subset each habitat into its own df
+all_spp_matrix %>% filter(sev3 == "h") -> h
+all_spp_matrix %>% filter(sev3 == "lu") -> lu
+all_spp_matrix %>% filter(sev3 == "multiple") -> multiple
+all_spp_matrix %>% filter(sev3 == "Rx") -> Rx
+
+#calc species accumulation curve for each habitat
+curve_h = specaccum(h[, -1], method = "random")
+curve_lu = specaccum(lu[, -1], method = "random")
+curve_multiple = specaccum(multiple[, -1], method = "random")
+curve_Rx = specaccum(Rx[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_h <- data.frame(Sites_h=curve_h$sites, Richness_h=curve_h$richness, SD_h=curve_h$sd) %>% mutate(sev = "HS")
+data_lu <- data.frame(Sites_lu=curve_lu$sites, Richness_lu=curve_lu$richness, SD_lu=curve_lu$sd) %>% mutate(sev = "UN/LS")
+data_mult <- data.frame(Sites_mult=curve_multiple$sites, Richness_mult=curve_multiple$richness, SD_mult=curve_multiple$sd) %>% mutate(sev = "Multiple")
+data_Rx <- data.frame(Sites_Rx=curve_Rx$sites, Richness_Rx=curve_Rx$richness, SD_Rx=curve_Rx$sd) %>% mutate(sev = "Rx")
+
+
+# ggplot species accummulation curves
+all_acc <- ggplot() +
+  scale_colour_manual(values=cbp2) +
+  geom_point(data = data_h, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h, aes(x=Sites_h, y=Richness_h , colour = sev)) +
+  geom_ribbon(data = data_h ,aes(x=Sites_h, ymin=(Richness_h-2*SD_h),ymax=(Richness_h+2*SD_h)),alpha=0.2, fill = HS_col) +
+  geom_point(data = data_lu, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu, aes(x=Sites_lu, y=Richness_lu , colour = sev)) +
+  geom_ribbon(data  = data_lu, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data  = data_mult, aes(x=Sites_mult, ymin=(Richness_mult-2*SD_mult),ymax=(Richness_mult+2*SD_mult)),alpha=0.2, fill = mult_col) +
+  geom_point(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx),ymax=(Richness_Rx+2*SD_Rx)),alpha=0.2, fill = Rx_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("All Species Accumulation Curves") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_mult$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_mult$Richness_mult[18], xend = 18, yend = data_mult$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_mult$Richness_mult[18], xend = 18, yend = data_mult$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_lu$Richness_lu[18], xend = 18, yend = data_lu$Richness_lu[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_Rx$Richness_Rx[18], xend = 18, yend = data_Rx$Richness_Rx[18])) +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 0, y = data_h$Richness_h[18], xend = 18, yend = data_h$Richness_h[18]))
+
+# Birds
+bird_matrix <- bird_dat_w %>% 
+  #mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(sev3,ACWO:YRWA)
+
+#subset each habitat into its own df
+bird_matrix %>% filter(sev3 == "h") -> h_b
+bird_matrix %>% filter(sev3 == "lu") -> lu_b
+bird_matrix %>% filter(sev3 == "multiple") -> multiple_b
+bird_matrix %>% filter(sev3 == "Rx") -> Rx_b
+
+#calc species accumulation curve for each habitat
+curve_h_b = specaccum(h_b[, -1], method = "random")
+curve_lu_b = specaccum(lu_b[, -1], method = "random")
+curve_multiple_b = specaccum(multiple_b[, -1], method = "random")
+curve_Rx_b = specaccum(Rx_b[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_h_b <- data.frame(Sites_h=curve_h_b$sites, Richness_h=curve_h_b$richness, SD_h=curve_h_b$sd) %>% mutate(sev = "HS")
+data_lu_b <- data.frame(Sites_lu=curve_lu_b$sites, Richness_lu=curve_lu_b$richness, SD_lu=curve_lu_b$sd) %>% mutate(sev = "UN/LS")
+data_mult_b <- data.frame(Sites_mult=curve_multiple_b$sites, Richness_mult=curve_multiple_b$richness, SD_mult=curve_multiple_b$sd) %>% mutate(sev = "Multiple")
+data_Rx_b <- data.frame(Sites_Rx=curve_Rx_b$sites, Richness_Rx=curve_Rx_b$richness, SD_Rx=curve_Rx_b$sd) %>% mutate(sev = "Rx")
+
+birds_acc <- ggplot() +
+  scale_colour_manual(values=cbp2) +
+  geom_point(data = data_lu_b, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu_b, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_ribbon(data = data_lu_b, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_Rx_b, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx_b, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx_b, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx),ymax=(Richness_Rx+2*SD_Rx)),alpha=0.2, fill = Rx_col) +
+  geom_point(data = data_mult_b, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult_b, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data  = data_mult_b, aes(x=Sites_mult, ymin=(Richness_mult-2*SD_mult),ymax=(Richness_mult+2*SD_mult)),alpha=0.2, fill = mult_col) +
+  geom_point(data = data_h_b, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h_b, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_ribbon(data = data_h_b, aes(x=Sites_h, ymin=(Richness_h-2*SD_h), ymax=(Richness_h+2*SD_h)), alpha=0.2, fill = HS_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Birds") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_mult_b$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = mult_col, aes(x = 0, y = data_mult_b$Richness_mult[18], xend = 18, yend = data_mult_b$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = UNLS_col, aes(x = 0, y = data_lu_b$Richness_lu[18], xend = 18, yend = data_lu_b$Richness_lu[18])) +
+  geom_segment(linetype = "dashed", color = Rx_col, aes(x = 0, y = data_Rx_b$Richness_Rx[18], xend = 18, yend = data_Rx_b$Richness_Rx[18])) +
+  geom_segment(linetype = "dashed", color = HS_col, aes(x = 0, y = data_h_b$Richness_h[18], xend = 18, yend = data_h_b$Richness_h[18]))  +
+  scale_y_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_mult_b$Richness_mult))) +
+  scale_x_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_lu_b$Sites_lu))) 
+
+# Plants
+plant_matrix <- plant_dat_pa_w %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(sev3,ABCO:YAMI)
+
+#subset each habitat into its own df
+plant_matrix %>% filter(sev3 == "h") -> h_p
+plant_matrix %>% filter(sev3 == "lu") -> lu_p
+plant_matrix %>% filter(sev3 == "multiple") -> multiple_p
+plant_matrix %>% filter(sev3 == "Rx") -> Rx_p
+
+#calc species accumulation curve for each habitat
+curve_h_p = specaccum(h_p[, -1], method = "random")
+curve_lu_p = specaccum(lu_p[, -1], method = "random")
+curve_multiple_p = specaccum(multiple_p[, -1], method = "random")
+curve_Rx_p = specaccum(Rx_p[, -1], method = "random")
+
+#creating dataframes for ggplot2
+data_h_p <- data.frame(Sites_h=curve_h_p$sites, Richness_h=curve_h_p$richness, SD_h=curve_h_p$sd) %>% mutate(sev = "HS")
+data_lu_p <- data.frame(Sites_lu=curve_lu_p$sites, Richness_lu=curve_lu_p$richness, SD_lu=curve_lu_p$sd) %>% mutate(sev = "UN/LS")
+data_mult_p <- data.frame(Sites_mult=curve_multiple_p$sites, Richness_mult=curve_multiple_p$richness, SD_mult=curve_multiple_p$sd) %>% mutate(sev = "Multiple")
+data_Rx_p <- data.frame(Sites_Rx=curve_Rx_p$sites, Richness_Rx=curve_Rx_p$richness, SD_Rx=curve_Rx_p$sd) %>% mutate(sev = "Rx")
+
+plants_acc <- ggplot() +
+  scale_colour_manual(values=cbp2) +
+  geom_point(data = data_h_p, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h_p, aes(x=Sites_h, y=Richness_h , colour = sev)) +
+  geom_ribbon(data = data_h_p ,aes(x=Sites_h, ymin=(Richness_h-2*SD_h),ymax=(Richness_h+2*SD_h)),alpha=0.2, fill = HS_col) +
+  geom_point(data = data_lu_p, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu_p, aes(x=Sites_lu, y=Richness_lu , colour = sev)) +
+  geom_ribbon(data  = data_lu_p, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_mult_p, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult_p, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data  = data_mult_p, aes(x=Sites_mult, ymin=(Richness_mult-2*SD_mult),ymax=(Richness_mult+2*SD_mult)),alpha=0.2, fill = mult_col) +
+  geom_point(data = data_Rx_p, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx_p, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx_p, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx),ymax=(Richness_Rx+2*SD_Rx)),alpha=0.2, fill = Rx_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Plants") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_mult_p$Richness_mult[18])) + #Making the horizontal and vertical lines at n = 18 samples
+  geom_segment(linetype = "dashed", color = mult_col, aes(x = 0, y = data_mult_p$Richness_mult[18], xend = 18, yend = data_mult_p$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = UNLS_col, aes(x = 0, y = data_lu_p$Richness_lu[18], xend = 18, yend = data_lu_p$Richness_lu[18])) +
+  geom_segment(linetype = "dashed", color = Rx_col, aes(x = 0, y = data_Rx_p$Richness_Rx[18], xend = 18, yend = data_Rx_p$Richness_Rx[18])) +
+  geom_segment(linetype = "dashed", color = HS_col, aes(x = 0, y = data_h_p$Richness_h[18], xend = 18, yend = data_h_p$Richness_h[18])) +
+  scale_y_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_mult_p$Richness_mult))) + #I want to get the axis to start at zero
+  scale_x_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_lu_p$Sites_lu))) 
+
+# Lichens
+lichen_matrix <- lichen_dat_species_pa_w %>% 
+#  mutate(sev3 = ifelse(sev == "u" | sev == "l", "lu", sev)) %>% 
+  dplyr::select(-c(site_id,fire:sev_cov)) # Ahtiana:Xanthomendoza for genus
+
+#subset each habitat into its own df
+lichen_matrix %>% filter(sev3 == "h") -> h
+lichen_matrix %>% filter(sev3 == "lu") -> lu
+lichen_matrix %>% filter(sev3 == "multiple") -> multiple
+lichen_matrix %>% filter(sev3 == "Rx") -> Rx
+
+# species accumulation curve for each habitat
+curve_h = specaccum(h %>% dplyr::select(-sev3), method = "random")
+curve_lu = specaccum(lu%>% dplyr::select(-sev3), method = "random")
+curve_multiple = specaccum(multiple%>% dplyr::select(-sev3), method = "random")
+curve_Rx = specaccum(Rx%>% dplyr::select(-sev3), method = "random")
+
+#creating dataframes for ggplot2
+data_h <- data.frame(Sites_h=curve_h$sites, Richness_h=curve_h$richness, SD_h=curve_h$sd) %>% mutate(sev = "HS")
+data_lu <- data.frame(Sites_lu=curve_lu$sites, Richness_lu=curve_lu$richness, SD_lu=curve_lu$sd) %>% mutate(sev = "UN/LS")
+data_mult <- data.frame(Sites_mult=curve_multiple$sites, Richness_mult=curve_multiple$richness, SD_mult=curve_multiple$sd) %>% mutate(sev = "Multiple")
+data_Rx <- data.frame(Sites_Rx=curve_Rx$sites, Richness_Rx=curve_Rx$richness, SD_Rx=curve_Rx$sd) %>% mutate(sev = "Rx")
+
+
+lichen_acc <- ggplot() +
+  scale_colour_manual(values=cbp2) +
+  geom_point(data = data_h, aes(x=Sites_h, y=Richness_h, colour = sev)) +
+  geom_line(data = data_h, aes(x=Sites_h, y=Richness_h , colour = sev)) +
+  geom_ribbon(data = data_h ,aes(x=Sites_h, ymin=(Richness_h-2*SD_h),ymax=(Richness_h+2*SD_h)),alpha=0.2, fill = HS_col) +
+  geom_point(data = data_lu, aes(x=Sites_lu, y=Richness_lu, colour = sev)) +
+  geom_line(data = data_lu, aes(x=Sites_lu, y=Richness_lu , colour = sev)) +
+  geom_ribbon(data  = data_lu, aes(x=Sites_lu, ymin=(Richness_lu-2*SD_lu),ymax=(Richness_lu+2*SD_lu)),alpha=0.2, fill = UNLS_col) +
+  geom_point(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_line(data = data_mult, aes(x=Sites_mult, y=Richness_mult, colour = sev)) +
+  geom_ribbon(data = data_mult, 
+                aes(x = Sites_mult,
+                  ymin = (Richness_mult-2*SD_mult), 
+                  ymax = (Richness_mult+2*SD_mult)), 
+                alpha = 0.2, 
+                fill = mult_col) +
+    geom_ribbon(data = data_h[c(1:3),], 
+                aes(x = Sites_h,
+                  ymin = (0), 
+                  ymax = (Richness_h+2*SD_h)), 
+                alpha = 0.2, 
+                fill = HS_col) +
+  geom_polygon(data = data_mult, aes(x=3, y=Richness_mult+2*SD_mult, fill="red")) + # COULD THIS BE A WAY TO FIX THE ISSUE?
+  geom_point(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_line(data = data_Rx, aes(x=Sites_Rx, y=Richness_Rx, colour = sev)) +
+  geom_ribbon(data = data_Rx, aes(x=Sites_Rx, ymin=(Richness_Rx-2*SD_Rx), ymax=(Richness_Rx+2*SD_Rx)), alpha=0.2, fill = Rx_col) +
+  theme_cowplot(12) + theme(legend.position = "none")  + theme(aspect.ratio=1) +
+  ggtitle("Lichens") +
+  xlab("# sites")  +
+  ylab("# species") +
+  geom_segment(linetype = "dashed", color = "dimgrey", aes(x = 18, y = 0, xend = 18, yend = data_mult$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = mult_col, aes(x = 0, y = data_mult$Richness_mult[18], xend = 18, yend = data_mult$Richness_mult[18])) +
+  geom_segment(linetype = "dashed", color = UNLS_col, aes(x = 0, y = data_lu$Richness_lu[18], xend = 18, yend = data_lu$Richness_lu[18])) +
+  geom_segment(linetype = "dashed", color = Rx_col, aes(x = 0, y = data_Rx$Richness_Rx[18], xend = 18, yend = data_Rx$Richness_Rx[18])) +
+  geom_segment(linetype = "dashed", color = HS_col, aes(x = 0, y = data_h$Richness_h[18], xend = 18, yend = data_h$Richness_h[18])) +
+  scale_y_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_lu$Richness_lu))) + # notice the issue here that setting the y axis to 0 causes the lower values of the geom_ribbon for the HS to cut out... not sure what to do.
+  scale_x_continuous(expand = c(0,0),
+                   limits = c(0,1.05 * max(data_lu$Sites_lu))) 
+
+  
+#  coord_cartesian(ylim = c(0,1.05 * max(data_lu$Richness_lu)), c(0,1.05 * max(data_lu$Sites_lu))) +
+
+#  ?geom_polygon
+#  scale_y_continuous(expand = c(0,0)) +
+#  expand_limits(y = c(0,1.05 * max(data_h$Richness_h))) +
+#  scale_x_continuous(expand = c(0,0)) +
+#  expand_limits(x = c(0,1.05 * max(data_lu$Sites_lu)))
+
+legend <- gtable_filter(ggplot_gtable(ggplot_build(plants_acc + theme(legend.position="right")+ theme(legend.title = element_blank()))), "guide-box")
+
+  
+sp_acc_plots <- grid.arrange(birds_acc, plants_acc, lichen_acc, legend,
+            # heights=c(1.1, 1.1, 0.1),
+#            widths = c(2.5, 2.5, 0.5),
+             widths = c(5, 5, 5, 1),
+             ncol = 4, nrow = 1, bottom = "Fig.4: Bird, plant and lichen species accumulation curves (error = +/- 2 x standard deviation).")
+
+
+```
+
