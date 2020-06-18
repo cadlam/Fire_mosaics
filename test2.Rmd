@@ -1,0 +1,19 @@
+---
+title: "test2"
+author: "Chris Adlam"
+date: "6/10/2020"
+output: html_document
+---
+
+```{r}
+r1 <- c(1,2,3,4,5)
+r2 <- c(2,3,4,5,6)
+r3 <- c(3,4,5,6,7)
+r4 <- c(4,5,6,7,8)
+
+tabletest <- data.frame(r1,r2,r3,r4)
+```
+
+
+### Effect of fire history on species composition
+The main PERMANOVA revealed that species composition varies for all taxa in response to the severity category (*p* < 0.001). Using pairwise PERMANOVAs to compare the habitats, there is no detectable difference between plant, bird or lichen communities of low severity and unburnt stands (Table 1) (plants: pseudo-*F* (~`r {2,1}`~) = H~2~O

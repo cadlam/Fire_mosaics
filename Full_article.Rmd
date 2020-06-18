@@ -1,25 +1,30 @@
 ---
-title: 'Can Forest Management Mitigate the risk of High Severity Fire and still Promote Biodiversity in the Klamath Mountains?'
-author: "Chris Adlam [...]"
+title: Can Forest Management Reduce Fuels and Still Promote Biodiversity in Forests with a Mixed Severity Fire Regime?
+author: "Chris Adlam"
 date: "6/2020"
-output:
-  pdf_document: default
-#    citation_package: natbib
+output: 
+  pdf_document:
+    extra_dependencies: ["flafter"]
   word_document: default
   html_document: default
+always_allow_html: true
+header-includes:
+    - \usepackage{setspace}\doublespacing
+csl: forest-ecology-and-management.csl
 bibliography: bibliography3.bib
-csl: ecology-and-society.csl
 ---
 
 ```{r global_options, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(echo=FALSE, echo=FALSE, warning=FALSE, message=FALSE)
+#knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
 ```
 
 ```{r scripts, include = F}
 source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/splist2presabs.R") #function for going from species list to presence/absence
 source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/pairwise_permanova.R")
 source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/scripts/data_load.R") #contains packages to load
-
+#webshot::install_phantomjs() # for gtsave()
+#options(tinytex.verbose = TRUE)
 ```
 
 ```{r child = "Introduction.Rmd"}

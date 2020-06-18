@@ -890,7 +890,7 @@ bird_matrix <- bird_mat_w[,-c(1:37)] %>%
   bind_rows(summarise_all(., funs(sum(.)))) # note: if wanting to make a row named total, could have used: funs(if(is.numeric(.)) sum(.) else "Total"
   
 ## keep only columns where minimum is reached (if subsetting some sites, change row number, here 49)
-bird_matrix <- bird_matrix[, (bird_matrix[111, ]) > 9]
+bird_matrix <- bird_matrix[, (bird_matrix[111, ]) > 0]
 ## adding back in the site id and removing true/false row (and making sure it's all read in as numeric)
 bird_matrix <- cbind(site_id = bird_mat_w[, 1], bird_matrix[-111, ]) %>%
   mutate_if(is.character, as.numeric)
@@ -899,11 +899,11 @@ bird_matrix <- cbind(site_id = bird_mat_w[, 1], bird_matrix[-111, ]) %>%
 #birds_matrix <- as.matrix(bird_matrix)
 
 # calculate distance for NMDS.
-NMDS.log<-log1p(bird_matrix[,-1])#[,-c(1:20)])
+NMDS.log<-bird_mat_w[,-1]#[,-c(1:20)])
 sol <- metaMDS(NMDS.log)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = bird_matrix$site_id)
+scrs <- cbind(scrs, site_id = bird_mat_w$site_id)
 scrs <- merge(scrs, site_data, by = "site_id")
 
 vf <- envfit(sol, NMDS.log, perm = 9)
@@ -951,7 +951,8 @@ p1
 # for species: 
 #NMDS.log<-log1p(lichen_dat_wide[,-1])#[,-c(1:20)])
 #for genus:
-NMDS.log<-log1p(lichen_dat_genus_pa_w[,-1])#[,-c(1:20)])
+NMDS.log<-lichen_mat_species_pa_w %>% dplyr::select(-c(site_id)) #[,-c(1:20)])
+           
 sol <- metaMDS(NMDS.log)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))
@@ -983,6 +984,7 @@ Cred <- cbind(Cred, Species = rownames(Cred))
 p <- ggplot(scrs) +
   geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!
+  stat_ellipse(level = 0.9, aes(x = NMDS1, y = NMDS2, colour = sev)) +
   geom_segment(data = Cred,
                aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
                arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
@@ -993,14 +995,14 @@ p
 ```
 
 
-#### Insects
+#### Plants
 ```{r, echo=FALSE,results='hide',fig.keep='all'}
 # calculate distance for NMDS
-NMDS.log<-log1p(insect_dat[,-c(1:2)])#[,-c(1:20)])
+NMDS.log<-plant_mat_pa_w[,-1]#[,-c(1:20)])
 sol <- metaMDS(NMDS.log)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))
-scrs <- cbind(scrs, site_id = insect_dat$site_id)
+scrs <- cbind(scrs, site_id = plant_mat_pa_w$site_id)
 scrs <- merge(scrs, site_data, by = "site_id")
 
 vf <- envfit(sol, NMDS.log, perm = 9)
@@ -1033,7 +1035,7 @@ p <- ggplot(scrs, mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
                arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
   geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species),
             size = 3) +
-  labs(title = "Figure 4: NMDS for insects")
+  labs(title = "Figure 4: NMDS for plants")
 p
 ```
 
@@ -1060,7 +1062,7 @@ p
 # for species: 
 #NMDS.log<-log1p(lichen_dat_wide[,-1])#[,-c(1:20)])
 #for genus:
-NMDS.log<-log1p(all_spp_w_pa[,-1])#[,-c(1:20)])
+NMDS.log<-(all_spp_w_pa[,-1])#[,-c(1:20)])
 sol <- metaMDS(NMDS.log, k = 2)
 
 scrs <- as.data.frame(scores(sol, display = "sites"))
