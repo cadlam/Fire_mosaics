@@ -89,7 +89,7 @@ PERMANOVA_sev_plants <- kable(adonis2(log1p(comp.sub) ~ sev, permutations = 9999
 
 
 ## Pairwise PERMANOVA
-# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
+# 1 = High severity; 2 = low-severity; 3 = Unburnt; 4= multiple; 5 = Rx.
 #comp.data <- comp.data %>% 
 #    dplyr::mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
 
@@ -135,7 +135,7 @@ PERMANOVA_sev_birds <- kable(adonis2(comp.sub ~ sev, permutations = 9999), capti
 #adonis2(comp.sub ~ (sev*tsf)*burn, permutations = 999)
 
 ## Pairwise PERMANOVA function (run)
-# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
+# 1 = High severity; 2 = low-severity; 3 = Unburnt; 4= multiple; 5 = Rx.
 #comp.data <- comp.data %>% 
 #    dplyr::mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
 
@@ -182,7 +182,7 @@ PERMANOVA_sev_lichens <- kable(format(adonis2(comp.sub ~ sev, permutations = 999
 
 
 ## Pairwise PERMANOVA function (run)
-# 1 = High severity; 2 = Low severity; 3 = Unburnt; 4= multiple; 5 = Rx.
+# 1 = High severity; 2 = low-severity; 3 = Unburnt; 4= multiple; 5 = Rx.
 #comp.data <- comp.data %>% 
 #    dplyr::mutate(sev2 = ifelse(sev == 'h' , "1", ifelse(sev == 'l' , "2", "3")))
 
@@ -226,13 +226,16 @@ rownames(all_pairwise_table) <- c()
 
 kable(all_pairwise_table, digits = 3, caption = "Pairwise PERMANOVA results") %>% 
   kable_styling("hover", full_width = F) %>%
-  add_header_above(c(" ", "plants" = 2, "birds" = 2, "lichens" = 2))
+  add_header_above(c(" ", "plants" = 2, "birds" = 2, "lichens" = 2)) %>% 
+  save_kable("output/pair_perm.png")
 ```
+
+![](output/pair_perm.png)
 
 ## Variation in community composition across habitats
 
 ### Effect of fire history on species composition
-The main PERMANOVA revealed that species composition varies for all taxa in response to the severity category (*p* < 0.001). Using pairwise PERMANOVAs to compare the habitats, there is no detectable difference between plant, bird or lichen communities of low severity and unburnt stands (Table 1) (plants: pseudo-*F*~(`r pair_plants[3,2]`,`r pair_plants[3,3]`)~ = `r round(pair_plants[3,4], 2)` and *p* = `r pair_plants[3,5]`; birds: pseudo-*F*~(`r pair_birds[3,2]`,`r pair_birds[3,3]`)~  = `r pair_birds[3,4]` and *p* = `r pair_birds[3,5]`; lichens: pseudo-*F*~(`r pair_lichens[3,2]`,`r pair_lichens[3,3]`)~ = `r pair_lichens[3,4]` and *p* = `r (pair_lichens[3,6])`). In addition, bird communities of high severity burns and multiple burns are not detectably different (pseudo-*F*~(`r pair_birds[5,2]`,`r pair_birds[5,3]`)~ = `r pair_birds[5,4]` and *p* = `r pair_birds[5,5]`). For lichens, the only habitat that stands out is the HS habitat (*p* < 0.02), although it is not statistically different from the MULT habitat (*p* = 1).
+The main PERMANOVA revealed that species composition varies for all taxa in response to the severity category (*p* < 0.001). Using pairwise PERMANOVAs to compare the habitats, there is no detectable difference between plant, bird or lichen communities of low-severity and unburnt stands (Table 1) (plants: pseudo-*F*~(`r pair_plants[3,2]`,`r pair_plants[3,3]`)~ = `r round(pair_plants[3,4], 2)` and *p* = `r pair_plants[3,5]`; birds: pseudo-*F*~(`r pair_birds[3,2]`,`r pair_birds[3,3]`)~  = `r pair_birds[3,4]` and *p* = `r pair_birds[3,5]`; lichens: pseudo-*F*~(`r pair_lichens[3,2]`,`r pair_lichens[3,3]`)~ = `r pair_lichens[3,4]` and *p* = `r (pair_lichens[3,6])`). In addition, bird communities of high severity burns and multiple burns are not detectably different (pseudo-*F*~(`r pair_birds[5,2]`,`r pair_birds[5,3]`)~ = `r pair_birds[5,4]` and *p* = `r pair_birds[5,5]`). For lichens, the only habitat that stands out is the HS habitat (*p* < 0.02), although it is not statistically different from the MULT habitat (*p* = 1).
 
 
 ```{r NMDS, echo=FALSE,results='hide'}
@@ -282,14 +285,14 @@ p <- ggplot(scrs, mapping = aes(x = NMDS1, y = NMDS2)) +
 #  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species), size = 3) +
   theme_cowplot(12)+
 #  labs(colour = "Severity Category") +
-  scale_colour_discrete(name = "Severity Category", labels = c("High Severity", "Multiple", "Thin+Burn", "Low Severity", "Unburnt")) +
+  scale_colour_discrete(name = "Severity Category", labels = c("High Severity", "Multiple", "Thin+Burn", "low-severity", "Unburnt")) +
   labs(title = "Figure 3: NMDS for all species. Ellipses represent 90% CI.")
 p
 ```
 
 ### Species assemblage ordination
 
-The NMDS confirms a considerable overlap in species communities of long-unburnt and low severity burn stands. High severity stands have distinct species communities, while the communities in thinned and burnt stands and multiple burn stands appear to be intermediate between the high severity stands and long-unburnt/low severity stands. Figure 3 shows the first two dimensions of a 3-dimensional ordination that found convergent solutions with a stress of `r round(sol$stress, 3)`.
+The NMDS confirms a considerable overlap in species communities of long-unburnt and low-severity burn stands. High severity stands have distinct species communities, while the communities in thinned and burnt stands and multiple burn stands appear to be intermediate between the high severity stands and long-unburnt/low-severity stands. Figure 3 shows the first two dimensions of a 3-dimensional ordination that found convergent solutions with a stress of `r round(sol$stress, 3)` ("stress" represents the degree of distortion required to reduce the dimensionality of the data; a stress of <0.20 is considered acceptable).
 
 ## Alpha, Beta, Gamma diversity patterns
 
@@ -535,9 +538,9 @@ p_hs_b <- pf(f_hs_b, df_mod_hs_b, df_res_hs_b, lower.tail = FALSE)
 #ggplot(multrx, aes(x=shrub_cov, y = rich_plant)) + geom_point() + geom_smooth(method = lm)
 ```
   
-Bird and plant species richness were highest in the multiple burns and thinned and burnt stands (for plants the difference between high severity burns and multiple burns was not significant) (Figure 4). Bird and plant richness in low severity burns and unburnt plots was slightly lower than in high severity burns, but the difference was overall not significant. Lichens were predictably less diverse in the high severity stands, but richness in the other severity categories was similar.
+Bird and plant species richness were highest in the multiple burns and thinned and burnt stands (for plants the difference between high severity burns and multiple burns was not significant) (Figure 4). Bird and plant richness in low-severity burns and unburnt plots was slightly lower than in high severity burns, but the difference was overall not significant. Lichens were predictably less diverse in the high severity stands, but richness in the other severity categories was similar.
 
-Within the multiple burns and thinned and burnt stands, canopy cover was negatively correlated with plant richness (*F*~(1,44)~ = `r round(f_multrx, 3)`, *p* = `r round(p_multrx, 3)`) and bird richness (*F*~(1,44)~ = `r round(f_multrx_b, 3)`, *p* = `r round(p_multrx_b, 3)`). In the low severity and long-unburnt stands, canopy cover was negatively correlated with bird richness (*F*~(1,35)~ = `r round(f_lu_b, 3)`, *p* = `r round(p_lu_b, 3)`), but only weakly correlated with plant richness (*F*~(1,35)~ = `r round(f_lu_p, 3)`, *p* = `r round(p_lu_p, 3)`). In the high severity stands, canopy cover was not correlated with either plant or bird richness (*F*~(1,25)~ = `r round(f_hs_p, 3)`, *p* = `r round(p_hs_p, 3)` and *F*~(1,25)~ = `r round(f_hs_b, 3)`, *p* = `r round(p_hs_b, 3)` respectively).
+Within the multiple burns and thinned and burnt stands, canopy cover was negatively correlated with plant richness (*F*~(1,44)~ = `r round(f_multrx, 3)`, *p* = `r round(p_multrx, 3)`) and bird richness (*F*~(1,44)~ = `r round(f_multrx_b, 3)`, *p* = `r round(p_multrx_b, 3)`). In the low-severity and long-unburnt stands, canopy cover was negatively correlated with bird richness (*F*~(1,35)~ = `r round(f_lu_b, 3)`, *p* = `r round(p_lu_b, 3)`), but only weakly correlated with plant richness (*F*~(1,35)~ = `r round(f_lu_p, 3)`, *p* = `r round(p_lu_p, 3)`). In the high severity stands, canopy cover was not correlated with either plant or bird richness (*F*~(1,25)~ = `r round(f_hs_p, 3)`, *p* = `r round(p_hs_p, 3)` and *F*~(1,25)~ = `r round(f_hs_b, 3)`, *p* = `r round(p_hs_b, 3)` respectively).
 
 ### Beta Diversity
 
@@ -744,7 +747,7 @@ grid.arrange(b_BD_jaccard, p_BD_jaccard, l_BD_jaccard, nrow = 1, bottom = "Fig.5
 
 ### Gamma diversity
 
-Based on the extrapolated species richness, the total pool of species for birds appears to be largest in the multiple burns and thinned and burnt stands, intermediate in the high severity burns, and lowest in the low severity and long-unburnt stands (Fig. 5). For plants, the pattern is the same except that species pool from the thinned and burnt stands appears smaller than the high severity burns, and more similar to the low severity stands instead. High severity fire eliminates lichens and most of their substrate [@millerAlteredFireRegimes2018], and their species pool is smaller in the high severity stands than in the other severity categories, which are similar.
+Based on the extrapolated species richness, the total pool of species for birds appears to be largest in the multiple burns and thinned and burnt stands, intermediate in the high severity burns, and lowest in the low-severity and long-unburnt stands (Fig. 5). For plants, the pattern is the same except that species pool from the thinned and burnt stands appears smaller than the high severity burns, and more similar to the low-severity stands instead. High severity fire eliminates lichens and most of their substrate [@millerAlteredFireRegimes2018], and their species pool is smaller in the high severity stands than in the other severity categories, which are similar.
 
 ```{r iNEXT, echo = FALSE, fig.width=8, fig.height=6,results='hide'}
 #, fig.width=6, fig.height=5
@@ -883,11 +886,12 @@ hs_indic <- hs_indic1 %>%
 
 insect_indic <- format(hs_indic[order(hs_indic$IndVal, decreasing = T), ], digits = 2)
 
-p <- kable(insect_indic, caption = "Insect indicators of early-seral habitat") %>% 
-  kable_styling()
-
-p
+kable(insect_indic, caption = "Insect indicators of early-seral habitat") %>% 
+  kable_styling() %>% 
+  save_kable("output/insect_indic.png")
 ```
+
+![](output/insect_indic.png)
 
 ```{r plant_indval, echo = F, results='hide'}
 # This finds similar results to labdsv package. But if I let it use different combinations (eg. h+l, h+u, h+l+u), it finds higher indvals for some of those combinations. Troubling!
@@ -1007,7 +1011,7 @@ bird_unls_indic1 <- bird_unls_indic1[c("Taxon", "Species", "IndVal", "P-value")]
 
 hs_spp <- bind_rows(plant_hs_indic1, bird_hs_indic1)%>% dplyr::mutate(pref = "High severity")
 
-unls_spp <- bind_rows(plant_unls_indic1, bird_unls_indic1) %>% mutate(pref = "Unburnt/Low severity")
+unls_spp <- bind_rows(plant_unls_indic1, bird_unls_indic1) %>% mutate(pref = "Unburnt/low-severity")
 
 all_indic <- rbind(hs_spp, unls_spp)
 
@@ -1021,7 +1025,7 @@ hs_spp_ind <- hs_spp %>% #rbind(hs_spp, unls_spp) %>%
     locations = cells_row_groups(groups = T)
     ) %>%
   tab_header(
-    title = md("Table 2: Indicator species for high severity burns and low severity/unburnt stands"),
+    title = md("Table 2: Indicator species for high severity burns and low-severity/unburnt stands"),
     subtitle = md("Species highlighted in gray also favored multiple burns and/or thinned and burnt stands.") ) 
 
 
@@ -1046,7 +1050,7 @@ hs_spp_ind1 <- hs_spp %>% #rbind(hs_spp, unls_spp) %>%
     locations = cells_row_groups(groups = T)
     ) %>%
   tab_header(
-    title = md("Table 2: Indicator species for high severity burns and low severity/unburnt stands"),
+    title = md("Table 2: Indicator species for high severity burns and low-severity/unburnt stands"),
     subtitle = md("Species highlighted in gray also favored multiple burns and/or thinned and burnt stands.") ) %>% 
   tab_spanner(
     label = "Indicators of High Severity Burns",
@@ -1066,7 +1070,7 @@ unls_spp_ind1 <- unls_spp %>%
     locations = cells_row_groups(groups = T)
     ) %>% 
   tab_spanner(
-    label = "Table 2: Indicators of Unburnt/Low Severity Stands",
+    label = "Table 2: Indicators of Unburnt/low-severity Stands",
     columns = vars(
       Species, IndVal, "P-value")
   )
@@ -1081,9 +1085,10 @@ p2 <- unls_spp_ind %>% gtsave("unls_ind.png", path = "/Users/christopheradlam/De
 
 ![](output/plant_bird_indic2.png)
 
-## Early- and late-seral species in actively and passively managed stands
+## Early and late seral species in actively and passively managed stands
 
-The indicator analysis for birds and plants of high severity and low severity/unburnt stands suggests distinct communities in each habitat (Table 2). Plants preferring such stands were predictably shade-tolerant species (e.g. *Goodyera oblongifolia* (rattlesnake plantain), *Pyrola spp.* (wintergreen), *Adenocaulon bicolor* (pathfinder), *Anisocarpus madioides* (woodland tarweed)), whereas these stands were favored by bark-gleaning (Red-breasted Nuthatch and Brown Creeper) and canopy-dwelling birds (Chestnut-backed Chickadee, Black-throated Gray/Hermit Warbler, Cassin's Vireo). In contrast, species that preferred early-seral conditions created by high severity fire included shrubs (e.g. *Ceanothus integerrimus* (deerbrush), *Rubus spp.* (blackberries, raspberries and thimbleberries), *Arctostaphylos spp.* (manzanita), *Solanum parishii* (Parish's nightshade)), grasses (e.g. *Melica spp.* (oniongrass), *Elymus glaucus* (blue wildrye), *Bromus carinatus* (California brome)), annual forbs (e.g. *Madia spp.* (tarweeds), *Collomia heterophylla* (vari-leaved collomia), *Cryptantha spp.* (popcorn flower), *Epilobium spp.* (willowherbs)) and perennial forbs (e.g. *Asyneuma prenanthoides* (California harebell), *Eriophyllum lanatum* (woolly sunflower), *Dichelostemma spp.*, *Chamerion angustifolium* (fireweed), *Hosackia crassifolia* (big deervetch)). Birds that favored these stands tended to be species associated with shrubs and deciduous tree cover (e.g. Spotted Towhee, Wrentit, Nashville Warbler, MacGillivray's Warbler, Anna's/Rufous Hummingbirds, Black-headed Grosbeak), open habitat species (Lesser Goldfinch, Lazuli Bunting), and cavity nesters (Acorn Woodpeckers, House Wren, Northern Flicker). 
+The indicator analysis for birds and plants of high severity and low-severity/unburnt stands suggests distinct communities in each habitat (Table 2). Plants preferring such stands were predictably shade-tolerant species (e.g. *Goodyera oblongifolia* (rattlesnake plantain), *Pyrola spp.* (wintergreen), *Adenocaulon bicolor* (pathfinder), *Anisocarpus madioides* (woodland tarweed)), whereas these stands were favored by bark-gleaning (Red-breasted Nuthatch and Brown Creeper) and canopy-dwelling birds (Chestnut-backed Chickadee, Black-throated Gray/Hermit Warbler, Cassin's Vireo). In contrast, species that preferred early-seral conditions created by high severity fire included shrubs (e.g. *Ceanothus integerrimus* (deerbrush), *Rubus spp.* (blackberries, raspberries and thimbleberries), *Arctostaphylos spp.* (manzanita), *Solanum parishii* (Parish's nightshade)), grasses (e.g. *Melica spp.* (oniongrass), *Elymus glaucus* (blue wildrye), *Bromus carinatus* (California brome)), annual forbs (e.g. *Madia spp.* (tarweeds), *Collomia heterophylla* (vari-leaved collomia), *Cryptantha spp.* (popcorn flower), *Epilobium spp.* (willowherbs)) and perennial forbs (e.g. *Asyneuma prenanthoides* (California harebell), *Eriophyllum lanatum* (woolly sunflower), *Dichelostemma spp.* (blue dicks/Indian potatoes), *Chamerion angustifolium* (fireweed), *Hosackia crassifolia* (big deervetch)). Birds that favored these stands tended to be species associated with shrubs and deciduous tree cover (e.g. Spotted Towhee, Wrentit, Nashville Warbler, MacGillivray's Warbler, Anna's/Rufous Hummingbirds, Black-headed Grosbeak), open habitat species (Lesser Goldfinch, Lazuli Bunting), and cavity nesters (Acorn Woodpeckers, House Wren, Northern Flicker). This classification into early and late seral species agrees with other regional studies for those species for which information is available [@donatoVegetationResponseShort2009; @fontaineBirdCommunitiesFollowing2009].
+
 
 ```{r echo = FALSE}
 #*Kruskall-Wallis rank test?
@@ -1827,12 +1832,12 @@ p_birds_UNLS <- ggplot(prefs_birds_UNLS[-1,], aes(x = hab, y = num, width=1)) +
 #options(digits = 0)
 ```
 
-I identified `r prefs_all_HS[1,3]` species (birds, plants and lichens combined) that seemed to favor high severity burns (species found twice as frequently in that habitat compared to low severity and unburnt stands), and `r prefs_all_UNLS[1,3]` species that favored low severity and unburnt stands (species found twice as frequently in that habitat compared to high severity burns). Additionally, most species that have a preference for either of these habitats exhibited the same affinity for multiple burns and thinned and burnt sites: `r prefs_all_UNLS[2,3]` species (`r prefs_all_UNLS[2,3]/prefs_all_UNLS[1,3]*100`%) preferring low severity and unburnt stands also favor multiple burns, while `r prefs_all_UNLS[3,3]` (`r prefs_all_UNLS[3,3]/prefs_all_UNLS[1,3]*100`%) also favor thinned and burnt sites. Conversely, `r prefs_all_HS[2,3]` species (`r prefs_all_HS[2,3]/prefs_all_HS[1,3]*100`%) that prefer high severity burns also favor multiple burns, and `r prefs_all_HS[3,3]` (`r prefs_all_HS[3,3]/prefs_all_HS[1,3]*100`%) also favor thinned and burnt sites. Figure 7 (a and b) displays graphically the proportion of plants and birds that prefer high severity burns or unburnt and low severity stands that also favor multiple burns and thin+burn sites. 
+I identified `r prefs_all_HS[1,3]` species (birds, plants and lichens combined) that seemed to favor high severity burns (occurring at least twice as frequently in that habitat compared to low-severity and unburnt stands), and `r prefs_all_UNLS[1,3]` species that favored low-severity and unburnt stands (occurring at least twice as frequently in that habitat compared to high severity burns). These habitat associations correspond to the findings of other fire ecology studies [@fontaineBirdCommunitiesFollowing2009]. Additionally, most species that have a preference for either of these habitats exhibited the same affinity for multiple burns and thinned and burnt sites: `r prefs_all_UNLS[2,3]` species (`r prefs_all_UNLS[2,3]/prefs_all_UNLS[1,3]*100`%) preferring low-severity and unburnt stands also favor multiple burns, while `r prefs_all_UNLS[3,3]` (`r prefs_all_UNLS[3,3]/prefs_all_UNLS[1,3]*100`%) also favor thinned and burnt sites. Conversely, `r prefs_all_HS[2,3]` species (`r prefs_all_HS[2,3]/prefs_all_HS[1,3]*100`%) that prefer high severity burns also favor multiple burns, and `r prefs_all_HS[3,3]` (`r prefs_all_HS[3,3]/prefs_all_HS[1,3]*100`%) also favor thinned and burnt sites. Figure 7 (a and b) displays graphically the proportion of plants and birds that prefer high severity burns or unburnt and low-severity stands that also favor multiple burns and thin+burn sites. 
 
 ```{r bar_plots_HS, echo = F, out.width="80%"}
 #grid.arrange(p_birds_HS, p_plants_HS, nrow=1)#, heights = c(21,21), widths = c(21,21))
 #grid.arrange(p_birds_UNLS, p_plants_UNLS, nrow=1)
-title <- paste("Fig. 7a: Most bird species that favor high severity and low severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
+title <- paste("Fig. 7a: Most bird species that favor high severity and low-severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
 
 grid.arrange(p_birds_UNLS, p_birds_HS, nrow=1, bottom = title)
 
@@ -1841,7 +1846,7 @@ grid.arrange(p_birds_UNLS, p_birds_HS, nrow=1, bottom = title)
 ```{r bar_plots_UNLS, echo = F, out.width="80%"}
 #grid.arrange(p_birds_HS, p_plants_HS, nrow=1)#, heights = c(21,21), widths = c(21,21))
 #grid.arrange(p_birds_UNLS, p_plants_UNLS, nrow=1)
-title <- paste("Fig. 7a: Most plant species that favor high severity and low severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
+title <- paste("Fig. 7a: Most plant species that favor high severity and low-severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
 
 grid.arrange(p_plants_UNLS, p_plants_HS, nrow=1, bottom = title)
 ```

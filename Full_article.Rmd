@@ -3,9 +3,9 @@ title: Can Forest Management Reduce Fuels and Still Promote Biodiversity in Fore
 author: "Chris Adlam"
 date: "6/2020"
 output: 
+  word_document: default
   pdf_document:
     extra_dependencies: ["flafter"]
-  word_document: default
   html_document: default
 always_allow_html: true
 header-includes:
