@@ -3,8 +3,8 @@ title: "Planning optimal fire mosaics- initial findings"
 author: "Chris Adlam"
 date: "10/2018"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 editor_options: 
   chunk_output_type: console
 ---
@@ -1765,7 +1765,7 @@ kable(spp_diff_table, caption = "Table 1: species restricted to only HS or LS/UN
 
 ### MRPP (plants)
 ```{r echo = F}
-mrpp_data <- plant_mat_cov_w[,-1]
+mrpp_data <- plant_mat_pa_w[,-1]
   
   
   plant_dat_cov_w %>% # [,c(2:82)]
@@ -1775,6 +1775,9 @@ mrpp_data <- plant_mat_cov_w[,-1]
 
 mrpp_cat <- plant_dat_cov_w
   
+
+mrpp_data <- div$rich_plant
+mrpp_cat <- div
   
   
   plant_dat_cov_w %>% 
@@ -1788,8 +1791,8 @@ plant.mrpp <- mrpp(plant_mat_cov_w[,-1], plant_dat_cov_w$sev)
 def.par <- par(no.readonly = TRUE)
 layout(matrix(1:2,nr=1))
 
-plot(plant.ord <- metaMDS(mrpp_data, type="text", display="sites"))
-ordihull(plant.ord, mrpp_cat$sev, label = T)
+#plot(plant.ord <- metaMDS(mrpp_data, type="text", display="sites"))
+#ordihull(plant.ord, mrpp_cat$sev, label = T)
 
 with(plant.mrpp, {
   fig.dist <- hist(boot.deltas, xlim=range(c(delta,boot.deltas)), 
@@ -1802,10 +1805,22 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-plant.md <- meandist(vegdist(mrpp_data), mrpp_cat$sev, method = "bray") # Need to adjust the columns to only keep species.... should fix this
+plant.md <- meandist(vegdist(mrpp_data), mrpp_cat$sev) # Need to adjust the columns to only keep species.... should fix this
 plant.md
 summary(plant.md)
 plot(plant.md)
+
+
+out1<- aovp(rich_plant ~ sev, div)
+
+anova(out1) # permutational anova
+
+TukeyHSD(out1) # pairwise comparisons
+
+
+
+?aovp
+
 
 #test to see if any columns are not numeric
 #plant_mat_cov_w[,-1] %>% select_if(negate(is.numeric))
@@ -1847,14 +1862,18 @@ plot(insect.md)
 ## MRPP (birds) 
 
 ```{r echo = F}
-bird_dat_w1 <- bird_dat_w %>% 
-  filter(yr == 2018) %>% 
-  mutate(sev = ifelse(sev == "multiple", "h", sev))
+bird_dat_w1 <- div %>% dplyr::select(sev, rich_bird)#%>% 
+#  filter(yr == 2018) %>% 
+#  mutate(sev = ifelse(sev == "multiple", "h", sev))
 
 mrpp_data <- bird_dat_w1 %>% 
-  dplyr::select(ACWO:YRWA)
+  dplyr::select(rich_bird)
 
-bird.mrpp <- mrpp(mrpp_data, bird_dat_w1$sev, distance = "binomial")
+bird.mrpp <- mrpp(mrpp_data, bird_dat_w1$sev)
+
+?mrpp
+
+bird.mrpp$Pvalue
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
@@ -1874,10 +1893,13 @@ par(def.par)
 
 ## meandist 
 # calculates a matrix of mean within-cluster dissimilarities (diagonal) and between-cluster dissimilarities (off-diagonal elements)
-bird.md <- meandist(vegdist(mrpp_data), bird_dat_w1$sev, method = "binomial")
+bird.md <- meandist(vegdist(mrpp_data), bird_dat_w1$sev, method = "jaccard")
 bird.md
 summary(bird.md)
 plot(bird.md)
+
+str(bird.md)
+bird.md
 ```
 
 ## MRPP (lichens) 
@@ -1885,11 +1907,17 @@ plot(bird.md)
 ```{r echo = F}
 #meandist not working now for some reason, same with plants above
 
-mrpp_data <- lichen_dat_genus_pa_w %>% select(Ahtiana:Xanthomendoza)
+lich_dat_mrpp <- lichen_dat_species_pa_w %>%dplyr::filter(sev == "Rx" | sev == "h")
 
-mrpp_cat <- lichen_dat_genus_pa_w
+mrpp_data <- lich_dat_mrpp %>% dplyr::select(-c(fire:tsf_num, site_id))
+
+mrpp_cat <- lich_dat_mrpp
 
 lichen.mrpp <- mrpp(mrpp_data, mrpp_cat$sev)
+
+lichen.mrpp$Pvalue
+
+summary(lichen.mrpp)
 
 # Save and change plotting parameters
 def.par <- par(no.readonly = TRUE)
@@ -1914,7 +1942,18 @@ lichen.md
 summary(lichen.md)
 plot(lichen.md)
 
+library(asbio)
+Mrpp(mrpp_data, mrpp_cat$sev)
+??Mrpp
+library(Mrpp)
 
+library(vegan)
+data(dune)
+data(dune.env)
+asbio::Mrpp(dune, dune.env$Management)
+
+help(package = asbio)
+# can I install package asbio v. 0.3-1? Or check for later versions?
 
 
 

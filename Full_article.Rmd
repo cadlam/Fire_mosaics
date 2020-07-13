@@ -3,9 +3,9 @@ title: Can Forest Management Reduce Fuels and Still Promote Biodiversity in Fore
 author: "Chris Adlam"
 date: "6/2020"
 output: 
-  word_document: default
   pdf_document:
     extra_dependencies: ["flafter"]
+  word_document: default
   html_document: default
 always_allow_html: true
 header-includes:
@@ -16,6 +16,7 @@ bibliography: bibliography3.bib
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(echo=FALSE, echo=FALSE, warning=FALSE, message=FALSE)
+#options(knitr.table.format = "latex")
 #knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
 ```
 

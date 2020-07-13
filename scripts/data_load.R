@@ -5,7 +5,7 @@ setwd("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics")
 
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(grid, gt, ggpubr, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon, multcomp, gtable, citr, indicspecies, iNEXT, vegetarian, tidyverse, emmeans, ggplot2, cowplot) #gtable is from package lemon
+pacman::p_load(magick, webshot, lmPerm, grid, gt, ggpubr, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon, multcomp, gtable, citr, indicspecies, iNEXT, vegetarian, tidyverse, emmeans, ggplot2, cowplot) #gtable is from package lemon
 #install.packages('tinytex')
 #tinytex::install_tinytex()
 
@@ -232,7 +232,7 @@ lichen_dat_genus_l <- lichen_mat_species_w %>%
 #lichen_mat_genus_pa_w <- lichen_dat_genus_pa_l %>% 
 #  spread(key = species, value = pa, fill = 0) %>% 
 #  dplyr::select(c(site_id:Xanthomendoza)) #%>% 
-  #dplyr::mutate("DUMB" = 1) # need dummy sp?
+#  dplyr::mutate("DUMB" = 1) # need dummy sp?
 
 #lichen_dat_genus_pa_w <- lichen_mat_genus_pa_w %>% 
 #  left_join(., site_data, by ="site_id")
