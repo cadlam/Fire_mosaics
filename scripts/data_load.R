@@ -5,7 +5,8 @@ setwd("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics")
 
 # Load packages
 if(!require('pacman'))install.packages('pacman')
-pacman::p_load(magick, webshot, lmPerm, grid, gt, ggpubr, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, rowr, plotly, spdep, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon, multcomp, gtable, citr, indicspecies, iNEXT, vegetarian, tidyverse, emmeans, ggplot2, cowplot) #gtable is from package lemon
+pacman::p_load(multcompView, magick, webshot, lmPerm, grid, gt, ggpubr, vegan, data.table, kableExtra, dplyr, plyr, nloptr, labdsv, betapart, lattice, plotly, bbmle, rsq, lmtest, broom, lmerTest, lme4, emmeans, gridExtra, BiodiversityR, lemon, multcomp, gtable, citr, indicspecies, iNEXT, vegetarian, tidyverse, emmeans, ggplot2, cowplot) #gtable is from package lemon
+#rowr, spdep
 #install.packages('tinytex')
 #tinytex::install_tinytex()
 
