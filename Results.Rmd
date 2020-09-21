@@ -1,9 +1,10 @@
 ---
 title: "Results"
 author: "Chris Adlam"
-output: 
+output:
+  word_document: default
   pdf_document:
-    extra_dependencies: ["flafter"]
+    extra_dependencies: flafter
   html_document: default
 editor_options:
   chunk_output_type: console
@@ -28,10 +29,11 @@ source("/Users/christopheradlam/Desktop/Davis/R/GitHub Repos/Fire_mosaics/script
 #brewer.pal(n = 4, name = "Dark2")
 
 cbp1 <- c("#D95F02", "#E7298A", "#7570B3", "#8B5742", "#1B9E77")
+cbp2 <- c("#D95F02", "#8B5742", "#E7298A", "#7570B3", "#1B9E77")
 
 UNLS_col <- "#1B9E77"
-LS_col <- "#E7298A"
-UN_col <- "#8B5742"
+LS_col <- "#8B5742"
+UN_col <- "#1B9E77"
 Rx_col <- "#7570B3"
 mult_col <- "#E7298A"
 HS_col <- "#D95F02"
@@ -49,12 +51,11 @@ cover_mod = lm(tree_cov ~ sev, data = site_data)
 cover_anova <- anova(cover_mod)
 means = emmeans(cover_mod, pairwise~sev)
 #cld(means$emmeans, Letters = letters)
-cov_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
-
+cov_cld <- as.data.frame(cld.emmGrid(means$emmeans, Letters = letters))
 
 ggplot(site_data, aes(x = sev, y = tree_cov)) +
   geom_boxplot(aes(fill=sev)) +
-  ggtitle("Fig.2: Canopy cover in each severity category") +
+  ggtitle("Fig.2: Canopy cover in each fire history category") +
   ylab("canopy cover (%)")  +
   xlab("Habitat")  +
   scale_fill_manual(values = cbp1) +
@@ -75,7 +76,7 @@ cwd_anova <- anova(cwd_mod)
 summary.aov(cwd_mod)
 #means = emmeans(cwd_mod, pairwise~sev)
 #cld(means$emmeans, Letters = letters)
-#cwd_cld <- as.data.frame(cld(means$emmeans, Letters = letters))
+#cwd_cld <- as.data.frame(cld.emmGrid(means$emmeans, Letters = letters))
 ```
 
 ```{r PERMANOVA_plants, echo = F}
@@ -233,20 +234,20 @@ names(all_pairwise_table) <- c("Pair", "F_model", "p_adj", "F_model", "p_adj", "
 all_pairwise_table <- all_pairwise_table[order(all_pairwise_table$Pair),]
 rownames(all_pairwise_table) <- c()
 
-#kable(all_pairwise_table, digits = 3, caption = "Pairwise PERMANOVA results") %>% 
+#kable(all_pairwise_table, digits = 2, caption = "Table 2: Pairwise PERMANOVA results") %>% 
 #  kable_styling("hover", full_width = F) %>%
 #  add_header_above(c(" ", "plants" = 2, "birds" = 2, "lichens" = 2)) %>% 
 #  save_kable("output/pair_perm.png")
 ```
 
-![](output/pair_perm.png)
+![](output/pairwise_permanova.png)
 
 ## Variation in community composition across habitats
 
 ### Effect of fire history on species composition
-The main PERMANOVA revealed that species composition varies for all taxa in response to the severity category (*p* < 0.001). Using pairwise PERMANOVAs to compare the habitats, there is no detectable difference between plant and lichen communities of low-severity and unburnt stands, while the difference in bird communities was only marginally significant (Table 1). In addition, bird communities of high-severity burns and multiple burns are not detectably different. For lichens, contrary to expectations, the communities of multiple burns, thin+burn and low severity differed significantly. 
+The main PERMANOVA revealed that species composition varies for all taxa in response to the fire history category (*p* < 0.001). Using pairwise PERMANOVAs to compare the habitats, there is no detectable difference between plant and lichen communities of low-severity and unburnt stands, while the difference in bird communities was only marginally significant (Table 1). In addition, bird communities of high-severity burns and multiple burns are not detectably different. For lichens, contrary to expectations, the communities of multiple burns, thin+burn and low severity differed significantly. 
 
-```{r NMDS, echo=FALSE,results='hide'}
+```{r NMDS, include = F, eval = F, echo=FALSE,results='hide'}
 #,results='hide',fig.keep='all'
 # read in data
 NMDS.log <- (all_spp_w_pa[,-1])
@@ -291,16 +292,23 @@ p <- ggplot(scrs, mapping = aes(x = NMDS1, y = NMDS2)) +
 #               aes(x = 0, xend = MDS1, y = 0, yend = MDS2),
 #               arrow = arrow(length = unit(0.25, "cm")), colour = "grey") +
 #  geom_text(data = Cred, aes(x = MDS1, y = MDS2, label = Species), size = 3) +
-  theme_cowplot(12)+
+  theme_cowplot(12) +
+#  scale_colour_manual(values = cbp1) +
+#  scale_colour_manual(breaks = c("h", "l", "Rx", "u", "multiple"), values=c("#D95F02", "#E7298A", "#7570B3", "#8B5742", "#1B9E77")) +
 #  labs(colour = "Severity Category") +
-  scale_colour_discrete(name = "Severity Category", labels = c("high-severity", "Multiple", "Thin+Burn", "low-severity", "Unburnt")) +
-  labs(title = "Figure 3: NMDS for all species. Ellipses represent 90% CI.")
-p
+#+  labs(title = "Figure 3: NMDS for all species. Ellipses represent 90% CI.") + 
+  scale_colour_manual(values = cbp1, name = "Fire History Category", labels = c("High-severity", "Multiple", "Thin+Burn", "Low-severity", "Unburnt")) 
+
+P1 <- grid.arrange(p, bottom="Figure 3: NMDS for all species. Ellipses represent 90% CI")
+
+
 ```
+
+![](output/NMDS_final.png)
 
 ### Species assemblage ordination
 
-The NMDS confirms a considerable overlap in species communities of long-unburnt and low-severity burn stands. high-severity stands have distinct species communities, while the communities in thinned and burnt stands and multiple burn stands appear to be intermediate between the high-severity stands and long-unburnt/low-severity stands. Figure 3 shows the first two dimensions of a 3-dimensional ordination that found convergent solutions with a stress of `r round(sol$stress, 3)` ("stress" represents the degree of distortion required to reduce the dimensionality of the data; a stress of <0.20 is considered acceptable).
+The NMDS confirms a considerable overlap in species communities of long-unburnt and low-severity burn stands. high-severity stands have distinct species communities, while the communities in thinned and burnt stands and multiple burn stands appear to be intermediate between the high-severity stands and long-unburnt/low-severity stands. Figure 3 shows the first two dimensions of a 3-dimensional ordination that found convergent solutions with a stress of 0.17 ("stress" represents the degree of distortion required to reduce the dimensionality of the data; a stress of <0.20 is considered acceptable).
 
 ## Alpha, Beta, Gamma diversity patterns
 
@@ -380,38 +388,38 @@ bird_hsd <- TukeyHSD(out_bird) # pairwise comparisons
 #hist(div$rich_plant)
 
 mod_add_tsf = lm(rich_bird ~ tsf_cat, data = div %>% dplyr::filter(sev != "u"))
-anova(mod_add_tsf)
+#anova(mod_add_tsf)
 means = emmeans(mod_add_tsf, pairwise~tsf_cat)
-cld(means$emmeans, Letters = letters)
-alpha_rich_stats_all <- as.data.frame(cld(means$emmeans, Letters = letters))
+#cld.emmGrid(means$emmeans, Letters = letters)
+alpha_rich_stats_all <- as.data.frame(cld.emmGrid(means$emmeans, Letters = letters))
 
 mod_add_all = lm(rich_all ~ sev, data = div)
-anova(mod_add_all)
+#anova(mod_add_all)
 means = emmeans(mod_add_all, pairwise~sev)
-cld(means$emmeans, Letters = letters)
-alpha_rich_stats_all <- as.data.frame(cld(means$emmeans, Letters = letters))
+#cld.emmGrid(means$emmeans, Letters = letters)
+alpha_rich_stats_all <- as.data.frame(cld.emmGrid(means$emmeans, Letters = letters))
 
 #  LU is statistically different (lower), RX is statistically different (higher); h is similar to lu and mult; mult is similar to h and Rx (a; ab; bc; c)
 mod_add_bird = lm(sqrt(rich_bird) ~ sev, data = div)
 #mod_add_bird = lm(rich_bird ~ sev, data = div)
-anova(mod_add_bird)
+#anova(mod_add_bird)
 means = emmeans(mod_add_bird, pairwise~sev)
-cld(means$emmeans, Letters = letters)
-alpha_rich_stats_bird <- as.data.frame(cld(means$emmeans, Letters = letters))
+#cld.emmGrid(means$emmeans, Letters = letters)
+alpha_rich_stats_bird <- as.data.frame(cld.emmGrid(means$emmeans, Letters = letters))
 
 #similar to bird pattern (lu: a, h: ab, mult:bc, Rx:c)
 mod_add_plant = lm(rich_plant ~ sev, data = div)
-anova(mod_add_plant)
+#anova(mod_add_plant)
 means = emmeans(mod_add_plant, pairwise~sev)
-cld(means$emmeans, Letters = letters)
-alpha_rich_stats_plant <- as.data.frame(cld(means$emmeans, Letters = letters))
+#cld(means$emmeans, Letters = letters)
+alpha_rich_stats_plant <- as.data.frame(cld.emmGrid(means$emmeans, Letters = letters))
 
 # LU is statistically different (higher), yet not different from Rx; h and mult are higher, though not diff from Rx. (h: a, mult: a, Rx: ab, lu:b)
 mod_add_lichen = lm(rich_lichen ~ sev, data = div)
-anova(mod_add_lichen)
+#anova(mod_add_lichen)
 means = emmeans(mod_add_lichen, pairwise~sev)
-cld(means$emmeans, Letters = letters)
-alpha_rich_stats_lichen <- as.data.frame(cld(means$emmeans, Letters = letters))
+#cld(means$emmeans, Letters = letters)
+alpha_rich_stats_lichen <- as.data.frame(cld.emmGrid(means$emmeans, Letters = letters))
 ```
 
 ```{r all_alpha, echo = FALSE}
@@ -590,11 +598,11 @@ p_hs_b <- pf(f_hs_b, df_mod_hs_b, df_res_hs_b, lower.tail = FALSE)
 #ggplot(multrx, aes(x=shrub_cov, y = rich_plant)) + geom_point() + geom_smooth(method = lm)
 ```
   
-Bird and plant species richness were highest in the multiple burns and thinned and burnt stands (for plants the difference between high-severity burns and multiple burns was not significant) (Figure 4). Bird and plant richness in low-severity burns and unburnt plots was slightly lower than in high-severity burns, but the difference was overall not significant. Lichens were predictably less diverse in the high-severity stands, but richness in the other severity categories was similar.
+Bird and plant species richness were highest in the multiple burns and thinned and burnt stands (for plants the difference between high-severity burns and multiple burns was not significant) (Figure 4). Bird and plant richness in low-severity burns and unburnt plots was slightly lower than in high-severity burns, but the difference was overall not significant. Lichens were predictably less diverse in the high-severity stands, but richness in the other fire history categories was similar.
 
 Within the multiple burns and thinned and burnt stands, canopy cover was negatively correlated with plant richness (*F*~(1,44)~ = `r round(f_multrx, 3)`, *p* = `r round(p_multrx, 3)`) and bird richness (*F*~(1,44)~ = `r round(f_multrx_b, 3)`, *p* = `r round(p_multrx_b, 3)`). In the low-severity and long-unburnt stands, canopy cover was negatively correlated with bird richness (*F*~(1,35)~ = `r round(f_lu_b, 3)`, *p* = `r round(p_lu_b, 3)`), but only weakly correlated with plant richness (*F*~(1,35)~ = `r round(f_lu_p, 3)`, *p* = `r round(p_lu_p, 3)`). In the high-severity stands, canopy cover was not correlated with either plant or bird richness (*F*~(1,25)~ = `r round(f_hs_p, 3)`, *p* = `r round(p_hs_p, 3)` and *F*~(1,25)~ = `r round(f_hs_b, 3)`, *p* = `r round(p_hs_b, 3)` respectively).
 
-### Beta Diversity
+### Beta diversity
 
 Beta diversity was highest in the high-severity burns and multiple burns for birds and plants, and lowest for the thinned and burnt stands, possibly because they were spatially clustered rather than because of an effect of treatment (figure 5). For lichens, high-severity burns had the highest beta diversity, likely not because of a high level of species turnover between sites, but rather because of the variation in species richness between plots with no surviving trees and those that had surviving trees, and therefore lichens.
 
@@ -799,7 +807,7 @@ grid.arrange(b_BD_jaccard, p_BD_jaccard, l_BD_jaccard, nrow = 1, bottom = "Fig.5
 
 ### Gamma diversity
 
-Based on the extrapolated species richness, the total pool of species for birds appears to be largest in the multiple burns and thinned and burnt stands, intermediate in the high-severity burns, and lowest in the low-severity and long-unburnt stands (Fig. 5). For plants, the pattern is the same except that species pool from the thinned and burnt stands appears smaller than the high-severity burns, and more similar to the low-severity stands instead. high-severity fire eliminates lichens and most of their substrate [@millerAlteredFireRegimes2018], and their species pool is smaller in the high-severity stands than in the other severity categories, which are similar.
+Based on the extrapolated species richness, the total pool of species for birds appears to be largest in the multiple burns and thinned and burnt stands, intermediate in the high-severity burns, and lowest in the low-severity and long-unburnt stands (Fig. 5). For plants, the pattern is the same except that species pool from the thinned and burnt stands appears smaller than the high-severity burns, and more similar to the low-severity stands instead. high-severity fire eliminates lichens and most of their substrate [@millerAlteredFireRegimes2018], and their species pool is smaller in the high-severity stands than in the other fire history categories, which are similar.
 
 ```{r iNEXT, echo = FALSE, fig.width=8, fig.height=6,results='hide'}
 #, fig.width=6, fig.height=5
@@ -824,11 +832,11 @@ plant_gamma <- ggiNEXT(out2, type=1, se = TRUE) + #change to Shannon Alpha?
   xlab("Number of sites") +
   theme(aspect.ratio=1) +   
   ggtitle("Plants") + 
-  theme_cowplot(12) + 
-  scale_fill_manual(values = cbp1) +
+  theme_cowplot(15) + 
+  scale_fill_manual(values = cbp2) +
   theme(legend.position = "none") +
   theme(aspect.ratio=1.2) + 
-  scale_color_manual(values = cbp1)
+  scale_color_manual(values = cbp2)
 
 #birds
 bird_inext <- list("HS" = t(bird_dat_w %>% filter(sev=="h") %>% dplyr::select(ACWO:YRWA)), 
@@ -844,11 +852,11 @@ bird_gamma <- ggiNEXT(out2, type=1, se = TRUE) +
   ylab("Species number") +
   xlab("Number of sites") +
   ggtitle("Birds") + 
-  theme_cowplot(12) + 
-  scale_fill_manual(values = cbp1) +
+  theme_cowplot(15) + 
+  scale_fill_manual(values = cbp2) +
   theme(legend.position = "none") +
   theme(aspect.ratio=1.2) + 
-  scale_color_manual(values = cbp1)
+  scale_color_manual(values = cbp2) #+geom_line(size=0.5)
 
 
 #lichens
@@ -864,19 +872,19 @@ lichen_gamma1 <- ggiNEXT(out2, type=1, se = TRUE) + #theme_bw()
   ylab("Species number") +
   xlab("Number of sites") +
   ggtitle("Lichens") + 
-  theme_cowplot(12) +
-  scale_fill_manual(values = cbp1) +
-  scale_color_manual(values = cbp1) +
-  guides(colour = guide_legend("Severity categories"),
-  shape = guide_legend("Severity categories"),
-  fill = guide_legend("Severity categories")) + 
+  theme_cowplot(15) +
+  scale_fill_manual(values = cbp2) +
+  scale_color_manual(values = cbp2) +
+  guides(colour = guide_legend("Fire history categories"),
+  shape = guide_legend("Fire history categories"),
+  fill = guide_legend("Fire history categories")) + 
   theme(aspect.ratio=1.2) +   
   theme(legend.position = "bottom", legend.justification = "center") 
   
 gamma_legend <- get_legend(lichen_gamma1)
 
 lichen_gamma <- lichen_gamma1 + theme(legend.position = "none") 
- 
+
 #  theme(aspect.ratio=1) + 
 
 #bird_gamma
@@ -895,7 +903,7 @@ p <- ggarrange(bird_gamma, plant_gamma, lichen_gamma,
          
 # common.legend = T, legend = "bottom")
 
-annotate_figure(p, bottom = "Figure 6: Gamma diversity, extrapolated based on species richness. \n Shaded area represents 95% confidence intervals.")
+#annotate_figure(p, bottom = "Figure 6: Gamma diversity, extrapolated based on species richness. \n Shaded area represents 95% confidence intervals.")
 
 
 #plot_grid(bird_gamma, plant_gamma, lichen_gamma, gamma_legend,
@@ -909,6 +917,10 @@ annotate_figure(p, bottom = "Figure 6: Gamma diversity, extrapolated based on sp
 
 #grid.arrange(bird_gamma, plant_gamma, lichen_gamma, nrow = 4, bottom = "Fig.4: Bird, plant and lichen rarefaction curves based on species richness (left) and Shannon's alpha diversity index (right)")
 ```
+
+
+
+![](output/gamma_graphs.png)
 
 ## Insect Indicator Species Analysis
 
@@ -938,7 +950,7 @@ hs_indic <- hs_indic1 %>%
 
 insect_indic <- format(hs_indic[order(hs_indic$IndVal, decreasing = T), ], digits = 2)
 
-#kable(insect_indic, caption = "Insect indicators of early-seral habitat") %>% 
+#kable(insect_indic, caption = "Table 2: Insect indicators of early-seral habitat") %>% 
 #  kable_styling() %>% 
 #  save_kable("output/insect_indic.png")
 ```
@@ -1227,7 +1239,7 @@ write.csv(print_occ_table, file = "output/print_occ_table_all.csv")
 
 ```
 
-```{r bar_chart_all, echo = FALSE}
+```{r bar_chart_all, echo = FALSE, include =F}
 # For lichens, see WKRP_fire
 
 
@@ -1411,7 +1423,7 @@ p_all_UNLS <- ggplot(prefs[-1,], aes(x = hab, y = num, width=1)) +
   ylab("#") +
   ggtitle("All species")
 
-options(digits = 0)
+#options(digits = 0)
 ```
 
 
@@ -1764,11 +1776,28 @@ spp_diff_table <- list(plant_UNLS_pref, plant_HS_pref, bird_UNLS_pref, bird_HS_p
 
 
 ## end summary table
-UNLS_pref <- dat_percent1 %>% 
+
+# Species that prefer UNLS
+## needed for Venn diagram
+UNLS_pref_bird <- dat_percent1 %>% 
   filter(sev_ratio >= 2) %>% 
+  dplyr::select(species)
+
+UNLS_mult_bird <- dat_percent1 %>%   
+  dplyr::mutate(mult_ratio = MULT_occ/HS_occ) %>% 
+  filter(sev_ratio >= 2) %>% 
+  filter(mult_ratio >= 2) %>% 
+  dplyr::select(species)
+  
+UNLS_Rx_bird <- dat_percent1 %>% 
+  dplyr::mutate(Rx_ratio = Rx_occ/HS_occ) %>% 
+  filter(sev_ratio >= 2) %>% 
+  filter(Rx_ratio >= 2) %>% 
+  dplyr::select(species)
+##
+
+UNLS_pref <- UNLS_pref_bird %>% 
   dplyr::count("species")
-
-
 
 UNLS_pref_mult <- dat_percent1 %>%   
   dplyr::mutate(mult_ratio = MULT_occ/HS_occ) %>% 
@@ -1783,8 +1812,25 @@ UNLS_pref_Rx <- dat_percent1 %>%
   dplyr::count("species")
 
 # Species that prefer HS
-HS_pref <- dat_percent1 %>% 
+## needed for Venn diagram
+HS_pref_bird <- dat_percent1 %>% 
   filter(sev_ratio <= 0.5) %>% 
+  dplyr::select(species)
+
+HS_mult_bird <- dat_percent1 %>% 
+  dplyr::mutate(mult_ratio = MULT_occ/UNLS_occ) %>% 
+  filter(sev_ratio <= 0.5) %>% 
+  filter(mult_ratio >= 2) %>% 
+  dplyr::select(species)
+
+HS_Rx_bird <- dat_percent1 %>% 
+  dplyr::mutate(Rx_ratio = Rx_occ/UNLS_occ) %>% 
+  filter(sev_ratio <= 0.5) %>% 
+  filter(Rx_ratio >= 2) %>% 
+  dplyr::select(species)
+##
+
+HS_pref <- HS_pref_bird %>% 
   dplyr::count("species")
 
 HS_pref_mult <- dat_percent1 %>% 
@@ -1884,23 +1930,107 @@ p_birds_UNLS <- ggplot(prefs_birds_UNLS[-1,], aes(x = hab, y = num, width=1)) +
 #options(digits = 0)
 ```
 
-I identified `r prefs_all_HS[1,3]` species (birds, plants and lichens combined) that seemed to favor high-severity burns (occurring at least twice as frequently in that habitat compared to low-severity and unburnt stands), and `r prefs_all_UNLS[1,3]` species that favored low-severity and unburnt stands (occurring at least twice as frequently in that habitat compared to high-severity burns). These habitat associations correspond to the findings of other fire ecology studies [@fontaineBirdCommunitiesFollowing2009]. Additionally, most species that have a preference for either of these habitats exhibited the same affinity for multiple burns and thinned and burnt sites: `r prefs_all_UNLS[2,3]` species (`r prefs_all_UNLS[2,3]/prefs_all_UNLS[1,3]*100`%) preferring low-severity and unburnt stands also favor multiple burns, while `r prefs_all_UNLS[3,3]` (`r prefs_all_UNLS[3,3]/prefs_all_UNLS[1,3]*100`%) also favor thinned and burnt sites. Conversely, `r prefs_all_HS[2,3]` species (`r prefs_all_HS[2,3]/prefs_all_HS[1,3]*100`%) that prefer high-severity burns also favor multiple burns, and `r prefs_all_HS[3,3]` (`r prefs_all_HS[3,3]/prefs_all_HS[1,3]*100`%) also favor thinned and burnt sites. Figure 7 (a and b) displays graphically the proportion of plants and birds that prefer high-severity burns or unburnt and low-severity stands that also favor multiple burns and thin+burn sites. 
+I identified `r prefs_all_HS[1,3]` species (birds, plants and lichens combined) that seemed to favor high-severity burns (occurring at least twice as frequently in that habitat compared to low-severity and unburnt stands), and `r prefs_all_UNLS[1,3]` species that favored low-severity and unburnt stands (occurring at least twice as frequently in that habitat compared to high-severity burns). These habitat associations correspond to the findings of other fire ecology studies [@fontaineBirdCommunitiesFollowing2009]. Additionally, most species that have a preference for either of these habitats exhibited the same affinity for multiple burns and thinned and burnt sites: `r prefs_all_UNLS[2,3]` species (`r round(prefs_all_UNLS[2,3]/prefs_all_UNLS[1,3]*100)`%) preferring low-severity and unburnt stands also favor multiple burns, while `r prefs_all_UNLS[3,3]` (`r round(prefs_all_UNLS[3,3]/prefs_all_UNLS[1,3]*100)`%) also favor thinned and burnt sites. Conversely, `r prefs_all_HS[2,3]` species (`r round(prefs_all_HS[2,3]/prefs_all_HS[1,3]*100)`%) that prefer high-severity burns also favor multiple burns, and `r prefs_all_HS[3,3]` (`r round(prefs_all_HS[3,3]/prefs_all_HS[1,3]*100)`%) also favor thinned and burnt sites. Figure 7 displays graphically the proportion of plants and birds that prefer high-severity burns or unburnt and low-severity stands that also favor multiple burns and thin+burn sites. 
 
 ```{r bar_plots_HS, echo = F, out.width="80%"}
 #grid.arrange(p_birds_HS, p_plants_HS, nrow=1)#, heights = c(21,21), widths = c(21,21))
 #grid.arrange(p_birds_UNLS, p_plants_UNLS, nrow=1)
-title <- paste("Fig. 7a: Most bird species that favor high-severity and low-severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
+#title <- paste("Fig. 7a: Most bird species that favor high-severity and low-severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
 
-grid.arrange(p_birds_UNLS, p_birds_HS, nrow=1, bottom = title)
+#grid.arrange(p_birds_UNLS, p_birds_HS, nrow=1, bottom = title)
 
 ```
 
 ```{r bar_plots_UNLS, echo = F, out.width="80%"}
 #grid.arrange(p_birds_HS, p_plants_HS, nrow=1)#, heights = c(21,21), widths = c(21,21))
 #grid.arrange(p_birds_UNLS, p_plants_UNLS, nrow=1)
-title <- paste("Fig. 7a: Most plant species that favor high-severity and low-severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
+#title <- paste("Fig. 7a: Most plant species that favor high-severity and low-severity/unburnt stands", "also favor multiple burns and thin+burn stands", sep = "\n")
 
-grid.arrange(p_plants_UNLS, p_plants_HS, nrow=1, bottom = title)
+#grid.arrange(p_plants_UNLS, p_plants_HS, nrow=1, bottom = title)
 ```
 
+![](output/fig7.png)
+
+```{r echo = F,}
+#mult_bird <- rbind(UNLS_mult_bird, HS_mult_bird)
+#Rx_bird <- rbind(UNLS_Rx_bird, HS_Rx_bird)
+
+
+#source("https://bioconductor.org/biocLite.R"); biocLite(c("RBGL","graph"))
+
+#BiocManager::install("RBGL")
+
+#if (!requireNamespace("BiocManager", quietly = TRUE))
+#    install.packages("BiocManager")
+#BiocManager::install(version = "3.11")
+
+#install.packages("devtools")
+#library(devtools)
+#install_github("js229/Vennerable"); library(Vennerable)
+
+#data(StemCell)
+#str(StemCell)
+
+
+#x = list(UNLS_pref_bird$species, HS_pref_bird$species, mult_bird$species, Rx_bird$species)
+#VennRaw <- Venn(x)
+
+#birds
+ppp <- ggplot() +
+  geom_rect(aes(xmin = -14, xmax = 0, ymin = 0, ymax = 5), color = HS_col, fill= HS_col, alpha = .5) +
+  geom_rect(aes(xmin = 0, xmax = 10, ymin = 0, ymax = 5), fill = UNLS_col, alpha = .5) +
+  geom_rect(aes(xmin = -14, xmax = 7, ymin = 0, ymax = 2.5), fill = mult_col) +
+  geom_rect(aes(xmin = -10, xmax = 9, ymin = 2.5, ymax = 5), fill = Rx_col) +
+  #geom_rect(aes(xmin = 0, xmax = 10, ymin = 2.5, ymax = 5), fill = Rx_col) +
+#  geom_rect(aes(xmin = 0, xmax = 14, ymin = 0, ymax = 2.55), fill = mult_col) +
+  geom_rect(aes(xmin = -14, xmax = 0, ymin = 0, ymax = 5), color = HS_col, fill= NA) +
+#  geom_rect(aes(xmin = -5, xmax = 6, ymin = 0, ymax = 5), fill = "slateblue") +
+#  geom_segment(aes(x=-10, y=0, xend = -10, yend = 5), color = UNLS_col) +
+#  geom_segment(aes(x=-9, y=0, xend = -9, yend = 5), color = Rx_col) +
+#  geom_segment(aes(x=-7, y=0, xend = -7, yend = 5), color = mult_col) +
+#  geom_segment(aes(x=10, y=0, xend = 10, yend = 5), color = Rx_col) +
+#  geom_segment(aes(x=14, y=0, xend = 14, yend = 5), color = HS_col) +
+  geom_rect(aes(xmin = 0, xmax = 10, ymin = 0, ymax = 5), color = UNLS_col, fill= NA, alpha = .5) +
+  geom_rect(aes(xmin = -14, xmax = 0, ymin = 0, ymax = 5), color = HS_col, fill= NA, alpha = .5) +
+  geom_segment(aes(x=-0, y=0, xend = -0, yend = 5), color = "black") +
+  theme_cowplot(12) + theme(aspect.ratio=0.5) + theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) + 
+  scale_x_continuous(name="Number of Species", breaks = seq(-15, 10, by = 5))
+
+#plants
+pp<- ggplot() +
+  geom_rect(aes(xmin = -44, xmax = 0, ymin = 0, ymax = 5), color = HS_col, fill= HS_col, alpha = .5) +
+  geom_rect(aes(xmin = 0, xmax = 14, ymin = 0, ymax = 5), fill = UNLS_col, alpha = .5) +
+  geom_rect(aes(xmin = -34, xmax = 10, ymin = 0, ymax = 2.5, fill="Multiple"), fill = mult_col) +
+  geom_rect(aes(xmin = -30, xmax = 10, ymin = 2.5, ymax = 5), fill = Rx_col) +
+  #geom_rect(aes(xmin = 0, xmax = 10, ymin = 2.5, ymax = 5), fill = Rx_col) +
+#  geom_rect(aes(xmin = 0, xmax = 14, ymin = 0, ymax = 2.55), fill = mult_col) +
+#  geom_rect(aes(xmin = 0, xmax = 44, ymin = 0, ymax = 5), color = HS_col, fill= NA) +
+#  geom_rect(aes(xmin = -5, xmax = 6, ymin = 0, ymax = 5), fill = "slateblue") +
+#  geom_segment(aes(x=-10, y=0, xend = -10, yend = 5), color = UNLS_col) +
+#  geom_segment(aes(x=-9, y=0, xend = -9, yend = 5), color = Rx_col) +
+#  geom_segment(aes(x=-7, y=0, xend = -7, yend = 5), color = mult_col) +
+#  geom_segment(aes(x=10, y=0, xend = 10, yend = 5), color = Rx_col) +
+#  geom_segment(aes(x=14, y=0, xend = 14, yend = 5), color = HS_col) +
+  geom_rect(aes(xmin = 0, xmax = 14, ymin = 0, ymax = 5), color = UNLS_col, fill= NA, alpha = .5) +
+  geom_rect(aes(xmin = -44, xmax = 0, ymin = 0, ymax = 5), color = HS_col, fill= NA, alpha = .5) +
+  geom_segment(aes(x=-0, y=0, xend = -0, yend = 5), color = "black") +
+  theme_cowplot(12) +
+  theme(aspect.ratio=0.5) + theme(axis.title.y=element_blank(),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank()) + 
+  scale_x_continuous(name="Number of Species", breaks = seq(-45, 15, by = 15)) +
+  scale_fill_manual('Multiple',
+                      values = mult_col,
+                      labels = "mult")
+# guide = guide_legend(override.aes = list(alpha = 0.5))) 
+
+#remove y axis
+#change x axis to show only specific species numbers
+# add x axis name
+
+
+
+```
 

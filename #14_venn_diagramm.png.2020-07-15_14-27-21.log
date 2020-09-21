@@ -1,0 +1,13 @@
+INFO [2020-07-15 14:27:21] $x
+INFO [2020-07-15 14:27:21] list(UNLS_pref_bird$species, HS_pref_bird$species, mult_bird$species, 
+INFO [2020-07-15 14:27:21]     Rx_bird$species)
+INFO [2020-07-15 14:27:21] 
+INFO [2020-07-15 14:27:21] $category.names
+INFO [2020-07-15 14:27:21] c("UNLS", "HS", "multiple", "Rx")
+INFO [2020-07-15 14:27:21] 
+INFO [2020-07-15 14:27:21] $filename
+INFO [2020-07-15 14:27:21] [1] "#14_venn_diagramm.png"
+INFO [2020-07-15 14:27:21] 
+INFO [2020-07-15 14:27:21] $output
+INFO [2020-07-15 14:27:21] [1] TRUE
+INFO [2020-07-15 14:27:21] 
