@@ -419,9 +419,9 @@ ggplot() +
 ## Main PERMANOVA
 All natives: We see using the permanova there is a strong effect of severity, and a weaker effect of TSF. The pairwise PERMANOVA shows that there is no difference between low sev and unburnt. There is a difference with high sev though.
 
-Herbaceous (grass and forb): There is an effect of severity, but TSF is not as important (p = 0.067). But there is almost a significan interaction sev:TSF, suggesting that TSF is more important for herbaceous plants (in HS?). This is not entirely suprising since TSF has little to no effect on tree cover in LS.
+Herbaceous (grass and forb): There is an effect of severity, but TSF is not as important (p = 0.067). But there is almost a significant interaction sev:TSF, suggesting that TSF is more important for herbaceous plants (in HS?). This is not entirely surprising since TSF has little to no effect on tree cover in LS.
 
-Trees and shrubs: Same as all natives; effect of sev, weaker effect of TSF, no interaction. Still no difference between low and unburnt in pariwise analysis.
+Trees and shrubs: Same as all natives; effect of sev, weaker effect of TSF, no interaction. Still no difference between low and unburnt in pairwise analysis.
 
 ```{r echo = F}
 # Main PERMANOVA
@@ -539,7 +539,7 @@ comp.data <- comp.data %>%
 kable(pairwise.adonis(comp.sub, comp.data$sev2))
 ```
 
-Comparing the different time since fire categories in LS: no statistically signficant difference for herbaceous plants only (p value is lower when comparing 10-12 YSF to 16-31 YSF and 4-5 YSF to 16-31 YSF than when comparing 4-5 YSF to 10-12 YSF).
+Comparing the different time since fire categories in LS: no statistically significant difference for herbaceous plants only (p value is lower when comparing 10-12 YSF to 16-31 YSF and 4-5 YSF to 16-31 YSF than when comparing 4-5 YSF to 10-12 YSF).
 
 Comparing the different time since fire categories in HS: still no significant difference between age categories (once p value is adjusted, maybe a different adjustment would make the difference?), although the lowest p value is for comparing 4-5 YSF to 16-31 YSF. Perhaps adjusting for site productivity or changing the TSF categories might make a difference. Changing to presence-absence makes no difference.
 ```{r echo = F}

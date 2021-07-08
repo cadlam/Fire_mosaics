@@ -122,7 +122,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, color = sev), label = site_id) +
   geom_point() +
   coord_fixed() + ## need aspect ratio of 1!
@@ -167,7 +167,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 p <- ggplot(scrs) +
   geom_point(mapping = aes(x = NMDS1, y = NMDS2, colour = sev)) +
   coord_fixed() + ## need aspect ratio of 1!
@@ -222,7 +222,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, color = sev), label = site_id) +
   geom_point() +
   coord_fixed() + ## need aspect ratio of 1!
@@ -363,7 +363,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, colour = sev), label = site_id) +
   geom_point() +
   coord_fixed() + ## need aspect ratio of 1!
@@ -419,7 +419,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 p <- ggplot(scrs, aes(x = NMDS1, y = NMDS2, colour = sev), label = site_id) +
   geom_point() +
   coord_fixed() + ## need aspect ratio of 1!
@@ -490,7 +490,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 
 #scrs1 <- scrs %>% 
 #  left_join(., all_edna_red, by = "site_id")
@@ -561,7 +561,7 @@ Cred<-subset(C,pvals<0.01)
 Cred <- cbind(Cred, Species = rownames(Cred))
 
 #only stat. signif. spp
-# maye subset only species detected at least 5 times?
+# maybe subset only species detected at least 5 times?
 
 #chrom <- scrs %>% 
 #  mutate(group = ifelse(NMDS1<0, 1, 2))

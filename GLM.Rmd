@@ -23,7 +23,7 @@ plant_dat <- read.csv("data/plant_data_natives.csv", header=TRUE)
 site_data <- read.csv("data/site_data.csv")
 
 
-#install.packages("fuzzySim") doesnt work, so here's the function; serves to convert from presence only to presence-absence
+#install.packages("fuzzySim") doesn't work, so here's the function; serves to convert from presence only to presence-absence
 
 splist2presabs <- function(data, sites.col, sp.col, keep.n = FALSE) {
   # version 1.1 (7 May 2013)
